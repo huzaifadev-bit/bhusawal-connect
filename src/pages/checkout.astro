@@ -1,0 +1,375 @@
+---
+import Switcher from '../components/Switcher.astro';
+---
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<title>Bhusawal Connect | Merchant Dashboard</title>
+<script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+<link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
+<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .pulse-orange {
+            box-shadow: 0 0 0 0 rgba(176, 47, 0, 0.4);
+            animation: pulse-orange 2s infinite;
+        }
+        @keyframes pulse-orange {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(176, 47, 0, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(176, 47, 0, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(176, 47, 0, 0); }
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: 100dvh;
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24 md:pb-0 md:pl-64">
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#e5e2e1",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#006e1c",
+                        "on-background": "#1a1c1c",
+                        "surface": "#f9f9f9",
+                        "primary-fixed": "#ffdbd1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed": "#002204",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#2f3131",
+                        "inverse-primary": "#ffb5a0",
+                        "primary": "#b02f00",
+                        "on-surface-variant": "#5b4039",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e2e2e2",
+                        "tertiary-fixed": "#94f990",
+                        "inverse-on-surface": "#f1f1f1",
+                        "primary-fixed-dim": "#ffb5a0",
+                        "outline-variant": "#e4beb4",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-primary-fixed": "#3b0900",
+                        "on-tertiary-fixed-variant": "#005313",
+                        "surface-dim": "#dadada",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary": "#5f5e5e",
+                        "on-surface": "#1a1c1c",
+                        "surface-container-high": "#e8e8e8",
+                        "surface-container": "#eeeeee",
+                        "on-secondary-container": "#656464",
+                        "on-tertiary-container": "#003208",
+                        "tertiary-fixed-dim": "#78dc77",
+                        "tertiary-container": "#41a447",
+                        "primary-container": "#ff5722",
+                        "on-primary-container": "#541200",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#b02f00",
+                        "on-primary-fixed-variant": "#862200",
+                        "surface-container-low": "#f3f3f3",
+                        "on-secondary-fixed-variant": "#474646",
+                        "outline": "#907067",
+                        "background": "#f9f9f9",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#f9f9f9",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1280px",
+                        "unit": "4px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<!-- Navigation Drawer (Web) -->
+<aside class="hidden md:flex flex-col h-screen py-8 bg-surface-container-low border-r border-outline-variant fixed left-0 w-64 z-50">
+<div class="px-6 mb-10">
+<h1 class="font-headline-md text-headline-md text-primary">Bhusawal Admin</h1>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 bg-primary text-on-primary rounded-r-full font-bold ml-0 mr-4 px-6 py-3 transition-all duration-200 translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-body-md text-body-md">Analytics</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-body-md text-body-md">Users</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="storefront" style="font-variation-settings: 'FILL' 1;">storefront</span>
+<span class="font-body-md text-body-md">Merchants</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-body-md text-body-md">Delivery</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Top App Bar -->
+<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm fixed top-0 w-full z-40 h-16 flex items-center justify-between px-margin-mobile md:px-10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary italic tracking-tighter md:hidden">Bhusawal Connect</span>
+<span class="hidden md:block font-label-md text-label-md text-on-surface-variant">Merchant: Shri Ram Electronics</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container-high transition-colors rounded-full relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full" />
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-bold text-xs">SR</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pt-24 px-margin-mobile md:px-10 pb-12 max-w-container-max mx-auto">
+<!-- Welcome Header -->
+<section class="mb-10">
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-2">Good Morning, Merchant!</h2>
+<p class="font-body-md text-body-md text-secondary">Here is what's happening with your store in Bhusawal today.</p>
+</section>
+<!-- Stats Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+<!-- Revenue Card -->
+<div class="md:col-span-2 glass-card p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between border border-outline-variant/20 relative overflow-hidden">
+<div class="relative z-10">
+<p class="font-label-md text-label-md text-secondary mb-1">Today's Revenue</p>
+<h3 class="font-headline-xl text-headline-xl text-primary">₹24,500.00</h3>
+<div class="flex items-center gap-1 text-tertiary mt-2">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span class="font-label-sm text-label-sm">+12% from yesterday</span>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-5">
+<span class="material-symbols-outlined text-9xl" data-icon="payments">payments</span>
+</div>
+</div>
+<!-- Orders Card -->
+<div class="glass-card p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-primary-fixed/30 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="receipt_long">receipt_long</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-secondary mb-1">Orders Today</p>
+<h3 class="font-headline-md text-headline-md">42</h3>
+<p class="font-label-sm text-label-sm text-tertiary mt-1">5 pending pickup</p>
+</div>
+<!-- Active Products -->
+<div class="glass-card p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/20">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-secondary-container rounded-lg">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="inventory_2">inventory_2</span>
+</div>
+</div>
+<p class="font-label-md text-label-md text-secondary mb-1">Active Products</p>
+<h3 class="font-headline-md text-headline-md">128</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">3 out of stock</p>
+</div>
+</div>
+<!-- Quick Actions Row -->
+<section class="mb-10">
+<h4 class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-4">Quick Actions</h4>
+<div class="flex flex-wrap gap-4">
+<button class="h-14 px-8 bg-primary text-on-primary rounded-xl font-bold flex items-center gap-2 hover:scale-95 transition-transform duration-150 shadow-[0_4px_12px_rgba(176,47,0,0.2)]">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                    Add Product
+                </button>
+<button class="h-14 px-8 bg-on-background text-white rounded-xl font-bold flex items-center gap-2 hover:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="edit_square">edit_square</span>
+                    Update Inventory
+                </button>
+<button class="h-14 px-8 border-2 border-outline rounded-xl font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+                    Create Promotion
+                </button>
+</div>
+</section>
+<!-- Main Workspace: Orders & Products -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Recent Orders List -->
+<div class="lg:col-span-2 glass-card rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] overflow-hidden border border-outline-variant/20">
+<div class="p-6 border-b border-outline-variant/30 flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md">Recent Orders</h3>
+<button class="text-primary font-label-md hover:underline">View All</button>
+</div>
+<div class="divide-y divide-outline-variant/30">
+<!-- Order Item -->
+<div class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young Indian man smiling, high-quality professional photography, studio lighting, warm skin tones, clean neutral background, modern corporate headshot style for a merchant application." src="/assets/8b40c56e80ef11aa0285733e78c313f7.jpg" />
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Rahul Sharma</p>
+<p class="font-label-sm text-label-sm text-secondary">#ORD-5529 • 10:45 AM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface font-bold">₹1,250</p>
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-[10px] font-bold uppercase">Preparing</span>
+</div>
+</div>
+<!-- Order Item -->
+<div class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A portrait of a young Indian woman with professional attire, soft natural lighting, high resolution, minimalist aesthetic, warm color palette, clean background, suitable for a mobile app user profile." src="/assets/d270925ae8ee44f7629839d7a9574312.jpg" />
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Priya Patil</p>
+<p class="font-label-sm text-label-sm text-secondary">#ORD-5528 • 10:15 AM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface font-bold">₹890</p>
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full text-[10px] font-bold uppercase">Ready</span>
+</div>
+</div>
+<!-- Order Item -->
+<div class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A middle-aged Indian man with a kind expression, wearing a clean white shirt, professional lighting, urban indoor setting, high-end photography, cinematic quality, vibrant yet professional colors." src="/assets/5d873d95ca770d96586a69717e3ac4be.jpg" />
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Amit Deshmukh</p>
+<p class="font-label-sm text-label-sm text-secondary">#ORD-5527 • 09:30 AM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface font-bold">₹4,200</p>
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed-variant rounded-full text-[10px] font-bold uppercase">New</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Inventory Insights Card -->
+<div class="glass-card rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] p-6 border border-outline-variant/20">
+<h3 class="font-headline-md text-headline-md mb-6">Inventory Alerts</h3>
+<div class="space-y-6">
+<div class="flex gap-4 p-4 bg-error-container/20 rounded-xl border border-error/10">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+<div>
+<p class="font-label-md text-label-md text-on-error-container font-bold">Out of Stock</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">LED Monitor 24" - 0 units left</p>
+<button class="mt-2 text-primary font-bold text-xs">RESTOCK NOW</button>
+</div>
+</div>
+<div class="flex gap-4 p-4 bg-secondary-container/20 rounded-xl border border-outline-variant/30">
+<span class="material-symbols-outlined text-secondary" data-icon="inventory">inventory</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-bold">Low Stock</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Wireless Mouse - 3 units left</p>
+<button class="mt-2 text-secondary font-bold text-xs">REORDER</button>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant/30">
+<p class="font-label-md text-label-md text-secondary mb-4">Top Selling (Bhusawal Region)</p>
+<div class="flex items-center gap-3 mb-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="bolt">bolt</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center mb-1">
+<span class="font-label-sm text-label-sm">High-Speed Chargers</span>
+<span class="font-label-sm text-label-sm font-bold">85%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 85%" />
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-outline-variant/30 h-20 flex justify-around items-center px-4 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
+<a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 scale-90 duration-200" href="/checkout">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/order_confirmation">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/checkout">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/home">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Customer View</span>
+</a>
+</nav>
+<!-- Floating Action Button (Mobile Contextual) -->
+<button class="md:hidden fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-[0_8px_16px_rgba(176,47,0,0.3)] flex items-center justify-center pulse-orange z-50">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<script>
+        // Micro-interactions for dashboard cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+    <Switcher />
+</body></html>
