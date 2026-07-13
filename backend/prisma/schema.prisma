@@ -1,0 +1,147 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CUSTOMER
+  RIDER
+  MERCHANT
+  ADMIN
+}
+
+enum StoreType {
+  GROCERY
+  MEDICINE
+  FOOD
+  MARKETPLACE
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  AWAITING_PICKUP
+  DELIVERING
+  DELIVERED
+  CANCELLED
+}
+
+enum RideStatus {
+  REQUESTED
+  ACCEPTED
+  ARRIVED
+  STARTED
+  COMPLETED
+  CANCELLED
+}
+
+enum ParcelStatus {
+  PENDING
+  RIDER_ASSIGNED
+  PICKED_UP
+  DELIVERED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  phone     String   @unique
+  name      String?
+  email     String?  @unique
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  orders    Order[]  @relation("CustomerOrders")
+  trips     Ride[]   @relation("CustomerRides")
+  drives    Ride[]   @relation("DriverRides")
+  parcels   Parcel[] @relation("CustomerParcels")
+  deliveries Parcel[] @relation("RiderParcels")
+  stores    Store[]  @relation("MerchantStores")
+}
+
+model Store {
+  id        String    @id @default(uuid())
+  name      String
+  type      StoreType
+  ownerId   String
+  owner     User      @relation("MerchantStores", fields: [ownerId], references: [id])
+  address   String
+  rating    Float     @default(5.0)
+  isOpen    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  products  Product[]
+  orders    Order[]
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id])
+  name        String
+  description String?
+  price       Float
+  stock       Int      @default(99)
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id          String      @id @default(uuid())
+  userId      String
+  user        User        @relation("CustomerOrders", fields: [userId], references: [id])
+  storeId     String
+  store       Store       @relation(fields: [storeId], references: [id])
+  items       String      // Serialized JSON of items
+  total       Float
+  status      OrderStatus @default(PENDING)
+  deliveryOtp String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Ride {
+  id             String     @id @default(uuid())
+  customerId     String
+  customer       User       @relation("CustomerRides", fields: [customerId], references: [id])
+  driverId       String?
+  driver         User?      @relation("DriverRides", fields: [driverId], references: [id])
+  pickupAddress  String
+  dropAddress    String
+  pickupLat      Float?
+  pickupLng      Float?
+  dropLat        Float?
+  dropLng        Float?
+  fare           Float
+  status         RideStatus @default(REQUESTED)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model Parcel {
+  id             String       @id @default(uuid())
+  senderId       String
+  sender         User         @relation("CustomerParcels", fields: [senderId], references: [id])
+  riderId        String?
+  rider          User?        @relation("RiderParcels", fields: [riderId], references: [id])
+  pickupAddress  String
+  dropAddress    String
+  receiverName   String
+  receiverPhone  String
+  weightKg       Float?
+  charge         Float
+  status         ParcelStatus @default(PENDING)
+  deliveryOtp    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
