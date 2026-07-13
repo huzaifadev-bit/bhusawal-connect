@@ -1,0 +1,333 @@
+---
+import Switcher from '../components/Switcher.astro';
+---
+
+<html lang="en"><head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<title>Bhusawal Connect - Book a Ride</title>
+<script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+<link href="/assets/0ec179dea726eb0d6e9df071c662a4be.css" rel="stylesheet" />
+<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+<link href="/assets/b29396048d554bc4d0e1d01b1f83cf5b.css" rel="stylesheet" />
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .bottom-sheet-shadow {
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.08);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#2f3131",
+                    "tertiary": "#006e1c",
+                    "surface-tint": "#b02f00",
+                    "primary-fixed": "#ffdbd1",
+                    "on-primary-fixed": "#3b0900",
+                    "on-background": "#1a1c1c",
+                    "on-primary-fixed-variant": "#862200",
+                    "error": "#ba1a1a",
+                    "surface-bright": "#f9f9f9",
+                    "on-primary-container": "#541200",
+                    "inverse-primary": "#ffb5a0",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "on-tertiary-fixed": "#002204",
+                    "on-secondary-fixed-variant": "#474646",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#eeeeee",
+                    "on-surface-variant": "#5b4039",
+                    "on-surface": "#1a1c1c",
+                    "primary": "#b02f00",
+                    "outline-variant": "#e4beb4",
+                    "on-tertiary-container": "#003208",
+                    "surface-container-high": "#e8e8e8",
+                    "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#ffb5a0",
+                    "secondary-container": "#e5e2e1",
+                    "secondary-fixed": "#e5e2e1",
+                    "outline": "#907067",
+                    "surface-container-highest": "#e2e2e2",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-secondary-container": "#656464",
+                    "background": "#f9f9f9",
+                    "tertiary-container": "#41a447",
+                    "surface-dim": "#dadada",
+                    "surface": "#f9f9f9",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "tertiary-fixed": "#94f990",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#78dc77",
+                    "surface-container-low": "#f3f3f3",
+                    "on-tertiary-fixed-variant": "#005313",
+                    "surface-variant": "#e2e2e2",
+                    "error-container": "#ffdad6",
+                    "primary-container": "#ff5722",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "secondary": "#5f5e5e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "gutter": "16px",
+                    "container-max": "1280px",
+                    "unit": "4px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: 100dvh;
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md antialiased overflow-hidden">
+<!-- Top App Bar -->
+<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm docked full-width top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary">location_on</span>
+</button>
+<h1 class="font-headline-xl text-headline-xl text-primary italic tracking-tighter">Bhusawal Connect</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+</div>
+</header>
+<!-- Map Canvas (Background) -->
+<main class="fixed inset-0 pt-16 pb-20">
+<div class="relative w-full h-full">
+<!-- Simulated Map Component -->
+<div class="w-full h-full grayscale-[20%] contrast-[90%] brightness-[105%]" data-location="Bhusawal, India" style="">
+<img class="w-full h-full object-cover" data-alt="A high-quality, top-down satellite view of a vibrant Indian urban landscape in Bhusawal. The map displays clean, stylized roads, green urban parks, and residential clusters under bright midday sunlight. The visual style is modern and high-contrast, optimized for a light-mode super-app UI, featuring soft ambient shadows on buildings and a clear, readable street grid." src="/assets/3c1d7d235563048e76ffef4606d7a7af.jpg" />
+</div>
+<!-- Current Location Pin (Pulsing) -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="relative flex items-center justify-center">
+<div class="absolute w-12 h-12 bg-primary/20 rounded-full animate-ping" />
+<div class="relative w-6 h-6 bg-primary rounded-full border-4 border-white shadow-lg z-10" />
+</div>
+<div class="mt-2 glass-panel px-3 py-1 rounded-full border border-white/40 shadow-sm">
+<span class="font-label-md text-label-md text-primary">You are here</span>
+</div>
+</div>
+<!-- Location Inputs Overlay -->
+<div class="absolute top-6 left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-md space-y-3 z-40">
+<div class="glass-panel p-4 rounded-3xl shadow-xl border border-white/30 flex flex-col gap-3">
+<!-- Pickup -->
+<div class="relative flex items-center gap-3">
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-sm">radio_button_checked</span>
+<div class="w-0.5 h-6 bg-outline-variant/50" />
+</div>
+<div class="flex-1">
+<input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 font-body-md text-on-surface focus:ring-2 focus:ring-primary-container transition-all" placeholder="Current Location" type="text" value="Varangaon Road, Bhusawal" />
+</div>
+</div>
+<!-- Drop -->
+<div class="relative flex items-center gap-3">
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">location_on</span>
+</div>
+<div class="flex-1">
+<input class="w-full bg-white border border-outline-variant rounded-xl px-4 py-3 font-body-md text-on-surface focus:ring-2 focus:ring-primary-container transition-all shadow-sm" placeholder="Where to?" type="text" />
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Interaction & Selection Sheet -->
+<section class="fixed bottom-0 left-0 right-0 z-50">
+<div class="glass-panel bottom-sheet-shadow rounded-t-[32px] border-t border-white/30 max-w-2xl mx-auto pb-safe">
+<!-- Drag Handle -->
+<div class="flex justify-center pt-3 pb-4">
+<div class="w-10 h-1.5 bg-outline-variant rounded-full" />
+</div>
+<!-- Vehicle Selection Grid -->
+<div class="px-margin-mobile space-y-6">
+<!-- Tabs / Recent Dest -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+<div class="flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full whitespace-nowrap active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span class="font-label-md text-label-md">Bhusawal Station</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full whitespace-nowrap active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-full whitespace-nowrap active:scale-95 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">work</span>
+<span class="font-label-md text-label-md">City Market</span>
+</div>
+</div>
+<!-- Selection Cards -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Auto Ride -->
+<div class="relative p-4 rounded-3xl border-2 border-primary bg-primary-fixed/20 shadow-md flex flex-col gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-95" id="ride-auto" onclick="selectRide('auto')">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary text-3xl">electric_rickshaw</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary-container bg-white px-2 py-0.5 rounded-full shadow-sm">3 mins</span>
+</div>
+<div>
+<h3 class="font-headline-md text-label-md text-on-surface">Auto</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Efficient &amp; Quick</p>
+</div>
+<div class="mt-2 font-headline-md text-on-surface">₹45.00</div>
+<!-- Active Indicator -->
+<div class="absolute top-2 right-2 w-4 h-4 bg-primary rounded-full border-2 border-white flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white" style="font-variation-settings: 'wght' 700;">check</span>
+</div>
+</div>
+<!-- Bike Ride -->
+<div class="relative p-4 rounded-3xl border border-outline-variant bg-white/50 flex flex-col gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-95" id="ride-bike" onclick="selectRide('bike')">
+<div class="flex justify-between items-start">
+<div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-secondary text-3xl">moped</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container px-2 py-0.5 rounded-full">2 mins</span>
+</div>
+<div>
+<h3 class="font-headline-md text-label-md text-on-surface">Bike</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Fastest for Solo</p>
+</div>
+<div class="mt-2 font-headline-md text-on-surface">₹25.00</div>
+</div>
+</div>
+<!-- Booking Action -->
+<div class="pt-2 pb-6 space-y-4">
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">payments</span>
+<span class="font-label-md text-label-md">Cash / UPI</span>
+</div>
+<span class="font-label-md text-label-md text-primary hover:underline cursor-pointer">Change</span>
+</div>
+<button class="w-full bg-primary text-on-primary font-headline-md h-14 rounded-2xl shadow-[0_12px_24px_rgba(176,47,0,0.25)] flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-[0.98]">
+                        Book Auto Now
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Global Nav (Hidden on map screen for focus, but structured per JSON) -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl border-t border-outline-variant/30 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] z-[60] md:hidden">
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/home">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/orders">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/medicine_search">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 duration-200 transition-all" href="/profile">
+<span class="material-symbols-outlined active-icon">person</span>
+<span class="font-label-sm text-label-sm">Account</span>
+</a>
+</nav>
+<script>
+        function selectRide(type) {
+            const autoCard = document.getElementById('ride-auto');
+            const bikeCard = document.getElementById('ride-bike');
+            const bookBtn = document.querySelector('button.bg-primary');
+
+            if (type === 'auto') {
+                autoCard.classList.add('border-primary', 'bg-primary-fixed/20');
+                autoCard.classList.remove('border-outline-variant', 'bg-white/50');
+                bikeCard.classList.remove('border-primary', 'bg-primary-fixed/20');
+                bikeCard.classList.add('border-outline-variant', 'bg-white/50');
+                
+                // Add indicator to auto
+                if (!autoCard.querySelector('.absolute')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'absolute top-2 right-2 w-4 h-4 bg-primary rounded-full border-2 border-white flex items-center justify-center';
+                    indicator.innerHTML = '<span class="material-symbols-outlined text-[10px] text-white" style="font-variation-settings: \'wght\' 700;">check</span>';
+                    autoCard.appendChild(indicator);
+                }
+                const bikeIndicator = bikeCard.querySelector('.absolute');
+                if (bikeIndicator) bikeIndicator.remove();
+                
+                bookBtn.textContent = 'Book Auto Now';
+            } else {
+                bikeCard.classList.add('border-primary', 'bg-primary-fixed/20');
+                bikeCard.classList.remove('border-outline-variant', 'bg-white/50');
+                autoCard.classList.remove('border-primary', 'bg-primary-fixed/20');
+                autoCard.classList.add('border-outline-variant', 'bg-white/50');
+
+                // Add indicator to bike
+                if (!bikeCard.querySelector('.absolute')) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'absolute top-2 right-2 w-4 h-4 bg-primary rounded-full border-2 border-white flex items-center justify-center';
+                    indicator.innerHTML = '<span class="material-symbols-outlined text-[10px] text-white" style="font-variation-settings: \'wght\' 700;">check</span>';
+                    bikeCard.appendChild(indicator);
+                }
+                const autoIndicator = autoCard.querySelector('.absolute');
+                if (autoIndicator) autoIndicator.remove();
+
+                bookBtn.textContent = 'Book Bike Now';
+            }
+        }
+        
+        // Simple entry animation for the bottom sheet
+        window.addEventListener('DOMContentLoaded', () => {
+            const sheet = document.querySelector('.glass-panel.bottom-sheet-shadow');
+            sheet.style.transform = 'translateY(100%)';
+            sheet.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            requestAnimationFrame(() => {
+                sheet.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>
