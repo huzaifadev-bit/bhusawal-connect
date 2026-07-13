@@ -1,0 +1,450 @@
+---
+---
+
+<html lang="en"><head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<title>Bhusawal Connect - Grocery</title>
+<script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+<link href="/assets/0ec179dea726eb0d6e9df071c662a4be.css" rel="stylesheet" />
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#2f3131",
+                    "tertiary": "#006e1c",
+                    "surface-tint": "#b02f00",
+                    "primary-fixed": "#ffdbd1",
+                    "on-primary-fixed": "#3b0900",
+                    "on-background": "#1a1c1c",
+                    "on-primary-fixed-variant": "#862200",
+                    "error": "#ba1a1a",
+                    "surface-bright": "#f9f9f9",
+                    "on-primary-container": "#541200",
+                    "inverse-primary": "#ffb5a0",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "on-tertiary-fixed": "#002204",
+                    "on-secondary-fixed-variant": "#474646",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#eeeeee",
+                    "on-surface-variant": "#5b4039",
+                    "on-surface": "#1a1c1c",
+                    "primary": "#b02f00",
+                    "outline-variant": "#e4beb4",
+                    "on-tertiary-container": "#003208",
+                    "surface-container-high": "#e8e8e8",
+                    "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#ffb5a0",
+                    "secondary-container": "#e5e2e1",
+                    "secondary-fixed": "#e5e2e1",
+                    "outline": "#907067",
+                    "surface-container-highest": "#e2e2e2",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-secondary-container": "#656464",
+                    "background": "#f9f9f9",
+                    "tertiary-container": "#41a447",
+                    "surface-dim": "#dadada",
+                    "surface": "#f9f9f9",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "tertiary-fixed": "#94f990",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#78dc77",
+                    "surface-container-low": "#f3f3f3",
+                    "on-tertiary-fixed-variant": "#005313",
+                    "surface-variant": "#e2e2e2",
+                    "error-container": "#ffdad6",
+                    "primary-container": "#ff5722",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "secondary": "#5f5e5e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "gutter": "16px",
+                    "container-max": "1280px",
+                    "unit": "4px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .animate-bounce-subtle {
+            animation: bounce-subtle 3s ease-in-out infinite;
+        }
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-40">
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl top-0 sticky z-50 shadow-sm flex items-center justify-between px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">Deliver to Home</span>
+<span class="text-[10px] leading-tight text-on-surface-variant truncate max-w-[120px]">Shivaji Nagar, Bhusawal...</span>
+</div>
+</div>
+<div class="font-headline-xl text-headline-xl text-primary dark:text-primary-fixed italic tracking-tighter">Bhusawal Connect</div>
+<div class="flex items-center gap-4">
+<button class="hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Search Section -->
+<section class="px-margin-mobile pt-6 pb-4">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full h-14 pl-12 pr-4 bg-surface-container-low border border-outline-variant/50 rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-body-md font-body-md" placeholder="Search for 'Milk' or 'Mangoes'" type="text" />
+</div>
+</section>
+<!-- Category Horizontal Bar -->
+<nav class="sticky top-16 z-40 bg-background/95 backdrop-blur-md py-4 border-b border-outline-variant/10">
+<div class="flex gap-4 overflow-x-auto hide-scrollbar px-margin-mobile">
+<button class="flex flex-col items-center gap-2 min-w-[72px] group">
+<div class="w-14 h-14 rounded-2xl bg-primary-container/20 flex items-center justify-center group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-primary-container text-3xl" data-icon="water_drop">water_drop</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Milk</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[72px] group">
+<div class="w-14 h-14 rounded-2xl bg-tertiary-container/20 flex items-center justify-center group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-tertiary text-3xl" data-icon="eco">eco</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Veggies</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[72px] group">
+<div class="w-14 h-14 rounded-2xl bg-orange-100 flex items-center justify-center group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-orange-600 text-3xl" data-icon="nutrition">nutrition</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Fruits</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[72px] group">
+<div class="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="fastfood">fastfood</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Snacks</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[72px] group">
+<div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center group-active:scale-90 transition-transform border-2 border-primary">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="inventory_2">inventory_2</span>
+</div>
+<span class="font-label-md text-label-md text-primary font-bold">Staples</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[72px] group">
+<div class="w-14 h-14 rounded-2xl bg-pink-100 flex items-center justify-center group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-pink-600 text-3xl" data-icon="soap">soap</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Care</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[72px] group">
+<div class="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-blue-600 text-3xl" data-icon="cleaning_services">cleaning_services</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Home</span>
+</button>
+<button class="flex flex-col items-center gap-2 min-w-[72px] group">
+<div class="w-14 h-14 rounded-2xl bg-yellow-100 flex items-center justify-center group-active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-yellow-600 text-3xl" data-icon="local_drink">local_drink</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Drinks</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="px-margin-mobile mt-8 space-y-10">
+<!-- Daily Essentials Section -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline-md text-headline-md text-on-surface">Daily Essentials</h2>
+<button class="text-primary font-label-md text-label-md flex items-center gap-1">
+                View All <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Product Card: Milk -->
+<div class="bg-surface-container-lowest rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col group">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container mb-3 relative">
+<img alt="Fresh Farm Whole Milk" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="/assets/d686bc969706f3bd6cf093f663be9579.jpg" />
+<div class="absolute top-2 left-2 bg-primary text-on-primary text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider">Fresh</div>
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface line-clamp-1">Fresh Farm Whole Milk</h3>
+<p class="text-on-surface-variant text-label-sm mt-1">500 ml</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">₹28</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary-container transition-colors active:scale-90">Add</button>
+</div>
+</div>
+<!-- Product Card: Spinach -->
+<div class="bg-surface-container-lowest rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col group">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container mb-3">
+<img alt="Organic Baby Spinach" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="/assets/2622b69a510ca33deafadb18f229cdae.jpg" />
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface line-clamp-1">Organic Baby Spinach</h3>
+<p class="text-on-surface-variant text-label-sm mt-1">200 g</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">₹45</span>
+<div class="flex items-center bg-primary-container/10 rounded-xl overflow-hidden">
+<button class="w-8 h-8 flex items-center justify-center text-primary font-bold active:bg-primary/20">-</button>
+<span class="w-8 text-center text-primary font-bold">2</span>
+<button class="w-8 h-8 flex items-center justify-center text-primary font-bold active:bg-primary/20">+</button>
+</div>
+</div>
+</div>
+<!-- Product Card: Mangoes -->
+<div class="bg-surface-container-lowest rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col group">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container mb-3">
+<img alt="Alphonso Mangoes" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="/assets/eb6e2b75fac9c0724341e63abc3b5100.jpg" />
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface line-clamp-1">Alphonso Mangoes</h3>
+<p class="text-on-surface-variant text-label-sm mt-1">1 kg</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">₹450</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary-container transition-colors active:scale-90">Add</button>
+</div>
+</div>
+<!-- Product Card: Biscuits -->
+<div class="bg-surface-container-lowest rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col group">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container mb-3 relative">
+<img alt="Premium Digestive Biscuits" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="/assets/12b56aa1b66489273ae73c61d82999e2.jpg" />
+<div class="absolute top-2 right-2 bg-error text-on-error text-[10px] px-2 py-1 rounded-full font-bold uppercase">10% OFF</div>
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface line-clamp-1">Digestive Biscuits</h3>
+<p class="text-on-surface-variant text-label-sm mt-1">250 g</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface">₹90</span>
+<span class="text-on-surface-variant text-[10px] line-through">₹100</span>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary-container transition-colors active:scale-90">Add</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Banner Promotion -->
+<div class="relative h-48 rounded-[32px] overflow-hidden group">
+<div class="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-1000" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBfXECstdh12wI3m-q4Fu_yksU6U_Xvo8u0iqHA5buBvgzQa6m940zOUgqvWZE2meaedrd9WidkUjVeX3Twp2i8Dng2OwKOfx9NQtAm33KvQeJn8ET4InzUVnxPV-YF4akA3F4Nuy8HE1l0Y_ELOsYlSZokHsObC5V8oA31SqRZv1iWBtaDfKJPgasT7mktleDcowH9VVGh_wHbJDzmEtXjNFtAm7yl2ok2RAd43qKmH_bbQctIuLLY')" />
+<div class="absolute inset-0 bg-gradient-to-r from-on-background/80 to-transparent flex flex-col justify-center px-8">
+<h3 class="text-on-primary font-headline-lg text-headline-lg max-w-[200px]">Freshness Delivered Home</h3>
+<p class="text-on-primary/80 font-body-md text-body-md mt-2">Best deals in Bhusawal</p>
+<button class="mt-4 bg-white text-primary px-6 py-2 rounded-full font-bold w-fit active:scale-95 transition-transform">Shop Deals</button>
+</div>
+</div>
+<!-- Pantry Staples Section -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline-md text-headline-md text-on-surface">Pantry Staples</h2>
+<button class="text-primary font-label-md text-label-md flex items-center gap-1">
+                View All <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Atta -->
+<div class="bg-surface-container-lowest rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col group">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container mb-3">
+<img alt="Fortune Chakki Fresh Atta" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="/assets/fc8e3c77b476a19b4fcebf2fcd4536c1.jpg" />
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface line-clamp-1">Fortune Fresh Atta</h3>
+<p class="text-on-surface-variant text-label-sm mt-1">5 kg</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">₹245</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary-container transition-colors active:scale-90">Add</button>
+</div>
+</div>
+<!-- Oil -->
+<div class="bg-surface-container-lowest rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col group">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container mb-3">
+<img alt="Refined Sunflower Oil" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="/assets/d3f93301e6c18d7528982b640c82f5f8.jpg" />
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface line-clamp-1">Sunflower Oil</h3>
+<p class="text-on-surface-variant text-label-sm mt-1">1 L</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">₹155</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary-container transition-colors active:scale-90">Add</button>
+</div>
+</div>
+<!-- Rice -->
+<div class="bg-surface-container-lowest rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col group">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container mb-3">
+<img alt="Basmati Rice" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="/assets/2ee87136c461cfeec184f86727bb8175.jpg" />
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface line-clamp-1">Basmati Rice</h3>
+<p class="text-on-surface-variant text-label-sm mt-1">1 kg</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">₹145</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary-container transition-colors active:scale-90">Add</button>
+</div>
+</div>
+<!-- Dal -->
+<div class="bg-surface-container-lowest rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col group">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container mb-3">
+<img alt="Toor Dal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&amp;fit=crop&amp;q=80 src="/assets/487e540236a77338ad8d59a499aacd6e.png" />
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface line-clamp-1">Toor Dal Premium</h3>
+<p class="text-on-surface-variant text-label-sm mt-1">1 kg</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">₹160</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary-container transition-colors active:scale-90">Add</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Personal & Home Care Section -->
+<section class="pb-20">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline-md text-headline-md text-on-surface">Personal &amp; Home Care</h2>
+<button class="text-primary font-label-md text-label-md flex items-center gap-1">
+                View All <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-gutter">
+<!-- Handwash -->
+<div class="bg-surface-container-lowest rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col group">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container mb-3">
+<img alt="Germ Protection Handwash" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="/assets/a4159d3fb2e0b376a58be6207986e2c4.png" />
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface line-clamp-1">Germ Protection Handwash</h3>
+<p class="text-on-surface-variant text-label-sm mt-1">250 ml</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">₹99</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary-container transition-colors active:scale-90">Add</button>
+</div>
+</div>
+<!-- Dishwash -->
+<div class="bg-surface-container-lowest rounded-2xl p-3 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col group">
+<div class="aspect-square rounded-xl overflow-hidden bg-surface-container mb-3">
+<img alt="Dishwash Gel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="/assets/d2e4a772beaf7eaf37dbbc3f89d85936.png" />
+</div>
+<div class="flex-grow">
+<h3 class="font-label-md text-label-md text-on-surface line-clamp-1">Dishwash Gel</h3>
+<p class="text-on-surface-variant text-label-sm mt-1">500 ml</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">₹120</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-md text-label-md hover:bg-primary-container transition-colors active:scale-90">Add</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Cart Floating Bar -->
+<div class="fixed bottom-24 left-4 right-4 z-50">
+<div class="bg-primary text-on-primary h-16 rounded-2xl flex items-center justify-between px-6 shadow-xl animate-bounce-subtle group cursor-pointer hover:bg-primary-container transition-all">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+</div>
+<div>
+<p class="font-bold text-label-md leading-none">3 Items</p>
+<p class="text-[10px] text-white/80">₹208 • Shivaji Nagar</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-bold uppercase tracking-widest text-sm">View Cart</span>
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl z-50 rounded-t-xl border-t border-outline-variant/30 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
+<a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Account</span>
+</a>
+</nav>
+<script>
+    // Simple scroll appearance for top bar shadow
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (window.scrollY > 10) {
+            header.classList.add('shadow-md');
+        } else {
+            header.classList.remove('shadow-md');
+        }
+    });
+
+    // Add haptic-like feel to buttons
+    document.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('touchstart', () => {
+            btn.style.transform = 'scale(0.95)';
+        });
+        btn.addEventListener('touchend', () => {
+            btn.style.transform = 'scale(1)';
+        });
+    });
+</script>
+</body></html>
