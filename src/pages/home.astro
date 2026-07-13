@@ -1,0 +1,336 @@
+---
+import Switcher from '../components/Switcher.astro';
+---
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<title>Bhusawal Connect | Hyperlocal Super-App</title>
+<script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+<link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
+<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<!-- Insert Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#2f3131",
+                    "tertiary": "#006e1c",
+                    "surface-tint": "#b02f00",
+                    "primary-fixed": "#ffdbd1",
+                    "on-primary-fixed": "#3b0900",
+                    "on-background": "#1a1c1c",
+                    "on-primary-fixed-variant": "#862200",
+                    "error": "#ba1a1a",
+                    "surface-bright": "#f9f9f9",
+                    "on-primary-container": "#541200",
+                    "inverse-primary": "#ffb5a0",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "on-tertiary-fixed": "#002204",
+                    "on-secondary-fixed-variant": "#474646",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#eeeeee",
+                    "on-surface-variant": "#5b4039",
+                    "on-surface": "#1a1c1c",
+                    "primary": "#b02f00",
+                    "outline-variant": "#e4beb4",
+                    "on-tertiary-container": "#003208",
+                    "surface-container-high": "#e8e8e8",
+                    "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#ffb5a0",
+                    "secondary-container": "#e5e2e1",
+                    "secondary-fixed": "#e5e2e1",
+                    "outline": "#907067",
+                    "surface-container-highest": "#e2e2e2",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-secondary-container": "#656464",
+                    "background": "#f9f9f9",
+                    "tertiary-container": "#41a447",
+                    "surface-dim": "#dadada",
+                    "surface": "#f9f9f9",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "tertiary-fixed": "#94f990",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#78dc77",
+                    "surface-container-low": "#f3f3f3",
+                    "on-tertiary-fixed-variant": "#005313",
+                    "surface-variant": "#e2e2e2",
+                    "error-container": "#ffdad6",
+                    "primary-container": "#ff5722",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "secondary": "#5f5e5e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "gutter": "16px",
+                    "container-max": "1280px",
+                    "unit": "4px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: 100dvh;
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm flex items-center justify-between px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">Bhusawal, Maharashtra</span>
+<span class="text-[10px] text-on-surface-variant flex items-center">Current Location <span class="material-symbols-outlined text-[12px]" data-icon="expand_more">expand_more</span></span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-150 ease-in-out" data-icon="notifications">notifications</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a modern, smiling user with a minimalist background, styled with soft directional lighting to match a premium tech app aesthetic. The color palette is neutral with clean highlights, emphasizing a reliable and friendly persona for a super-app profile." src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" />
+</div>
+</div>
+</header>
+<main class="pb-24 max-w-container-max mx-auto">
+<!-- Search Bar -->
+<section class="px-margin-mobile pt-4 pb-2">
+<div class="relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant group-focus-within:text-primary transition-colors" data-icon="search">search</span>
+<input class="w-full h-14 pl-12 pr-4 bg-white border border-outline-variant/30 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-body-md font-body-md outline-none" placeholder="Search for groceries, food, or autos" type="text" />
+</div>
+</section>
+<!-- Service Categories Grid -->
+<section class="px-margin-mobile py-6 overflow-x-auto hide-scrollbar">
+<div class="grid grid-cols-6 min-w-[450px] gap-4">
+<a href="/grocery" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-primary-fixed/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="shopping_basket">shopping_basket</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Grocery</span>
+</a>
+<a href="/food" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-primary-container text-3xl" data-icon="restaurant" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Food</span>
+</a>
+<a href="/medicines" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-tertiary/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-tertiary text-3xl" data-icon="medical_services">medical_services</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Medicines</span>
+</a>
+<a href="/parcel" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-blue-600 text-3xl" data-icon="package_2">package_2</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Parcel</span>
+</a>
+<a href="/auto" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-yellow-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-yellow-600 text-3xl" data-icon="directions_car">directions_car</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Auto</span>
+</a>
+<a href="/shops" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-secondary-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="storefront">storefront</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Local Shops</span>
+</a>
+</div>
+</section>
+<!-- Featured Banner -->
+<section class="px-margin-mobile py-4">
+<div class="relative w-full h-44 rounded-2xl overflow-hidden shadow-lg group">
+<img class="w-full h-full object-cover" data-alt="A vibrant, cinematic wide shot of a delivery professional on a sleek orange scooter navigating a clean, modern street in Bhusawal at sunset. The lighting is warm and energetic, suggesting speed and reliability. The visual style is polished and high-end, with a soft motion blur on the wheels to convey the '10 Mins' fast delivery promise." src="/assets/9bd7215ebcf9a61eea5be1ef3574174c.jpg" />
+<div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent flex flex-col justify-center px-8">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-white max-w-[200px]">Fastest Delivery in Bhusawal</h2>
+<div class="mt-2 inline-flex bg-white text-primary font-bold px-4 py-1 rounded-full text-label-md">
+                        10 Mins Delivery
+                    </div>
+</div>
+</div>
+</section>
+<!-- Quick Tasks -->
+<section class="px-margin-mobile py-8">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-4">Quick Tasks</h3>
+<div class="grid grid-cols-2 gap-4">
+<a href="/parcel" class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-md transition-shadow active:scale-[0.98] duration-200 cursor-pointer">
+<div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+</div>
+<div class="text-left">
+<p class="font-label-md text-on-surface">Send Parcel</p>
+<p class="text-[10px] text-on-surface-variant">Pick &amp; Drop</p>
+</div>
+</a>
+<a href="/auto" class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-md transition-shadow active:scale-[0.98] duration-200 cursor-pointer">
+<div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center text-yellow-700">
+<span class="material-symbols-outlined" data-icon="hail">hail</span>
+</div>
+<div class="text-left">
+<p class="font-label-md text-on-surface">Book Auto</p>
+<p class="text-[10px] text-on-surface-variant">Instant Pickup</p>
+</div>
+</a>
+</div>
+</section>
+<!-- Popular Near You -->
+<section class="py-4">
+<div class="flex items-center justify-between px-margin-mobile mb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Popular Near You</h3>
+<button class="text-primary font-label-md">View All</button>
+</div>
+<div class="flex overflow-x-auto hide-scrollbar gap-4 px-margin-mobile pb-4">
+<!-- Card 1 -->
+<div class="flex-shrink-0 w-72 bg-white rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all group">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close-up artistic shot of gourmet North Indian cuisine, specifically steaming butter chicken and garlic naan, served on elegant ceramic dishes. The lighting is warm and appetizing, highlighting textures and colors. The background is a blurred, high-end restaurant interior to denote quality and local popularity." src="/assets/d343ccc14e92e8c2c560bc3a944b9c31.jpg" />
+<div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-yellow-500 text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">4.2</span>
+</div>
+</div>
+<div class="p-4">
+<h4 class="font-label-md text-on-surface text-lg">Spice Village</h4>
+<p class="text-label-sm text-on-surface-variant">North Indian • 25-30 mins</p>
+<div class="mt-3 flex items-center gap-2">
+<span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">FREE DELIVERY</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex-shrink-0 w-72 bg-white rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all group">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean, minimalist shop front of a local high-end organic grocery store. The display features vibrant, fresh fruits and neatly arranged health products under warm, recessed lighting. The atmosphere is premium and fresh, aligning with the reliable service of a hyperlocal super-app." src="/assets/e3241a3ee12ab053f6c14cc48144a87d.jpg" />
+<div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-yellow-500 text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">4.8</span>
+</div>
+</div>
+<div class="p-4">
+<h4 class="font-label-md text-on-surface text-lg">Fresh Mart Bhusawal</h4>
+<p class="text-label-sm text-on-surface-variant">Groceries • 15 mins</p>
+<div class="mt-3 flex items-center gap-2">
+<span class="bg-tertiary/10 text-tertiary text-[10px] px-2 py-0.5 rounded-full font-bold">ORGANIC</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex-shrink-0 w-72 bg-white rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all group">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An inviting, modern bakery counter filled with various artisanal pastries, colorful macarons, and freshly baked breads. The lighting is soft and natural, emphasizing the 'freshly made' appeal. The overall aesthetic is warm, vibrant, and upscale, targeted at users looking for premium local treats." src="/assets/eb07c0498924dba72c7bd001cdd7232d.jpg" />
+<div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-yellow-500 text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-label-sm font-bold">4.5</span>
+</div>
+</div>
+<div class="p-4">
+<h4 class="font-label-md text-on-surface text-lg">The Sweet Tooth</h4>
+<p class="text-label-sm text-on-surface-variant">Bakery • 20 mins</p>
+<div class="mt-3 flex items-center gap-2">
+<span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">BEST SELLER</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-[0_-4px_12px_rgba(0,0,0,0.04)] border-t border-outline-variant/30 fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4">
+<a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 duration-200 transition-all" href="/home">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/orders">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/grocery">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/profile">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Account</span>
+</a>
+</nav>
+<!-- Contextual FAB (Only on Home/Dashboard) -->
+<button class="fixed right-6 bottom-24 w-14 h-14 bg-primary text-white rounded-2xl shadow-[0_8px_24px_rgba(176,47,0,0.3)] flex items-center justify-center active:scale-90 transition-transform duration-200 z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+<script>
+        // Micro-interactions for scrolling effects
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-md');
+                header.classList.remove('shadow-sm');
+            } else {
+                header.classList.add('shadow-sm');
+                header.classList.remove('shadow-md');
+            }
+        });
+
+        // Search bar focus behavior
+        const searchInput = document.querySelector('input');
+        searchInput.addEventListener('focus', () => {
+            searchInput.parentElement.classList.add('scale-[1.02]');
+        });
+        searchInput.addEventListener('blur', () => {
+            searchInput.parentElement.classList.remove('scale-[1.02]');
+        });
+    </script>
+    <Switcher />
+</body></html>
