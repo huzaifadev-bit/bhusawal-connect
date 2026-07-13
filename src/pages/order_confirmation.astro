@@ -1,0 +1,480 @@
+---
+import Switcher from '../components/Switcher.astro';
+---
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+<link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
+<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#e5e2e1",
+                    "on-tertiary": "#ffffff",
+                    "tertiary": "#006e1c",
+                    "on-background": "#1a1c1c",
+                    "surface": "#f9f9f9",
+                    "primary-fixed": "#ffdbd1",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#002204",
+                    "secondary-fixed-dim": "#c8c6c5",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#2f3131",
+                    "inverse-primary": "#ffb5a0",
+                    "primary": "#b02f00",
+                    "on-surface-variant": "#5b4039",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#e2e2e2",
+                    "tertiary-fixed": "#94f990",
+                    "inverse-on-surface": "#f1f1f1",
+                    "primary-fixed-dim": "#ffb5a0",
+                    "outline-variant": "#e4beb4",
+                    "secondary-fixed": "#e5e2e1",
+                    "on-primary-fixed": "#3b0900",
+                    "on-tertiary-fixed-variant": "#005313",
+                    "surface-dim": "#dadada",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e2e2e2",
+                    "secondary": "#5f5e5e",
+                    "on-surface": "#1a1c1c",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container": "#eeeeee",
+                    "on-secondary-container": "#656464",
+                    "on-tertiary-container": "#003208",
+                    "tertiary-fixed-dim": "#78dc77",
+                    "tertiary-container": "#41a447",
+                    "primary-container": "#ff5722",
+                    "on-primary-container": "#541200",
+                    "on-secondary-fixed": "#1c1b1b",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#b02f00",
+                    "on-primary-fixed-variant": "#862200",
+                    "surface-container-low": "#f3f3f3",
+                    "on-secondary-fixed-variant": "#474646",
+                    "outline": "#907067",
+                    "background": "#f9f9f9",
+                    "on-primary": "#ffffff",
+                    "surface-bright": "#f9f9f9",
+                    "on-secondary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-max": "1280px",
+                    "unit": "4px",
+                    "margin-mobile": "16px",
+                    "margin-desktop": "64px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f9f9f9; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-tab-indicator {
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #b02f00;
+            border-radius: 9999px;
+        }
+    </style>
+<style>
+    body {
+      min-height: 100dvh;
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Top Navigation Anchor -->
+<header class="bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm flex items-center justify-between px-margin-mobile h-16 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="storefront">storefront</span>
+<h1 class="font-headline-xl text-headline-xl text-primary italic tracking-tighter">Bhusawal Connect</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-container-high transition-colors text-primary active:scale-95 duration-150 ease-in-out">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="text-on-primary-fixed font-label-md">JD</span>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-8 pb-32">
+<!-- Dashboard Header & Search -->
+<section class="mb-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">Merchant Dashboard</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Manage your orders and track real-time delivery status.</p>
+</div>
+<div class="flex gap-3">
+<div class="relative flex-1 md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary-container text-body-md" placeholder="Search orders..." type="text" />
+</div>
+<button class="bg-surface-container-high p-3 rounded-xl hover:bg-surface-container-highest transition-all">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Order Tabs -->
+<div class="flex items-center gap-8 mb-8 border-b border-outline-variant/30 overflow-x-auto whitespace-nowrap">
+<button class="relative pb-4 font-label-md text-primary active:scale-95 transition-all">
+                Active (12)
+                <div class="active-tab-indicator" />
+</button>
+<button class="pb-4 font-label-md text-on-surface-variant hover:text-primary transition-all">Pending Approval (5)</button>
+<button class="pb-4 font-label-md text-on-surface-variant hover:text-primary transition-all">Ready for Pickup (3)</button>
+<button class="pb-4 font-label-md text-on-surface-variant hover:text-primary transition-all">Completed</button>
+</div>
+<!-- Orders Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Pending Order Card (Action Required) -->
+<div class="glass-card rounded-2xl p-6 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-primary/10 relative overflow-hidden flex flex-col h-full">
+<div class="absolute top-0 right-0 p-3">
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full font-label-sm uppercase tracking-wider">New Request</span>
+</div>
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a customer smiling, warm lighting, high-end photography style with a shallow depth of field, minimalist clean background, representing a reliable and friendly user for a premium digital service." src="/assets/36473b25e66a3caeb42a3b1cd036f3b6.jpg" />
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Rahul Sharma</h3>
+<p class="font-label-sm text-on-surface-variant">Order #BHU-8921</p>
+</div>
+</div>
+<div class="flex-1">
+<div class="space-y-2 mb-6">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-on-surface-variant">2x Paneer Tikka</span>
+<span class="font-label-md text-on-surface">₹480</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-on-surface-variant">1x Butter Naan Basket</span>
+<span class="font-label-md text-on-surface">₹120</span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+<span class="font-label-md text-on-surface">Total Amount</span>
+<span class="font-headline-md text-primary">₹600.00</span>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 py-4 bg-primary text-on-primary rounded-xl font-label-md hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/20">Accept Order</button>
+<button class="px-4 py-4 bg-surface-container rounded-xl text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<!-- Active Order Card -->
+<div class="bg-surface-container-low rounded-2xl p-6 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col h-full border border-transparent hover:border-outline-variant transition-all">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A portrait of a cheerful young woman in a casual setting, natural lighting, sharp focus on facial features, vibrant colors, clean and modern aesthetic suitable for a high-quality user profile in a super-app interface." src="/assets/796038e85b0ed92ef28d99fadbb29ba3.jpg" />
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Ananya Gupta</h3>
+<p class="font-label-sm text-on-surface-variant">Order #BHU-8890</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-tertiary font-label-sm flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse" />
+                            Preparing
+                        </span>
+<span class="font-label-sm text-on-surface-variant mt-1">Est: 12 mins</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="bg-surface-container-highest/30 rounded-xl p-4 mb-6">
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+<span class="font-label-md text-on-surface">Items:</span> 1x Farmhouse Pizza (Large), 1x Garlic Breadsticks, 1x Coke 500ml
+                        </p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/30">
+<div class="text-on-surface">
+<p class="font-label-sm text-on-surface-variant">Paid via UPI</p>
+<p class="font-headline-md">₹845.00</p>
+</div>
+<button class="px-6 py-3 border-2 border-on-surface text-on-surface rounded-xl font-label-md hover:bg-on-surface hover:text-surface transition-all">Ready</button>
+</div>
+</div>
+<!-- Active Order Card -->
+<div class="bg-surface-container-low rounded-2xl p-6 shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col h-full">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a satisfied middle-aged man, professional high-end digital photography style, soft focus background, authentic emotion, warm tones, representing a premium customer experience." src="/assets/aa324c61c49b2d7f1756b38af766b445.jpg" />
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Vikram Mehta</h3>
+<p class="font-label-sm text-on-surface-variant">Order #BHU-8872</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-primary-container font-label-sm flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary-container" />
+                            Awaiting Pickup
+                        </span>
+<span class="font-label-sm text-on-surface-variant mt-1">Rider Arrived</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="bg-surface-container-highest/30 rounded-xl p-4 mb-6">
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+<span class="font-label-md text-on-surface">Items:</span> 3x Special Thali, 1x Lassi
+                        </p>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/30">
+<div class="text-on-surface">
+<p class="font-label-sm text-on-surface-variant">COD Order</p>
+<p class="font-headline-md">₹1,120.00</p>
+</div>
+<button class="px-6 py-3 bg-primary-container text-on-primary-container rounded-xl font-label-md flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[20px]" data-icon="local_shipping">local_shipping</span>
+                        Handover
+                    </button>
+</div>
+</div>
+<!-- Completed Order (Simplified) -->
+<div class="bg-surface-container-low/50 rounded-2xl p-6 flex flex-col opacity-75 grayscale-[0.5] hover:grayscale-0 hover:opacity-100 transition-all border border-outline-variant/20">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-label-md text-on-surface">Sana Khan</h3>
+<span class="bg-surface-container-highest px-3 py-1 rounded-full font-label-sm">Completed</span>
+</div>
+<p class="font-body-md text-on-surface-variant mb-4">1x Veg Biryani, 1x Raita</p>
+<div class="flex justify-between items-center mt-auto">
+<span class="font-label-md text-on-surface">₹320.00</span>
+<span class="font-label-sm text-on-surface-variant italic">20 mins ago</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Mobile Only) -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl z-50 rounded-t-xl border-t border-outline-variant/30 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/checkout">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 duration-200 transition-all" href="/order_confirmation">
+<span class="material-symbols-outlined active-icon">receipt_long</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/checkout">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/home">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Customer View</span>
+</a>
+</nav>
+<!-- Navigation Drawer (Desktop Only) -->
+<aside class="hidden md:flex flex-col fixed left-0 h-full w-64 bg-surface-container-low dark:bg-surface-container-lowest border-r border-outline-variant py-8 transition-transform">
+<div class="px-6 mb-10">
+<span class="font-headline-md text-headline-md text-primary">Bhusawal Admin</span>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-body-md text-body-md">Analytics</span>
+</a>
+<a class="flex items-center gap-4 bg-primary text-on-primary rounded-r-full font-bold ml-0 mr-4 px-6 py-3 translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-body-md text-body-md">Orders</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-body-md text-body-md">Users</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-body-md text-body-md">Merchants</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-body-md text-body-md">Delivery</span>
+</a>
+<div class="mt-auto">
+<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</div>
+</nav>
+</aside>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 md:bottom-12 md:right-12 bg-primary-container text-on-primary-container w-16 h-16 rounded-2xl shadow-lg shadow-primary-container/30 flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined text-[32px]" data-icon="add">add</span>
+</button>
+<script>
+        // Micro-interaction for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Tab Switching Logic (Simulated)
+        const tabs = document.querySelectorAll('button[class*="pb-4"]');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                tabs.forEach(t => {
+                    t.classList.remove('text-primary');
+                    t.classList.add('text-on-surface-variant');
+                    const indicator = t.querySelector('.active-tab-indicator');
+                    if(indicator) indicator.remove();
+                });
+                tab.classList.add('text-primary');
+                tab.classList.remove('text-on-surface-variant');
+                const indicator = document.createElement('div');
+                indicator.className = 'active-tab-indicator';
+                tab.appendChild(indicator);
+            });
+        });
+
+        // Dynamic accept/ready order logic synced with localStorage
+        window.updateOrderStatus = (orderId, newStatus) => {
+            const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+            const updated = orders.map(o => {
+                if (o.id === orderId) {
+                    o.status = newStatus;
+                }
+                return o;
+            });
+            localStorage.setItem('bhusawal_orders', JSON.stringify(updated));
+
+            const activeOrder = JSON.parse(localStorage.getItem('bhusawal_active_order') || '{}');
+            if (activeOrder.id === orderId) {
+                activeOrder.status = newStatus;
+                localStorage.setItem('bhusawal_active_order', JSON.stringify(activeOrder));
+            }
+            alert(`Order #${orderId} status updated to: ${newStatus}`);
+            window.location.reload();
+        };
+
+        // Attach to Accept/Ready buttons in static markup
+        document.querySelectorAll('button').forEach(btn => {
+            const card = btn.closest('.glass-card') || btn.closest('.bg-surface-container-low');
+            if (!card) return;
+            const orderTextElement = card.querySelector('p.font-label-sm') || card.querySelector('p.text-secondary');
+            if (!orderTextElement) return;
+
+            const orderText = orderTextElement.textContent.trim();
+            const matches = orderText.match(/#([A-Z0-9-]+)/);
+            if (!matches) return;
+            const orderId = matches[1];
+
+            if (btn.textContent.trim() === 'Accept Order') {
+                btn.addEventListener('click', () => {
+                    window.updateOrderStatus(orderId, 'Preparing');
+                });
+            } else if (btn.textContent.trim() === 'Ready') {
+                btn.addEventListener('click', () => {
+                    window.updateOrderStatus(orderId, 'Ready for Pickup');
+                });
+            }
+        });
+
+        // Prepend dynamic orders from localStorage if any
+        document.addEventListener('DOMContentLoaded', () => {
+            const ordersGrid = document.querySelector('.grid.grid-cols-1');
+            if (!ordersGrid) return;
+            
+            const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+            orders.forEach(order => {
+                if (order.status === 'Preparing' || order.status === 'Verifying') {
+                    const card = document.createElement('div');
+                    card.className = 'glass-card rounded-2xl p-6 shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-primary/10 relative overflow-hidden flex flex-col h-full animate-in fade-in duration-300';
+                    card.innerHTML = `
+                        <div class="absolute top-0 right-0 p-3">
+                            <span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full font-label-sm uppercase tracking-wider">${order.status}</span>
+                        </div>
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 rounded-full overflow-hidden bg-primary-fixed/20 flex items-center justify-center text-primary font-bold">
+                                ${order.id.slice(0, 2)}
+                            </div>
+                            <div>
+                                <h3 class="font-label-md text-on-surface">Shivaji Nagar Customer</h3>
+                                <p class="font-label-sm text-on-surface-variant">Order #${order.id}</p>
+                            </div>
+                        </div>
+                        <div class="flex-1 mb-4">
+                            <div class="space-y-2 mb-6">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-body-md text-on-surface-variant">${order.items}</span>
+                                    <span class="font-label-md text-on-surface">₹${order.total}</span>
+                                </div>
+                                <div class="flex justify-between items-center pt-2 border-t border-outline-variant/30">
+                                    <span class="font-label-md text-on-surface">Total Amount</span>
+                                    <span class="font-headline-md text-primary">₹${order.total}.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="flex-1 py-4 bg-primary text-on-primary rounded-xl font-label-md hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary/20" onclick="window.updateOrderStatus('${order.id}', 'Preparing')">Accept Order</button>
+                            <button class="px-4 py-4 bg-surface-container rounded-xl text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all">
+                                <span class="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                    `;
+                    ordersGrid.insertBefore(card, ordersGrid.firstChild);
+                }
+            });
+        });
+    </script>
+    <Switcher />
+</body></html>
