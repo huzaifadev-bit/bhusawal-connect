@@ -1,0 +1,267 @@
+---
+import Switcher from '../components/Switcher.astro';
+---
+
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Medicines Store - Bhusawal Connect</title>
+  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+  <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
+  <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#e5e2e1",
+            "on-primary": "#ffffff",
+            "on-surface-variant": "#5b4039",
+            "outline": "#907067",
+            "on-primary-container": "#541200",
+            "surface-tint": "#b02f00",
+            "secondary": "#5f5e5e",
+            "inverse-primary": "#ffb5a0",
+            "outline-variant": "#e4beb4",
+            "on-secondary-fixed": "#1c1b1b",
+            "background": "#f9f9f9",
+            "error-container": "#ffdad6",
+            "tertiary": "#006e1c",
+            "surface-container-lowest": "#ffffff",
+            "on-error": "#ffffff",
+            "inverse-surface": "#2f3131",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#e2e2e2",
+            "secondary-fixed": "#e5e2e1",
+            "tertiary-fixed": "#94f990",
+            "surface-container": "#eeeeee",
+            "on-surface": "#1a1c1c",
+            "primary": "#b02f00",
+            "primary-container": "#ff5722",
+            "on-secondary-container": "#656464",
+            "surface-container-low": "#f3f3f3",
+            "surface-dim": "#dadada",
+            "primary-fixed": "#ffdbd1",
+            "on-primary-fixed-variant": "#862200",
+            "error": "#ba1a1a",
+            "on-error-container": "#93000a",
+            "surface-container-high": "#e8e8e8",
+            "surface-bright": "#f9f9f9",
+            "on-secondary": "#ffffff",
+            "surface": "#f9f9f9"
+          },
+          "fontFamily": {
+            "label-sm": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"]
+          },
+          "spacing": {
+            "margin-mobile": "16px",
+            "gutter": "16px"
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f9f9f9; min-height: 100dvh; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="text-on-surface bg-background pb-32">
+  <!-- Top App Bar -->
+  <header class="bg-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
+    <div class="flex items-center gap-3">
+      <a href="/home" class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-150">
+        <span class="material-symbols-outlined text-primary">arrow_back</span>
+      </a>
+      <h1 class="font-headline-lg-mobile text-headline-md text-on-surface">Medicines Store</h1>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto px-margin-mobile pt-6 space-y-6">
+    <!-- Prescription Banner -->
+    <a href="/upload_prescription" class="block bg-tertiary/10 border border-tertiary/20 rounded-2xl p-5 hover:bg-tertiary/15 transition-all">
+      <div class="flex items-start gap-4">
+        <div class="w-12 h-12 rounded-xl bg-tertiary text-white flex items-center justify-center">
+          <span class="material-symbols-outlined text-2xl">description</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-bold text-label-md text-tertiary">Have a Prescription?</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Upload your doctor's receipt to order regulated prescription medicines directly.</p>
+        </div>
+        <span class="material-symbols-outlined text-tertiary self-center">chevron_right</span>
+      </div>
+    </a>
+
+    <!-- Search Section -->
+    <div class="relative">
+      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+      <input type="text" class="w-full h-14 pl-12 pr-4 bg-white border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-body-md" placeholder="Search medicines (e.g. Paracetamol, Dolo)" />
+    </div>
+
+    <!-- Medicine List -->
+    <section class="space-y-4">
+      <h2 class="font-bold text-headline-md text-on-surface">Common Medicines</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Item 1 -->
+        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">OTC</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Paracetamol 650mg</h3>
+            <p class="text-xs text-on-surface-variant mt-1">Strip of 15 tablets</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-bold text-on-surface">₹30</span>
+            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">OTC</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Dolo 650</h3>
+            <p class="text-xs text-on-surface-variant mt-1">Strip of 15 tablets</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-bold text-on-surface">₹32</span>
+            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">OTC</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Cough Syrup</h3>
+            <p class="text-xs text-on-surface-variant mt-1">100 ml bottle</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-bold text-on-surface">₹105</span>
+            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">OTC</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Vitamin C Tablets</h3>
+            <p class="text-xs text-on-surface-variant mt-1">Strip of 10 chewables</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-bold text-on-surface">₹150</span>
+            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Cart Floating Bar -->
+  <div class="fixed bottom-24 left-4 right-4 z-50">
+    <div class="bg-primary text-on-primary h-16 rounded-2xl flex items-center justify-between px-6 shadow-xl cursor-pointer hover:brightness-110 transition-all">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined">shopping_basket</span>
+        </div>
+        <div>
+          <p class="font-bold text-label-md leading-none">0 Items</p>
+          <p class="text-[10px] text-white/80">₹0 • Pharmacy Delivery</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-bold uppercase tracking-widest text-sm">Order Now</span>
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4 bg-surface/80 backdrop-blur-xl z-50 border-t border-outline-variant/30 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
+    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all" href="/home">
+      <span class="material-symbols-outlined">home</span>
+      <span class="font-label-sm text-label-sm">Home</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all" href="/orders">
+      <span class="material-symbols-outlined">receipt_long</span>
+      <span class="font-label-sm text-label-sm">Orders</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all" href="/grocery">
+      <span class="material-symbols-outlined">search</span>
+      <span class="font-label-sm text-label-sm">Search</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all" href="/profile">
+      <span class="material-symbols-outlined">person</span>
+      <span class="font-label-sm text-label-sm">Account</span>
+    </a>
+  </nav>
+
+  <script is:inline>
+    let cart = [];
+    let cartCount = 0;
+    let cartTotal = 0;
+
+    const cartBar = document.querySelector('.fixed.bottom-24');
+    const cartTextCount = cartBar.querySelector('p.font-bold');
+    const cartTextDetails = cartBar.querySelector('p.text-white\\/80');
+
+    cartBar.classList.add('hidden');
+
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.trim() === 'Add') {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const card = btn.closest('.bg-white');
+          const title = card.querySelector('h3').textContent.trim();
+          const priceText = card.querySelector('.font-bold.text-on-surface').textContent.trim();
+          const price = parseInt(priceText.replace(/[^\d]/g, ''));
+
+          btn.textContent = 'Added';
+          btn.classList.remove('bg-primary');
+          btn.classList.add('bg-tertiary');
+          btn.disabled = true;
+
+          cart.push({ title, price });
+          cartCount++;
+          cartTotal += price;
+
+          cartBar.classList.remove('hidden');
+          cartTextCount.textContent = `${cartCount} Item${cartCount > 1 ? 's' : ''}`;
+          cartTextDetails.textContent = `₹${cartTotal} • Pharmacy Delivery`;
+        });
+      }
+    });
+
+    cartBar.addEventListener('click', () => {
+      if (cart.length > 0) {
+        const order = {
+          id: `MED-${Math.floor(1000 + Math.random() * 9000)}`,
+          items: cart.map(item => item.title).join(', '),
+          total: cartTotal,
+          date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          status: 'Preparing'
+        };
+
+        const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+        orders.unshift(order);
+        localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+        localStorage.setItem('bhusawal_active_order', JSON.stringify(order));
+
+        window.location.href = '/track_order';
+      }
+    });
+  </script>
+
+  <Switcher />
+</body>
+</html>
