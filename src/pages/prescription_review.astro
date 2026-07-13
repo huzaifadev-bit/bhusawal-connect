@@ -1,0 +1,371 @@
+---
+import Switcher from '../components/Switcher.astro';
+---
+
+<html lang="en"><head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<title>Bhusawal Connect - Delivery Partner</title>
+<script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+<link href="/assets/0ec179dea726eb0d6e9df071c662a4be.css" rel="stylesheet" />
+<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+<link href="/assets/b29396048d554bc4d0e1d01b1f83cf5b.css" rel="stylesheet" />
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .status-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .7; transform: scale(1.1); }
+        }
+        .safe-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2f3131",
+                        "tertiary": "#006e1c",
+                        "surface-tint": "#b02f00",
+                        "primary-fixed": "#ffdbd1",
+                        "on-primary-fixed": "#3b0900",
+                        "on-background": "#1a1c1c",
+                        "on-primary-fixed-variant": "#862200",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#f9f9f9",
+                        "on-primary-container": "#541200",
+                        "inverse-primary": "#ffb5a0",
+                        "on-secondary-fixed": "#1c1b1b",
+                        "on-tertiary-fixed": "#002204",
+                        "on-secondary-fixed-variant": "#474646",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#eeeeee",
+                        "on-surface-variant": "#5b4039",
+                        "on-surface": "#1a1c1c",
+                        "primary": "#b02f00",
+                        "outline-variant": "#e4beb4",
+                        "on-tertiary-container": "#003208",
+                        "surface-container-high": "#e8e8e8",
+                        "on-primary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#ffb5a0",
+                        "secondary-container": "#e5e2e1",
+                        "secondary-fixed": "#e5e2e1",
+                        "outline": "#907067",
+                        "surface-container-highest": "#e2e2e2",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-secondary-container": "#656464",
+                        "background": "#f9f9f9",
+                        "tertiary-container": "#41a447",
+                        "surface-dim": "#dadada",
+                        "surface": "#f9f9f9",
+                        "secondary-fixed-dim": "#c8c6c5",
+                        "tertiary-fixed": "#94f990",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#78dc77",
+                        "surface-container-low": "#f3f3f3",
+                        "on-tertiary-fixed-variant": "#005313",
+                        "surface-variant": "#e2e2e2",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#ff5722",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "secondary": "#5f5e5e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "gutter": "16px",
+                        "container-max": "1280px",
+                        "unit": "4px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "headline-xl": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: 100dvh;
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm fixed top-0 w-full z-50 flex items-center justify-between px-margin-mobile h-16">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
+<span class="font-headline-lg-mobile text-headline-lg-mobile italic tracking-tighter text-primary">Bhusawal Connect</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative w-10 h-10 flex items-center justify-center hover:bg-surface-container-high transition-colors rounded-full transition-all active:scale-95 duration-150">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full" />
+</button>
+</div>
+</header>
+<main class="pt-20 pb-28 px-margin-mobile max-w-container-max mx-auto">
+<!-- Online Status Toggle Section -->
+<section class="flex items-center justify-between p-6 rounded-xl bg-white shadow-[0_4px_12px_rgba(0,0,0,0.04)] mb-8">
+<div class="flex items-center gap-4">
+<div class="w-3 h-3 rounded-full bg-tertiary-container status-pulse" id="status-indicator" />
+<div>
+<h2 class="font-headline-md text-headline-md" id="status-text">Online</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Waiting for new orders...</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="status-toggle" type="checkbox" />
+<div class="w-14 h-8 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary-container" />
+</label>
+</section>
+<!-- Earnings Grid -->
+<section class="grid grid-cols-2 gap-4 mb-10">
+<div class="p-6 rounded-xl bg-white shadow-[0_4px_12px_rgba(0,0,0,0.04)] border-l-4 border-primary">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">Today's Earnings</p>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">₹1,240.50</h3>
+<div class="mt-2 flex items-center text-tertiary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-xs mr-1" data-icon="trending_up">trending_up</span>
+<span>12% from yesterday</span>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-white shadow-[0_4px_12px_rgba(0,0,0,0.04)] border-l-4 border-on-secondary-fixed-variant">
+<p class="font-label-md text-label-md text-on-surface-variant mb-1">Orders Completed</p>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">14</h3>
+<p class="mt-2 font-label-sm text-label-sm text-on-surface-variant">Average ₹88/order</p>
+</div>
+</section>
+<!-- Available Orders Section -->
+<section class="mb-10">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-headline-md flex items-center gap-2">
+                    Available Orders
+                    <span class="bg-primary-container/20 text-on-primary-container px-2 py-0.5 rounded-full text-xs font-bold">3 NEW</span>
+</h2>
+<button class="text-primary font-label-md text-label-md">View All</button>
+</div>
+<!-- Bento Grid of Orders -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Order Card 1 -->
+<div class="glass-card p-6 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-white/50 flex flex-col gap-5">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-1">Estimated Earnings</span>
+<span class="font-headline-md text-headline-md text-primary">₹145.00</span>
+</div>
+<div class="bg-secondary-container px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+<span class="font-label-sm text-label-sm">22 min</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="radio_button_checked">radio_button_checked</span>
+<div class="w-0.5 h-8 bg-outline-variant/50" />
+<span class="material-symbols-outlined text-tertiary text-xl" data-icon="location_on">location_on</span>
+</div>
+<div class="flex flex-col gap-4 flex-1">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Pickup</p>
+<p class="font-label-md text-label-md">Khandesh Bakery, Shivaji Nagar</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Drop</p>
+<p class="font-label-md text-label-md">Railway Colony, Bhusawal North</p>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary-container text-white py-4 rounded-xl font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary-container/20">Accept Trip</button>
+</div>
+<!-- Order Card 2 -->
+<div class="glass-card p-6 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-white/50 flex flex-col gap-5">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-1">Estimated Earnings</span>
+<span class="font-headline-md text-headline-md text-primary">₹68.00</span>
+</div>
+<div class="bg-secondary-container px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+<span class="font-label-sm text-label-sm">12 min</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="radio_button_checked">radio_button_checked</span>
+<div class="w-0.5 h-8 bg-outline-variant/50" />
+<span class="material-symbols-outlined text-tertiary text-xl" data-icon="location_on">location_on</span>
+</div>
+<div class="flex flex-col gap-4 flex-1">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Pickup</p>
+<p class="font-label-md text-label-md">Modern Pharmacy, Main Road</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Drop</p>
+<p class="font-label-md text-label-md">Tapti Terrace Appt, Floor 3</p>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary-container text-white py-4 rounded-xl font-label-md text-label-md hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary-container/20">Accept Trip</button>
+</div>
+<!-- Map Section (Bento Style) -->
+<div class="lg:col-span-1 rounded-2xl overflow-hidden relative shadow-[0_4px_12px_rgba(0,0,0,0.04)] h-[340px] md:h-auto">
+<div class="absolute inset-0 bg-cover bg-center" data-location="Bhusawal, India" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCyCKdNcF-8p6JlMwg6vMAlegD5ho1cXUF4pStadkMmGBwvGuUxsrIhS0Gp4QHzLZHETvyNPxVoPG0DQq5TgdnrRWhuUwYIyDGDPvre3eIw4ytImJ7sV0HhtpJk2z4SXb_8hRpstc6HPvrSDjwr-N-bWMXeOSoBBl1-WuxWq9eReQADdgboXx0W8apbZo8cBCvazNFbrNGkPT4yYDqXv7RQRyeXe9AqufhyQfSwJxd-bz0YgMpG0OO6')" />
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+<div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur p-4 rounded-xl flex items-center justify-between">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Your current location</p>
+<p class="font-label-md text-label-md">Municipal Council Office</p>
+</div>
+<button class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined" data-icon="my_location">my_location</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Navigation Links -->
+<section class="grid grid-cols-3 gap-4 mb-12">
+<a class="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:bg-surface-container-high transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined text-primary-container text-2xl mb-2" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:bg-surface-container-high transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined text-primary-container text-2xl mb-2" data-icon="stars">stars</span>
+<span class="font-label-md text-label-md">Ratings</span>
+</a>
+<a class="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:bg-surface-container-high transition-colors active:scale-95" href="#">
+<span class="material-symbols-outlined text-primary-container text-2xl mb-2" data-icon="contact_support">contact_support</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center h-20 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl border-t border-outline-variant/30 safe-bottom z-50">
+<a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 duration-200" href="/prescription_review">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/orders">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/medicine_search">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/home">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Customer View</span>
+</a>
+</nav>
+<!-- Floating Action Button - Supressed as per Guidelines for Dashboard sub-tasks if needed, but contextually useful for "Quick Help" -->
+<script>
+        const toggle = document.getElementById('status-toggle');
+        const statusText = document.getElementById('status-text');
+        const statusIndicator = document.getElementById('status-indicator');
+
+        toggle.addEventListener('change', function() {
+            if (this.checked) {
+                statusText.innerText = 'Online';
+                statusIndicator.classList.remove('bg-error');
+                statusIndicator.classList.add('bg-tertiary-container');
+                statusIndicator.classList.add('status-pulse');
+            } else {
+                statusText.innerText = 'Offline';
+                statusIndicator.classList.remove('bg-tertiary-container');
+                statusIndicator.classList.add('bg-error');
+                statusIndicator.classList.remove('status-pulse');
+            }
+        });
+
+        // Synced Rider accept trip / delivery simulation
+        document.querySelectorAll('button').forEach(btn => {
+            if(btn.innerText.trim() === 'Accept Trip') {
+                btn.addEventListener('click', () => {
+                    btn.innerText = 'Trip Accepted!';
+                    btn.classList.replace('bg-primary-container', 'bg-tertiary');
+                    
+                    // Update active order in localStorage to 'Out for Delivery'
+                    const activeOrder = JSON.parse(localStorage.getItem('bhusawal_active_order') || '{}');
+                    if (activeOrder.id) {
+                        activeOrder.status = 'Out for Delivery';
+                        localStorage.setItem('bhusawal_active_order', JSON.stringify(activeOrder));
+                        
+                        const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+                        const updated = orders.map(o => {
+                            if (o.id === activeOrder.id) o.status = 'Out for Delivery';
+                            return o;
+                        });
+                        localStorage.setItem('bhusawal_orders', JSON.stringify(updated));
+                    }
+                    
+                    setTimeout(() => {
+                        btn.innerText = 'Complete Delivery';
+                        btn.onclick = () => {
+                            btn.innerText = 'Delivered!';
+                            btn.classList.replace('bg-tertiary', 'bg-secondary');
+                            
+                            // Set to Delivered
+                            if (activeOrder.id) {
+                                activeOrder.status = 'Delivered';
+                                localStorage.setItem('bhusawal_active_order', JSON.stringify(activeOrder));
+                                
+                                const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+                                const updated = orders.map(o => {
+                                    if (o.id === activeOrder.id) o.status = 'Delivered';
+                                    return o;
+                                });
+                                localStorage.setItem('bhusawal_orders', JSON.stringify(updated));
+                            }
+                            alert('Order delivered successfully!');
+                            window.location.reload();
+                        };
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+    <Switcher />
+</body></html>
