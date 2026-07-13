@@ -1,0 +1,136 @@
+---
+// Reusable Switcher Component for Bhusawal Connect
+---
+
+<div class="fixed bottom-6 right-6 z-[9999] font-sans" id="demo-role-switcher">
+  <!-- Switcher Button -->
+  <button id="switcher-btn" class="w-14 h-14 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-all cursor-pointer">
+    <span class="material-symbols-outlined text-2xl" id="switcher-icon">swap_horiz</span>
+  </button>
+
+  <!-- Switcher Panel -->
+  <div id="switcher-panel" class="hidden absolute bottom-16 right-0 w-64 bg-white/95 dark:bg-inverse-surface/95 backdrop-blur-md rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-outline-variant/30 flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
+    <div class="border-b border-outline-variant/20 pb-2">
+      <h4 class="text-sm font-bold text-primary tracking-wide uppercase text-xs">Prototype Switcher</h4>
+      <p class="text-[10px] text-on-surface-variant">Switch roles to view different parts of the super-app flow.</p>
+    </div>
+    
+    <div class="flex flex-col gap-2">
+      <!-- Customer Page -->
+      <a href="/home" class="flex items-center gap-3 p-2 rounded-xl hover:bg-primary-fixed/20 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-lg">smartphone</span>
+        </div>
+        <div class="text-left">
+          <p class="text-xs font-bold text-on-surface">📱 Customer View</p>
+          <p class="text-[9px] text-on-surface-variant">Order groceries/medicines, rides</p>
+        </div>
+      </a>
+
+      <!-- Merchant Dashboard -->
+      <a href="/checkout" class="flex items-center gap-3 p-2 rounded-xl hover:bg-primary-fixed/20 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-lg">storefront</span>
+        </div>
+        <div class="text-left">
+          <p class="text-xs font-bold text-on-surface">🏪 Merchant Panel</p>
+          <p class="text-[9px] text-on-surface-variant">Manage shop, preparations</p>
+        </div>
+      </a>
+
+      <!-- Rider Dashboard -->
+      <a href="/prescription_review" class="flex items-center gap-3 p-2 rounded-xl hover:bg-primary-fixed/20 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-lg">directions_run</span>
+        </div>
+        <div class="text-left">
+          <p class="text-xs font-bold text-on-surface">🛵 Rider Dashboard</p>
+          <p class="text-[9px] text-on-surface-variant">Delivery partner notifications & map</p>
+        </div>
+      </a>
+
+      <!-- Admin Dashboard -->
+      <a href="/cart" class="flex items-center gap-3 p-2 rounded-xl hover:bg-primary-fixed/20 transition-all group">
+        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+          <span class="material-symbols-outlined text-lg">insights</span>
+        </div>
+        <div class="text-left">
+          <p class="text-xs font-bold text-on-surface">📊 Super Admin Dashboard</p>
+          <p class="text-[9px] text-on-surface-variant">Analytics, users, merchants logs</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Additional Pages Switcher -->
+    <div class="border-t border-outline-variant/20 pt-2 flex flex-col gap-1">
+      <p class="text-[9px] font-bold text-secondary uppercase tracking-widest">Customer Screens:</p>
+      <div class="grid grid-cols-2 gap-1 text-[10px]">
+        <a href="/grocery" class="text-primary hover:underline">Grocery Store</a>
+        <a href="/medicines" class="text-primary hover:underline">Medicines Store</a>
+        <a href="/food" class="text-primary hover:underline">Food Delivery</a>
+        <a href="/parcel" class="text-primary hover:underline">Parcel Courier</a>
+        <a href="/auto" class="text-primary hover:underline">Auto Booking</a>
+        <a href="/shops" class="text-primary hover:underline">Local Shops</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('switcher-btn');
+    const panel = document.getElementById('switcher-panel');
+    const icon = document.getElementById('switcher-icon');
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isHidden = panel.classList.contains('hidden');
+      if (isHidden) {
+        panel.classList.remove('hidden');
+        icon.textContent = 'close';
+      } else {
+        panel.classList.add('hidden');
+        icon.textContent = 'swap_horiz';
+      }
+    });
+
+    // Close switcher when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+        panel.classList.add('hidden');
+        icon.textContent = 'swap_horiz';
+      }
+    });
+  });
+</script>
+
+<style is:global>
+  /* Ensure material symbols can load on any page that uses this switcher */
+  @font-face {
+    font-family: 'Material Symbols Outlined';
+    font-style: normal;
+    font-weight: 100 700;
+    font-display: block;
+    src: url('/assets/material-symbols-outlined.woff2') format('woff2');
+  }
+  
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined' !important;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  #demo-role-switcher button {
+    background-color: #b02f00;
+  }
+</style>
