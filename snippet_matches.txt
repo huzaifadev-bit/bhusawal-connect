@@ -1,0 +1,76 @@
+PRODUCT: Fresho Apple Royal Gala
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Zespri Apple Royal Gala
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Banana Robusta
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Potato
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Onion
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Tomato
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Garlic
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Ginger
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Lemon
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Coriander Leaves
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Green Chilli
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Cabbage
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Cauliflower
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Carrot - Orange
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Fresho Cucumber English
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Capsicum Green
+OCCURRENCES: 2
+  Snippet: cLNhwfpyLm0wpGZ-ERQ9BafSm2wnGWpv_H1ATsa4nV9U3Iy8TKozg5Nncy5004Z2f5FLaCUzC7Cw9wdYUc_GhHjB-R1YtBALCxnZGiD62AgEMs8taexS9YTYyAko?purpose=inline\",{\"_229\":230,\"_231\":230},{\"_225\":289,\"_227\":290},\"Capsicum Green, 500 g\\n – Starquik\",\"https://www.starquik.com/cdn/shop/files/SQ109057_2_5827a361-6209-4f2a-9820-3ed1a966723a.png?v=1772025203\u0026
+  Snippet: cLNhwfpyLm0wpGZ-ERQ9BafSm2wnGWpv_H1ATsa4nV9U3Iy8TKozg5Nncy5004Z2f5FLaCUzC7Cw9wdYUc_GhHjB-R1YtBALCxnZGiD62AgEMs8taexS9YTYyAko?purpose=inline\",{\"_229\":230,\"_231\":230},{\"_225\":289,\"_227\":290},\"Capsicum Green ================================================================================ URL: https://github.com/openclaw/openclaw Snippet: 26,
+================================================================================
+PRODUCT: Fresh Broccoli
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Button Mushroom
+OCCURRENCES: 0
+================================================================================
+PRODUCT: Yellow Zucchini
+OCCURRENCES: 2
+  Snippet: qppm3WldChY8EgdBeX8DRj5AkDAck4CGvA-U0?purpose=inline Snippet: 8\":259,\"_210\":157,\"_211\":260,\"_213\":261,\"_215\":262,\"_217\":263,\"_34\":264,\"_220\":221,\"_222\":26,\"_223\":-5,\"_224\":265},\"Yellow zucchini 500g product image\",\"https://www.jiomart.com/p/groceries/zucchini-yellow-200-g/590000111?utm_source=chatgpt.com\",{\"_229\":268,\"_2
+  Snippet: enter.jpg\",0.28229166666666666,0.2674479166666667,3840,{\"_208\":259,\"_210\":157,\"_211\":260,\"_213\":261,\"_215\":262,\"_217\":263,\"_34\":264,\"_220\":221,\"_222\":26,\"_223\":-5,\"_224\":265},\"Yellow zucchini 500g product image\",\"https://www.jiomart.com/p/groceries/zucchini-yellow-200-g/590000111?utm_source=chatgpt.com\",{\"_229\":268,\"_2
+================================================================================
+PRODUCT: Fresh Pomegranate
+OCCURRENCES: 3
+  Snippet: NOwJ8yONCvmNDMdhhPFNw?purpose=inline Snippet: ,0.48,500,{\"_208\":247,\"_210\":166,\"_211\":248,\"_213\":249,\"_215\":250,\"_217\":251,\"_34\":252,\"_220\":221,\"_222\":26,\"_223\":-5,\"_224\":253},\"Fresh pomegranate 1kg product image\",\"https://gcc.luluhypermarket.com/en-sa/p/377341-ea/?utm_source=chatgpt.com\",{\"_229\":256,\"_231\":256},\"http
+  Snippet: g/products/IMG2722023/1765-500x500.jpg\",0.316,0.48,500,{\"_208\":247,\"_210\":166,\"_211\":248,\"_213\":249,\"_215\":250,\"_217\":251,\"_34\":252,\"_220\":221,\"_222\":26,\"_223\":-5,\"_224\":253},\"Fresh pomegranate 1kg product image\",\"https://gcc.luluhypermarket.com/en-sa/p/377341-ea/?utm_source=chatgpt.com\",{\"_229\":256,\"_231\":256},\"http
+  Snippet: g/products/IMG2722023/1765-500x500.jpg\",0.316,0.48,500,{\"_208\":247,\"_210\":166,\"_211\":248,\"_213\":249,\"_215\":250,\"_217\":251,\"_34\":252,\"_220\":221,\"_222\":26,\"_223\":-5,\"_224\":253},\"Fresh pomegranate 1kg product image\",\"https://g ================================================================================ URL: https://openai
+================================================================================
+PRODUCT: Fresh Guava
+OCCURRENCES: 2
+  Snippet: _percent\",0.20849609375,\"width\",1024,\"height\",2048,{\"_208\":235,\"_210\":159,\"_211\":236,\"_213\":237,\"_215\":238,\"_217\":239,\"_34\":240,\"_220\":221,\"_222\":26,\"_223\":-5,\"_224\":241},\"Fresh guava 1kg product image\",\"https://grandmall.grandhyper.com/Guava-Pakistan-1Kg?utm_source=chatgpt.com\",{\"_229\":244,\"_231\":244},\"https://i
+  Snippet: tmLnvd0lBi8JQr1U?purpose=inline Snippet: "height\",2048,{\"_208\":235,\"_210\":159,\"_211\":236,\"_213\":237,\"_215\":238,\"_217\":239,\"_34\":240,\"_220\":221,\"_222\":26,\"_223\":-5,\"_224\":241},\"Fresh guava 1kg product image\",\"https://grandmall.grandhyper.com/Guava-Pakistan-1Kg?utm_source=chatgpt.com\",{\"_229\":244,\"_231\":244},\"https://i
+================================================================================
+PRODUCT: Fresh Muskmelon
+OCCURRENCES: 1
+  Snippet: \"image_result\",{\"_208\":209,\"_210\":172,\"_211\":212,\"_213\":214,\"_215\":216,\"_217\":218,\"_34\":219,\"_220\":221,\"_222\":14,\"_223\":-5,\"_224\":-5},\"image_ref_id\",\"image_search_query\",\"Fresh muskmelon whole product image\",\"image_search_system\",\"url\",\"https://media.gettyimages.com/id/520974957/photo/malon.jpg?b=1\u0026c=U77NwtiA
+================================================================================
