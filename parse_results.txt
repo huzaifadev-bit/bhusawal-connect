@@ -1,0 +1,90 @@
+Product: Fresho Apple Royal Gala
+Snippet: {\"_477\":478},\"message_source\",\"custom_symbol_offsets\",[],[480],\"🍏 Fruits \u0026 Vegetables\\nFresho Apple Royal Gala\\nZespri Apple Royal Gala\\nFresho Banana Robusta\\nFresho Potato\\nFresho O
+URLs: []
+-----------------------------------------------------------------
+Product: Zespri Apple Royal Gala
+Snippet: ource\",\"custom_symbol_offsets\",[],[480],\"🍏 Fruits \u0026 Vegetables\\nFresho Apple Royal Gala\\nZespri Apple Royal Gala\\nFresho Banana Robusta\\nFresho Potato\\nFresho Onion\\nFresho Tomato\\nFre
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Banana Robusta
+Snippet: fsets\",[],[480],\"🍏 Fruits \u0026 Vegetables\\nFresho Apple Royal Gala\\nZespri Apple Royal Gala\\nFresho Banana Robusta\\nFresho Potato\\nFresho Onion\\nFresho Tomato\\nFresho Garlic\\nFresho Ginger
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Potato
+Snippet: its \u0026 Vegetables\\nFresho Apple Royal Gala\\nZespri Apple Royal Gala\\nFresho Banana Robusta\\nFresho Potato\\nFresho Onion\\nFresho Tomato\\nFresho Garlic\\nFresho Ginger\\nFresho Lemon\\nFresho
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Onion
+Snippet: ables\\nFresho Apple Royal Gala\\nZespri Apple Royal Gala\\nFresho Banana Robusta\\nFresho Potato\\nFresho Onion\\nFresho Tomato\\nFresho Garlic\\nFresho Ginger\\nFresho Lemon\\nFresho Coriander Leave
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Tomato
+Snippet: Apple Royal Gala\\nZespri Apple Royal Gala\\nFresho Banana Robusta\\nFresho Potato\\nFresho Onion\\nFresho Tomato\\nFresho Garlic\\nFresho Ginger\\nFresho Lemon\\nFresho Coriander Leaves\\nFresho Gree
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Garlic
+Snippet: \\nZespri Apple Royal Gala\\nFresho Banana Robusta\\nFresho Potato\\nFresho Onion\\nFresho Tomato\\nFresho Garlic\\nFresho Ginger\\nFresho Lemon\\nFresho Coriander Leaves\\nFresho Green Chilli\\nFresh
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Ginger
+Snippet: Royal Gala\\nFresho Banana Robusta\\nFresho Potato\\nFresho Onion\\nFresho Tomato\\nFresho Garlic\\nFresho Ginger\\nFresho Lemon\\nFresho Coriander Leaves\\nFresho Green Chilli\\nFresho Cabbage\\nFres
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Lemon
+Snippet: sho Banana Robusta\\nFresho Potato\\nFresho Onion\\nFresho Tomato\\nFresho Garlic\\nFresho Ginger\\nFresho Lemon\\nFresho Coriander Leaves\\nFresho Green Chilli\\nFresho Cabbage\\nFresho Cauliflower\\
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Coriander Leaves
+Snippet: sta\\nFresho Potato\\nFresho Onion\\nFresho Tomato\\nFresho Garlic\\nFresho Ginger\\nFresho Lemon\\nFresho Coriander Leaves\\nFresho Green Chilli\\nFresho Cabbage\\nFresho Cauliflower\\nFresho Carrot 
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Green Chilli
+Snippet: ho Onion\\nFresho Tomato\\nFresho Garlic\\nFresho Ginger\\nFresho Lemon\\nFresho Coriander Leaves\\nFresho Green Chilli\\nFresho Cabbage\\nFresho Cauliflower\\nFresho Carrot - Orange\\nFresho Cucumber
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Cabbage
+Snippet: to\\nFresho Garlic\\nFresho Ginger\\nFresho Lemon\\nFresho Coriander Leaves\\nFresho Green Chilli\\nFresho Cabbage\\nFresho Cauliflower\\nFresho Carrot - Orange\\nFresho Cucumber English\\nCapsicum Gr
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Cauliflower
+Snippet: c\\nFresho Ginger\\nFresho Lemon\\nFresho Coriander Leaves\\nFresho Green Chilli\\nFresho Cabbage\\nFresho Cauliflower\\nFresho Carrot - Orange\\nFresho Cucumber English\\nCapsicum Green\\nFresh Brocc
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Carrot - Orange
+Snippet: resho Lemon\\nFresho Coriander Leaves\\nFresho Green Chilli\\nFresho Cabbage\\nFresho Cauliflower\\nFresho Carrot - Orange\\nFresho Cucumber English\\nCapsicum Green\\nFresh Broccoli\\nButton Mushroom
+URLs: []
+-----------------------------------------------------------------
+Product: Fresho Cucumber English
+Snippet: ander Leaves\\nFresho Green Chilli\\nFresho Cabbage\\nFresho Cauliflower\\nFresho Carrot - Orange\\nFresho Cucumber English\\nCapsicum Green\\nFresh Broccoli\\nButton Mushroom\\nYellow Zucchini\\nFres
+URLs: []
+-----------------------------------------------------------------
+Product: Capsicum Green
+Snippet: GiD62AgEMs8taexS9YTYyAko?purpose=inline\",{\"_229\":230,\"_231\":230},{\"_225\":289,\"_227\":290},\"Capsicum Green, 500 g\\n – Starquik\",\"https://www.starquik.com/cdn/shop/files/SQ109057_2_5827a361-
+URLs: ['https://www.starquik.com/cdn/shop/files/SQ109057_2_5827a361-6209-4f2a-9820-3ed1a966723a.png?v=1772025203']
+-----------------------------------------------------------------
+Product: Fresh Broccoli
+Snippet: image\\\",\\\"English cucumber 500g product image\\\",\\\"Green capsicum 500g product image\\\",\\\"Fresh broccoli 250g product image\\\",\\\"Button mushroom 200g pack product image\\\"]}\",583,882,[
+URLs: ['https://images.openai.com/static-rsc-4/xePSPJi4HL-ZmiHCHenC3-yeAU_Wdt269_Dzpg5H4XJAAI10O_MoP8_ac2P7Lzi_vlBTC_nSHLwjug65IFUzr2SC3OPyTtOptRqopDeAbOvVOhH_p4CqXgxswfeL4BnJxT7wb4HiMtUQwrvQR57ivLRQdHfd6yi2hz5G_DLVIz-D204B3J4yoGn13uhgZPzm?purpose=fullsize']
+-----------------------------------------------------------------
+Product: Button Mushroom
+Snippet: t image\\\",\\\"Green capsicum 500g product image\\\",\\\"Fresh broccoli 250g product image\\\",\\\"Button mushroom 200g pack product image\\\"]}\",583,882,[158,161,169,171],[],\"![Image](https://ima
+URLs: ['https://images.openai.com/static-rsc-4/xePSPJi4HL-ZmiHCHenC3-yeAU_Wdt269_Dzpg5H4XJAAI10O_MoP8_ac2P7Lzi_vlBTC_nSHLwjug65IFUzr2SC3OPyTtOptRqopDeAbOvVOhH_p4CqXgxswfeL4BnJxT7wb4HiMtUQwrvQR57ivLRQdHfd6yi2hz5G_DLVIz-D204B3J4yoGn13uhgZPzm?purpose=fullsize', 'https://images.openai.com/static-rsc-4/FhuHK9ax']
+-----------------------------------------------------------------
+Product: Yellow Zucchini
+Snippet: \"image_group{\\\"layout\\\":\\\"carousel\\\",\\\"aspect_ratio\\\":\\\"1:1\\\",\\\"query\\\":[\\\"Yellow zucchini 500g product image\\\",\\\"Fresh pomegranate 1kg product image\\\",\\\"Fresh guava 1
+URLs: ['https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9jyTiCCnbevrzQly2Zn0ISPth2jFUvtV5l0F']
+-----------------------------------------------------------------
+Product: Fresh Pomegranate
+Snippet: \\\",\\\"aspect_ratio\\\":\\\"1:1\\\",\\\"query\\\":[\\\"Yellow zucchini 500g product image\\\",\\\"Fresh pomegranate 1kg product image\\\",\\\"Fresh guava 1kg product image\\\",\\\"Fresh muskmelon wh
+URLs: ['https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9jyTiCCnbevrzQly2Zn0ISPth2jFUvtV5l0FhAnLUhHvgZQj15zTXC4cc6QXd3tMktqhnwNBKz2os6s']
+-----------------------------------------------------------------
+Product: Fresh Guava
+Snippet: ery\\\":[\\\"Yellow zucchini 500g product image\\\",\\\"Fresh pomegranate 1kg product image\\\",\\\"Fresh guava 1kg product image\\\",\\\"Fresh muskmelon whole product image\\\"]}\",\"prefix\",\"star
+URLs: ['https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9jyTiCCnbevrzQly2Zn0ISPth2jFUvtV5l0FhAnLUhHvgZQj15zTXC4cc6QXd3tMktqhnwNBKz2os6sGYqv5jRssPtM36EBNqEXSAcYVdxlqGVkj_bVFaoZAI_G']
+-----------------------------------------------------------------
+Product: Fresh Muskmelon
+Snippet: uct image\\\",\\\"Fresh pomegranate 1kg product image\\\",\\\"Fresh guava 1kg product image\\\",\\\"Fresh muskmelon whole product image\\\"]}\",\"prefix\",\"start_idx\",884,\"end_idx\",1095,[157,159,
+URLs: ['https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9jyTiCCnbevrzQly2Zn0ISPth2jFUvtV5l0FhAnLUhHvgZQj15zTXC4cc6QXd3tMktqhnwNBKz2os6sGYqv5jRssPtM36EBNqEXSAcYVdxlqGVkj_bVFaoZAI_G1Waxgp1KV?purpose=fullsize']
+-----------------------------------------------------------------
+
+=== MD LINKS IN TEXT ===
