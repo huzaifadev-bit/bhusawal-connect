@@ -40,12 +40,12 @@ import Switcher from '../components/Switcher.astro';
                         "tertiary-fixed": "#94f990",
                         "surface-container": "#eeeeee",
                         "on-surface": "#1a1c1c",
-                        "primary": "#b02f00",
-                        "primary-container": "#ff5722",
+                        "primary": "#0d9488",
+                        "primary-container": "#14b8a6",
                         "on-secondary-container": "#656464",
                         "surface-container-low": "#f3f3f3",
                         "surface-dim": "#dadada",
-                        "primary-fixed": "#ffdbd1",
+                        "primary-fixed": "#ccfbf1",
                         "on-primary-fixed-variant": "#862200",
                         "error": "#ba1a1a",
                         "on-error-container": "#93000a",
@@ -157,7 +157,7 @@ import Switcher from '../components/Switcher.astro';
 <!-- Status Box (Initially Hidden) -->
 <div class="hidden col-span-2 p-4 rounded-xl bg-tertiary-fixed/30 border border-tertiary-container/20 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500" id="upload-status">
 <div class="w-12 h-12 rounded-lg overflow-hidden bg-surface-dim">
-<img class="w-full h-full object-cover" data-alt="A macro close-up photograph of a professional medical prescription document with handwritten notes and a clinic seal, featuring soft morning lighting in a clean, modern pharmacy setting with high-end light-mode aesthetics. The focus is sharp on the paper texture, highlighting the reliability of the medical service. The color palette includes sterile whites, clinical blues, and warm Connect Orange accents." src="/assets/204c96c472dfa0c7cae8c9f08a05a9e4.jpg" />
+<img class="w-full h-full object-cover" data-alt="A macro close-up photograph of a professional medical prescription document with handwritten notes and a clinic seal, featuring soft morning lighting in a clean, modern pharmacy setting with high-end light-mode aesthetics. The focus is sharp on the paper texture, highlighting the reliability of the medical service. The color palette includes sterile whites, clinical blues, and warm Connect Orange accents." src="/assets/204c96c472dfa0c7cae8c9f08a05a9e4.jpg"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
 </div>
 <div class="flex-1">
 <p class="font-label-md text-label-md text-on-tertiary-fixed">prescription_final.jpg</p>
@@ -167,6 +167,24 @@ import Switcher from '../components/Switcher.astro';
 <span class="material-symbols-outlined">cancel</span>
 </button>
 </div>
+</div>
+<!-- Pharmacy Choice Card -->
+<div class="p-5 rounded-2xl bg-white border border-outline-variant/30 shadow-[0_4px_12px_rgba(0,0,0,0.02)] mb-8 space-y-4">
+  <div class="flex items-center gap-2">
+    <span class="material-symbols-outlined text-primary">store</span>
+    <h4 class="font-label-md text-label-md text-on-surface">Pharmacy Preference (Optional)</h4>
+  </div>
+  <div class="space-y-3">
+    <div class="space-y-1">
+      <label for="pharmacy-name-choice" class="text-[10px] font-bold text-neutral-500">Pharmacy Name</label>
+      <input type="text" id="pharmacy-name-choice" class="w-full h-12 px-4 bg-background border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-xs font-bold text-neutral-800" placeholder="e.g. Shiva Medico, Balaji Pharmacy" />
+    </div>
+    <div class="space-y-1">
+      <label for="pharmacy-address-choice" class="text-[10px] font-bold text-neutral-500">Pharmacy Address / Location</label>
+      <input type="text" id="pharmacy-address-choice" class="w-full h-12 px-4 bg-background border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-xs font-bold text-neutral-800" placeholder="e.g. Jamner Road, near railway gate" />
+    </div>
+    <p class="text-[10px] text-neutral-400 font-bold leading-normal">Mention store details if you want our delivery partner to pick up from a specific store. If left blank, they will purchase it from any nearby pharmacy.</p>
+  </div>
 </div>
 <!-- How It Works Section -->
 <section class="mb-12">
@@ -243,10 +261,19 @@ import Switcher from '../components/Switcher.astro';
         const btnRemove = document.getElementById('btn-remove');
         const statusBox = document.getElementById('upload-status');
         const btnContinue = document.getElementById('btn-continue');
+        let currentObjectUrl = null;
+
+        const defaultPreviewSrc = '/assets/204c96c472dfa0c7cae8c9f08a05a9e4.jpg';
 
         // Handle button clicks to trigger input click
-        btnCamera.addEventListener('click', () => cameraInput.click());
-        btnGallery.addEventListener('click', () => galleryInput.click());
+        btnCamera.addEventListener('click', () => {
+            cameraInput.value = '';
+            cameraInput.click();
+        });
+        btnGallery.addEventListener('click', () => {
+            galleryInput.value = '';
+            galleryInput.click();
+        });
 
         // Handle file selection
         function handleFileSelection(e) {
@@ -257,7 +284,23 @@ import Switcher from '../components/Switcher.astro';
                 const fileNameEl = statusBox.querySelector('p');
 
                 fileNameEl.textContent = file.name;
-                previewImg.src = URL.createObjectURL(file);
+
+                if (currentObjectUrl) {
+                    URL.revokeObjectURL(currentObjectUrl);
+                    currentObjectUrl = null;
+                }
+
+                previewImg.onerror = function() {
+                    this.src = defaultPreviewSrc;
+                };
+
+                if (file.type && file.type.startsWith('image/')) {
+                    currentObjectUrl = URL.createObjectURL(file);
+                    previewImg.src = currentObjectUrl;
+                } else {
+                    previewImg.src = defaultPreviewSrc;
+                }
+
                 statusBox.classList.remove('hidden');
 
                 // Enable continue button
@@ -272,6 +315,10 @@ import Switcher from '../components/Switcher.astro';
 
         // Remove upload
         btnRemove.addEventListener('click', () => {
+            if (currentObjectUrl) {
+                URL.revokeObjectURL(currentObjectUrl);
+                currentObjectUrl = null;
+            }
             statusBox.classList.add('hidden');
             cameraInput.value = '';
             galleryInput.value = '';
@@ -284,12 +331,23 @@ import Switcher from '../components/Switcher.astro';
 
         // Handle button redirect
         btnContinue.addEventListener('click', () => {
+            const nameChoice = document.getElementById('pharmacy-name-choice').value.trim();
+            const addressChoice = document.getElementById('pharmacy-address-choice').value.trim();
+            let pharmacyDisplay = 'Any Nearby Pharmacy';
+            if (nameChoice) {
+                pharmacyDisplay = nameChoice;
+                if (addressChoice) {
+                    pharmacyDisplay += ' (' + addressChoice + ')';
+                }
+            }
+            
             const order = {
                 id: `PRE-${Math.floor(1000 + Math.random() * 9000)}`,
                 items: "Prescription Medicine Verification",
                 total: 0,
                 date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                status: 'Verifying'
+                status: 'Verifying',
+                pharmacy: pharmacyDisplay
             };
             const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
             orders.unshift(order);
