@@ -12,8 +12,11 @@ import Switcher from '../components/Switcher.astro';
     <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script is:inline src="/assets/google_maps_loader.js"></script>
     <script is:inline src="/assets/delivery_zone.js"></script>
+    <script is:inline src="/assets/ai_address_validator.js"></script>
     <script is:inline src="/assets/address_manager.js"></script>
+    <script is:inline src="/assets/google_address_manager.js"></script>
     <script is:inline src="/assets/realtime_sync.js"></script>
     <style>
         .material-symbols-outlined {
@@ -545,14 +548,20 @@ import Switcher from '../components/Switcher.astro';
         isDefault: document.getElementById('addr-default').checked
       };
 
-      const errors = window.AddressManager.validateAddress(addrData);
-      if (errors.length > 0) {
-        errEl.innerHTML = errors.join('<br>');
+      const basicErrors = window.AddressManager.validateAddress(addrData);
+      const aiValidation = window.AIAddressValidator ? window.AIAddressValidator.validate(addrData) : { isValid: true, warnings: [], suggestions: [] };
+
+      if (basicErrors.length > 0 || !aiValidation.isValid) {
+        let msg = [...basicErrors, ...aiValidation.warnings].join('<br>');
+        if (aiValidation.suggestions.length > 0) {
+          msg += '<br><br><b>💡 AI Suggestions:</b><br>' + aiValidation.suggestions.join('<br>');
+        }
+        errEl.innerHTML = msg;
         errEl.classList.remove('hidden');
         return;
       }
 
-      window.AddressManager.saveAddress(addrData);
+      window.GoogleAddressManager ? window.GoogleAddressManager.saveAddress(addrData) : window.AddressManager.saveAddress(addrData);
       modal.classList.add('hidden');
       renderAddresses();
       updateHeaderAddress();

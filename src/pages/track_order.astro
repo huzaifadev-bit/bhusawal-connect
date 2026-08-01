@@ -11,9 +11,11 @@ import Switcher from '../components/Switcher.astro';
   <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
   <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
   
-  <!-- Leaflet Map CSS & JS -->
+  <!-- Leaflet & Google Maps JS SDK -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" is:inline></script>
+  <script src="/assets/google_maps_loader.js" is:inline></script>
+  <script src="/assets/google_live_tracker.js" is:inline></script>
   <script src="/assets/realtime_sync.js" is:inline></script>
 
   <style>
@@ -208,131 +210,38 @@ import Switcher from '../components/Switcher.astro';
         }
       }
 
-      // Initialize Leaflet Map
-      let map = null;
-      try {
-        map = L.map('bhusawal-map', { 
-          zoomControl: false, 
-          attributionControl: false,
-          fadeAnimation: false
-        }).setView([21.0487, 75.7919], 15);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 19
-        }).addTo(map);
-
-        setTimeout(() => map.invalidateSize(), 200);
-      } catch(e) {
-        console.error(e);
-      }
-
-      if (map) {
-        // Store Marker
-        L.marker([storeLat, storeLng], {
-          icon: L.divIcon({
-            html: '<div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg border border-white text-sm">🏪</div>',
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-          })
-        }).addTo(map).bindPopup("Bhusawal Express Store");
-
-        // Customer Destination Marker
-        L.marker([custLat, custLng], {
-          icon: L.divIcon({
-            className: 'custom-pin-icon',
-            html: `<div class="bg-slate-900 text-white px-2.5 py-1 rounded-full text-[10px] font-black shadow-xl border border-white flex items-center gap-1">
-                     <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-                     <span>Delivery Spot</span>
-                   </div>`,
-            iconSize: [90, 30],
-            iconAnchor: [45, 15]
-          })
-        }).addTo(map).bindPopup(activeOrder.address || "Customer House");
-
-        // Route Polyline
-        const waypoints = [
-          [storeLat, storeLng],
-          [21.0470, 75.7890],
-          [21.0495, 75.7930],
-          [custLat, custLng]
-        ];
-        const routeLine = L.polyline(waypoints, {
-          color: '#7c3aed',
-          weight: 6,
-          opacity: 0.9,
-          lineCap: 'round'
-        }).addTo(map);
-
-        map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
-
-        // Rider Marker
-        const riderMarker = L.marker([storeLat, storeLng], {
-          icon: L.divIcon({
-            className: 'custom-rider-icon',
-            html: `<div class="pulse-ring-purple w-11 h-11 rounded-full bg-purple-700 text-white flex items-center justify-center border-2 border-white shadow-2xl text-xl font-bold">🛵</div>`,
-            iconSize: [44, 44],
-            iconAnchor: [22, 22]
-          })
-        }).addTo(map);
-
-        document.getElementById('btn-recenter-map')?.addEventListener('click', () => {
-          map.invalidateSize();
-          map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
-        });
-
-        // Dynamic Movement Simulation & Realtime Broadcast Listener
-        let progressStep = 0;
-        const totalSteps = 240;
-        
-        const simInterval = setInterval(() => {
-          progressStep++;
-          const ratio = progressStep / totalSteps;
-
-          const lat = storeLat + (custLat - storeLat) * ratio;
-          const lng = storeLng + (custLng - storeLng) * ratio;
-          riderMarker.setLatLng([lat, lng]);
-
-          const remainingMins = Math.max(1, Math.ceil(8 * (1 - ratio)));
-          document.getElementById('top-eta-mins').textContent = remainingMins + ' mins';
-          document.getElementById('banner-eta-text').textContent = remainingMins + ' mins';
-
-          if (ratio > 0.8 && ratio < 0.95) {
+      // Initialize Google Live Tracker Engine
+      const tracker = new window.GoogleLiveTracker('bhusawal-map', {
+        storePos: { lat: storeLat, lng: storeLng },
+        custPos: { lat: custLat, lng: custLng },
+        onNotification: (type, msg) => {
+          showToast(msg);
+          if (type === '300M_NEARBY' || type === '100M_DOORSTEP') {
             document.getElementById('rider-nearby-alert')?.classList.remove('hidden');
+            const alertText = document.getElementById('nearby-alert-text');
+            if (alertText) alertText.textContent = msg;
           }
-
-          if (ratio >= 0.98) {
-            clearInterval(simInterval);
+          if (type === 'DELIVERED') {
             onDeliveryComplete();
           }
-        }, 300);
-
-        function onDeliveryComplete() {
-          document.getElementById('top-status-title').textContent = "Order Delivered!";
-          document.getElementById('top-status-sub').textContent = "Huzaifa delivered your order to your doorstep";
-          document.getElementById('bottom-eta-banner')?.classList.add('hidden');
-          document.getElementById('delivery-completed-banner')?.classList.remove('hidden');
-          showToast("🎉 Order Delivered Successfully!");
+        },
+        onEtaUpdate: (etaText, distText) => {
+          document.getElementById('top-eta-mins').textContent = etaText;
+          document.getElementById('banner-eta-text').textContent = etaText + ' (' + distText + ')';
         }
+      });
 
-        // Listen for Realtime Sync events from Rider Dashboard / Admin
-        if (window.BhusawalRealtime) {
-          window.BhusawalRealtime.on('rider-location', (pos) => {
-            if (pos && pos.lat && pos.lng) {
-              riderMarker.setLatLng([pos.lat, pos.lng]);
-            }
-          });
+      function onDeliveryComplete() {
+        document.getElementById('top-status-title').textContent = "Order Delivered!";
+        document.getElementById('top-status-sub').textContent = "Huzaifa delivered your order to your doorstep";
+        document.getElementById('bottom-eta-banner')?.classList.add('hidden');
+        document.getElementById('delivery-completed-banner')?.classList.remove('hidden');
+        showToast("🎉 Order Delivered Successfully!");
+      }
 
-          window.BhusawalRealtime.on('order-status', (data) => {
-            if (data && data.status) {
-              showToast("Status Update: " + data.status);
-              if (data.status === 'DELIVERED') {
-                clearInterval(simInterval);
-                riderMarker.setLatLng([custLat, custLng]);
-                onDeliveryComplete();
-              }
-            }
-          });
-        }
+      // Check Google Maps API Key setup error UI if missing key
+      if (window.GoogleMapsLoader && !window.GoogleMapsLoader.getApiKey()) {
+        console.log("No Google Maps API Key found, using Google Roadmap Tile fallback.");
       }
     });
   </script>
