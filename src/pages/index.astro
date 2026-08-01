@@ -1,611 +1,686 @@
 ---
+import fs from 'fs';
+import path from 'path';
 import Switcher from '../components/Switcher.astro';
+
+// Read the database at build-time for static rendering
+const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
+let catalog = [];
+try {
+ catalog = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+} catch (err) {
+ console.error("Failed to read grocery catalog at build time", err);
+}
+
+// Helper deduplicator
+function dedupHome(arr) {
+  const seen = new Set();
+  return arr.filter(p => {
+    const name = (p["Product Name"] || "").trim().toLowerCase();
+    if (seen.has(name)) return false;
+    seen.add(name);
+    return true;
+  });
+}
+
+// 1. Trending & Hot Sellers
+const trendingKws = ['lays', 'pringles', 'kurkure', 'coca', 'pepsi', 'sprite', 'red bull', 'dairy milk', 'kitkat', 'nutella', 'oreo', 'good day', 'maggi', 'durex', 'pedigree', 'nivea', 'dettol'];
+let trendingProducts = [];
+const seenTrending = new Set();
+
+for (const kw of trendingKws) {
+  const matches = catalog.filter(p => (p["Product Name"] || "").toLowerCase().includes(kw));
+  for (const p of matches) {
+    const cleanName = (p["Product Name"] || "").split(" (Batch")[0];
+    if (!seenTrending.has(cleanName)) {
+      trendingProducts.push(p);
+      seenTrending.add(cleanName);
+      if (trendingProducts.length >= 16) break;
+    }
+  }
+  if (trendingProducts.length >= 16) break;
+}
+if (trendingProducts.length < 16) {
+  trendingProducts = dedupHome([...trendingProducts, ...catalog.filter(p => p.Category === 'Snacks & Confectionery' || p.Category === 'Beverages')]).slice(0, 16);
+}
+
+// 2. Daily Need Essentials
+const dailyKws = ['banana', 'apple', 'tomato', 'onion', 'potato', 'palak', 'spinach', 'milk', 'dahi', 'curd', 'paneer', 'bread', 'atta', 'rice', 'dal', 'oil', 'ghee', 'soap', 'toothpaste'];
+let dailyNeedProducts = [];
+const seenDaily = new Set();
+
+for (const kw of dailyKws) {
+  const matches = catalog.filter(p => (p["Product Name"] || "").toLowerCase().includes(kw));
+  for (const p of matches) {
+    const cleanName = (p["Product Name"] || "").split(" (Batch")[0];
+    if (!seenDaily.has(cleanName)) {
+      dailyNeedProducts.push(p);
+      seenDaily.add(cleanName);
+      if (dailyNeedProducts.length >= 16) break;
+    }
+  }
+  if (dailyNeedProducts.length >= 16) break;
+}
+if (dailyNeedProducts.length < 16) {
+  dailyNeedProducts = dedupHome([...dailyNeedProducts, ...catalog.filter(p => p.Category === 'Fruits & Vegetables' || p.Category === 'Dairy & Breakfast' || p.Category === 'Grocery Staples')]).slice(0, 16);
+}
 ---
 
-<html class="light" lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Welcome | Bhusawal Connect</title>
-    <!-- Google Fonts: Premium Typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<html class="light" lang="en"><head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<title>Bhusawal Connect | Hyperlocal Super-App</title>
+<script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+<link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
+<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-effect {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<!-- Insert Tailwind Config -->
+<script is:inline id="tailwind-config">
+   tailwind.config = {
+    darkMode: "class",
+    theme: {
+     extend: {
+      "colors": {
+          "inverse-surface": "#2f3131",
+          "tertiary": "#006e1c",
+          "surface-tint": "#b02f00",
+          "primary-fixed": "#ffdbd1",
+          "on-primary-fixed": "#3b0900",
+          "on-background": "#1a1c1c",
+          "on-primary-fixed-variant": "#862200",
+          "error": "#ba1a1a",
+          "surface-bright": "#f9f9f9",
+          "on-primary-container": "#541200",
+          "inverse-primary": "#ffb5a0",
+          "on-secondary-fixed": "#1c1b1b",
+          "on-tertiary-fixed": "#002204",
+          "on-secondary-fixed-variant": "#474646",
+          "on-error-container": "#93000a",
+          "surface-container": "#eeeeee",
+          "on-surface-variant": "#5b4039",
+          "on-surface": "#1a1c1c",
+          "primary": "#b02f00",
+          "outline-variant": "#e4beb4",
+          "on-tertiary-container": "#003208",
+          "surface-container-high": "#e8e8e8",
+          "on-primary": "#ffffff",
+          "surface-container-lowest": "#ffffff",
+          "primary-fixed-dim": "#ffb5a0",
+          "secondary-container": "#e5e2e1",
+          "secondary-fixed": "#e5e2e1",
+          "outline": "#907067",
+          "surface-container-highest": "#e2e2e2",
+          "inverse-on-surface": "#f1f1f1",
+          "on-secondary-container": "#656464",
+          "background": "#f9f9f9",
+          "tertiary-container": "#41a447",
+          "surface-dim": "#dadada",
+          "surface": "#f9f9f9",
+          "secondary-fixed-dim": "#c8c6c5",
+          "tertiary-fixed": "#94f990",
+          "on-error": "#ffffff",
+          "tertiary-fixed-dim": "#78dc77",
+          "surface-container-low": "#f3f3f3",
+          "on-tertiary-fixed-variant": "#005313",
+          "surface-variant": "#e2e2e2",
+          "error-container": "#ffdad6",
+          "primary-container": "#ff5722",
+          "on-secondary": "#ffffff",
+          "on-tertiary": "#ffffff",
+          "secondary": "#5f5e5e"
+      },
+      "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+      },
+      "spacing": {
+          "margin-desktop": "64px",
+          "gutter": "16px",
+          "container-max": "1280px",
+          "unit": "4px",
+          "margin-mobile": "16px"
+      },
+      "fontFamily": {
+          "body-md": ["Plus Jakarta Sans"],
+          "headline-md": ["Plus Jakarta Sans"],
+          "headline-lg-mobile": ["Plus Jakarta Sans"],
+          "headline-xl": ["Plus Jakarta Sans"],
+          "label-sm": ["Plus Jakarta Sans"],
+          "body-lg": ["Plus Jakarta Sans"],
+          "headline-lg": ["Plus Jakarta Sans"],
+          "label-md": ["Plus Jakarta Sans"]
+      },
+      "fontSize": {
+          "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+          "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+          "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+          "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+          "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+          "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+          "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+          "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+      }
+     },
+    },
+   }
+  </script>
+<style>
+  body {
+   min-height: 100dvh;
+  }
+ </style>
+ </head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
+  <div class="flex items-center gap-2 min-w-0">
     
-    <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
-    <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
-    <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
-    
-    <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden;
+    <!-- Delivery Time & Location Info -->
+    <div class="flex flex-col min-w-0">
+      <div class="flex items-center gap-1">
+        <span class="material-symbols-outlined text-primary text-sm font-black animate-pulse" style="font-variation-settings: 'FILL' 1;">bolt</span>
+        <span class="font-extrabold text-[13px] tracking-tight text-on-surface" id="header-eta">10 minutes</span>
+      </div>
+      <div class="flex items-center gap-0.5 text-[10px] text-on-surface-variant font-extrabold cursor-pointer hover:text-primary transition-colors min-w-0 uppercase tracking-wide">
+        <span class="truncate" id="header-address">Home - Varangaon Road, Bhusawal</span>
+        <span class="material-symbols-outlined text-xs flex-shrink-0">keyboard_arrow_down</span>
+      </div>
+    </div>
+  </div>
+  <!-- Profile Avatar on Top Right -->
+  <a href="/profile" class="w-9 h-9 rounded-full overflow-hidden border border-outline-variant/30 flex-shrink-0 hover:ring-2 hover:ring-primary/20 active:scale-90 transition-all flex items-center justify-center">
+    <img class="w-full h-full object-cover" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Profile"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+  </a>
+</header>
+<script is:inline>
+ (function() {
+  const cachedAddr = localStorage.getItem('bhusawal_user_address') || 'Home - Varangaon Rd, Bhusawal';
+  const cachedLat = localStorage.getItem('bhusawal_user_lat');
+  const cachedLng = localStorage.getItem('bhusawal_user_lng');
+  
+  document.addEventListener('DOMContentLoaded', () => {
+   const addrEl = document.getElementById('header-address');
+   if (addrEl) {
+    // Shorten the address to make it look clean (max 30 chars) and append "..." if longer
+    let shortAddr = cachedAddr;
+    if (shortAddr.length > 30) {
+     shortAddr = shortAddr.substring(0, 27) + '...';
+    }
+    addrEl.textContent = shortAddr;
+    addrEl.parentElement.addEventListener('click', () => {
+      window.location.href = '/profile';
+    });
+   }
+   
+   const etaEl = document.getElementById('header-eta');
+   if (etaEl) {
+    if (cachedLat && cachedLng) {
+     const lat1 = parseFloat(cachedLat);
+     const lng1 = parseFloat(cachedLng);
+     const lat2 = 21.0478;
+     const lng2 = 75.7896;
+     const R = 6371;
+     const dLat = (lat2 - lat1) * Math.PI / 180;
+     const dLon = (lng2 - lng1) * Math.PI / 180;
+     const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+     const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+     const minutes = Math.max(7, Math.round(dist * 2.5 + 4));
+     etaEl.textContent = minutes + ' minutes';
+    } else {
+     etaEl.textContent = '10 minutes';
+    }
+   }
+  });
+ })();
+</script>
+<main class="pb-24 max-w-container-max mx-auto">
+<!-- Search Bar -->
+<section class="px-margin-mobile pt-4 pb-2">
+<div class="relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant group-focus-within:text-primary transition-colors" data-icon="search">search</span>
+<input class="w-full h-14 pl-12 pr-4 bg-white border border-outline-variant/30 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-body-md font-body-md outline-none" placeholder="Search for groceries, food, or autos" type="text" />
+</div>
+</section>
+<!-- Service Categories Grid -->
+<section class="px-margin-mobile py-6 overflow-x-auto hide-scrollbar">
+<div class="grid grid-cols-6 min-w-[450px] gap-4">
+<a href="/grocery" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-primary-fixed/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="shopping_basket">shopping_basket</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Grocery</span>
+</a>
+<a href="/food" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-primary-container text-3xl" data-icon="restaurant" style="font-variation-settings: 'FILL' 1;">restaurant</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Food</span>
+</a>
+<a href="/medicines" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-tertiary/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-tertiary text-3xl" data-icon="medical_services">medical_services</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Medicines</span>
+</a>
+<a href="/parcel" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-blue-600 text-3xl" data-icon="package_2">package_2</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Parcel</span>
+</a>
+<a href="/auto" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-yellow-50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-yellow-600 text-3xl" data-icon="directions_car">directions_car</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Auto</span>
+</a>
+<a href="/shops" class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 rounded-full bg-secondary-container flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="storefront">storefront</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">Local Shops</span>
+</a>
+</div>
+</section>
+<!-- Daily Need Essentials Section -->
+<section class="px-margin-mobile pt-4 pb-6">
+ <div class="flex items-center justify-between mb-4">
+  <div class="flex items-center gap-2">
+   <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+    <span class="material-symbols-outlined text-emerald-700 text-xl font-bold">eco</span>
+   </div>
+   <div>
+    <h3 class="font-headline-md text-headline-md text-on-surface leading-none">Daily Need Essentials</h3>
+    <p class="text-[10px] text-neutral-500 font-extrabold mt-0.5">Fresh Veggies, Milk, Atta, Rice & Daily Household Items</p>
+   </div>
+  </div>
+  <a href="/grocery" class="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-extrabold hover:bg-emerald-100 active:scale-95 transition-all">
+   View All <span class="material-symbols-outlined text-base">chevron_right</span>
+  </a>
+ </div>
+ <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3" id="daily-products-grid">
+  {
+   dailyNeedProducts.map(p => (
+    <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-emerald-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
+     <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
+      <img alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+         src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+      <div class="absolute top-2 left-2 bg-emerald-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Daily Need</div>
+      <button class="absolute bottom-2 right-2 bg-white border border-[#0c831f] text-[#0c831f] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#0c831f]/5 active:scale-95 transition-all duration-200 btn-add-home-product">ADD</button>
+     </div>
+     <div class="flex-grow flex flex-col justify-between">
+      <div>
+       <div class="flex items-center flex-wrap gap-1">
+        <span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹{p.MRP}</span>
+       </div>
+       <h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">{p["Product Name"]}</h3>
+      </div>
+      <div class="mt-1">
+       <p class="text-[9px] text-neutral-500 font-bold">{p["Pack Size"] || '1 Unit'}</p>
+       <div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">
+        <span class="text-[#0c831f]">★</span>
+        <span>4.8</span>
+        <span class="text-neutral-400 font-normal">({p.StockQuantity || '100'})</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   ))
+  }
+ </div>
+</section>
+
+<!-- Trending & Hot Sellers Section -->
+<section class="px-margin-mobile py-6">
+ <div class="flex items-center justify-between mb-4">
+  <div class="flex items-center gap-2">
+   <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+    <span class="material-symbols-outlined text-amber-700 text-xl font-bold">local_fire_department</span>
+   </div>
+   <div>
+    <h3 class="font-headline-md text-headline-md text-on-surface leading-none">Trending & Hot Sellers</h3>
+    <p class="text-[10px] text-neutral-500 font-extrabold mt-0.5">Top Selling Snacks, Drinks, Chocolates & Brands in Bhusawal</p>
+   </div>
+  </div>
+  <a href="/grocery" class="flex items-center gap-1 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-xs font-extrabold hover:bg-amber-100 active:scale-95 transition-all">
+   View All <span class="material-symbols-outlined text-base">chevron_right</span>
+  </a>
+ </div>
+ <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3" id="all-products-grid">
+  {
+   trendingProducts.map(p => (
+    <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-amber-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
+     <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
+      <img alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+         src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+      <div class="absolute top-2 left-2 bg-[#ffc107] text-neutral-900 text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">HOT SELLER</div>
+      <button class="absolute bottom-2 right-2 bg-white border border-primary text-primary px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-primary/5 active:scale-95 transition-all duration-200 btn-add-home-product">ADD</button>
+     </div>
+     <div class="flex-grow flex flex-col justify-between">
+      <div>
+       <div class="flex items-center flex-wrap gap-1">
+        <span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹{p.MRP}</span>
+       </div>
+       <h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">{p["Product Name"]}</h3>
+      </div>
+      <div class="mt-1">
+       <p class="text-[9px] text-neutral-500 font-bold">{p["Pack Size"] || '1 Unit'}</p>
+       <div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">
+        <span class="text-[#0c831f]">★</span>
+        <span>4.9</span>
+        <span class="text-neutral-400 font-normal">({p.StockQuantity || '100'})</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   ))
+  }
+ </div>
+</section>
+<!-- Search Results Overlay -->
+<div id="search-results-overlay" class="hidden px-margin-mobile pb-8">
+ <div class="flex items-center justify-between mb-4">
+  <h3 class="font-headline-md text-headline-md text-on-surface" id="search-results-title">Results</h3>
+  <button id="btn-clear-search" class="text-primary font-label-md text-label-md flex items-center gap-1 hover:brightness-110 active:scale-95 transition-all">
+   Clear <span class="material-symbols-outlined text-sm">close</span>
+  </button>
+ </div>
+ <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3" id="search-results-grid"></div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-[0_-4px_12px_rgba(0,0,0,0.04)] border-t border-outline-variant/30 fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4">
+<a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 duration-200 transition-all" href="/home">
+<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/orders">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-sm text-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/grocery">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="font-label-sm text-label-sm">Search</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/profile">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Account</span>
+</a>
+</nav>
+<!-- Contextual FAB (Only on Home/Dashboard) -->
+<button class="fixed right-6 bottom-24 w-14 h-14 bg-primary text-white rounded-2xl shadow-[0_8px_24px_rgba(176,47,0,0.3)] flex items-center justify-center active:scale-90 transition-transform duration-200 z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+<script>
+    if (!localStorage.getItem('bhusawal_user_token')) {
+      window.location.href = '/';
+    }
+
+    // Micro-interactions for scrolling effects
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 20) {
+        header.classList.add('shadow-md');
+        header.classList.remove('shadow-sm');
+      } else {
+        header.classList.add('shadow-sm');
+        header.classList.remove('shadow-md');
+      }
+    });
+
+    // Search bar focus behavior
+    const searchInput = document.querySelector('input');
+    searchInput.addEventListener('focus', () => {
+      searchInput.parentElement.classList.add('scale-[1.02]');
+    });
+    searchInput.addEventListener('blur', () => {
+      searchInput.parentElement.classList.remove('scale-[1.02]');
+    });
+
+    // Load full catalog for search
+    let fullCatalog = [];
+    fetch('/grocery_catalog.json?v=' + new Date().getTime())
+     .then(r => r.json())
+     .then(data => { fullCatalog = data; })
+     .catch(err => console.error('Failed to load catalog', err));
+
+    const allSection = document.getElementById('all-products-grid').closest('section');
+    const searchOverlay = document.getElementById('search-results-overlay');
+    const searchGrid = document.getElementById('search-results-grid');
+    const searchTitle = document.getElementById('search-results-title');
+
+    document.getElementById('btn-clear-search').addEventListener('click', () => {
+      searchInput.value = '';
+      searchOverlay.classList.add('hidden');
+      allSection.classList.remove('hidden');
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.trim().toLowerCase();
+      if (query.length > 1 && fullCatalog.length > 0) {
+        const matches = fullCatalog.filter(item => {
+          const name = (item['Product Name'] || '').toLowerCase();
+          const brand = (item['Brand Name'] || '').toLowerCase();
+          const cat = (item['Category'] || '').toLowerCase();
+          return name.includes(query) || brand.includes(query) || cat.includes(query);
+        });
+        renderSearchResults(query, matches.slice(0, 40));
+      } else if (query.length === 0) {
+        searchOverlay.classList.add('hidden');
+        allSection.classList.remove('hidden');
+      }
+    });
+
+    function renderSearchResults(query, products) {
+      allSection.classList.add('hidden');
+      searchOverlay.classList.remove('hidden');
+      searchTitle.textContent = 'Results for "' + query + '" (' + products.length + ')';
+
+      let html = '';
+      products.forEach(p => {
+        const imgUrl = p['Product Image URL'] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg';
+        html += '<div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-primary/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">' +
+         '<div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">' +
+          '<img alt="' + (p['Product Name'] || '') + '" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" src="' + imgUrl + '" onerror="this.onerror=null;this.src=\'/assets/d686bc969706f3bd6cf093f663be9579.jpg\';" />' +
+          '<div class="absolute top-2 left-2 bg-[#ffc107] text-neutral-900 text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">' + (p.Category || 'Grocery') + '</div>' +
+          '<button class="absolute bottom-2 right-2 bg-white border border-primary text-primary px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-primary/5 active:scale-95 transition-all duration-200 btn-add-search">ADD</button>' +
+         '</div>' +
+         '<div class="flex-grow flex flex-col justify-between">' +
+          '<div>' +
+           '<div class="flex items-center flex-wrap gap-1">' +
+            '<span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹' + p.MRP + '</span>' +
+           '</div>' +
+           '<h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">' + p['Product Name'] + '</h3>' +
+          '</div>' +
+          '<div class="mt-1">' +
+           '<p class="text-[9px] text-neutral-500 font-bold">' + (p['Pack Size'] || '1 Unit') + '</p>' +
+          '</div>' +
+         '</div>' +
+        '</div>';
+      });
+      searchGrid.innerHTML = html;
+
+      // Bind add buttons on search results
+      searchGrid.querySelectorAll('.btn-add-search').forEach(btn => bindAddButton(btn));
+    }
+  
+    // Cart interaction logic on Home
+    let cart = JSON.parse(localStorage.getItem('bhusawal_cart_grocery') || '{}');
+    let cartCount = 0;
+    let cartTotal = 0;
+
+    // Floating Cart Bar element
+    const cartBar = document.createElement('div');
+    cartBar.className = "fixed bottom-24 left-4 right-4 z-50 hidden";
+    cartBar.innerHTML = `
+      <div class="bg-primary text-on-primary h-16 rounded-2xl flex items-center justify-between px-6 shadow-xl cursor-pointer hover:brightness-110 transition-all">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+         <span class="material-symbols-outlined">shopping_basket</span>
+        </div>
+        <div>
+         <p class="font-bold text-label-md leading-none" id="home-cart-count">0 Items</p>
+         <p class="text-[10px] text-white/80" id="home-cart-total">₹0 • Super-App Delivery</p>
+        </div>
+       </div>
+       <div class="flex items-center gap-2">
+        <span class="font-bold uppercase tracking-widest text-sm">View Cart</span>
+        <span class="material-symbols-outlined">arrow_forward</span>
+       </div>
+      </div>
+    `;
+    document.body.appendChild(cartBar);
+
+    function updateCartBar() {
+      localStorage.setItem('bhusawal_cart_grocery', JSON.stringify(cart));
+      cartCount = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+      cartTotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
+      if (cartCount > 0) {
+        cartBar.classList.remove('hidden');
+        document.getElementById('home-cart-count').textContent = cartCount + ' Item' + (cartCount > 1 ? 's' : '');
+        document.getElementById('home-cart-total').textContent = '₹' + cartTotal + ' • Super-App Delivery';
+      } else {
+        cartBar.classList.add('hidden');
+      }
+    }
+
+    function replaceWithStepper(btn, title, price, imgUrl = '', packSize = '', category = '') {
+      const btnClass = btn.className;
+      const stepper = document.createElement('div');
+      stepper.className = 'absolute bottom-2 right-2 flex items-center bg-primary rounded-lg shadow-md overflow-hidden z-10';
+      stepper.innerHTML = `
+        <button class="qty-minus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">−</button>
+        <span class="qty-value w-6 h-7 flex items-center justify-center text-white text-[11px] font-extrabold">1</span>
+        <button class="qty-plus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">+</button>
+      `;
+      btn.replaceWith(stepper);
+
+      // Initialize cart entry
+      if (!cart[title]) {
+        cart[title] = { price, qty: 1, imgUrl, packSize, category, btnClass };
+      }
+      updateCartBar();
+
+      const qtyDisplay = stepper.querySelector('.qty-value');
+      qtyDisplay.textContent = cart[title].qty;
+
+      stepper.querySelector('.qty-plus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        cart[title].qty++;
+        qtyDisplay.textContent = cart[title].qty;
+        updateCartBar();
+      });
+
+      stepper.querySelector('.qty-minus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        cart[title].qty--;
+        if (cart[title].qty <= 0) {
+          delete cart[title];
+          // Restore ADD button
+          const addBtn = document.createElement('button');
+          addBtn.className = btnClass;
+          addBtn.textContent = 'ADD';
+          stepper.replaceWith(addBtn);
+          bindAddButton(addBtn);
+        } else {
+          qtyDisplay.textContent = cart[title].qty;
         }
-        h1, h2, h3, .font-headline {
-            font-family: 'Outfit', sans-serif;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        /* Glassmorphism Styling */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.45);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 24px 64px -12px rgba(176, 47, 0, 0.08);
-        }
-        /* Dynamic Mesh Background */
-        .bg-mesh-glow {
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            background-color: #faf9f8;
-            overflow: hidden;
-        }
-        .glow-circle {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.55;
-            mix-blend-mode: multiply;
-            animation: float-glow 20s infinite alternate ease-in-out;
-        }
-        .glow-1 {
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, #ffdbd1 0%, rgba(255,219,209,0) 70%);
-            top: -10%;
-            right: -10%;
-            animation-duration: 25s;
-        }
-        .glow-2 {
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(12,131,31,0.12) 0%, rgba(12,131,31,0) 70%);
-            bottom: -15%;
-            left: -10%;
-            animation-duration: 30s;
-            animation-delay: -5s;
-        }
-        .glow-3 {
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,165,0,0.1) 0%, rgba(255,165,0,0) 70%);
-            top: 40%;
-            left: 20%;
-            animation-duration: 18s;
-            animation-delay: -2s;
-        }
+        updateCartBar();
+      });
+    }
+
+    function bindAddButton(btn) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.group');
+        const title = card.querySelector('h3').textContent.trim();
+        const priceEl = card.querySelector('.selling-price') || card.querySelector('[class*="bg-[#0c831f]"]');
+        const priceText = priceEl ? priceEl.textContent.trim() : '0';
+        const price = parseInt(priceText.replace(/[^\d]/g, ''));
         
-        @keyframes float-glow {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            50% {
-                transform: translate(5%, 8%) scale(1.15);
-            }
-            100% {
-                transform: translate(-3%, -5%) scale(0.9);
-            }
-        }
+        const imgEl = card.querySelector('img');
+        const imgUrl = imgEl ? imgEl.getAttribute('src') : '';
+        
+        const packEl = card.querySelector('p.text-neutral-500');
+        const packSize = packEl ? packEl.textContent.trim() : '';
+        
+        const catEl = card.querySelector('.absolute.top-2.left-2');
+        const category = catEl ? catEl.textContent.trim() : '';
 
-        /* Input Styling */
-        .custom-input:focus-within {
-            border-color: #b02f00;
-            box-shadow: 0 0 0 4px rgba(176, 47, 0, 0.12);
-        }
+        replaceWithStepper(btn, title, price, imgUrl, packSize, category);
+      });
+    }
 
-        /* Animated slide-in-up */
-        .animate-slide-up {
-            animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes slide-up {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.98);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-    </style>
-    <!-- Insert Tailwind Config -->
-    <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                "inverse-surface": "#2f3131",
-                "tertiary": "#0c831f",
-                "surface-tint": "#b02f00",
-                "primary-fixed": "#ffdbd1",
-                "on-primary-fixed": "#3b0900",
-                "on-background": "#1a1c1c",
-                "on-primary-fixed-variant": "#862200",
-                "error": "#ba1a1a",
-                "surface-bright": "#f9f9f9",
-                "on-primary-container": "#541200",
-                "inverse-primary": "#ffb5a0",
-                "on-secondary-fixed": "#1c1b1b",
-                "on-tertiary-fixed": "#002204",
-                "on-secondary-fixed-variant": "#474646",
-                "on-error-container": "#93000a",
-                "surface-container": "#eeeeee",
-                "on-surface-variant": "#5b4039",
-                "on-surface": "#1a1c1c",
-                "primary": "#b02f00",
-                "outline-variant": "#e4beb4",
-                "on-tertiary-container": "#003208",
-                "surface-container-high": "#e8e8e8",
-                "on-primary": "#ffffff",
-                "surface-container-lowest": "#ffffff",
-                "primary-fixed-dim": "#ffb5a0",
-                "secondary-container": "#e5e2e1",
-                "secondary-fixed": "#e5e2e1",
-                "outline": "#907067",
-                "surface-container-highest": "#e2e2e2",
-                "inverse-on-surface": "#f1f1f1",
-                "on-secondary-container": "#656464",
-                "background": "#f9f9f9",
-                "tertiary-container": "#41a447",
-                "surface-dim": "#dadada",
-                "surface": "#f9f9f9",
-                "secondary-fixed-dim": "#c8c6c5",
-                "tertiary-fixed": "#94f990",
-                "on-error": "#ffffff",
-                "tertiary-fixed-dim": "#78dc77",
-                "surface-container-low": "#f3f3f3",
-                "on-tertiary-fixed-variant": "#005313",
-                "surface-variant": "#e2e2e2",
-                "error-container": "#ffdad6",
-                "primary-container": "#ff5722",
-                "on-secondary": "#ffffff",
-                "on-tertiary": "#ffffff",
-                "secondary": "#5f5e5e"
-            }
+    function syncUIWithCart() {
+      document.querySelectorAll('.group').forEach(card => {
+        const titleEl = card.querySelector('h3');
+        if (!titleEl) return;
+        const title = titleEl.textContent.trim();
+        if (cart[title]) {
+          const btn = card.querySelector('.btn-add-home-product') || card.querySelector('.btn-add-search');
+          if (btn) {
+            const priceEl = card.querySelector('.selling-price') || card.querySelector('[class*="bg-[#0c831f]"]');
+            const priceText = priceEl ? priceEl.textContent.trim() : '0';
+            const price = parseInt(priceText.replace(/[^\d]/g, ''));
+            
+            const imgEl = card.querySelector('img');
+            const imgUrl = imgEl ? imgEl.getAttribute('src') : '';
+            
+            const packEl = card.querySelector('p.text-neutral-500');
+            const packSize = packEl ? packEl.textContent.trim() : '';
+            
+            const catEl = card.querySelector('.absolute.top-2.left-2');
+            const category = catEl ? catEl.textContent.trim() : '';
+
+            replaceWithStepper(btn, title, price, imgUrl, packSize, category);
           }
         }
+      });
+      updateCartBar();
+    }
+
+    // Bind all static ADD buttons and sync UI
+    document.querySelectorAll('.btn-add-home-product').forEach(btn => bindAddButton(btn));
+    syncUIWithCart();
+
+    cartBar.addEventListener('click', () => {
+      if (cartCount > 0) {
+        window.location.href = '/billing';
       }
-    </script>
-</head>
-<body class="bg-background text-on-background min-h-screen flex items-center justify-center p-4">
-
-<!-- Dynamic Mesh Background -->
-<div class="bg-mesh-glow">
-    <div class="glow-circle glow-1" />
-    <div class="glow-circle glow-2" />
-    <div class="glow-circle glow-3" />
-</div>
-
-<!-- Simulated SMS Toast Popup (Apple/Android style) -->
-<div id="sms-toast" class="hidden fixed top-6 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-32px)] max-w-sm p-4 rounded-2xl bg-[#1e293b]/95 backdrop-blur-md shadow-2xl border border-white/10 flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
-    <div class="w-9 h-9 bg-primary/20 text-primary rounded-xl flex items-center justify-center flex-shrink-0 animate-pulse">
-        <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">sms</span>
-    </div>
-    <div class="flex-1 min-w-0">
-        <p class="font-bold text-[10px] text-primary uppercase tracking-wider font-extrabold">Simulated SMS</p>
-        <p class="text-[12px] font-semibold text-white mt-0.5" id="sms-toast-message">Your OTP is 123456</p>
-    </div>
-</div>
-
-<main class="w-full max-w-md animate-slide-up space-y-8">
-    
-    <!-- Branding Header -->
-    <div class="text-center">
-        <!-- Stylized Glow Logo -->
-        <div class="w-20 h-20 bg-gradient-to-tr from-primary to-[#ff5722] rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/20 animate-pulse">
-            <span class="material-symbols-outlined text-white text-4xl" style="font-variation-settings: 'FILL' 1;">local_mall</span>
-        </div>
-        <h1 class="text-4xl font-extrabold tracking-tighter text-on-surface mb-1">
-            Bhusawal <span class="text-primary italic font-black">Connect</span>
-        </h1>
-        <p class="text-xs font-semibold text-on-surface-variant max-w-xs mx-auto">
-            Bhusawal's #1 All-in-One Local Super App
-        </p>
-    </div>
-
-    <!-- APP PROMOTIONAL ADVERTISEMENT BANNER (ULTRA CLEAN) -->
-    <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-neutral-900 via-neutral-800 to-primary/90 p-5 text-white shadow-xl border border-white/10">
-        <div class="relative z-10 space-y-3">
-            <div class="flex items-center justify-between">
-                <span class="bg-primary/30 border border-primary/50 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Bhusawal Local App
-                </span>
-                <span class="text-[11px] font-bold text-neutral-300 flex items-center gap-1">
-                    <span class="material-symbols-outlined text-primary text-sm">bolt</span> 10-Min Delivery
-                </span>
-            </div>
-
-            <div>
-                <h2 class="text-lg font-black tracking-tight leading-tight text-white">Your City's All-in-One Super App 🚀</h2>
-                <p class="text-xs text-neutral-300 mt-1 font-medium leading-relaxed">Groceries, Hot Food, Medicines, Parcels & Auto Rides delivered to your door.</p>
-            </div>
-
-            <!-- App Features Grid -->
-            <div class="grid grid-cols-2 gap-2 pt-1">
-                <div class="bg-white/10 backdrop-blur-md rounded-xl p-2.5 flex items-center gap-2 border border-white/10">
-                    <span class="material-symbols-outlined text-primary text-lg">electric_bolt</span>
-                    <div>
-                        <p class="text-[9px] uppercase font-bold text-neutral-400 leading-none">Doorstep Service</p>
-                        <p class="text-xs font-black text-white leading-tight mt-0.5">Express 10-Min</p>
-                    </div>
-                </div>
-                <div class="bg-white/10 backdrop-blur-md rounded-xl p-2.5 flex items-center gap-2 border border-white/10">
-                    <span class="material-symbols-outlined text-primary text-lg">widgets</span>
-                    <div>
-                        <p class="text-[9px] uppercase font-bold text-neutral-400 leading-none">Local Marketplace</p>
-                        <p class="text-xs font-black text-white leading-tight mt-0.5">5 Services in 1</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Login/OTP Container Card -->
-    <div class="glass-panel p-8 rounded-[32px] border border-white/50 relative overflow-hidden min-h-[380px] flex flex-col justify-between">
-        
-        <!-- STEP 1: Phone Request state -->
-        <div id="step-phone" class="space-y-6 transition-all duration-300">
-            <div>
-                <h2 class="text-2xl font-extrabold text-on-surface tracking-tight mb-2">Welcome</h2>
-                <p class="text-xs font-semibold text-on-surface-variant leading-relaxed">
-                    Verify your phone number with OTP to enter the Bhusawal marketplace dashboard.
-                </p>
-            </div>
-
-            <!-- Input Group -->
-            <div class="space-y-4">
-                <div class="custom-input relative flex items-center bg-white/70 border border-outline-variant/40 rounded-2xl shadow-sm transition-all">
-                    <!-- Country Code flag placeholder -->
-                    <div class="pl-4 pr-3 flex items-center gap-1.5 border-r border-outline-variant/20">
-                        <span class="text-xs">🇮🇳</span>
-                        <span class="font-bold text-on-surface-variant text-sm">+91</span>
-                    </div>
-                    <!-- Number Input -->
-                    <input 
-                        type="tel" 
-                        id="phone-input" 
-                        maxlength="10" 
-                        class="w-full py-4 px-3 bg-transparent rounded-r-2xl outline-none font-semibold text-on-surface text-base tracking-widest placeholder-neutral-400" 
-                        placeholder="Enter 10-digit number"
-                        autocomplete="off"
-                    />
-                </div>
-                <div id="phone-error" class="hidden text-error text-[11px] font-bold pl-2 flex items-center gap-1">
-                    <span class="material-symbols-outlined text-sm">error</span>
-                    <span>Please enter a valid 10-digit mobile number</span>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <button 
-                id="btn-send-otp" 
-                class="w-full bg-gradient-to-r from-primary to-[#ff5722] text-on-primary font-bold h-14 rounded-2xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:brightness-105 active:scale-[0.97] transition-all cursor-pointer text-sm tracking-wide"
-            >
-                Send OTP
-                <span class="material-symbols-outlined text-base">arrow_forward</span>
-            </button>
-        </div>
-
-        <!-- STEP 2: Verify OTP state (Initially Hidden) -->
-        <div id="step-otp" class="hidden space-y-6 transition-all duration-300">
-            <div>
-                <button id="btn-back-to-phone" class="flex items-center gap-1 text-primary text-xs font-bold mb-2 hover:underline">
-                    <span class="material-symbols-outlined text-sm">arrow_back</span>
-                    Change Number
-                </button>
-                <h2 class="text-2xl font-extrabold text-on-surface tracking-tight mb-1">Verify OTP</h2>
-                <p class="text-xs font-semibold text-on-surface-variant">
-                    Enter the code sent to <span id="display-phone" class="font-extrabold text-on-surface">+91 99999 99999</span>
-                </p>
-            </div>
-
-            <!-- 6 Digits Boxes -->
-            <div class="space-y-4">
-                <div class="flex justify-between gap-2" id="otp-container">
-                    <input type="text" pattern="[0-9]*" inputmode="numeric" maxlength="1" class="otp-box w-11 h-14 text-center text-xl font-extrabold border border-outline-variant/40 rounded-xl bg-white/70 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none shadow-sm" />
-                    <input type="text" pattern="[0-9]*" inputmode="numeric" maxlength="1" class="otp-box w-11 h-14 text-center text-xl font-extrabold border border-outline-variant/40 rounded-xl bg-white/70 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none shadow-sm" />
-                    <input type="text" pattern="[0-9]*" inputmode="numeric" maxlength="1" class="otp-box w-11 h-14 text-center text-xl font-extrabold border border-outline-variant/40 rounded-xl bg-white/70 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none shadow-sm" />
-                    <input type="text" pattern="[0-9]*" inputmode="numeric" maxlength="1" class="otp-box w-11 h-14 text-center text-xl font-extrabold border border-outline-variant/40 rounded-xl bg-white/70 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none shadow-sm" />
-                    <input type="text" pattern="[0-9]*" inputmode="numeric" maxlength="1" class="otp-box w-11 h-14 text-center text-xl font-extrabold border border-outline-variant/40 rounded-xl bg-white/70 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none shadow-sm" />
-                    <input type="text" pattern="[0-9]*" inputmode="numeric" maxlength="1" class="otp-box w-11 h-14 text-center text-xl font-extrabold border border-outline-variant/40 rounded-xl bg-white/70 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none shadow-sm" />
-                </div>
-                <div id="otp-error" class="hidden text-error text-[11px] font-bold pl-2 flex items-center gap-1">
-                    <span class="material-symbols-outlined text-sm">error</span>
-                    <span>Invalid verification code. Please try again.</span>
-                </div>
-            </div>
-
-            <!-- Resend timer -->
-            <div class="flex items-center justify-between text-xs px-1 font-semibold">
-                <span class="text-on-surface-variant" id="timer-text">Resend OTP in <span id="timer-count" class="font-extrabold text-primary">30</span>s</span>
-                <button id="btn-resend" class="text-primary font-bold hover:underline hidden">Resend Code</button>
-            </div>
-
-            <!-- Verify Button -->
-            <button 
-                id="btn-verify-otp" 
-                class="w-full bg-gradient-to-r from-primary to-[#ff5722] text-on-primary font-bold h-14 rounded-2xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:brightness-105 active:scale-[0.97] transition-all cursor-pointer text-sm tracking-wide"
-            >
-                Verify & Continue
-                <span class="material-symbols-outlined text-base">login</span>
-            </button>
-        </div>
-
-        <!-- Hint block -->
-        <div class="mt-6 border-t border-outline-variant/20 pt-4 text-center">
-            <p class="text-[11px] font-bold text-[#0c831f] flex items-center justify-center gap-1">
-                <span class="material-symbols-outlined text-sm animate-pulse">lock</span>
-                <span>Testing Code: Use 123456</span>
-            </p>
-        </div>
-    </div>
-
-    <!-- Quick Features Showcase -->
-    <div class="grid grid-cols-3 gap-3 text-center px-2">
-        <div class="space-y-1.5">
-            <div class="w-10 h-10 bg-white/60 backdrop-blur rounded-xl border border-white/50 flex items-center justify-center mx-auto text-primary shadow-sm">
-                <span class="material-symbols-outlined text-xl">shopping_basket</span>
-            </div>
-            <p class="text-[10px] font-bold text-on-surface-variant">Daily Groceries</p>
-        </div>
-        <div class="space-y-1.5">
-            <div class="w-10 h-10 bg-white/60 backdrop-blur rounded-xl border border-white/50 flex items-center justify-center mx-auto text-primary shadow-sm">
-                <span class="material-symbols-outlined text-xl">restaurant</span>
-            </div>
-            <p class="text-[10px] font-bold text-on-surface-variant">Instant Food</p>
-        </div>
-        <div class="space-y-1.5">
-            <div class="w-10 h-10 bg-white/60 backdrop-blur rounded-xl border border-white/50 flex items-center justify-center mx-auto text-primary shadow-sm">
-                <span class="material-symbols-outlined text-xl">directions_car</span>
-            </div>
-            <p class="text-[10px] font-bold text-on-surface-variant">Auto Rides</p>
-        </div>
-    </div>
-</main>
+    });
+ </script>
+  <Switcher />
+  <script src="/assets/zepto_search.js" defer></script>
 
 <script>
-    const stepPhone = document.getElementById('step-phone');
-    const stepOtp = document.getElementById('step-otp');
-    const phoneInput = document.getElementById('phone-input');
-    const phoneError = document.getElementById('phone-error');
-    const otpError = document.getElementById('otp-error');
-    const displayPhone = document.getElementById('display-phone');
-    const smsToast = document.getElementById('sms-toast');
-    const smsToastMessage = document.getElementById('sms-toast-message');
-    
-    const btnSendOtp = document.getElementById('btn-send-otp');
-    const btnVerifyOtp = document.getElementById('btn-verify-otp');
-    const btnBackToPhone = document.getElementById('btn-back-to-phone');
-    const btnResend = document.getElementById('btn-resend');
-    
-    const timerText = document.getElementById('timer-text');
-    const timerCount = document.getElementById('timer-count');
-    
-    const otpBoxes = document.querySelectorAll('.otp-box');
-    
-    let countdown;
-    let toastTimeout;
-
-    function showSmsToast(phone) {
-        clearTimeout(toastTimeout);
-        smsToastMessage.innerHTML = `Your OTP is <strong class="text-primary text-base font-black">123456</strong> (sent to +91 ${phone.slice(0, 5)} ${phone.slice(5)})`;
-        smsToast.classList.remove('hidden');
-        toastTimeout = setTimeout(() => {
-            smsToast.classList.add('hidden');
-        }, 10000);
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest('.group');
+    if (card && !e.target.closest('button') && !e.target.closest('a')) {
+      const titleEl = card.querySelector('h3, h4');
+      if (titleEl) {
+        const title = titleEl.textContent.trim();
+        window.location.href = '/product?name=' + encodeURIComponent(title);
+      }
     }
-    
-    // Auto-focus logic for OTP boxes
-    otpBoxes.forEach((box, index) => {
-        box.addEventListener('input', (e) => {
-            const val = e.target.value;
-            if (val.length === 1 && index < otpBoxes.length - 1) {
-                otpBoxes[index + 1].focus();
-            }
-            clearOtpError();
-        });
-        
-        box.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && !e.target.value && index > 0) {
-                otpBoxes[index - 1].focus();
-            }
-        });
-    });
-
-    function getOtpCode() {
-        let code = '';
-        otpBoxes.forEach(box => code += box.value);
-        return code;
-    }
-
-    function clearOtpError() {
-        otpError.classList.add('hidden');
-    }
-
-    // Start verification timer
-    function startTimer() {
-        clearInterval(countdown);
-        let timeRemaining = 30;
-        timerText.classList.remove('hidden');
-        btnResend.classList.add('hidden');
-        timerCount.textContent = timeRemaining;
-
-        countdown = setInterval(() => {
-            timeRemaining--;
-            timerCount.textContent = timeRemaining;
-            if (timeRemaining <= 0) {
-                clearInterval(countdown);
-                timerText.classList.add('hidden');
-                btnResend.classList.remove('hidden');
-            }
-        }, 1000);
-    }
-
-    // Phone format validator
-    function validatePhone(phone) {
-        return /^\d{10}$/.test(phone);
-    }
-
-    // Send OTP Handler
-    btnSendOtp.addEventListener('click', async () => {
-        const phone = phoneInput.value.trim();
-        if (!validatePhone(phone)) {
-            phoneError.classList.remove('hidden');
-            return;
-        }
-        phoneError.classList.add('hidden');
-
-        btnSendOtp.disabled = true;
-        btnSendOtp.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Sending...';
-
-        try {
-            const res = await fetch('/api/auth/request-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: `+91${phone}` })
-            });
-            const data = await res.json();
-            console.log('OTP request outcome:', data);
-        } catch (err) {
-            console.warn('Backend offline, proceeding with mock simulator.', err);
-        }
-
-        // Show step 2
-        displayPhone.textContent = `+91 ${phone.slice(0, 5)} ${phone.slice(5)}`;
-        stepPhone.classList.add('hidden');
-        stepOtp.classList.remove('hidden');
-        btnSendOtp.disabled = false;
-        btnSendOtp.innerHTML = 'Send OTP <span class="material-symbols-outlined text-base">arrow_forward</span>';
-        
-        startTimer();
-        showSmsToast(phone);
-        otpBoxes[0].focus();
-    });
-
-    // Verify OTP Handler
-    btnVerifyOtp.addEventListener('click', async () => {
-        const phone = phoneInput.value.trim();
-        const code = getOtpCode();
-
-        if (code.length < 6) {
-            otpError.textContent = 'Please enter a 6-digit code';
-            otpError.classList.remove('hidden');
-            return;
-        }
-
-        btnVerifyOtp.disabled = true;
-        btnVerifyOtp.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">sync</span> Verifying...';
-
-        let success = false;
-        let userData = null;
-        let token = null;
-
-        try {
-            const res = await fetch('/api/auth/verify-otp', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: `+91${phone}`, otp: code })
-            });
-            if (res.ok) {
-                const data = await res.json();
-                if (data.success) {
-                    success = true;
-                    token = data.token;
-                    userData = data.user;
-                }
-            }
-        } catch (err) {
-            console.warn('Backend offline, running fallback verification.', err);
-        }
-
-        // Fallback mock check
-        if (!success && code === '123456') {
-            success = true;
-            token = 'mock_jwt_token_bhusawal_connect_' + Date.now();
-            userData = {
-                id: 'MOCK-1',
-                phone: `+91${phone}`,
-                name: 'Sahil Patel',
-                role: 'CUSTOMER'
-            };
-        }
-
-        if (success) {
-            localStorage.setItem('bhusawal_user_token', token);
-            localStorage.setItem('bhusawal_user', JSON.stringify(userData));
-            if (!localStorage.getItem('bhusawal_user_address')) {
-                localStorage.setItem('bhusawal_user_address', 'Home - Varangaon Road, Bhusawal');
-            }
-
-            // Immediately redirect to home dashboard for fast, seamless login
-            window.location.href = '/home';
-
-            // Asynchronously request geolocation in background if available
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    async (position) => {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        localStorage.setItem('bhusawal_user_lat', lat);
-                        localStorage.setItem('bhusawal_user_lng', lng);
-                        try {
-                            const address = await getAddressFromCoords(lat, lng);
-                            localStorage.setItem('bhusawal_user_address', `Home - ${address}`);
-                        } catch (e) {}
-                    },
-                    (error) => {}
-                );
-            }
-        } else {
-            otpError.innerHTML = '<span class="material-symbols-outlined text-sm">error</span> Incorrect code. Try 123456';
-            otpError.classList.remove('hidden');
-            btnVerifyOtp.disabled = false;
-            btnVerifyOtp.innerHTML = 'Verify & Continue <span class="material-symbols-outlined text-base">login</span>';
-        }
-    });
-
-    // Go back button handler
-    btnBackToPhone.addEventListener('click', () => {
-        stepOtp.classList.add('hidden');
-        stepPhone.classList.remove('hidden');
-        clearOtpError();
-    });
-
-    // Resend button handler
-    btnResend.addEventListener('click', () => {
-        const phone = phoneInput.value.trim();
-        startTimer();
-        showSmsToast(phone);
-        otpBoxes.forEach(box => box.value = '');
-        otpBoxes[0].focus();
-    });
-
-    // Reverse Geocoding Helper
-    async function getAddressFromCoords(lat, lng) {
-        try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`, {
-                headers: { 'Accept-Language': 'en' }
-            });
-            const data = await res.json();
-            if (data && data.address) {
-                const road = data.address.road || data.address.suburb || data.address.neighbourhood || '';
-                const city = data.address.city || data.address.town || data.address.village || 'Bhusawal';
-                return road ? `${road}, ${city}` : city;
-            }
-        } catch (e) {
-            console.warn("Reverse geocoding failed", e);
-        }
-        return 'Varangaon Road, Bhusawal';
-    }
+  });
 </script>
 
-<Switcher />
-</body>
-</html>
+</body></html>
