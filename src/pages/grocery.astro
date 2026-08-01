@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Switcher from '../components/Switcher.astro';
 
-// Read restored original database at build-time
+// Read organized catalog database at build-time
 const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
 let catalog = [];
 try {
@@ -12,16 +12,22 @@ try {
   console.error("Failed to read grocery catalog at build time", err);
 }
 
-// Extract distinct categories from restored catalog
+// Extract distinct categories from catalog
 const categoriesList = [
   { id: 'all', name: 'All Products', icon: '⚡' },
-  { id: 'personal', name: 'Personal Care', icon: '✨' },
-  { id: 'spices', name: 'Spices & Masalas', icon: '🌶️' },
+  { id: 'fruits_veg', name: 'Fresh Fruits & Vegetables', icon: '🥬' },
+  { id: 'atta_rice', name: 'Atta, Rice & Dal', icon: '🌾' },
+  { id: 'oil_ghee', name: 'Oil, Ghee & Masala', icon: '🛢️' },
   { id: 'dairy', name: 'Dairy & Breakfast', icon: '🥛' },
-  { id: 'staples', name: 'Grocery Staples', icon: '🌾' },
-  { id: 'snacks', name: 'Snacks & Confectionery', icon: '🍿' },
-  { id: 'beverages', name: 'Beverages', icon: '🥤' },
-  { id: 'home', name: 'Household Care', icon: '🧹' },
+  { id: 'beverages', name: 'Tea, Coffee & Beverages', icon: '🥤' },
+  { id: 'juices', name: 'Juices, Soft Drinks & Water', icon: '🍹' },
+  { id: 'chocolates', name: 'Chocolates & Candies', icon: '🍫' },
+  { id: 'snacks', name: 'Chips, Snacks & Namkeen', icon: '🍿' },
+  { id: 'biscuits', name: 'Biscuits & Cookies', icon: '🍞' },
+  { id: 'noodles', name: 'Noodles & Pasta', icon: '🍜' },
+  { id: 'personal', name: 'Personal Care', icon: '✨' },
+  { id: 'home', name: 'Home Cleaning', icon: '🧹' },
+  { id: 'laundry', name: 'Laundry', icon: '🧺' },
 ];
 
 // Initial 48 items for server-rendering
@@ -100,7 +106,7 @@ const initialProducts = catalog.slice(0, 48);
     
     <div class="flex items-center gap-2 bg-slate-100 rounded-2xl px-4 py-2.5 border border-slate-200/80 focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
       <span class="material-symbols-outlined text-slate-400">search</span>
-      <input type="text" id="grocery-search-input" placeholder="Search 5,000+ items across all categories..." class="w-full bg-transparent outline-none text-sm font-medium text-slate-800 placeholder-slate-400" autocomplete="off" />
+      <input type="text" id="grocery-search-input" placeholder="Search 23,000+ groceries, snacks, milk, fruits..." class="w-full bg-transparent outline-none text-sm font-medium text-slate-800 placeholder-slate-400" autocomplete="off" />
       <button id="clear-search-btn" class="hidden text-slate-400 hover:text-slate-600">
         <span class="material-symbols-outlined text-lg">close</span>
       </button>
@@ -127,9 +133,9 @@ const initialProducts = catalog.slice(0, 48);
   <div class="px-4 pt-4">
     <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-700 text-white p-5 shadow-lg shadow-purple-900/10">
       <div class="relative z-10">
-        <span class="px-2.5 py-0.5 bg-amber-400 text-slate-900 text-[10px] font-black uppercase tracking-wider rounded-full inline-block mb-2">BHUSAWAL EXPRESS</span>
-        <h2 class="text-xl font-black font-display leading-tight">5,050+ Original Products Live</h2>
-        <p class="text-xs text-purple-100 mt-1">Personal Care, Spices, Dairy, Snacks & Household Essentials</p>
+        <span class="px-2.5 py-0.5 bg-amber-400 text-slate-900 text-[10px] font-black uppercase tracking-wider rounded-full inline-block mb-2">BHUSAWAL CONNECT CATALOG</span>
+        <h2 class="text-xl font-black font-display leading-tight">23,043 Products Organized into Categories</h2>
+        <p class="text-xs text-purple-100 mt-1">Fresh Fruits, Atta & Rice, Ghee, Dairy, Beverages, Snacks & Cleaning</p>
       </div>
     </div>
   </div>
@@ -150,14 +156,14 @@ const initialProducts = catalog.slice(0, 48);
     <!-- Desktop Sidebar Categories -->
     <aside class="hidden md:block w-64 flex-shrink-0 space-y-2 sticky top-44 h-fit">
       <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider px-3 mb-2">Categories</h3>
-      <div class="bg-white rounded-3xl p-2 border border-slate-100 shadow-sm space-y-1">
+      <div class="bg-white rounded-3xl p-2 border border-slate-100 shadow-sm space-y-1 max-h-[75vh] overflow-y-auto no-scrollbar">
         {categoriesList.map(cat => (
           <button class="desktop-cat-btn w-full flex items-center justify-between px-3 py-2.5 rounded-2xl text-xs font-extrabold text-slate-700 hover:bg-purple-50 hover:text-purpleBrand transition-all" data-category={cat.name}>
-            <div class="flex items-center gap-2">
-              <span class="text-base">{cat.icon}</span>
-              <span>{cat.name}</span>
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="text-base flex-shrink-0">{cat.icon}</span>
+              <span class="truncate">{cat.name}</span>
             </div>
-            <span class="material-symbols-outlined text-sm text-slate-300">chevron_right</span>
+            <span class="material-symbols-outlined text-sm text-slate-300 flex-shrink-0">chevron_right</span>
           </button>
         ))}
       </div>
@@ -167,26 +173,25 @@ const initialProducts = catalog.slice(0, 48);
     <main class="flex-1 space-y-4">
       <div class="flex items-center justify-between">
         <h2 id="active-category-title" class="text-lg font-black font-display text-slate-900">All Products</h2>
-        <span id="product-count-label" class="text-xs font-bold text-slate-400">Total 5,050 Products</span>
+        <span id="product-count-label" class="text-xs font-bold text-slate-400">Total 23,043 Products</span>
       </div>
 
       <!-- Products Grid -->
       <div id="grocery-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {initialProducts.map(p => {
-          const id = p["Product ID"] || p.ProductID || p.id || '';
+          const id = p.ProductID || p.id || '';
           const name = p["Product Name"] || '';
           const cat = p.Category || 'Grocery';
-          const pack = p["Pack Size"] || p.Unit || '1 Unit';
+          const pack = p["Weight/Variant"] || p["Pack Size"] || p.Unit || '1 Unit';
           const mrp = parseFloat(p.MRP || 0);
           const price = parseFloat(p["Selling Price"] || p["Offer Price"] || mrp);
-          const img = p["Product Image URL"] || p["Thumbnail URL"] || p["Image URL"] || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-          const hasDiscount = mrp > price;
-          const discountPct = hasDiscount ? Math.round(((mrp - price) / mrp) * 100) : 0;
+          const img = p["Product Image URL"] || p["Product Image"] || p["Image URL"] || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const discountPct = p["Discount %"] || (mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0);
 
           return (
-            <div class="product-card bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between group cursor-pointer" data-id={id} data-name={name} data-price={price} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-desc={p.Description || ''}>
+            <div class="product-card bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between group cursor-pointer" data-id={id} data-name={name} data-price={price} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-desc={p["Product Description"] || p.Description || ''}>
               
-              {hasDiscount && discountPct > 0 && (
+              {discountPct > 0 && (
                 <span class="absolute top-2.5 left-2.5 bg-purpleBrand text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm">
                   {discountPct}% OFF
                 </span>
@@ -204,7 +209,7 @@ const initialProducts = catalog.slice(0, 48);
                 <div class="flex items-center justify-between">
                   <div>
                     <span class="text-xs font-black text-slate-900">₹{price}</span>
-                    {hasDiscount && (
+                    {mrp > price && (
                       <span class="text-[10px] text-slate-400 line-through ml-1">₹{mrp}</span>
                     )}
                   </div>
@@ -270,16 +275,16 @@ const initialProducts = catalog.slice(0, 48);
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CATALOG ENGINE FOR 5050 ORIGINAL ITEMS -->
+  <!-- CLIENT-SIDE CATALOG ENGINE FOR 23,043 ORGANIZED ITEMS -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', async () => {
       let catalogData = [];
       try {
         const res = await fetch('/grocery_catalog.json');
         catalogData = await res.json();
-        console.log("Loaded original catalog items count:", catalogData.length);
+        console.log("Loaded organized catalog items count:", catalogData.length);
       } catch(e) {
-        console.error("Failed to load original grocery catalog", e);
+        console.error("Failed to load organized grocery catalog", e);
       }
 
       // 1. Cart Bar State
@@ -385,7 +390,7 @@ const initialProducts = catalog.slice(0, 48);
         modal.classList.add('hidden');
       });
 
-      // 4. Client Search & Filtering over 5,050 Items
+      // 4. Client Search & Filtering over 23,043 Items
       const searchInput = document.getElementById('grocery-search-input');
       const clearBtn = document.getElementById('clear-search-btn');
       const grid = document.getElementById('grocery-products-grid');
@@ -405,19 +410,18 @@ const initialProducts = catalog.slice(0, 48);
 
         countLabel.textContent = `Showing ${filtered.length} of ${catalogData.length} Products`;
         grid.innerHTML = filtered.map(p => {
-          const id = p["Product ID"] || p.ProductID || p.id || '';
+          const id = p.ProductID || p.id || '';
           const name = p["Product Name"] || '';
           const cat = p.Category || 'Grocery';
-          const pack = p["Pack Size"] || p.Unit || '1 Unit';
+          const pack = p["Weight/Variant"] || p["Pack Size"] || p.Unit || '1 Unit';
           const mrp = parseFloat(p.MRP || 0);
           const price = parseFloat(p["Selling Price"] || p["Offer Price"] || mrp);
-          const img = p["Product Image URL"] || p["Thumbnail URL"] || p["Image URL"] || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-          const hasDiscount = mrp > price;
-          const discountPct = hasDiscount ? Math.round(((mrp - price) / mrp) * 100) : 0;
+          const img = p["Product Image URL"] || p["Product Image"] || p["Image URL"] || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const discountPct = p["Discount %"] || (mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0);
 
           return `
-            <div class="product-card bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between group cursor-pointer" data-id="${id}" data-name="${name}" data-price="${price}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-desc="${(p.Description || '').replace(/"/g, '&quot;')}">
-              ${hasDiscount && discountPct > 0 ? `<span class="absolute top-2.5 left-2.5 bg-purpleBrand text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm">${discountPct}% OFF</span>` : ''}
+            <div class="product-card bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between group cursor-pointer" data-id="${id}" data-name="${name}" data-price="${price}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-desc="${(p["Product Description"] || p.Description || '').replace(/"/g, '&quot;')}">
+              ${discountPct > 0 ? `<span class="absolute top-2.5 left-2.5 bg-purpleBrand text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm">${discountPct}% OFF</span>` : ''}
               <div class="h-32 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50 relative group-hover:scale-105 transition-transform duration-300">
                 <img src="${img}" alt="${name}" class="max-h-full max-w-full object-contain p-2" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
               </div>
@@ -428,7 +432,7 @@ const initialProducts = catalog.slice(0, 48);
                 <div class="flex items-center justify-between">
                   <div>
                     <span class="text-xs font-black text-slate-900">₹${price}</span>
-                    ${hasDiscount ? `<span class="text-[10px] text-slate-400 line-through ml-1">₹${mrp}</span>` : ''}
+                    ${mrp > price ? `<span class="text-[10px] text-slate-400 line-through ml-1">₹${mrp}</span>` : ''}
                   </div>
                   <button class="add-to-cart-btn px-3 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id="${id}" data-name="${name}" data-price="${price}" data-img="${img}">ADD</button>
                 </div>
@@ -446,12 +450,12 @@ const initialProducts = catalog.slice(0, 48);
 
         let res = catalogData;
 
-        // Search Query over Product Name, Category, Brand Name, Search Keywords
+        // Search Query over Product Name, Category, Brand, Search Keywords
         if (currentQuery) {
           res = res.filter(p => {
             const name = (p["Product Name"] || '').toLowerCase();
             const cat = (p.Category || '').toLowerCase();
-            const brand = (p["Brand Name"] || '').toLowerCase();
+            const brand = (p.Brand || '').toLowerCase();
             const kw = (p["Search Keywords"] || '').toLowerCase();
             return name.includes(currentQuery) || cat.includes(currentQuery) || brand.includes(currentQuery) || kw.includes(currentQuery);
           });
