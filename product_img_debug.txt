@@ -1,0 +1,164 @@
+Product: Fresho Apple Royal Gala (Pos: 30350)
+  Markdown Images: []
+  Snippet: Fresho Apple Royal Gala Zespri Apple Royal Gala Fresho Banana Robusta Fresho Potato Fresho Onion Fresho Tomato Fresho Garlic Fresho Ginger Fresho Lemon Fresho Coriander Leaves Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Br
+============================================================
+Product: Zespri Apple Royal Gala (Pos: 30374)
+  Markdown Images: []
+  Snippet: Zespri Apple Royal Gala Fresho Banana Robusta Fresho Potato Fresho Onion Fresho Tomato Fresho Garlic Fresho Ginger Fresho Lemon Fresho Coriander Leaves Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Y
+============================================================
+Product: Fresho Banana Robusta (Pos: 30398)
+  Markdown Images: []
+  Snippet: Fresho Banana Robusta Fresho Potato Fresho Onion Fresho Tomato Fresho Garlic Fresho Ginger Fresho Lemon Fresho Coriander Leaves Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pom
+============================================================
+Product: Fresho Potato (Pos: 30420)
+  Markdown Images: []
+  Snippet: Fresho Potato Fresho Onion Fresho Tomato Fresho Garlic Fresho Ginger Fresho Lemon Fresho Coriander Leaves Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava F
+============================================================
+Product: Fresho Onion (Pos: 30434)
+  Markdown Images: []
+  Snippet: Fresho Onion Fresho Tomato Fresho Garlic Fresho Ginger Fresho Lemon Fresho Coriander Leaves Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon
+============================================================
+Product: Fresho Tomato (Pos: 30447)
+  Markdown Images: []
+  Snippet: Fresho Tomato Fresho Garlic Fresho Ginger Fresho Lemon Fresho Coriander Leaves Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product
+============================================================
+Product: Fresho Garlic (Pos: 30461)
+  Markdown Images: []
+  Snippet: Fresho Garlic Fresho Ginger Fresho Lemon Fresho Coriander Leaves Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for th
+============================================================
+Product: Fresho Ginger (Pos: 30475)
+  Markdown Images: []
+  Snippet: Fresho Ginger Fresho Lemon Fresho Coriander Leaves Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos
+============================================================
+Product: Fresho Lemon (Pos: 30489)
+  Markdown Images: []
+  Snippet: Fresho Lemon Fresho Coriander Leaves Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different
+============================================================
+Product: Fresho Coriander Leaves (Pos: 30502)
+  Markdown Images: []
+  Snippet: Fresho Coriander Leaves Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weig
+============================================================
+Product: Fresho Green Chilli (Pos: 30526)
+  Markdown Images: []
+  Snippet: Fresho Green Chilli Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":46
+============================================================
+Product: Fresho Cabbage (Pos: 30546)
+  Markdown Images: []
+  Snippet: Fresho Cabbage Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":4
+============================================================
+Product: Fresho Cauliflower (Pos: 30561)
+  Markdown Images: []
+  Snippet: Fresho Cauliflower Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":487,"_117":488,"
+============================================================
+Product: Fresho Carrot - Orange (Pos: 30580)
+  Markdown Images: []
+  Snippet: Fresho Carrot - Orange Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":487,"_117":488,"_119":120,"_122":38
+============================================================
+Product: Fresho Cucumber English (Pos: 30603)
+  Markdown Images: []
+  Snippet: Fresho Cucumber English Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":487,"_117":488,"_119":120,"_122":387,"_124":489,"_126":127
+============================================================
+Product: Capsicum Green (Pos: 15493)
+  Markdown Images: []
+  Snippet: Capsicum Green, 500 g  – Starquik","https://www.starquik.com/cdn/shop/files/SQ109057_2_5827a361-6209-4f2a-9820-3ed1a966723a.png?v=1772025203\u0026width=1946",0.2471736896197328,0.5698869475847893,1946,{"_208":294,"_210":169,"_211":295,"_213":296,"_215":297,"_217":298,"_34":299,"_220":221,"_222":26,"
+============================================================
+Product: Capsicum Green (Pos: 30627)
+  Markdown Images: []
+  Snippet: Capsicum Green Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":487,"_117":488,"_119":120,"_122":387,"_124":489,"_126":127},"0b0938ae-e853-401f-90
+============================================================
+Product: Fresh Broccoli (Pos: 13583)
+  Markdown Images: ['https://images.openai.com/static-rsc-4/xePSPJi4HL-ZmiHCHenC3-yeAU_Wdt269_Dzpg5H4XJAAI10O_MoP8_ac2P7Lzi_vlBTC_nSHLwjug65IFUzr2SC3OPyTtOptRqopDeAbOvVOhH_p4CqXgxswfeL4BnJxT7wb4HiMtUQwrvQR57ivLRQdHfd6yi2hz5G_DLVIz-D204B3J4yoGn13uhgZPzm?purpose=fullsize', 'https://images.openai.com/static-rsc-4/FhuHK9ax7F76GY6rMrFNy2cZnPrX1DZAz-LVnRfF4gJi2ZRuq3_MFIWq2dsW5nMb6KIV1C-uI75CdgFkCGy-nRJa_d1CFIsPAxXhN8FALrSRDhpXklIJ9d8bHh2zUIy94LJt--7FQxhFioVYwSHjbHg3FM10tUMDlFa0BFW-rJXPCi2FEey2IZqC7xAePm5a?purpose=fullsize', 'https://images.openai.com/static-rsc-4/sx-EjtAGYJmQ5WypozNk1QMvhzUw8AN258W9C0ASQXo9gVkZTP8pYf1D0YwYuSS0zv8-iinka1-3k-FrKF4vkBAPmIXSKxcCfQZnr1zW1UzSJfIhmIBJQTJxlw0wNmLHdO9iT_6bcJRd4J4kCCDcTkfudmkiWl1DKMxNpyAbh4QWhCujUsKnRMxalf7JS9P4?purpose=fullsize', 'https://images.openai.com/static-rsc-4/3GGMh3t3uITvDGE4uDkJmtOxy3SzzcPnW4NVu-r1AzNz22Zs63-QE_70AOKXSYPXa-R7WEvKwz2hf5GZ3ZO_rMt0wq-BYyLFgtpTe74kmgNNiN2HiQLXDMsZY3hbwOCNuq4HjIJSMoEkitlOiob8ovGexdNhAHeXwnfM0pmE-9RkW3aC8h2VyWZfkyYfTLpI?purpose=fullsize']
+  Snippet: Fresh broccoli 250g product image\",\"Button mushroom 200g pack product image\"]}",583,882,[158,161,169,171],[],"![Image](https://images.openai.com/static-rsc-4/xePSPJi4HL-ZmiHCHenC3-yeAU_Wdt269_Dzpg5H4XJAAI10O_MoP8_ac2P7Lzi_vlBTC_nSHLwjug65IFUzr2SC3OPyTtOptRqopDeAbOvVOhH_p4CqXgxswfeL4BnJxT7wb4HiMt
+============================================================
+Product: Fresh Broccoli (Pos: 27866)
+  Markdown Images: []
+  Snippet: Fresh broccoli 250g product image\",\"Button mushroom 200g pack product image\"]}  image_group{\"layout\":\"carousel\",\"aspect_ratio\":\"1:1\",\"query\":[\"Yellow zucchini 500g product image\",\"Fresh pomegranate 1kg product image\",\"Fresh guava 1kg product image\",\"Fresh muskmelon whole produ
+============================================================
+Product: Fresh Broccoli (Pos: 30642)
+  Markdown Images: []
+  Snippet: Fresh Broccoli Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":487,"_117":488,"_119":120,"_122":387,"_124":489,"_126":127},"0b0938ae-e853-401f-9086-4603fdb27cef
+============================================================
+Product: Button Mushroom (Pos: 13621)
+  Markdown Images: ['https://images.openai.com/static-rsc-4/xePSPJi4HL-ZmiHCHenC3-yeAU_Wdt269_Dzpg5H4XJAAI10O_MoP8_ac2P7Lzi_vlBTC_nSHLwjug65IFUzr2SC3OPyTtOptRqopDeAbOvVOhH_p4CqXgxswfeL4BnJxT7wb4HiMtUQwrvQR57ivLRQdHfd6yi2hz5G_DLVIz-D204B3J4yoGn13uhgZPzm?purpose=fullsize', 'https://images.openai.com/static-rsc-4/FhuHK9ax7F76GY6rMrFNy2cZnPrX1DZAz-LVnRfF4gJi2ZRuq3_MFIWq2dsW5nMb6KIV1C-uI75CdgFkCGy-nRJa_d1CFIsPAxXhN8FALrSRDhpXklIJ9d8bHh2zUIy94LJt--7FQxhFioVYwSHjbHg3FM10tUMDlFa0BFW-rJXPCi2FEey2IZqC7xAePm5a?purpose=fullsize', 'https://images.openai.com/static-rsc-4/sx-EjtAGYJmQ5WypozNk1QMvhzUw8AN258W9C0ASQXo9gVkZTP8pYf1D0YwYuSS0zv8-iinka1-3k-FrKF4vkBAPmIXSKxcCfQZnr1zW1UzSJfIhmIBJQTJxlw0wNmLHdO9iT_6bcJRd4J4kCCDcTkfudmkiWl1DKMxNpyAbh4QWhCujUsKnRMxalf7JS9P4?purpose=fullsize', 'https://images.openai.com/static-rsc-4/3GGMh3t3uITvDGE4uDkJmtOxy3SzzcPnW4NVu-r1AzNz22Zs63-QE_70AOKXSYPXa-R7WEvKwz2hf5GZ3ZO_rMt0wq-BYyLFgtpTe74kmgNNiN2HiQLXDMsZY3hbwOCNuq4HjIJSMoEkitlOiob8ovGexdNhAHeXwnfM0pmE-9RkW3aC8h2VyWZfkyYfTLpI?purpose=fullsize']
+  Snippet: Button mushroom 200g pack product image\"]}",583,882,[158,161,169,171],[],"![Image](https://images.openai.com/static-rsc-4/xePSPJi4HL-ZmiHCHenC3-yeAU_Wdt269_Dzpg5H4XJAAI10O_MoP8_ac2P7Lzi_vlBTC_nSHLwjug65IFUzr2SC3OPyTtOptRqopDeAbOvVOhH_p4CqXgxswfeL4BnJxT7wb4HiMtUQwrvQR57ivLRQdHfd6yi2hz5G_DLVIz-D204B
+============================================================
+Product: Button Mushroom (Pos: 27904)
+  Markdown Images: []
+  Snippet: Button mushroom 200g pack product image\"]}  image_group{\"layout\":\"carousel\",\"aspect_ratio\":\"1:1\",\"query\":[\"Yellow zucchini 500g product image\",\"Fresh pomegranate 1kg product image\",\"Fresh guava 1kg product image\",\"Fresh muskmelon whole product image\"]}  For your grocery app (s
+============================================================
+Product: Button Mushroom (Pos: 28980)
+  Markdown Images: []
+  Snippet: Button Mushroom | 200 g, 400 g | | Yellow Zucchini | 250 g, 500 g | | Pomegranate | 500 g, 1 kg | | Guava | 500 g, 1 kg | | Muskmelon | 1 pc (0.8–1.5 kg), 2 pcs |  For a professional-looking app, use: - White background product images. - High-resolution (minimum **1000 × 1000 px**). - One consistent
+============================================================
+Product: Button Mushroom (Pos: 30657)
+  Markdown Images: []
+  Snippet: Button Mushroom Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":487,"_117":488,"_119":120,"_122":387,"_124":489,"_126":127},"0b0938ae-e853-401f-9086-4603fdb27cef",[455],{"_451"
+============================================================
+Product: Yellow Zucchini (Pos: 8567)
+  Markdown Images: ['https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9jyTiCCnbevrzQly2Zn0ISPth2jFUvtV5l0FhAnLUhHvgZQj15zTXC4cc6QXd3tMktqhnwNBKz2os6sGYqv5jRssPtM36EBNqEXSAcYVdxlqGVkj_bVFaoZAI_G1Waxgp1KV?purpose=fullsize', 'https://images.openai.com/static-rsc-4/dkerJ7nEbicqA-KgBh_hwIcrlLuh-l0Vu-qO-Xuooc2MoNSb3L-IRUEI8s79Ph8ya2ZplALM0xyPNDI8srpiFPSlPQZF-CVgsu6qYKb8DzeZ83OTu1oySESvT0r-ESvb_5-keFCxVeCXyNHk8Nw1ZK8Wil5rywt5aipy5x1D4aU6E7YkqrSQpe1Nwf-AOzPg?purpose=fullsize', 'https://images.openai.com/static-rsc-4/4VozeXjTM_xG_jVoj54B7_v8oyEqmaG3d-_qIyOflGJXSjykkwEW4jw13fEJ8o4xpJqvQJBoq_LYymoRW7OAWkUvJizhtGyd81MdoTiNpXpeY2q5-Gb5rMUP7yHOANQKw45_8sXmrhChqKuY1kxznAZq2kw4RPeeyON51pULjHXVq5L05PNOhI5hecmsLft-?purpose=fullsize']
+  Snippet: Yellow zucchini 500g product image\",\"Fresh pomegranate 1kg product image\",\"Fresh guava 1kg product image\",\"Fresh muskmelon whole product image\"]}","prefix","start_idx",884,"end_idx",1095,[157,159,166,172],"refs",[],"alt","![Image](https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbp
+============================================================
+Product: Yellow Zucchini (Pos: 12659)
+  Markdown Images: []
+  Snippet: Yellow zucchini 500g product image","https://www.jiomart.com/p/groceries/zucchini-yellow-200-g/590000111?utm_source=chatgpt.com",{"_229":268,"_231":268},"https://images.openai.com/static-rsc-4/XQSsqTS_k4b9YY97BQUAGFWwGXiRCtKFm_pmuGNQOpTbBF_B94leC867gRrOKFZyaemU32O1cu55Z0SCCysu9vZPmRP5TPEvhbWByJ8b-SP
+============================================================
+Product: Yellow Zucchini (Pos: 28026)
+  Markdown Images: []
+  Snippet: Yellow zucchini 500g product image\",\"Fresh pomegranate 1kg product image\",\"Fresh guava 1kg product image\",\"Fresh muskmelon whole product image\"]}  For your grocery app (similar to Blinkit/Zepto), it's better to show the **same product with multiple weight variants**. Here's a recommended str
+============================================================
+Product: Yellow Zucchini (Pos: 29015)
+  Markdown Images: []
+  Snippet: Yellow Zucchini | 250 g, 500 g | | Pomegranate | 500 g, 1 kg | | Guava | 500 g, 1 kg | | Muskmelon | 1 pc (0.8–1.5 kg), 2 pcs |  For a professional-looking app, use: - White background product images. - High-resolution (minimum **1000 × 1000 px**). - One consistent angle for all fruits and vegetable
+============================================================
+Product: Yellow Zucchini (Pos: 30673)
+  Markdown Images: []
+  Snippet: Yellow Zucchini Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":487,"_117":488,"_119":120,"_122":387,"_124":489,"_126":127},"0b0938ae-e853-401f-9086-4603fdb27cef",[455],{"_451":492,"_124":493}
+============================================================
+Product: Fresh Pomegranate (Pos: 8606)
+  Markdown Images: ['https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9jyTiCCnbevrzQly2Zn0ISPth2jFUvtV5l0FhAnLUhHvgZQj15zTXC4cc6QXd3tMktqhnwNBKz2os6sGYqv5jRssPtM36EBNqEXSAcYVdxlqGVkj_bVFaoZAI_G1Waxgp1KV?purpose=fullsize', 'https://images.openai.com/static-rsc-4/dkerJ7nEbicqA-KgBh_hwIcrlLuh-l0Vu-qO-Xuooc2MoNSb3L-IRUEI8s79Ph8ya2ZplALM0xyPNDI8srpiFPSlPQZF-CVgsu6qYKb8DzeZ83OTu1oySESvT0r-ESvb_5-keFCxVeCXyNHk8Nw1ZK8Wil5rywt5aipy5x1D4aU6E7YkqrSQpe1Nwf-AOzPg?purpose=fullsize', 'https://images.openai.com/static-rsc-4/4VozeXjTM_xG_jVoj54B7_v8oyEqmaG3d-_qIyOflGJXSjykkwEW4jw13fEJ8o4xpJqvQJBoq_LYymoRW7OAWkUvJizhtGyd81MdoTiNpXpeY2q5-Gb5rMUP7yHOANQKw45_8sXmrhChqKuY1kxznAZq2kw4RPeeyON51pULjHXVq5L05PNOhI5hecmsLft-?purpose=fullsize']
+  Snippet: Fresh pomegranate 1kg product image\",\"Fresh guava 1kg product image\",\"Fresh muskmelon whole product image\"]}","prefix","start_idx",884,"end_idx",1095,[157,159,166,172],"refs",[],"alt","![Image](https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9
+============================================================
+Product: Fresh Pomegranate (Pos: 11893)
+  Markdown Images: []
+  Snippet: Fresh pomegranate 1kg product image","https://gcc.luluhypermarket.com/en-sa/p/377341-ea/?utm_source=chatgpt.com",{"_229":256,"_231":256},"https://images.openai.com/static-rsc-4/1OCR6PuO82SqyZhb2hDZjL5hZiSowivLMwrfEDfGYxtge-yQ0BAi11hAB_nZN36S_Dd4w4hdskHuBqNiYxlRLQec1QX1uzudKe_-zyLcmqh4n8FdXY4W5rS-UOZ
+============================================================
+Product: Fresh Pomegranate (Pos: 28065)
+  Markdown Images: []
+  Snippet: Fresh pomegranate 1kg product image\",\"Fresh guava 1kg product image\",\"Fresh muskmelon whole product image\"]}  For your grocery app (similar to Blinkit/Zepto), it's better to show the **same product with multiple weight variants**. Here's a recommended structure:  | Product | Weight Variants |
+============================================================
+Product: Fresh Pomegranate (Pos: 30689)
+  Markdown Images: []
+  Snippet: Fresh Pomegranate Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":487,"_117":488,"_119":120,"_122":387,"_124":489,"_126":127},"0b0938ae-e853-401f-9086-4603fdb27cef",[455],{"_451":492,"_124":493},1784385473.1041
+============================================================
+Product: Fresh Guava (Pos: 8646)
+  Markdown Images: ['https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9jyTiCCnbevrzQly2Zn0ISPth2jFUvtV5l0FhAnLUhHvgZQj15zTXC4cc6QXd3tMktqhnwNBKz2os6sGYqv5jRssPtM36EBNqEXSAcYVdxlqGVkj_bVFaoZAI_G1Waxgp1KV?purpose=fullsize', 'https://images.openai.com/static-rsc-4/dkerJ7nEbicqA-KgBh_hwIcrlLuh-l0Vu-qO-Xuooc2MoNSb3L-IRUEI8s79Ph8ya2ZplALM0xyPNDI8srpiFPSlPQZF-CVgsu6qYKb8DzeZ83OTu1oySESvT0r-ESvb_5-keFCxVeCXyNHk8Nw1ZK8Wil5rywt5aipy5x1D4aU6E7YkqrSQpe1Nwf-AOzPg?purpose=fullsize', 'https://images.openai.com/static-rsc-4/4VozeXjTM_xG_jVoj54B7_v8oyEqmaG3d-_qIyOflGJXSjykkwEW4jw13fEJ8o4xpJqvQJBoq_LYymoRW7OAWkUvJizhtGyd81MdoTiNpXpeY2q5-Gb5rMUP7yHOANQKw45_8sXmrhChqKuY1kxznAZq2kw4RPeeyON51pULjHXVq5L05PNOhI5hecmsLft-?purpose=fullsize', 'https://images.openai.com/static-rsc-4/xeRCVWRqV2J0sb90uDawHIulBsjqjEomUWIsYA-IshZlx-g0xn0U5Z8MCsVGcn96n_zvUlu0MVSU08jx8xjkhp2lkdhvfVKAYoUVipOXgETEoyGgG_yo6eP4DpnXgVHgJLFJfppczYsfBAo7f23qoqPoN8SEbJYt7jQ_ngKEC9YJ99BLLoJXNoif2PsdagMy?purpose=fullsize']
+  Snippet: Fresh guava 1kg product image\",\"Fresh muskmelon whole product image\"]}","prefix","start_idx",884,"end_idx",1095,[157,159,166,172],"refs",[],"alt","![Image](https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9jyTiCCnbevrzQly2Zn0ISPth2jFUvtV5l0FhAnLU
+============================================================
+Product: Fresh Guava (Pos: 11247)
+  Markdown Images: []
+  Snippet: Fresh guava 1kg product image","https://grandmall.grandhyper.com/Guava-Pakistan-1Kg?utm_source=chatgpt.com",{"_229":244,"_231":244},"https://images.openai.com/static-rsc-4/Eyor5omsnakXhbVf-ZdNdTeE9PwKc9x8MbYKI4bOuxV9wMwId0M5pQfBR0ZfvRVfegk6omjON9zFt2YoVvOPgMR6ImGi_wwD3QcqBpdIhigzcYD_l4GrfMUnr5AFkdZ-
+============================================================
+Product: Fresh Guava (Pos: 28105)
+  Markdown Images: []
+  Snippet: Fresh guava 1kg product image\",\"Fresh muskmelon whole product image\"]}  For your grocery app (similar to Blinkit/Zepto), it's better to show the **same product with multiple weight variants**. Here's a recommended structure:  | Product | Weight Variants | |---------|-----------------| | Apple Ro
+============================================================
+Product: Fresh Guava (Pos: 30707)
+  Markdown Images: []
+  Snippet: Fresh Guava Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":487,"_117":488,"_119":120,"_122":387,"_124":489,"_126":127},"0b0938ae-e853-401f-9086-4603fdb27cef",[455],{"_451":492,"_124":493},1784385473.104162,{"_446":447,"_4
+============================================================
+Product: Fresh Muskmelon (Pos: 8680)
+  Markdown Images: ['https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9jyTiCCnbevrzQly2Zn0ISPth2jFUvtV5l0FhAnLUhHvgZQj15zTXC4cc6QXd3tMktqhnwNBKz2os6sGYqv5jRssPtM36EBNqEXSAcYVdxlqGVkj_bVFaoZAI_G1Waxgp1KV?purpose=fullsize', 'https://images.openai.com/static-rsc-4/dkerJ7nEbicqA-KgBh_hwIcrlLuh-l0Vu-qO-Xuooc2MoNSb3L-IRUEI8s79Ph8ya2ZplALM0xyPNDI8srpiFPSlPQZF-CVgsu6qYKb8DzeZ83OTu1oySESvT0r-ESvb_5-keFCxVeCXyNHk8Nw1ZK8Wil5rywt5aipy5x1D4aU6E7YkqrSQpe1Nwf-AOzPg?purpose=fullsize', 'https://images.openai.com/static-rsc-4/4VozeXjTM_xG_jVoj54B7_v8oyEqmaG3d-_qIyOflGJXSjykkwEW4jw13fEJ8o4xpJqvQJBoq_LYymoRW7OAWkUvJizhtGyd81MdoTiNpXpeY2q5-Gb5rMUP7yHOANQKw45_8sXmrhChqKuY1kxznAZq2kw4RPeeyON51pULjHXVq5L05PNOhI5hecmsLft-?purpose=fullsize', 'https://images.openai.com/static-rsc-4/xeRCVWRqV2J0sb90uDawHIulBsjqjEomUWIsYA-IshZlx-g0xn0U5Z8MCsVGcn96n_zvUlu0MVSU08jx8xjkhp2lkdhvfVKAYoUVipOXgETEoyGgG_yo6eP4DpnXgVHgJLFJfppczYsfBAo7f23qoqPoN8SEbJYt7jQ_ngKEC9YJ99BLLoJXNoif2PsdagMy?purpose=fullsize']
+  Snippet: Fresh muskmelon whole product image\"]}","prefix","start_idx",884,"end_idx",1095,[157,159,166,172],"refs",[],"alt","![Image](https://images.openai.com/static-rsc-4/08bPHqd42Yk9GEif_plwbpfsP7lo34KAa29JCczA-LtlDU64667qMW71PDZh9jyTiCCnbevrzQly2Zn0ISPth2jFUvtV5l0FhAnLUhHvgZQj15zTXC4cc6QXd3tMktqhnwNBKz2
+============================================================
+Product: Fresh Muskmelon (Pos: 10290)
+  Markdown Images: []
+  Snippet: Fresh muskmelon whole product image","image_search_system","url","https://media.gettyimages.com/id/520974957/photo/malon.jpg?b=1\u0026c=U77NwtiA3z5T8DtP-lrO7QG5RW3jYtRCqWqWkq3uPDQ%3D\u0026k=20\u0026s=612x612\u0026w=0\u0026utm_source=chatgpt.com","content_url","content_size",{"_229":232,"_231":232},"
+============================================================
+Product: Fresh Muskmelon (Pos: 28139)
+  Markdown Images: []
+  Snippet: Fresh muskmelon whole product image\"]}  For your grocery app (similar to Blinkit/Zepto), it's better to show the **same product with multiple weight variants**. Here's a recommended structure:  | Product | Weight Variants | |---------|-----------------| | Apple Royal Gala | 500 g, 1 kg, 2 kg | | B
+============================================================
+Product: Fresh Muskmelon (Pos: 30719)
+  Markdown Images: []
+  Snippet: Fresh Muskmelon give product images for the app variuos for different diffrent weight","user",{},{"_106":467,"_113":486,"_35":487,"_117":488,"_119":120,"_122":387,"_124":489,"_126":127},"0b0938ae-e853-401f-9086-4603fdb27cef",[455],{"_451":492,"_124":493},1784385473.104162,{"_446":447,"_448":491},{"_
+============================================================
