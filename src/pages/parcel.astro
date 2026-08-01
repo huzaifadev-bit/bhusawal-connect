@@ -39,12 +39,12 @@ import Switcher from '../components/Switcher.astro';
             "tertiary-fixed": "#94f990",
             "surface-container": "#eeeeee",
             "on-surface": "#1a1c1c",
-            "primary": "#b02f00",
-            "primary-container": "#ff5722",
+            "primary": "#4f46e5",
+            "primary-container": "#6366f1",
             "on-secondary-container": "#656464",
             "surface-container-low": "#f3f3f3",
             "surface-dim": "#dadada",
-            "primary-fixed": "#ffdbd1",
+            "primary-fixed": "#e0e7ff",
             "on-primary-fixed-variant": "#862200",
             "error": "#ba1a1a",
             "on-error-container": "#93000a",
@@ -75,6 +75,18 @@ import Switcher from '../components/Switcher.astro';
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
   </style>
+
+    <!-- Leaflet Map CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        .custom-pin-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+
 </head>
 <body class="text-on-surface bg-background pb-32">
   <!-- Top App Bar -->
@@ -88,6 +100,15 @@ import Switcher from '../components/Switcher.astro';
   </header>
 
   <main class="max-w-md mx-auto px-margin-mobile pt-6 space-y-6">
+    <div class="px-4 mt-3 max-w-md mx-auto">
+      <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-sm space-y-2">
+        <div class="flex items-center justify-between text-xs font-black text-neutral-800">
+          <span>📦 Bhusawal Pickup & Drop Route</span>
+          <span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[10px]">Google Maps Live</span>
+        </div>
+        <div id="parcel-bhusawal-map" class="h-36 w-full rounded-xl border border-neutral-200"></div>
+      </div>
+    </div>
     <!-- Form Container -->
     <div class="bg-white rounded-2xl p-6 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4">
       <h2 class="font-bold text-headline-md text-on-surface mb-2">Delivery Details</h2>
@@ -103,6 +124,9 @@ import Switcher from '../components/Switcher.astro';
           <input type="text" id="drop-addr" class="w-full bg-white border border-outline-variant/50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm" placeholder="Enter recipient address" />
         </div>
       </div>
+
+      <!-- Interactive GPS Route Map -->
+      <div id="map" class="h-44 w-full rounded-2xl border border-outline-variant/30 overflow-hidden shadow-inner mt-4" style="z-index:10; position: relative;"></div>
 
       <!-- Recipient Info -->
       <div class="grid grid-cols-2 gap-4">
@@ -175,16 +199,126 @@ import Switcher from '../components/Switcher.astro';
     const slider = document.getElementById('weight-slider');
     const weightLabel = document.getElementById('weight-label');
     const fareLabel = document.getElementById('fare-label');
-    let fare = 50;
+    let currentDistance = 2.0; // Default 2 km
+    let baseFare = 40;
+
+    function calculateFare() {
+      const weight = parseInt(slider.value);
+      // Fare: Base 40 + (weight * 5) + (distance * 12)
+      const totalFare = Math.round(baseFare + (weight * 5) + (currentDistance * 12));
+      fareLabel.textContent = `₹${totalFare}.00`;
+    }
 
     slider.addEventListener('input', (e) => {
-      const weight = parseInt(e.target.value);
-      weightLabel.textContent = `${weight} kg`;
-      
-      // Calculate dynamic fare: base 40 + 10 per kg
-      fare = 40 + (weight * 10);
-      fareLabel.textContent = `₹${fare}.00`;
+      weightLabel.textContent = `${e.target.value} kg`;
+      calculateFare();
     });
+
+    // Initialize Leaflet Map
+    let userLatLng = [21.0478, 75.7896];
+    const map = L.map('map', { zoomControl: false }).setView(userLatLng, 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    const createPin = (icon, color) => {
+        return L.divIcon({
+            className: 'custom-pin-icon',
+            html: `<div class="w-8 h-8 rounded-full ${color} text-white flex items-center justify-center border-2 border-white shadow-md">
+                       <span class="material-symbols-outlined text-sm font-bold">${icon}</span>
+                   </div>`,
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
+        });
+    };
+
+    // Current pickup marker
+    const pickupMarker = L.marker(userLatLng, {
+        icon: createPin('radio_button_checked', 'bg-primary')
+    }).addTo(map);
+
+    let dropMarker = null;
+    let routeLine = null;
+
+    // Distance calculator helper
+    function getDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    const dropInput = document.getElementById('drop-addr');
+
+    dropInput.addEventListener('focus', () => {
+        if (!dropMarker) {
+            const dropLat = userLatLng[0] + 0.012;
+            const dropLng = userLatLng[1] - 0.015;
+            currentDistance = getDistance(userLatLng[0], userLatLng[1], dropLat, dropLng);
+
+            dropMarker = L.marker([dropLat, dropLng], {
+                icon: createPin('location_on', 'bg-emerald-600'),
+                draggable: true
+            }).addTo(map).bindPopup("Recipient Drop Point (Drag to change)").openPopup();
+
+            routeLine = L.polyline([userLatLng, [dropLat, dropLng]], {
+                color: '#4f46e5',
+                weight: 3,
+                dashArray: '5, 5'
+            }).addTo(map);
+
+            map.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
+            dropInput.value = "Station Road, Bhusawal";
+            calculateFare();
+
+            // Recalculate fare when drop marker is dragged
+            dropMarker.on('dragend', () => {
+                const newPos = dropMarker.getLatLng();
+                routeLine.setLatLngs([userLatLng, newPos]);
+                currentDistance = getDistance(userLatLng[0], userLatLng[1], newPos.lat, newPos.lng);
+                calculateFare();
+                map.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
+            });
+        }
+    });
+
+    // Read cached location from launch or request permission
+    const cachedLat = localStorage.getItem('bhusawal_user_lat');
+    const cachedLng = localStorage.getItem('bhusawal_user_lng');
+
+    if (cachedLat && cachedLng) {
+        const lat = parseFloat(cachedLat);
+        const lng = parseFloat(cachedLng);
+        userLatLng = [lat, lng];
+        pickupMarker.setLatLng(userLatLng);
+        pickupMarker.bindPopup("Your Location: Pickup").openPopup();
+        map.setView(userLatLng, 13);
+    } else if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                userLatLng = [lat, lng];
+                localStorage.setItem('bhusawal_user_lat', lat);
+                localStorage.setItem('bhusawal_user_lng', lng);
+                
+                pickupMarker.setLatLng(userLatLng);
+                pickupMarker.bindPopup("Your Location: Pickup").openPopup();
+                map.setView(userLatLng, 13);
+                
+                if (dropMarker) {
+                    routeLine.setLatLngs([userLatLng, dropMarker.getLatLng()]);
+                    currentDistance = getDistance(userLatLng[0], userLatLng[1], dropMarker.getLatLng().lat, dropMarker.getLatLng().lng);
+                    calculateFare();
+                }
+            },
+            (error) => {
+                console.warn("Location permission denied, using default Bhusawal.");
+                pickupMarker.bindPopup("Pickup: Varangaon Road, Bhusawal").openPopup();
+            }
+        );
+    }
 
     // Dispatch Order
     document.getElementById('btn-book-parcel').addEventListener('click', () => {
@@ -198,23 +332,36 @@ import Switcher from '../components/Switcher.astro';
         return;
       }
 
-      const order = {
-        id: `PAR-${Math.floor(1000 + Math.random() * 9000)}`,
-        items: `Parcel Courier: ${selectedType} (${weightLabel.textContent}) to ${name}`,
-        total: fare,
-        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        status: 'Preparing'
-      };
+      // Proceed with simulated booking
+      localStorage.setItem('bhusawal_last_order', JSON.stringify({
+        id: 'PRC-' + Math.floor(Math.random() * 9000 + 1000),
+        items: `Parcel (${selectedType}, ${slider.value}kg) to ${name}`,
+        total: Math.round(baseFare + (parseInt(slider.value) * 5) + (currentDistance * 12)),
+        status: 'Verifying...',
+        date: 'Today'
+      }));
 
-      const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
-      orders.unshift(order);
-      localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
-      localStorage.setItem('bhusawal_active_order', JSON.stringify(order));
-
-      window.location.href = '/track_order';
+      alert("Rider request sent! Redirecting to confirmation.");
+      window.location.href = "/order_confirmation?type=parcel";
     });
   </script>
 
   <Switcher />
+<script>
+        if (!localStorage.getItem('bhusawal_user_token')) {
+            window.location.href = '/';
+        }
+</script>
+<script is:inline>
+    try {
+      const bhusawalParcelMap = L.map('parcel-bhusawal-map', { zoomControl: false, attributionControl: false }).setView([21.0478, 75.7896], 15);
+      L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+      }).addTo(bhusawalParcelMap);
+      L.marker([21.0455, 75.7858]).addTo(bhusawalParcelMap).bindPopup("Pickup: Station Road");
+      L.marker([21.0520, 75.7980]).addTo(bhusawalParcelMap).bindPopup("Drop: Jamner Road");
+    } catch(e){}
+  </script>
 </body>
 </html>
