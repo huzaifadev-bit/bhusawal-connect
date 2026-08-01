@@ -39,12 +39,12 @@ import Switcher from '../components/Switcher.astro';
             "tertiary-fixed": "#94f990",
             "surface-container": "#eeeeee",
             "on-surface": "#1a1c1c",
-            "primary": "#b02f00",
-            "primary-container": "#ff5722",
+            "primary": "#0d9488",
+            "primary-container": "#14b8a6",
             "on-secondary-container": "#656464",
             "surface-container-low": "#f3f3f3",
             "surface-dim": "#dadada",
-            "primary-fixed": "#ffdbd1",
+            "primary-fixed": "#ccfbf1",
             "on-primary-fixed-variant": "#862200",
             "error": "#ba1a1a",
             "on-error-container": "#93000a",
@@ -78,14 +78,68 @@ import Switcher from '../components/Switcher.astro';
 </head>
 <body class="text-on-surface bg-background pb-32">
   <!-- Top App Bar -->
-  <header class="bg-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
-    <div class="flex items-center gap-3">
-      <a href="/home" class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-150">
-        <span class="material-symbols-outlined text-primary">arrow_back</span>
-      </a>
-      <h1 class="font-headline-lg-mobile text-headline-md text-on-surface">Medicines Store</h1>
+  <header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
+    <div class="flex items-center gap-2 min-w-0">
+        
+        <a href="/home" class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-150 flex-shrink-0 flex items-center justify-center mr-1">
+            <span class="material-symbols-outlined text-primary">arrow_back</span>
+        </a>
+  
+        <!-- Delivery Time & Location Info -->
+        <div class="flex flex-col min-w-0">
+            <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-primary text-sm font-black animate-pulse" style="font-variation-settings: 'FILL' 1;">bolt</span>
+                <span class="font-extrabold text-[13px] tracking-tight text-on-surface" id="header-eta">10 minutes</span>
+            </div>
+            <div class="flex items-center gap-0.5 text-[10px] text-on-surface-variant font-extrabold cursor-pointer hover:text-primary transition-colors min-w-0 uppercase tracking-wide">
+                <span class="truncate" id="header-address">Home - Varangaon Road, Bhusawal</span>
+                <span class="material-symbols-outlined text-xs flex-shrink-0">keyboard_arrow_down</span>
+            </div>
+        </div>
     </div>
-  </header>
+    <!-- Profile Avatar on Top Right -->
+    <a href="/profile" class="w-9 h-9 rounded-full overflow-hidden border border-outline-variant/30 flex-shrink-0 hover:ring-2 hover:ring-primary/20 active:scale-90 transition-all flex items-center justify-center">
+        <img class="w-full h-full object-cover" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Profile"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+    </a>
+</header>
+<script is:inline>
+  (function() {
+    const cachedAddr = localStorage.getItem('bhusawal_user_address') || 'Home - Varangaon Rd, Bhusawal';
+    const cachedLat = localStorage.getItem('bhusawal_user_lat');
+    const cachedLng = localStorage.getItem('bhusawal_user_lng');
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const addrEl = document.getElementById('header-address');
+      if (addrEl) {
+        // Shorten the address to make it look clean (max 30 chars) and append "..." if longer
+        let shortAddr = cachedAddr;
+        if (shortAddr.length > 30) {
+          shortAddr = shortAddr.substring(0, 27) + '...';
+        }
+        addrEl.textContent = shortAddr;
+      }
+      
+      const etaEl = document.getElementById('header-eta');
+      if (etaEl) {
+        if (cachedLat && cachedLng) {
+          const lat1 = parseFloat(cachedLat);
+          const lng1 = parseFloat(cachedLng);
+          const lat2 = 21.0478;
+          const lng2 = 75.7896;
+          const R = 6371;
+          const dLat = (lat2 - lat1) * Math.PI / 180;
+          const dLon = (lng2 - lng1) * Math.PI / 180;
+          const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+          const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+          const minutes = Math.max(7, Math.round(dist * 2.5 + 4));
+          etaEl.textContent = minutes + ' minutes';
+        } else {
+          etaEl.textContent = '10 minutes';
+        }
+      }
+    });
+  })();
+</script>
 
   <main class="max-w-md mx-auto px-margin-mobile pt-6 space-y-6">
     <!-- Prescription Banner -->
@@ -115,51 +169,96 @@ import Switcher from '../components/Switcher.astro';
         <!-- Item 1 -->
         <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
           <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">OTC</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Paracetamol 650mg</h3>
-            <p class="text-xs text-on-surface-variant mt-1">Strip of 15 tablets</p>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Eno</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Eno Eno Fruit Salt - Lemon Fresh</h3>
+            <p class="text-xs text-on-surface-variant mt-1">5 g</p>
           </div>
           <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹30</span>
+            <span class="font-bold text-on-surface">₹10</span>
             <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
           </div>
         </div>
-
         <!-- Item 2 -->
         <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
           <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">OTC</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Dolo 650</h3>
-            <p class="text-xs text-on-surface-variant mt-1">Strip of 15 tablets</p>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Eno</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Eno Eno Fruit Salt - Lemon Fresh</h3>
+            <p class="text-xs text-on-surface-variant mt-1">100 g</p>
           </div>
           <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹32</span>
+            <span class="font-bold text-on-surface">₹160</span>
             <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
           </div>
         </div>
-
         <!-- Item 3 -->
         <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
           <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">OTC</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Cough Syrup</h3>
-            <p class="text-xs text-on-surface-variant mt-1">100 ml bottle</p>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Eno</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Eno Eno Fruit Salt - Cola fizz</h3>
+            <p class="text-xs text-on-surface-variant mt-1">5 g</p>
           </div>
           <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹105</span>
+            <span class="font-bold text-on-surface">₹10</span>
             <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
           </div>
         </div>
-
         <!-- Item 4 -->
         <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
           <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">OTC</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Vitamin C Tablets</h3>
-            <p class="text-xs text-on-surface-variant mt-1">Strip of 10 chewables</p>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Eno</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Eno Eno Fruit Salt - Cola fizz</h3>
+            <p class="text-xs text-on-surface-variant mt-1">100 g</p>
           </div>
           <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹150</span>
+            <span class="font-bold text-on-surface">₹160</span>
+            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
+          </div>
+        </div>
+        <!-- Item 5 -->
+        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Dettol</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Dettol Dettol Antiseptic Liquid - Original Formula</h3>
+            <p class="text-xs text-on-surface-variant mt-1">250 ml</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-bold text-on-surface">₹145</span>
+            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
+          </div>
+        </div>
+        <!-- Item 6 -->
+        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Dettol</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Dettol Dettol Antiseptic Liquid - Original Formula</h3>
+            <p class="text-xs text-on-surface-variant mt-1">500 ml</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-bold text-on-surface">₹260</span>
+            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
+          </div>
+        </div>
+        <!-- Item 7 -->
+        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Dettol</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Dettol Dettol Antiseptic Liquid - Original Formula</h3>
+            <p class="text-xs text-on-surface-variant mt-1">1 L</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-bold text-on-surface">₹420</span>
+            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
+          </div>
+        </div>
+        <!-- Item 8 -->
+        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
+          <div>
+            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Savlon</span>
+            <h3 class="font-bold text-label-md text-on-surface mt-2">Savlon Dettol Antiseptic Liquid - Original Formula</h3>
+            <p class="text-xs text-on-surface-variant mt-1">250 ml</p>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-bold text-on-surface">₹145</span>
             <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
           </div>
         </div>
@@ -207,7 +306,7 @@ import Switcher from '../components/Switcher.astro';
   </nav>
 
   <script is:inline>
-    let cart = [];
+    let cart = JSON.parse(localStorage.getItem('bhusawal_cart_medicine') || '{}');
     let cartCount = 0;
     let cartTotal = 0;
 
@@ -215,53 +314,120 @@ import Switcher from '../components/Switcher.astro';
     const cartTextCount = cartBar.querySelector('p.font-bold');
     const cartTextDetails = cartBar.querySelector('p.text-white\\/80');
 
-    cartBar.classList.add('hidden');
+    function updateCartBar() {
+      localStorage.setItem('bhusawal_cart_medicine', JSON.stringify(cart));
+      cartCount = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+      cartTotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
+      if (cartCount > 0) {
+        cartBar.classList.remove('hidden');
+        cartTextCount.textContent = cartCount + ' Item' + (cartCount > 1 ? 's' : '');
+        cartTextDetails.textContent = `₹${cartTotal} • Pharmacy Delivery`;
+      } else {
+        cartBar.classList.add('hidden');
+      }
+    }
 
+    function replaceWithStepper(btn, title, price, themeColor = '#10b981', imgUrl = '', packSize = '', category = '') {
+      const btnClass = btn.className;
+      const stepper = document.createElement('div');
+      // Relative positioning parent is the right column flex container
+      stepper.className = 'flex items-center rounded-lg shadow-sm overflow-hidden z-10';
+      stepper.style.backgroundColor = themeColor;
+      stepper.innerHTML = `
+        <button class="qty-minus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">−</button>
+        <span class="qty-value w-6 h-7 flex items-center justify-center text-white text-[11px] font-extrabold">1</span>
+        <button class="qty-plus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">+</button>
+      `;
+      btn.replaceWith(stepper);
+
+      if (!cart[title]) {
+        cart[title] = { price, qty: 1, themeColor, btnClass, imgUrl, packSize, category };
+      }
+      updateCartBar();
+
+      const qtyDisplay = stepper.querySelector('.qty-value');
+      qtyDisplay.textContent = cart[title].qty;
+
+      stepper.querySelector('.qty-plus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        cart[title].qty++;
+        qtyDisplay.textContent = cart[title].qty;
+        updateCartBar();
+      });
+
+      stepper.querySelector('.qty-minus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        cart[title].qty--;
+        if (cart[title].qty <= 0) {
+          delete cart[title];
+          const addBtn = document.createElement('button');
+          addBtn.className = btnClass;
+          addBtn.textContent = 'Add';
+          stepper.replaceWith(addBtn);
+          bindAddButton(addBtn);
+        } else {
+          qtyDisplay.textContent = cart[title].qty;
+        }
+        updateCartBar();
+      });
+    }
+
+    function bindAddButton(btn) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.bg-white');
+        const title = card.querySelector('h3').textContent.trim();
+        const priceText = card.querySelector('.font-bold.text-on-surface').textContent.trim();
+        const price = parseInt(priceText.replace(/[^\d]/g, ''));
+        
+        const packEl = card.querySelector('p.text-xs.text-on-surface-variant');
+        const packSize = packEl ? packEl.textContent.trim() : '1 Unit';
+
+        replaceWithStepper(btn, title, price, '#10b981', '', packSize, 'Medicines');
+      });
+    }
+
+    function syncUIWithCart() {
+      document.querySelectorAll('.bg-white').forEach(card => {
+        const titleEl = card.querySelector('h3');
+        if (!titleEl) return;
+        const title = titleEl.textContent.trim();
+        if (cart[title]) {
+          const btn = Array.from(card.querySelectorAll('button')).find(b => b.textContent.trim() === 'Add' || b.textContent.trim() === 'Added');
+          if (btn) {
+            const priceText = card.querySelector('.font-bold.text-on-surface').textContent.trim();
+            const price = parseInt(priceText.replace(/[^\d]/g, ''));
+            const packEl = card.querySelector('p.text-xs.text-on-surface-variant');
+            const packSize = packEl ? packEl.textContent.trim() : '1 Unit';
+
+            replaceWithStepper(btn, title, price, '#10b981', '', packSize, 'Medicines');
+          }
+        }
+      });
+      updateCartBar();
+    }
+
+    // Bind and sync initial cart state
     document.querySelectorAll('button').forEach(btn => {
       if (btn.textContent.trim() === 'Add') {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const card = btn.closest('.bg-white');
-          const title = card.querySelector('h3').textContent.trim();
-          const priceText = card.querySelector('.font-bold.text-on-surface').textContent.trim();
-          const price = parseInt(priceText.replace(/[^\d]/g, ''));
-
-          btn.textContent = 'Added';
-          btn.classList.remove('bg-primary');
-          btn.classList.add('bg-tertiary');
-          btn.disabled = true;
-
-          cart.push({ title, price });
-          cartCount++;
-          cartTotal += price;
-
-          cartBar.classList.remove('hidden');
-          cartTextCount.textContent = `${cartCount} Item${cartCount > 1 ? 's' : ''}`;
-          cartTextDetails.textContent = `₹${cartTotal} • Pharmacy Delivery`;
-        });
+        bindAddButton(btn);
       }
     });
+    syncUIWithCart();
 
     cartBar.addEventListener('click', () => {
-      if (cart.length > 0) {
-        const order = {
-          id: `MED-${Math.floor(1000 + Math.random() * 9000)}`,
-          items: cart.map(item => item.title).join(', '),
-          total: cartTotal,
-          date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          status: 'Preparing'
-        };
-
-        const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
-        orders.unshift(order);
-        localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
-        localStorage.setItem('bhusawal_active_order', JSON.stringify(order));
-
-        window.location.href = '/track_order';
+      if (cartCount > 0) {
+        window.location.href = '/billing?type=medicine';
       }
     });
   </script>
 
   <Switcher />
+<script>
+        if (!localStorage.getItem('bhusawal_user_token')) {
+            window.location.href = '/';
+        }
+</script>
+  <script src="/assets/zepto_search.js" defer></script>
 </body>
 </html>
