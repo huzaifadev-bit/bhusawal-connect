@@ -1,0 +1,7 @@
+import "/cdn/assets/manifest-9d80070e.js";
+import * as route0 from "/cdn/assets/root-iqfegv2z.js";
+import * as route1 from "/cdn/assets/share._shareId.(_action)-kfiyb2j1.js";
+  
+  window.__reactRouterRouteModules = {"root":route0,"routes/share.$shareId.($action)":route1};
+
+import("/cdn/assets/entry.client-d3spz9f1.js");
