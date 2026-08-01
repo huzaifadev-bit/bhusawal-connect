@@ -1,0 +1,8 @@
+node_modules
+.git
+.astro
+.gemini
+scratch
+backend/node_modules
+backend/prisma/dev.db-journal
+*.log
