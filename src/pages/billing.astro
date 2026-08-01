@@ -19,7 +19,7 @@ import Switcher from '../components/Switcher.astro';
    display: none;
   }
  </style>
- <script id="tailwind-config">
+ <script is:inline id="tailwind-config">
   tailwind.config = {
    darkMode: "class",
    theme: {
@@ -42,6 +42,9 @@ import Switcher from '../components/Switcher.astro';
   <!-- Leaflet & Google Maps Tiles -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" is:inline></script>
+  <script src="/assets/delivery_zone.js" is:inline></script>
+  <script src="/assets/address_manager.js" is:inline></script>
+  <script src="/assets/realtime_sync.js" is:inline></script>
 </head>
 <body class="text-on-surface bg-[#f4f6f8] min-h-screen pb-40">
  <!-- Top Navigation Header -->
@@ -51,24 +54,42 @@ import Switcher from '../components/Switcher.astro';
     <span class="material-symbols-outlined text-neutral-800">arrow_back</span>
    </a>
    <div>
-    <h1 class="text-sm font-extrabold text-neutral-800">Checkout</h1>
-    <p class="text-[10px] text-neutral-500 font-bold" id="header-address">Shivaji Nagar, Bhusawal</p>
+    <h1 class="text-sm font-extrabold text-neutral-800">Checkout & Payment</h1>
+    <p class="text-[10px] text-neutral-500 font-bold" id="header-address">Select Delivery Address</p>
    </div>
   </div>
  </header>
 
  <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
-  <!-- Delivering in 6 Mins Card -->
-  <!-- Bhusawal Delivery Location Map Card -->
-  <div class="bg-white rounded-2xl p-3 shadow-[0_8px_16px_rgba(0,0,0,0.02)] border border-neutral-100 space-y-2">
-    <div class="flex items-center justify-between px-1">
+
+  <!-- Mandatory Address Collection Card -->
+  <div class="bg-white rounded-2xl p-4 shadow-[0_8px_16px_rgba(0,0,0,0.02)] border border-neutral-100 space-y-3" id="billing-address-card">
+    <div class="flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <span class="text-emerald-600">📍</span>
-        <span class="text-xs font-black text-neutral-800">Delivery Address in Bhusawal</span>
+        <span class="material-symbols-outlined text-rose-600 text-lg">location_on</span>
+        <h3 class="text-xs font-black text-neutral-800">Select Delivery Address</h3>
       </div>
-      <span class="text-[10px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">GPS Verified</span>
+      <a href="/profile" class="text-[11px] font-black text-rose-600 hover:underline flex items-center gap-0.5">
+        <span class="material-symbols-outlined text-xs">add</span> Manage
+      </a>
     </div>
-    <div id="checkout-bhusawal-map" class="h-32 w-full rounded-xl border border-neutral-200 z-10"></div>
+
+    <!-- Address Cards Container -->
+    <div id="checkout-address-list" class="space-y-2">
+      <!-- Address options rendered dynamically -->
+    </div>
+
+    <!-- Out of Delivery Area Error Banner -->
+    <div id="delivery-zone-error" class="hidden p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-xs font-bold space-y-1">
+      <div class="flex items-center gap-1.5 text-red-800 font-black">
+        <span class="material-symbols-outlined text-base">error</span>
+        <span>Out of Delivery Radius</span>
+      </div>
+      <p id="delivery-zone-msg">Sorry, Bhusawal Connect does not currently deliver to this location.</p>
+    </div>
+
+    <!-- Bhusawal Delivery Location Map Card -->
+    <div id="checkout-bhusawal-map" class="h-28 w-full rounded-xl border border-neutral-200 z-10 mt-2"></div>
   </div>
 
   <div class="bg-white rounded-2xl p-4 shadow-[0_8px_16px_rgba(0,0,0,0.02)] border border-neutral-100 flex items-center gap-4">
@@ -179,10 +200,7 @@ import Switcher from '../components/Switcher.astro';
      <span>Delivery Fee</span>
      <span class="text-neutral-800" id="bill-delivery-fee">₹30</span>
     </div>
-    <div class="flex justify-between">
-     <span>Handling & Packaging Fee</span>
-     <span class="text-neutral-800" id="bill-handling-fee">₹10</span>
-    </div>
+
     <div class="flex justify-between hidden" id="night-fee-row">
      <span>Night Surcharge (11 PM - 6 AM)</span>
      <span class="text-neutral-800" id="bill-night-fee">₹0</span>
@@ -512,7 +530,7 @@ import Switcher from '../components/Switcher.astro';
    });
 
    const deliveryFee = itemTotal === 0 ? 0 : 30;
-   const handlingFee = itemTotal === 0 ? 0 : (deliveryDistance > 3.0 ? 25 : 10);
+
    const bagFee = noBag ? 0 : 10;
    
    // Night Fee calculation (after 11 PM, under ₹300 item total)
@@ -529,11 +547,11 @@ import Switcher from '../components/Switcher.astro';
     }
    }
 
-   const grandTotal = itemTotal > 0 ? (itemTotal + deliveryFee + handlingFee + bagFee + selectedTip + nightFee) : 0;
+   const grandTotal = itemTotal > 0 ? (itemTotal + deliveryFee + bagFee + selectedTip + nightFee) : 0;
 
    document.getElementById('bill-item-total').textContent = '₹' + itemTotal;
    document.getElementById('bill-delivery-fee').textContent = deliveryFee === 0 ? 'FREE' : '₹' + deliveryFee;
-   document.getElementById('bill-handling-fee').textContent = '₹' + handlingFee;
+
 
    const nightFeeRow = document.getElementById('night-fee-row');
    if (nightFee > 0) {
@@ -583,6 +601,95 @@ import Switcher from '../components/Switcher.astro';
    });
   });
 
+  // Address Selection & Delivery Zone Validation State
+  let selectedAddress = null;
+
+  function renderCheckoutAddresses() {
+    const addresses = window.AddressManager ? window.AddressManager.getAddresses() : [];
+    const container = document.getElementById('checkout-address-list');
+    const zoneError = document.getElementById('delivery-zone-error');
+    if (!container) return;
+
+    container.innerHTML = '';
+    
+    if (addresses.length === 0) {
+      container.innerHTML = `
+        <div class="p-3 bg-neutral-50 rounded-xl border border-dashed border-neutral-300 text-center">
+          <p class="text-xs font-bold text-neutral-600">No saved delivery address found.</p>
+          <a href="/profile" class="inline-block mt-2 text-xs font-black text-rose-600 bg-rose-50 px-3 py-1 rounded-lg border border-rose-200">Add Address in Profile</a>
+        </div>
+      `;
+      selectedAddress = null;
+      validateSelectedAddress();
+      return;
+    }
+
+    const defaultAddr = window.AddressManager.getDefaultAddress();
+    selectedAddress = defaultAddr || addresses[0];
+
+    addresses.forEach(addr => {
+      const isSelected = selectedAddress && selectedAddress.id === addr.id;
+      const isZoneValid = window.BhusawalDeliveryZone ? window.BhusawalDeliveryZone.isWithinDeliveryZone(addr.lat, addr.lng) : true;
+
+      const div = document.createElement('label');
+      div.className = `flex items-start gap-3 p-3 rounded-xl border ${isSelected ? 'border-rose-500 bg-rose-50/50' : 'border-neutral-200 bg-white'} cursor-pointer transition-all`;
+      div.innerHTML = `
+        <input type="radio" name="checkout-addr" value="${addr.id}" ${isSelected ? 'checked' : ''} class="mt-1 text-rose-600 focus:ring-rose-500" />
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-black text-neutral-800">${addr.tag || 'Home'}</span>
+            ${addr.isDefault ? '<span class="text-[9px] font-black bg-rose-100 text-rose-700 px-1.5 py-0.2 rounded uppercase">Default</span>' : ''}
+            ${!isZoneValid ? '<span class="text-[9px] font-black bg-red-100 text-red-700 px-1.5 py-0.2 rounded uppercase">Out of Zone</span>' : ''}
+          </div>
+          <p class="text-[11px] font-bold text-neutral-600 leading-tight mt-0.5 truncate">${addr.fullAddress}</p>
+        </div>
+      `;
+
+      div.querySelector('input').addEventListener('change', () => {
+        selectedAddress = addr;
+        if (window.BhusawalDeliveryZone) {
+          deliveryDistance = Math.round(window.BhusawalDeliveryZone.getDistanceToBhusawal(addr.lat, addr.lng) * 10) / 10;
+        }
+        renderCheckoutAddresses();
+        updateBillTotals();
+      });
+
+      container.appendChild(div);
+    });
+
+    validateSelectedAddress();
+  }
+
+  function validateSelectedAddress() {
+    const zoneError = document.getElementById('delivery-zone-error');
+    const payBtn = document.getElementById('btn-pay');
+    
+    if (!selectedAddress) {
+      zoneError.classList.remove('hidden');
+      document.getElementById('delivery-zone-msg').textContent = 'Please select a valid delivery address before proceeding.';
+      payBtn.disabled = true;
+      payBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      return false;
+    }
+
+    const isValidZone = window.BhusawalDeliveryZone ? window.BhusawalDeliveryZone.isWithinDeliveryZone(selectedAddress.lat, selectedAddress.lng) : true;
+    if (!isValidZone) {
+      zoneError.classList.remove('hidden');
+      document.getElementById('delivery-zone-msg').textContent = 'Sorry, Bhusawal Connect does not currently deliver to this location outside Bhusawal.';
+      payBtn.disabled = true;
+      payBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      return false;
+    }
+
+    zoneError.classList.add('hidden');
+    payBtn.disabled = false;
+    payBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+    const headerAddr = document.getElementById('header-address');
+    if (headerAddr) headerAddr.textContent = selectedAddress.fullAddress.substring(0, 32) + '...';
+    return true;
+  }
+
   // Payment Mode State & Handlers
   let selectedPaymentMethod = 'UPI';
   const payMethodUpi = document.getElementById('pay-method-upi');
@@ -615,6 +722,8 @@ import Switcher from '../components/Switcher.astro';
   // Click to Pay button
   let upiTimeout;
   document.getElementById('btn-pay').addEventListener('click', () => {
+   if (!validateSelectedAddress()) return;
+
    const items = Object.entries(cart);
    if (items.length === 0) {
     alert("Your cart is empty!");
@@ -627,7 +736,6 @@ import Switcher from '../components/Switcher.astro';
     itemTotal += item.price * item.qty;
    });
    const deliveryFee = 30;
-   const handlingFee = deliveryDistance > 3.0 ? 25 : 10;
    const bagFee = noBag ? 0 : 10;
    
    const now = new Date();
@@ -642,7 +750,7 @@ import Switcher from '../components/Switcher.astro';
      nightFee = 30;
     }
    }
-   grandTotal = itemTotal + deliveryFee + handlingFee + bagFee + selectedTip + nightFee;
+   grandTotal = itemTotal + deliveryFee + bagFee + selectedTip + nightFee;
 
    const itemsList = items.map(([title, data]) => title + ' x' + data.qty).join(', ');
    
@@ -656,7 +764,10 @@ import Switcher from '../components/Switcher.astro';
     total: grandTotal,
     date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     status: 'Preparing',
-    paymentMethod: selectedPaymentMethod
+    paymentMethod: selectedPaymentMethod,
+    address: selectedAddress ? selectedAddress.fullAddress : "Shivaji Nagar, Bhusawal",
+    lat: selectedAddress ? selectedAddress.lat : 21.0520,
+    lng: selectedAddress ? selectedAddress.lng : 75.7980
    };
 
    function placeOrderAndRedirect() {
@@ -665,14 +776,15 @@ import Switcher from '../components/Switcher.astro';
     localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
     localStorage.setItem('bhusawal_active_order', JSON.stringify(order));
 
-    // Clear cart
     const pendingOrders = JSON.parse(localStorage.getItem('pending_rider_orders') || '[]');
     const newRiderOrder = {
       id: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
       timestamp: new Date().toLocaleString(),
       customerName: "Sahil (Bhusawal Resident)",
-      address: document.getElementById('header-address')?.textContent || "Shivaji Nagar, Bhusawal",
-      phone: "+91 98765 43210",
+      address: selectedAddress ? selectedAddress.fullAddress : "Shivaji Nagar, Bhusawal",
+      lat: selectedAddress ? selectedAddress.lat : 21.0520,
+      lng: selectedAddress ? selectedAddress.lng : 75.7980,
+      phone: "+91 74980 71274",
       items: itemsList,
       totalAmount: grandTotal,
       paymentMethod: selectedPaymentMethod,
@@ -686,7 +798,12 @@ import Switcher from '../components/Switcher.astro';
     localStorage.setItem('last_active_order', JSON.stringify(newRiderOrder));
     localStorage.removeItem(cartKey);
 
-    // Redirect to tracking page
+    // Broadcast Real-time event across tabs
+    if (window.BhusawalRealtime) {
+      window.BhusawalRealtime.emit('new-order', newRiderOrder);
+    }
+
+    // Redirect to live tracking page
     window.location.href = '/track_order';
    }
 
@@ -697,18 +814,15 @@ import Switcher from '../components/Switcher.astro';
     const modal = document.getElementById('upi-modal');
     modal.classList.remove('hidden');
 
-    // Cancel button inside UPI modal
     document.getElementById('btn-cancel-upi').addEventListener('click', () => {
      modal.classList.add('hidden');
      clearTimeout(upiTimeout);
     });
 
-    // Mock payment confirmation after 4 seconds
     upiTimeout = setTimeout(() => {
      placeOrderAndRedirect();
-    }, 4000);
+    }, 3000);
    } else {
-    // Cash on Delivery - place order immediately
     placeOrderAndRedirect();
    }
   });
@@ -716,6 +830,7 @@ import Switcher from '../components/Switcher.astro';
   // Initial render
   renderCartItems();
   renderRecommendations();
+  renderCheckoutAddresses();
  </script>
  <Switcher />
 </body>

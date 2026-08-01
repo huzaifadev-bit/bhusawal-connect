@@ -6,10 +6,11 @@ import Switcher from '../components/Switcher.astro';
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Rider Dashboard - Bhusawal Connect</title>
-  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+  <title>Delivery Partner App - Bhusawal Connect</title>
+  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
   <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
   <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+  <script src="/assets/realtime_sync.js" is:inline></script>
   <style>
     * { -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f8fafc; }
@@ -34,7 +35,7 @@ import Switcher from '../components/Switcher.astro';
       <div class="flex items-center gap-2">
         <div id="gps-status-badge" class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-black px-2.5 py-1 rounded-full flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-          <span>📍 GPS Active</span>
+          <span id="gps-status-text">📍 GPS Active</span>
         </div>
         <button id="btn-toggle-duty" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
           <span class="w-2 h-2 rounded-full bg-slate-950 animate-pulse"></span>
@@ -97,15 +98,28 @@ import Switcher from '../components/Switcher.astro';
             <span class="text-base">📍</span>
             <div>
               <p class="font-extrabold text-slate-400 text-[10px]">DELIVERY CUSTOMER</p>
-              <h3 id="active-customer-name" class="font-black text-white">Customer</h3>
+              <h3 id="active-customer-name" class="font-black text-white">Sahil (Bhusawal Resident)</h3>
               <p id="active-customer-address" class="text-slate-400 text-[11px]">Shivaji Nagar, Bhusawal</p>
             </div>
           </div>
         </div>
 
+        <!-- Customer Phone & Action Buttons -->
+        <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-2xl border border-slate-700/60">
+          <div>
+            <p class="text-[10px] font-bold text-slate-400">Customer Phone</p>
+            <p id="active-customer-phone" class="text-xs font-black text-emerald-400">+91 74980 71274</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <a id="btn-call-cust" href="tel:7498071274" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-xl text-xs font-bold flex items-center gap-1 active:scale-95">
+              <span class="material-symbols-outlined text-sm">call</span> Call
+            </a>
+          </div>
+        </div>
+
         <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-700/60 flex items-center justify-between">
           <div>
-            <p class="text-[10px] font-bold text-slate-400">Order Bill & Items</p>
+            <p class="text-[10px] font-bold text-slate-400">Order Items</p>
             <p id="active-order-items" class="text-xs font-black text-slate-200">1 Item</p>
           </div>
           <div class="text-right">
@@ -140,18 +154,16 @@ import Switcher from '../components/Switcher.astro';
 
   </main>
 
-  <!-- High-Priority Incoming Order Sound & Modal Alert Popup -->
+  <!-- High-Priority Incoming Order Alert Modal -->
   <div id="rider-order-popup-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
     <div class="bg-slate-900 border-2 border-emerald-500 rounded-3xl max-w-md w-full p-6 space-y-5 relative shadow-2xl text-center animate-in zoom-in-95 duration-200">
-      
       <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl animate-bounce border border-emerald-500/40">
         🔔
       </div>
-
       <div>
         <span class="bg-emerald-500 text-slate-950 font-black text-[10px] px-3 py-1 rounded-full uppercase tracking-widest">New Order Request</span>
         <h2 class="text-xl font-black text-white mt-2">New Delivery Order Available!</h2>
-        <p class="text-xs text-slate-400 font-bold mt-1">Accept now to claim ₹60 delivery payout!</p>
+        <p class="text-xs text-slate-400 font-bold mt-1">Accept now to claim delivery payout!</p>
       </div>
 
       <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 text-left space-y-2">
@@ -188,26 +200,36 @@ import Switcher from '../components/Switcher.astro';
     let isOnline = true;
     let currentPendingOrders = [];
     let currentActiveOrder = null;
-    let audioCtx = null;
+    let watchId = null;
 
-    function playAlertSound() {
-      try {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 note
-        osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5);
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.5);
-      } catch (e) {
-        console.log("Audio alert blocked by browser context");
-      }
+    // Start continuous GPS watching & Realtime Broadcast
+    function startGPSWatch() {
+      if (!navigator.geolocation) return;
+      watchId = navigator.geolocation.watchPosition((pos) => {
+        const coords = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          riderId: 'HZ-7498',
+          heading: pos.coords.heading || 0
+        };
+        if (window.BhusawalRealtime) {
+          window.BhusawalRealtime.emit('rider-location', coords);
+        }
+        document.getElementById('gps-status-text').textContent = '📍 GPS Active';
+      }, (err) => {
+        document.getElementById('gps-status-text').textContent = '📍 GPS Standby';
+      }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 5000 });
     }
+
+    function stopGPSWatch() {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+      }
+      document.getElementById('gps-status-text').textContent = '📍 GPS Stopped';
+    }
+
+    startGPSWatch();
 
     function loadPendingOrders() {
       const stored = localStorage.getItem('pending_rider_orders');
@@ -265,13 +287,14 @@ import Switcher from '../components/Switcher.astro';
         currentActiveOrder.step = 1;
         currentActiveOrder.riderName = "Huzaifa Shaikh";
         currentActiveOrder.riderPhone = "7498071274";
-        currentActiveOrder.riderVehicle = "MH-19-4821 (Honda Activa)";
-        currentActiveOrder.riderLat = 21.0455;
-        currentActiveOrder.riderLng = 75.7858;
         
         localStorage.setItem('pending_rider_orders', JSON.stringify(currentPendingOrders));
         localStorage.setItem('active_rider_order', JSON.stringify(currentActiveOrder));
         localStorage.setItem('last_active_order', JSON.stringify(currentActiveOrder));
+
+        if (window.BhusawalRealtime) {
+          window.BhusawalRealtime.emit('order-status', { orderId: currentActiveOrder.id, status: 'RIDER_ASSIGNED' });
+        }
         
         document.getElementById('rider-order-popup-modal').classList.add('hidden');
         renderActiveOrder();
@@ -294,8 +317,10 @@ import Switcher from '../components/Switcher.astro';
       activeSection.classList.remove('hidden');
       document.getElementById('active-order-id').textContent = currentActiveOrder.id;
       document.getElementById('active-pickup-store').textContent = currentActiveOrder.storeName || "Bhusawal Express Store";
-      document.getElementById('active-customer-name').textContent = currentActiveOrder.customerName || "Customer";
+      document.getElementById('active-customer-name').textContent = currentActiveOrder.customerName || "Sahil (Bhusawal Resident)";
       document.getElementById('active-customer-address').textContent = currentActiveOrder.address;
+      document.getElementById('active-customer-phone').textContent = currentActiveOrder.phone || "+91 74980 71274";
+      document.getElementById('btn-call-cust').href = 'tel:' + (currentActiveOrder.phone || '7498071274');
       document.getElementById('active-order-items').textContent = currentActiveOrder.items || "1 Item";
       document.getElementById('active-order-earning').textContent = '₹' + (currentActiveOrder.riderEarning || 60);
 
@@ -320,20 +345,26 @@ import Switcher from '../components/Switcher.astro';
       if (step < 4) {
         step++;
         currentActiveOrder.step = step;
-        if (step === 2) currentActiveOrder.status = "PICKED_UP";
-        if (step === 3) currentActiveOrder.status = "OUT_FOR_DELIVERY";
+        if (step === 2) currentActiveOrder.status = "REACHED_STORE";
+        if (step === 3) currentActiveOrder.status = "PICKED_UP";
         if (step === 4) {
           currentActiveOrder.status = "DELIVERED";
           localStorage.removeItem('active_rider_order');
+          stopGPSWatch(); // Automatically stop location updates after delivery is completed
         } else {
           localStorage.setItem('active_rider_order', JSON.stringify(currentActiveOrder));
         }
         localStorage.setItem('last_active_order', JSON.stringify(currentActiveOrder));
+
+        if (window.BhusawalRealtime) {
+          window.BhusawalRealtime.emit('order-status', { orderId: currentActiveOrder.id, status: currentActiveOrder.status });
+        }
+
         renderActiveOrder();
       }
     });
 
-    // Toggle Online/Offline Status
+    // Toggle Duty
     const dutyBtn = document.getElementById('btn-toggle-duty');
     const dutyText = document.getElementById('duty-status-text');
 
@@ -342,56 +373,25 @@ import Switcher from '../components/Switcher.astro';
       if (isOnline) {
         dutyText.textContent = "ONLINE";
         dutyBtn.className = "bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 transition-all active:scale-95";
+        startGPSWatch();
       } else {
         dutyText.textContent = "OFFLINE";
         dutyBtn.className = "bg-rose-500/20 text-rose-400 border border-rose-500/40 font-black text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all active:scale-95";
+        stopGPSWatch();
       }
       renderOrdersList();
     });
 
-    // Trigger Popup for incoming orders
-    function checkIncomingNotification() {
-      if (!isOnline) return;
-      loadPendingOrders();
-      if (currentPendingOrders.length > 0 && !currentActiveOrder) {
-        const latest = currentPendingOrders[0];
-        document.getElementById('popup-order-id').textContent = latest.id;
-        document.getElementById('popup-order-address').textContent = latest.address;
-        document.getElementById('popup-order-items').textContent = latest.items;
-        document.getElementById('popup-order-payout').textContent = '₹' + (latest.riderEarning || 60);
-
-        const modal = document.getElementById('rider-order-popup-modal');
-        if (modal.classList.contains('hidden')) {
-          modal.classList.remove('hidden');
-          modal.classList.add('flex');
-          playAlertSound();
-        }
-
-        document.getElementById('btn-accept-popup').onclick = () => {
-          acceptOrder(latest.id);
-        };
-        document.getElementById('btn-decline-popup').onclick = () => {
-          modal.classList.remove('hidden');
-          modal.classList.add('hidden');
-        };
-      }
+    // Check incoming orders via Realtime sync
+    if (window.BhusawalRealtime) {
+      window.BhusawalRealtime.on('new-order', (ord) => {
+        loadPendingOrders();
+      });
     }
-
-    document.getElementById('btn-refresh-orders').addEventListener('click', () => {
-      loadPendingOrders();
-    });
-
-    // Storage event listener for cross-tab realtime updates when order is placed
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'pending_rider_orders') {
-        checkIncomingNotification();
-      }
-    });
 
     // Init load
     loadPendingOrders();
     renderActiveOrder();
-    setInterval(checkIncomingNotification, 3000);
   </script>
 
   <Switcher />

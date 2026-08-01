@@ -6,183 +6,71 @@ import Switcher from '../components/Switcher.astro';
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>My Account | Bhusawal Connect</title>
-    <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+    <title>My Account & Addresses | Bhusawal Connect</title>
+    <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
     <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
     <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script is:inline src="/assets/delivery_zone.js"></script>
+    <script is:inline src="/assets/address_manager.js"></script>
+    <script is:inline src="/assets/realtime_sync.js"></script>
     <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
         .profile-header-bg {
             background: linear-gradient(135deg, #b02f00 0%, #ff5722 100%);
         }
-    </style>
-    <!-- Insert Tailwind Config -->
-    <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                "inverse-surface": "#2f3131",
-                "tertiary": "#006e1c",
-                "surface-tint": "#b02f00",
-                "primary-fixed": "#ffdbd1",
-                "on-primary-fixed": "#3b0900",
-                "on-background": "#1a1c1c",
-                "on-primary-fixed-variant": "#862200",
-                "error": "#ba1a1a",
-                "surface-bright": "#f9f9f9",
-                "on-primary-container": "#541200",
-                "inverse-primary": "#ffb5a0",
-                "on-secondary-fixed": "#1c1b1b",
-                "on-tertiary-fixed": "#002204",
-                "on-secondary-fixed-variant": "#474646",
-                "on-error-container": "#93000a",
-                "surface-container": "#eeeeee",
-                "on-surface-variant": "#5b4039",
-                "on-surface": "#1a1c1c",
-                "primary": "#b02f00",
-                "outline-variant": "#e4beb4",
-                "on-tertiary-container": "#003208",
-                "surface-container-high": "#e8e8e8",
-                "on-primary": "#ffffff",
-                "surface-container-lowest": "#ffffff",
-                "primary-fixed-dim": "#ffb5a0",
-                "secondary-container": "#e5e2e1",
-                "secondary-fixed": "#e5e2e1",
-                "outline": "#907067",
-                "surface-container-highest": "#e2e2e2",
-                "inverse-on-surface": "#f1f1f1",
-                "on-secondary-container": "#656464",
-                "background": "#f9f9f9",
-                "tertiary-container": "#41a447",
-                "surface-dim": "#dadada",
-                "surface": "#f9f9f9",
-                "secondary-fixed-dim": "#c8c6c5",
-                "tertiary-fixed": "#94f990",
-                "on-error": "#ffffff",
-                "tertiary-fixed-dim": "#78dc77",
-                "surface-container-low": "#f3f3f3",
-                "on-tertiary-fixed-variant": "#005313",
-                "surface-variant": "#e2e2e2",
-                "error-container": "#ffdad6",
-                "primary-container": "#ff5722",
-                "on-secondary": "#ffffff",
-                "on-tertiary": "#ffffff",
-                "secondary": "#5f5e5e"
-            },
-            "borderRadius": {
-                "DEFAULT": "0.25rem",
-                "lg": "0.5rem",
-                "xl": "0.75rem",
-                "full": "9999px"
-            },
-            "fontFamily": {
-                "body-md": ["Plus Jakarta Sans"],
-                "headline-md": ["Plus Jakarta Sans"],
-                "headline-lg-mobile": ["Plus Jakarta Sans"],
-                "label-sm": ["Plus Jakarta Sans"],
-                "body-lg": ["Plus Jakarta Sans"],
-                "headline-lg": ["Plus Jakarta Sans"],
-                "label-md": ["Plus Jakarta Sans"]
-            }
-          }
+        #address-map {
+            height: 220px;
+            width: 100%;
+            border-radius: 1rem;
+            z-index: 1;
         }
-      }
-    </script>
+    </style>
 </head>
-<body class="bg-background text-on-background font-body-md min-h-screen pb-24">
+<body class="bg-background text-on-background min-h-screen pb-24">
 
 <!-- Top App Bar -->
-<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
+<header class="bg-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-4 h-16 w-full">
     <div class="flex items-center gap-2 min-w-0">
-        
         <a href="/home" class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-150 flex-shrink-0 flex items-center justify-center mr-1">
             <span class="material-symbols-outlined text-primary">arrow_back</span>
         </a>
-  
-        <!-- Delivery Time & Location Info -->
         <div class="flex flex-col min-w-0">
             <div class="flex items-center gap-1">
                 <span class="material-symbols-outlined text-primary text-sm font-black animate-pulse" style="font-variation-settings: 'FILL' 1;">bolt</span>
                 <span class="font-extrabold text-[13px] tracking-tight text-on-surface" id="header-eta">10 minutes</span>
             </div>
             <div class="flex items-center gap-0.5 text-[10px] text-on-surface-variant font-extrabold cursor-pointer hover:text-primary transition-colors min-w-0 uppercase tracking-wide">
-                <span class="truncate" id="header-address">Home - Varangaon Road, Bhusawal</span>
+                <span class="truncate" id="header-address">Home - Station Road, Bhusawal</span>
                 <span class="material-symbols-outlined text-xs flex-shrink-0">keyboard_arrow_down</span>
             </div>
         </div>
     </div>
-    <!-- Profile Avatar on Top Right -->
     <a href="/profile" class="w-9 h-9 rounded-full overflow-hidden border border-outline-variant/30 flex-shrink-0 hover:ring-2 hover:ring-primary/20 active:scale-90 transition-all flex items-center justify-center">
-        <img class="w-full h-full object-cover" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Profile"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+        <img id="header-profile-img" class="w-full h-full object-cover" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Profile" onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
     </a>
 </header>
-<script is:inline>
-  (function() {
-    const cachedAddr = localStorage.getItem('bhusawal_user_address') || 'Home - Varangaon Rd, Bhusawal';
-    const cachedLat = localStorage.getItem('bhusawal_user_lat');
-    const cachedLng = localStorage.getItem('bhusawal_user_lng');
-    
-    document.addEventListener('DOMContentLoaded', () => {
-      const addrEl = document.getElementById('header-address');
-      if (addrEl) {
-        // Shorten the address to make it look clean (max 30 chars) and append "..." if longer
-        let shortAddr = cachedAddr;
-        if (shortAddr.length > 30) {
-          shortAddr = shortAddr.substring(0, 27) + '...';
-        }
-        addrEl.textContent = shortAddr;
-      }
-      
-      const etaEl = document.getElementById('header-eta');
-      if (etaEl) {
-        if (cachedLat && cachedLng) {
-          const lat1 = parseFloat(cachedLat);
-          const lng1 = parseFloat(cachedLng);
-          const lat2 = 21.0478;
-          const lng2 = 75.7896;
-          const R = 6371;
-          const dLat = (lat2 - lat1) * Math.PI / 180;
-          const dLon = (lng2 - lng1) * Math.PI / 180;
-          const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
-          const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-          const minutes = Math.max(7, Math.round(dist * 2.5 + 4));
-          etaEl.textContent = minutes + ' minutes';
-        } else {
-          etaEl.textContent = '10 minutes';
-        }
-      }
-    });
-  })();
-</script>
 
-<main class="max-w-md mx-auto px-margin-mobile py-4 space-y-6">
+<main class="max-w-md mx-auto px-4 py-4 space-y-6">
 
     <!-- Profile Overview Card -->
-    <div class="profile-header-bg p-6 rounded-3xl text-white shadow-lg flex items-center gap-4 relative overflow-hidden">
-        <!-- Overlay subtle pattern -->
-        <div class="absolute inset-0 bg-black/5 mix-blend-overlay" />
-        
-        <!-- Avatar -->
-        <div class="w-16 h-16 rounded-full border-4 border-white/30 overflow-hidden shadow-inner flex-shrink-0">
-            <img class="w-full h-full object-cover" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="User Profile"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-        </div>
-        <!-- Profile Info -->
-        <div class="flex-1 min-w-0">
-            <h2 id="user-name" class="text-xl font-bold truncate">Sahil Patel</h2>
-            <p id="user-phone" class="text-sm text-white/80 font-medium mt-0.5">+91 99999 99999</p>
-            <div class="inline-flex bg-white/20 backdrop-blur-md px-2 py-0.5 rounded-full text-[10px] font-bold mt-2 tracking-wide uppercase">
-                Customer
+    <div class="profile-header-bg p-6 rounded-3xl text-white shadow-lg flex items-center justify-between gap-4 relative overflow-hidden">
+        <div class="flex items-center gap-4 min-w-0">
+            <div class="w-16 h-16 rounded-full border-4 border-white/30 overflow-hidden shadow-inner flex-shrink-0">
+                <img id="card-profile-img" class="w-full h-full object-cover" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="User Profile" onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+            </div>
+            <div class="flex-1 min-w-0">
+                <h2 id="user-name" class="text-xl font-bold truncate">Sahil Patel</h2>
+                <p id="user-phone" class="text-sm text-white/80 font-medium mt-0.5">+91 99999 99999</p>
+                <p id="user-email" class="text-xs text-white/70 font-normal truncate mt-0.5">sahil@bhusawalconnect.com</p>
             </div>
         </div>
+        <button id="btn-edit-profile" class="bg-white/20 hover:bg-white/30 text-white p-2.5 rounded-full active:scale-90 transition-all flex-shrink-0" title="Edit Profile">
+            <span class="material-symbols-outlined text-lg">edit</span>
+        </button>
     </div>
 
     <!-- Quick Stats Grid -->
@@ -192,24 +80,41 @@ import Switcher from '../components/Switcher.astro';
             <p class="text-[10px] font-bold text-on-surface-variant mt-0.5 uppercase tracking-wide">Orders</p>
         </div>
         <div class="bg-white p-3 rounded-2xl border border-outline-variant/30 text-center shadow-sm">
-            <p class="text-xl font-extrabold text-[#0c831f]">2</p>
+            <p id="stat-addresses" class="text-xl font-extrabold text-[#0c831f]">1</p>
             <p class="text-[10px] font-bold text-on-surface-variant mt-0.5 uppercase tracking-wide">Addresses</p>
         </div>
         <div class="bg-white p-3 rounded-2xl border border-outline-variant/30 text-center shadow-sm">
-            <p class="text-xl font-extrabold text-blue-600">₹0</p>
+            <p class="text-xl font-extrabold text-blue-600">₹150</p>
             <p class="text-[10px] font-bold text-on-surface-variant mt-0.5 uppercase tracking-wide">B-Wallet</p>
+        </div>
+    </div>
+
+    <!-- Mandatory Address Management Section -->
+    <div class="space-y-3">
+        <div class="flex items-center justify-between">
+            <h3 class="font-bold text-lg text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">location_on</span>
+                <span>Saved Addresses</span>
+            </h3>
+            <button id="btn-add-address" class="bg-primary text-white text-xs font-extrabold px-3 py-1.5 rounded-xl shadow-sm hover:bg-primary/90 active:scale-95 transition-all flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">add</span>
+                <span>Add Address</span>
+            </button>
+        </div>
+
+        <div id="addresses-list" class="space-y-3">
+            <!-- Addresses will be injected dynamically -->
         </div>
     </div>
 
     <!-- Past / Active Orders Section -->
     <div class="space-y-3">
         <div class="flex items-center justify-between">
-            <h3 class="font-headline-md text-lg text-on-surface">Recent Orders</h3>
-            <span class="text-xs font-bold text-primary hover:underline cursor-pointer">View History</span>
+            <h3 class="font-bold text-lg text-on-surface">Recent Orders</h3>
+            <a href="/orders" class="text-xs font-bold text-primary hover:underline cursor-pointer">View History</a>
         </div>
 
         <div id="orders-container" class="space-y-3">
-            <!-- Dynamic order items will be injected here -->
             <div class="bg-white p-6 rounded-2xl border border-outline-variant/20 text-center space-y-3 shadow-sm">
                 <div class="w-12 h-12 bg-primary-fixed/30 text-primary rounded-full flex items-center justify-center mx-auto">
                     <span class="material-symbols-outlined text-2xl">receipt_long</span>
@@ -227,29 +132,15 @@ import Switcher from '../components/Switcher.astro';
 
     <!-- Settings Menu List -->
     <div class="bg-white rounded-3xl border border-outline-variant/20 shadow-sm overflow-hidden divide-y divide-outline-variant/10">
-        <!-- Addresses -->
-        <div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors cursor-pointer active:scale-98">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-primary-fixed/20 text-primary flex items-center justify-center">
-                    <span class="material-symbols-outlined">location_on</span>
-                </div>
-                <div>
-                    <h4 class="font-bold text-sm text-on-surface">Saved Addresses</h4>
-                    <p class="text-[10px] text-on-surface-variant">Manage home, office addresses</p>
-                </div>
-            </div>
-            <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
-        </div>
-
         <!-- Payments -->
-        <div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors cursor-pointer active:scale-98">
+        <div id="btn-payments" class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors cursor-pointer active:scale-98">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center">
                     <span class="material-symbols-outlined">payments</span>
                 </div>
                 <div>
-                    <h4 class="font-bold text-sm text-on-surface">Payment Methods</h4>
-                    <p class="text-[10px] text-on-surface-variant">UPI, saved cards, wallet link</p>
+                    <h4 class="font-bold text-sm text-on-surface">Saved Payment Methods</h4>
+                    <p class="text-[10px] text-on-surface-variant">Google Pay, PhonePe, Cards, COD</p>
                 </div>
             </div>
             <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
@@ -263,7 +154,7 @@ import Switcher from '../components/Switcher.astro';
                 </div>
                 <div>
                     <h4 class="font-bold text-sm text-on-surface">Help & Support</h4>
-                    <p class="text-[10px] text-on-surface-variant">Chat with support, FAQs</p>
+                    <p class="text-[10px] text-on-surface-variant">Bhusawal Helpline: +91 74980 71274</p>
                 </div>
             </div>
             <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
@@ -286,102 +177,416 @@ import Switcher from '../components/Switcher.astro';
 
 </main>
 
+<!-- Address Add/Edit Modal with Interactive Leaflet Map -->
+<div id="address-modal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl p-5 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+            <h3 id="address-modal-title" class="font-bold text-base text-neutral-900 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">pin_drop</span>
+                <span>Select & Save Delivery Address</span>
+            </h3>
+            <button id="address-modal-close" class="text-neutral-400 hover:text-neutral-700">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <!-- Map & GPS Button -->
+        <div class="space-y-2">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-neutral-600">Drag pin to set exact location:</span>
+                <button id="btn-detect-gps" class="text-xs font-black text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg hover:bg-rose-100 active:scale-95 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">my_location</span>
+                    <span>Detect GPS</span>
+                </button>
+            </div>
+            <div id="address-map"></div>
+            <p id="geo-status" class="text-[11px] text-neutral-500 italic"></p>
+        </div>
+
+        <!-- Form Fields -->
+        <form id="address-form" class="space-y-3">
+            <input type="hidden" id="addr-id" />
+            <input type="hidden" id="addr-lat" value="21.0478" />
+            <input type="hidden" id="addr-lng" value="75.7896" />
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-neutral-700 mb-1">House / Flat No. *</label>
+                    <input type="text" id="addr-flat" required placeholder="e.g. Flat 302, Bldg B" class="w-full text-xs p-2.5 border border-neutral-200 rounded-xl outline-none focus:border-rose-500" />
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-neutral-700 mb-1">Building / Society</label>
+                    <input type="text" id="addr-building" placeholder="e.g. Shiv Regency" class="w-full text-xs p-2.5 border border-neutral-200 rounded-xl outline-none focus:border-rose-500" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-neutral-700 mb-1">Street / Road *</label>
+                    <input type="text" id="addr-street" required placeholder="e.g. Station Road" class="w-full text-xs p-2.5 border border-neutral-200 rounded-xl outline-none focus:border-rose-500" />
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-neutral-700 mb-1">Area / Locality *</label>
+                    <input type="text" id="addr-area" required placeholder="e.g. Shivaji Nagar" class="w-full text-xs p-2.5 border border-neutral-200 rounded-xl outline-none focus:border-rose-500" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-neutral-700 mb-1">Landmark</label>
+                    <input type="text" id="addr-landmark" placeholder="e.g. Near Railway Station" class="w-full text-xs p-2.5 border border-neutral-200 rounded-xl outline-none focus:border-rose-500" />
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-neutral-700 mb-1">PIN Code *</label>
+                    <input type="text" id="addr-pincode" required value="425201" maxlength="6" class="w-full text-xs p-2.5 border border-neutral-200 rounded-xl outline-none focus:border-rose-500" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[11px] font-bold text-neutral-700 mb-1">City</label>
+                    <input type="text" id="addr-city" readonly value="Bhusawal" class="w-full text-xs p-2.5 bg-neutral-100 border border-neutral-200 rounded-xl text-neutral-600" />
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-neutral-700 mb-1">State</label>
+                    <input type="text" id="addr-state" readonly value="Maharashtra" class="w-full text-xs p-2.5 bg-neutral-100 border border-neutral-200 rounded-xl text-neutral-600" />
+                </div>
+            </div>
+
+            <!-- Tag Selection -->
+            <div>
+                <label class="block text-[11px] font-bold text-neutral-700 mb-1">Address Type</label>
+                <div class="flex items-center gap-3">
+                    <label class="flex items-center gap-1 text-xs font-bold text-neutral-700 cursor-pointer">
+                        <input type="radio" name="addr-tag" value="Home" checked /> Home
+                    </label>
+                    <label class="flex items-center gap-1 text-xs font-bold text-neutral-700 cursor-pointer">
+                        <input type="radio" name="addr-tag" value="Work" /> Work
+                    </label>
+                    <label class="flex items-center gap-1 text-xs font-bold text-neutral-700 cursor-pointer">
+                        <input type="radio" name="addr-tag" value="Other" /> Other
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 pt-2">
+                <input type="checkbox" id="addr-default" class="rounded text-rose-600" />
+                <label for="addr-default" class="text-xs font-bold text-neutral-700">Set as Default Delivery Address</label>
+            </div>
+
+            <div id="address-form-error" class="hidden text-xs font-bold text-rose-600 bg-rose-50 p-2.5 rounded-xl border border-rose-200"></div>
+
+            <div class="flex justify-end gap-2 pt-3 border-t border-neutral-100">
+                <button type="button" id="btn-cancel-address" class="px-4 py-2 border border-neutral-200 rounded-xl text-xs font-bold text-neutral-600 hover:bg-neutral-50">Cancel</button>
+                <button type="submit" class="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-black shadow-md">Save Address</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div id="profile-modal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-5 space-y-4 shadow-2xl">
+        <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+            <h3 class="font-bold text-base text-neutral-900">Edit Profile Details</h3>
+            <button id="profile-modal-close" class="text-neutral-400 hover:text-neutral-700">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form id="profile-form" class="space-y-3">
+            <div>
+                <label class="block text-xs font-bold text-neutral-700 mb-1">Full Name</label>
+                <input type="text" id="edit-name" required class="w-full text-xs p-2.5 border border-neutral-200 rounded-xl" />
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-neutral-700 mb-1">Mobile Number</label>
+                <input type="tel" id="edit-phone" required class="w-full text-xs p-2.5 border border-neutral-200 rounded-xl" />
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-neutral-700 mb-1">Email Address</label>
+                <input type="email" id="edit-email" required class="w-full text-xs p-2.5 border border-neutral-200 rounded-xl" />
+            </div>
+            <div class="flex justify-end gap-2 pt-3 border-t border-neutral-100">
+                <button type="button" id="btn-cancel-profile" class="px-4 py-2 border border-neutral-200 rounded-xl text-xs font-bold">Cancel</button>
+                <button type="submit" class="px-5 py-2 bg-rose-600 text-white rounded-xl text-xs font-black shadow-md">Save Details</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- BottomNavBar -->
-<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-[0_-4px_12px_rgba(0,0,0,0.04)] border-t border-outline-variant/30 fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4">
-    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/home">
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/80 backdrop-blur-xl shadow-sm border-t border-outline-variant/30 flex justify-around items-center h-20 px-4">
+    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all active:scale-90" href="/home">
         <span class="material-symbols-outlined">home</span>
-        <span class="font-label-sm text-label-sm">Home</span>
+        <span class="text-[10px] font-bold">Home</span>
     </a>
-    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/orders">
+    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all active:scale-90" href="/orders">
         <span class="material-symbols-outlined">receipt_long</span>
-        <span class="font-label-sm text-label-sm">Orders</span>
+        <span class="text-[10px] font-bold">Orders</span>
     </a>
-    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/grocery">
+    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all active:scale-90" href="/grocery">
         <span class="material-symbols-outlined">search</span>
-        <span class="font-label-sm text-label-sm">Search</span>
+        <span class="text-[10px] font-bold">Search</span>
     </a>
-    <a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 duration-200 transition-all" href="/profile">
+    <a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90" href="/profile">
         <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
-        <span class="font-label-sm text-label-sm">Account</span>
+        <span class="text-[10px] font-bold">Account</span>
     </a>
 </nav>
 
-<script>
-    // Route guard
-    if (!localStorage.getItem('bhusawal_user_token')) {
-        window.location.href = '/';
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    let map = null;
+    let marker = null;
+
+    // Load User Profile Data
+    const userStr = localStorage.getItem('bhusawal_user');
+    let userObj = { name: 'Sahil Patel', phone: '+91 74980 71274', email: 'sahil@bhusawalconnect.com' };
+    if (userStr) {
+      try { userObj = { ...userObj, ...JSON.parse(userStr) }; } catch(e) {}
+    }
+    document.getElementById('user-name').textContent = userObj.name;
+    document.getElementById('user-phone').textContent = userObj.phone;
+    document.getElementById('user-email').textContent = userObj.email;
+
+    // Load Addresses List
+    function renderAddresses() {
+      const addresses = window.AddressManager.getAddresses();
+      document.getElementById('stat-addresses').textContent = addresses.length;
+      
+      const container = document.getElementById('addresses-list');
+      container.innerHTML = '';
+
+      if (addresses.length === 0) {
+        container.innerHTML = `<div class="p-4 bg-white rounded-2xl text-center text-xs font-bold text-neutral-400">No saved addresses found.</div>`;
+        return;
+      }
+
+      addresses.forEach(addr => {
+        const isDef = addr.isDefault;
+        const div = document.createElement('div');
+        div.className = `p-4 rounded-2xl bg-white border ${isDef ? 'border-rose-500 shadow-sm' : 'border-neutral-200'} space-y-2`;
+        div.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-xs px-2 py-0.5 rounded-full ${addr.tag === 'Home' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}">${addr.tag}</span>
+              ${isDef ? '<span class="bg-rose-100 text-rose-700 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Default</span>' : ''}
+            </div>
+            <div class="flex items-center gap-2">
+              ${!isDef ? `<button data-action="set-default" data-id="${addr.id}" class="text-[11px] font-bold text-rose-600 hover:underline">Set Default</button>` : ''}
+              <button data-action="edit" data-id="${addr.id}" class="text-[11px] font-bold text-neutral-600 hover:underline">Edit</button>
+              ${addresses.length > 1 ? `<button data-action="delete" data-id="${addr.id}" class="text-[11px] font-bold text-red-500 hover:underline">Delete</button>` : ''}
+            </div>
+          </div>
+          <p class="text-xs font-bold text-neutral-800 leading-tight">${addr.fullAddress}</p>
+        `;
+        container.appendChild(div);
+      });
+
+      // Bind address action buttons
+      container.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const action = e.target.getAttribute('data-action');
+          const id = e.target.getAttribute('data-id');
+          if (action === 'set-default') {
+            window.AddressManager.setDefaultAddress(id);
+            renderAddresses();
+            updateHeaderAddress();
+          } else if (action === 'delete') {
+            window.AddressManager.deleteAddress(id);
+            renderAddresses();
+            updateHeaderAddress();
+          } else if (action === 'edit') {
+            openAddressModal(id);
+          }
+        });
+      });
     }
 
-    // Populate user profile details
-    const userString = localStorage.getItem('bhusawal_user');
-    if (userString) {
-        try {
-            const user = JSON.parse(userString);
-            document.getElementById('user-name').textContent = user.name || 'Bhusawal Connect Resident';
-            document.getElementById('user-phone').textContent = user.phone || '';
-        } catch (e) {
-            console.error('Failed to parse user details', e);
+    function updateHeaderAddress() {
+      const def = window.AddressManager.getDefaultAddress();
+      if (def) {
+        document.getElementById('header-address').textContent = def.fullAddress.substring(0, 30) + '...';
+      }
+    }
+
+    renderAddresses();
+    updateHeaderAddress();
+
+    // Address Modal Handlers
+    const modal = document.getElementById('address-modal');
+    document.getElementById('btn-add-address').addEventListener('click', () => openAddressModal());
+    document.getElementById('address-modal-close').addEventListener('click', () => modal.classList.add('hidden'));
+    document.getElementById('btn-cancel-address').addEventListener('click', () => modal.classList.add('hidden'));
+
+    function openAddressModal(editId = null) {
+      modal.classList.remove('hidden');
+      document.getElementById('address-form-error').classList.add('hidden');
+      
+      let addr = {
+        id: '',
+        flatNo: '',
+        building: '',
+        street: '',
+        area: '',
+        landmark: '',
+        pincode: '425201',
+        city: 'Bhusawal',
+        state: 'Maharashtra',
+        lat: 21.0478,
+        lng: 75.7896,
+        tag: 'Home',
+        isDefault: false
+      };
+
+      if (editId) {
+        const found = window.AddressManager.getAddresses().find(a => a.id === editId);
+        if (found) addr = found;
+        document.getElementById('address-modal-title').textContent = 'Edit Delivery Address';
+      } else {
+        document.getElementById('address-modal-title').textContent = 'Add New Delivery Address';
+      }
+
+      document.getElementById('addr-id').value = addr.id;
+      document.getElementById('addr-flat').value = addr.flatNo;
+      document.getElementById('addr-building').value = addr.building;
+      document.getElementById('addr-street').value = addr.street;
+      document.getElementById('addr-area').value = addr.area;
+      document.getElementById('addr-landmark').value = addr.landmark;
+      document.getElementById('addr-pincode').value = addr.pincode;
+      document.getElementById('addr-lat').value = addr.lat;
+      document.getElementById('addr-lng').value = addr.lng;
+      document.getElementById('addr-default').checked = addr.isDefault;
+
+      // Initialize Leaflet Map inside Modal
+      setTimeout(() => {
+        if (!map) {
+          map = L.map('address-map').setView([addr.lat, addr.lng], 15);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+          }).addTo(map);
+
+          marker = L.marker([addr.lat, addr.lng], { draggable: true }).addTo(map);
+
+          marker.on('dragend', function(e) {
+            const pos = marker.getLatLng();
+            document.getElementById('addr-lat').value = pos.lat;
+            document.getElementById('addr-lng').value = pos.lng;
+            document.getElementById('geo-status').textContent = 'Fetching address...';
+            window.AddressManager.reverseGeocode(pos.lat, pos.lng, (err, res) => {
+              if (res) {
+                if (res.street) document.getElementById('addr-street').value = res.street;
+                if (res.area) document.getElementById('addr-area').value = res.area;
+                if (res.pincode) document.getElementById('addr-pincode').value = res.pincode;
+                document.getElementById('geo-status').textContent = 'Address updated from pin drop!';
+              } else {
+                document.getElementById('geo-status').textContent = '';
+              }
+            });
+          });
+        } else {
+          map.invalidateSize();
+          map.setView([addr.lat, addr.lng], 15);
+          marker.setLatLng([addr.lat, addr.lng]);
         }
+      }, 200);
     }
 
-    // Fetch and populate recent orders from localStorage
-    const ordersString = localStorage.getItem('bhusawal_orders');
-    if (ordersString) {
-        try {
-            const orders = JSON.parse(ordersString);
-            if (orders && orders.length > 0) {
-                // Update orders stat counter
-                document.getElementById('stat-orders').textContent = orders.length;
-
-                const ordersContainer = document.getElementById('orders-container');
-                ordersContainer.innerHTML = ''; // Clear empty state
-
-                // Display up to 3 recent orders
-                orders.slice(0, 3).forEach(order => {
-                    const statusColors = {
-                        'Verifying': 'bg-yellow-100 text-yellow-700',
-                        'Preparing': 'bg-blue-100 text-blue-700',
-                        'Delivering': 'bg-orange-100 text-orange-700',
-                        'Delivered': 'bg-green-100 text-green-700',
-                        'Verifying...': 'bg-yellow-100 text-yellow-700'
-                    };
-                    const statusClass = statusColors[order.status] || 'bg-surface-container text-on-surface-variant';
-
-                    const orderEl = document.createElement('div');
-                    orderEl.className = 'bg-white p-4 rounded-2xl border border-outline-variant/30 shadow-sm flex items-center justify-between gap-4';
-                    orderEl.innerHTML = `
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-10 h-10 rounded-xl bg-primary-fixed/20 text-primary flex items-center justify-center flex-shrink-0">
-                                <span class="material-symbols-outlined">receipt</span>
-                            </div>
-                            <div class="min-w-0">
-                                <div class="flex items-center gap-2">
-                                    <h4 class="font-bold text-sm text-on-surface truncate">${order.items}</h4>
-                                </div>
-                                <p class="text-[10px] text-on-surface-variant mt-0.5">${order.date || 'Today'} • #${order.id}</p>
-                            </div>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <span class="inline-block text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wide ${statusClass}">
-                                ${order.status}
-                            </span>
-                            <p class="font-extrabold text-sm text-on-surface mt-1">₹${order.total || '0'}</p>
-                        </div>
-                    `;
-                    ordersContainer.appendChild(orderEl);
-                });
-            }
-        } catch (e) {
-            console.error('Failed to parse orders details', e);
+    // GPS Detector Button
+    document.getElementById('btn-detect-gps').addEventListener('click', () => {
+      const status = document.getElementById('geo-status');
+      if (!navigator.geolocation) {
+        status.textContent = 'Geolocation is not supported by your browser.';
+        return;
+      }
+      status.textContent = 'Detecting current GPS location...';
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        document.getElementById('addr-lat').value = lat;
+        document.getElementById('addr-lng').value = lng;
+        if (map && marker) {
+          map.setView([lat, lng], 16);
+          marker.setLatLng([lat, lng]);
         }
-    }
-
-    // Log Out functionality
-    document.getElementById('btn-logout').addEventListener('click', () => {
-        localStorage.removeItem('bhusawal_user_token');
-        localStorage.removeItem('bhusawal_user');
-        window.location.href = '/';
+        window.AddressManager.reverseGeocode(lat, lng, (err, res) => {
+          if (res) {
+            if (res.street) document.getElementById('addr-street').value = res.street;
+            if (res.area) document.getElementById('addr-area').value = res.area;
+            if (res.pincode) document.getElementById('addr-pincode').value = res.pincode;
+            status.textContent = 'GPS location & address detected!';
+          } else {
+            status.textContent = 'GPS location set!';
+          }
+        });
+      }, (err) => {
+        status.textContent = 'Unable to fetch GPS location: ' + err.message;
+      });
     });
+
+    // Form Submit
+    document.getElementById('address-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('address-form-error');
+      
+      const addrData = {
+        id: document.getElementById('addr-id').value,
+        flatNo: document.getElementById('addr-flat').value,
+        building: document.getElementById('addr-building').value,
+        street: document.getElementById('addr-street').value,
+        area: document.getElementById('addr-area').value,
+        landmark: document.getElementById('addr-landmark').value,
+        pincode: document.getElementById('addr-pincode').value,
+        city: 'Bhusawal',
+        state: 'Maharashtra',
+        lat: parseFloat(document.getElementById('addr-lat').value),
+        lng: parseFloat(document.getElementById('addr-lng').value),
+        tag: document.querySelector('input[name="addr-tag"]:checked').value,
+        isDefault: document.getElementById('addr-default').checked
+      };
+
+      const errors = window.AddressManager.validateAddress(addrData);
+      if (errors.length > 0) {
+        errEl.innerHTML = errors.join('<br>');
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      window.AddressManager.saveAddress(addrData);
+      modal.classList.add('hidden');
+      renderAddresses();
+      updateHeaderAddress();
+    });
+
+    // Edit Profile Handlers
+    const profileModal = document.getElementById('profile-modal');
+    document.getElementById('btn-edit-profile').addEventListener('click', () => {
+      document.getElementById('edit-name').value = userObj.name;
+      document.getElementById('edit-phone').value = userObj.phone;
+      document.getElementById('edit-email').value = userObj.email;
+      profileModal.classList.remove('hidden');
+    });
+    document.getElementById('profile-modal-close').addEventListener('click', () => profileModal.classList.add('hidden'));
+    document.getElementById('btn-cancel-profile').addEventListener('click', () => profileModal.classList.add('hidden'));
+
+    document.getElementById('profile-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      userObj.name = document.getElementById('edit-name').value;
+      userObj.phone = document.getElementById('edit-phone').value;
+      userObj.email = document.getElementById('edit-email').value;
+      localStorage.setItem('bhusawal_user', JSON.stringify(userObj));
+      document.getElementById('user-name').textContent = userObj.name;
+      document.getElementById('user-phone').textContent = userObj.phone;
+      document.getElementById('user-email').textContent = userObj.email;
+      profileModal.classList.add('hidden');
+    });
+
+    // Log Out
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      localStorage.removeItem('bhusawal_user_token');
+      window.location.href = '/home';
+    });
+  });
 </script>
 
 <Switcher />

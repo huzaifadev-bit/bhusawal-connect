@@ -91,7 +91,7 @@ if (dailyNeedProducts.length < 16) {
     }
   </style>
 <!-- Insert Tailwind Config -->
-<script id="tailwind-config">
+<script is:inline id="tailwind-config">
    tailwind.config = {
     darkMode: "class",
     theme: {
@@ -225,6 +225,9 @@ if (dailyNeedProducts.length < 16) {
      shortAddr = shortAddr.substring(0, 27) + '...';
     }
     addrEl.textContent = shortAddr;
+    addrEl.parentElement.addEventListener('click', () => {
+      window.location.href = '/profile';
+    });
    }
    
    const etaEl = document.getElementById('header-eta');

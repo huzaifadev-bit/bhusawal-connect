@@ -6,14 +6,15 @@ import Switcher from '../components/Switcher.astro';
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Live Tracking - Bhusawal Connect</title>
-  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
+  <title>Live Delivery Tracking - Bhusawal Connect</title>
+  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
   <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
   <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
   
   <!-- Leaflet Map CSS & JS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" is:inline></script>
+  <script src="/assets/realtime_sync.js" is:inline></script>
 
   <style>
     * { -webkit-tap-highlight-color: transparent; }
@@ -52,15 +53,24 @@ import Switcher from '../components/Switcher.astro';
           <span class="material-symbols-outlined text-neutral-800">arrow_back</span>
         </a>
         <div>
-          <h1 class="text-sm font-black text-neutral-900 leading-tight">Live tracking</h1>
+          <h1 class="text-sm font-black text-neutral-900 leading-tight">Live Delivery Tracking</h1>
           <p class="text-[10px] font-bold text-neutral-500" id="header-order-id">Order ID: #ORD-784920</p>
         </div>
       </div>
-      <button class="border border-purple-200 text-purple-700 bg-purple-50 hover:bg-purple-100 font-extrabold text-xs px-3 py-1.5 rounded-full flex items-center gap-1 transition-all active:scale-95">
+      <a href="tel:7498071274" class="border border-purple-200 text-purple-700 bg-purple-50 hover:bg-purple-100 font-extrabold text-xs px-3 py-1.5 rounded-full flex items-center gap-1 transition-all active:scale-95">
         <span class="material-symbols-outlined text-sm">headset_mic</span> Support
-      </button>
+      </a>
     </div>
   </header>
+
+  <!-- Realtime Toast Banner -->
+  <div id="toast-notification" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-neutral-900 text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-3 hidden animate-in slide-in-from-top duration-300">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <span class="material-symbols-outlined text-emerald-400 text-xl" id="toast-icon">local_shipping</span>
+      <p class="text-xs font-extrabold truncate" id="toast-msg">Rider is assigned to your order</p>
+    </div>
+    <span class="text-[10px] font-black bg-white/20 px-2 py-0.5 rounded-full uppercase">LIVE</span>
+  </div>
 
   <main class="max-w-md mx-auto relative">
 
@@ -79,7 +89,7 @@ import Switcher from '../components/Switcher.astro';
           </div>
           <div class="min-w-0 flex-1">
             <h2 id="top-status-title" class="text-sm font-black text-neutral-900 truncate">Huzaifa is on the way</h2>
-            <p id="top-status-sub" class="text-[11px] font-bold text-neutral-500 truncate mt-0.5">Rider is on the road, moving towards you</p>
+            <p id="top-status-sub" class="text-[11px] font-bold text-neutral-500 truncate mt-0.5">Rider is moving towards your doorstep</p>
           </div>
         </div>
         <div id="top-eta-container" class="bg-purple-100/80 border border-purple-200 text-purple-800 px-3 py-2 rounded-2xl text-center shrink-0">
@@ -90,14 +100,11 @@ import Switcher from '../components/Switcher.astro';
     </div>
 
     <!-- Live Map Container of Bhusawal -->
-    <div class="h-[62vh] w-full bg-[#e5e9ec] relative mt-3 z-10 overflow-hidden" id="bhusawal-map">
-      <!-- Floating Right Controls like Zepto Image -->
+    <div class="h-[55vh] w-full bg-[#e5e9ec] relative mt-3 z-10 overflow-hidden" id="bhusawal-map">
+      <!-- Floating Right Controls -->
       <div class="absolute right-4 bottom-10 z-20 flex flex-col gap-2.5">
-        <button id="btn-recenter-map" class="w-10 h-10 bg-white rounded-full shadow-xl border border-neutral-200/80 flex items-center justify-center text-neutral-700 hover:bg-neutral-50 active:scale-95 transition-all">
+        <button id="btn-recenter-map" class="w-10 h-10 bg-white rounded-full shadow-xl border border-neutral-200/80 flex items-center justify-center text-neutral-700 hover:bg-neutral-50 active:scale-95 transition-all" title="Recenter Map">
           <span class="material-symbols-outlined text-lg font-bold">my_location</span>
-        </button>
-        <button class="w-10 h-10 bg-white rounded-full shadow-xl border border-neutral-200/80 flex items-center justify-center text-neutral-700 hover:bg-neutral-50 active:scale-95 transition-all">
-          <span class="material-symbols-outlined text-lg font-bold">shield</span>
         </button>
       </div>
     </div>
@@ -105,67 +112,57 @@ import Switcher from '../components/Switcher.astro';
     <!-- Bottom Sheet Drawer -->
     <div class="bg-white rounded-t-3xl -mt-6 relative z-30 px-4 pt-4 pb-12 shadow-[0_-10px_30px_rgba(0,0,0,0.08)] border-t border-neutral-100 space-y-4">
       
-      <!-- Drawer Handle -->
       <div class="w-12 h-1 bg-neutral-200 rounded-full mx-auto mb-2"></div>
 
-      <!-- Rider Profile & Call Button -->
-      <div class="flex items-center justify-between bg-neutral-50/80 p-3 rounded-2xl border border-neutral-100">
+      <!-- Rider Profile Card -->
+      <div class="flex items-center justify-between bg-neutral-50 p-3.5 rounded-2xl border border-neutral-200/80">
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-purple-900 text-white flex items-center justify-center font-black text-lg shadow-md border-2 border-purple-400 shrink-0">
+          <div class="w-12 h-12 rounded-full bg-purple-900 text-white flex items-center justify-center font-black text-xl shadow-md border-2 border-purple-400 shrink-0">
             👨‍✈️
           </div>
           <div>
             <h3 id="rider-name" class="text-sm font-black text-neutral-900">Huzaifa Shaikh</h3>
-            <p class="text-[10px] text-neutral-500 font-bold mt-0.5">Your Bhusawal Connect Rider</p>
+            <p class="text-[10px] text-neutral-500 font-bold mt-0.5">Vehicle: MH-19-BS-2026 (EV Bike)</p>
             <div class="flex items-center gap-1 text-[10px] text-amber-500 font-black mt-0.5">
-              <span>★ 4.8</span>
-              <span class="text-neutral-400 font-normal">(230+ deliveries)</span>
+              <span>★ 4.9</span>
+              <span class="text-neutral-400 font-normal">(320+ deliveries)</span>
             </div>
           </div>
         </div>
-        <a id="btn-call-rider" href="tel:7498071274" class="border-2 border-purple-600 text-purple-700 hover:bg-purple-50 px-3.5 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 active:scale-95 transition-all shadow-sm">
-          <span class="material-symbols-outlined text-sm">call</span> Call rider
-        </a>
+
+        <div class="flex items-center gap-2">
+          <a id="btn-call-rider" href="tel:7498071274" class="w-10 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center justify-center active:scale-95 transition-all shadow-md" title="Call Rider">
+            <span class="material-symbols-outlined text-lg">call</span>
+          </a>
+          <a id="btn-chat-rider" href="https://wa.me/917498071274?text=Hi%20Huzaifa,%20regarding%20my%20Bhusawal%20Connect%20order" target="_blank" class="w-10 h-10 bg-purple-600 hover:bg-purple-700 text-white rounded-xl flex items-center justify-center active:scale-95 transition-all shadow-md" title="Chat on WhatsApp">
+            <span class="material-symbols-outlined text-lg">chat</span>
+          </a>
+        </div>
       </div>
 
       <!-- Live ETA Banner -->
       <div id="bottom-eta-banner" class="bg-purple-50 border border-purple-200/80 rounded-2xl p-3.5 flex items-center gap-3">
         <div class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center text-sm font-black shrink-0">
-          🛡️
+          ⚡
         </div>
         <p class="text-xs font-bold text-neutral-800 leading-snug">
           Your order is on the way and will reach you in <span id="banner-eta-text" class="font-black text-purple-700">8 mins</span>
         </p>
       </div>
 
-      <!-- Delivery Completion Celebration Banner (Hidden until delivered) -->
+      <!-- Delivery Completion Banner -->
       <div id="delivery-completed-banner" class="hidden bg-gradient-to-br from-emerald-600 to-teal-700 text-white rounded-3xl p-5 shadow-xl space-y-3 text-center border border-emerald-400/30">
         <div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner border border-white/40">
           🎉
         </div>
         <div>
-          <h2 class="text-base font-black">Thank You for Shopping with Bhusawal Connect!</h2>
+          <h2 class="text-base font-black">Order Delivered Successfully!</h2>
           <p class="text-xs text-emerald-100 font-bold mt-1">
-            Your order has been safely delivered to your doorstep. We hope you enjoyed our 10-minute fast service!
+            Thank you for using Bhusawal Connect! Your delivery partner Huzaifa has delivered your order.
           </p>
         </div>
-
-        <a href="/grocery" class="block w-full bg-white text-emerald-800 font-black text-xs py-3 rounded-2xl shadow-lg hover:bg-emerald-50 active:scale-95 transition-all mt-2">
-          Shop More Grocery Items 🛒
-        </a>
-      </div>
-
-      <!-- Items Summary Row -->
-      <div class="flex items-center justify-between bg-neutral-50 p-3 rounded-2xl border border-neutral-100 text-xs">
-        <div class="flex items-center gap-2">
-          <div class="flex -space-x-2 overflow-hidden">
-            <img src="https://www.bbassets.com/media/uploads/p/l/306926_4-amul-taaza-toned-milk.jpg" class="inline-block h-7 w-7 rounded-full ring-2 ring-white object-contain bg-white" />
-            <img src="https://www.bbassets.com/media/uploads/p/l/102739_10-lays-potato-chips-indias-magic-masala.jpg" class="inline-block h-7 w-7 rounded-full ring-2 ring-white object-contain bg-white" />
-          </div>
-          <span id="order-items-badge" class="bg-purple-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full">5 items</span>
-        </div>
-        <a href="/orders" class="text-xs font-black text-purple-700 flex items-center gap-0.5 hover:underline">
-          View order details <span class="material-symbols-outlined text-sm">chevron_right</span>
+        <a href="/home" class="block w-full bg-white text-emerald-800 font-black text-xs py-3 rounded-2xl shadow-lg hover:bg-emerald-50 active:scale-95 transition-all mt-2">
+          Back to Home Page 🛒
         </a>
       </div>
 
@@ -183,218 +180,162 @@ import Switcher from '../components/Switcher.astro';
   </main>
 
   <script is:inline>
-    // Read active order or rider dispatch
-    let activeOrder = JSON.parse(localStorage.getItem('active_rider_order') || localStorage.getItem('last_active_order') || '{}');
-    if (activeOrder.id) {
-      document.getElementById('header-order-id').textContent = 'Order ID: #' + activeOrder.id;
-      if (activeOrder.items) {
-        document.getElementById('order-items-badge').textContent = (activeOrder.items.split(',').length || 1) + ' items';
+    document.addEventListener('DOMContentLoaded', () => {
+      // Read order info
+      let activeOrder = {};
+      try {
+        activeOrder = JSON.parse(localStorage.getItem('bhusawal_active_order') || localStorage.getItem('last_active_order') || '{}');
+      } catch(e) {}
+
+      if (activeOrder.id) {
+        document.getElementById('header-order-id').textContent = 'Order ID: #' + activeOrder.id;
       }
-    }
 
-    // Bhusawal Real Road Coordinates
-    const storeLat = 21.0455;
-    const storeLng = 75.7858;
-    const custLat = 21.0520;
-    const custLng = 75.7980;
+      // Store Coords & Destination Coords
+      const storeLat = 21.0455;
+      const storeLng = 75.7858;
+      const custLat = parseFloat(activeOrder.lat) || 21.0520;
+      const custLng = parseFloat(activeOrder.lng) || 75.7980;
 
-    // Initialize Leaflet Map centered on Bhusawal with Zero-Blank Guarantee
-    const mapContainer = document.getElementById('bhusawal-map');
-    let map = null;
-
-    try {
-      map = L.map('bhusawal-map', { 
-        zoomControl: false, 
-        attributionControl: false,
-        fadeAnimation: false
-      }).setView([21.0487, 75.7919], 15);
-
-      // Primary Tile Layer: OpenStreetMap Standard Vector Tiles
-      const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        subdomains: ['a', 'b', 'c']
-      }).addTo(map);
-
-      // Secondary Backup Tile Layer fallback
-      const cartoLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19
-      });
-
-      osmLayer.on('tileerror', function() {
-        console.warn("OSM tile error, switching to CartoDB fallback layer.");
-        map.removeLayer(osmLayer);
-        cartoLayer.addTo(map);
-      });
-
-      // Invalidate map size multiple times to ensure 100% tile render after DOM layout calculations
-      map.invalidateSize();
-      setTimeout(() => { map.invalidateSize(); }, 100);
-      setTimeout(() => { map.invalidateSize(); }, 500);
-      window.addEventListener('resize', () => { map.invalidateSize(); });
-
-    } catch (e) {
-      console.error("Map initialization error:", e);
-      if (mapContainer) {
-        mapContainer.innerHTML = '<div class="p-6 text-center text-xs font-bold text-slate-600">Map loading error. Please check your internet connection or reload the page.</div>';
+      // Toast Notification Helper
+      function showToast(msg) {
+        const toast = document.getElementById('toast-notification');
+        const text = document.getElementById('toast-msg');
+        if (toast && text) {
+          text.textContent = msg;
+          toast.classList.remove('hidden');
+          setTimeout(() => toast.classList.add('hidden'), 4000);
+        }
       }
-    }
 
-    if (map) {
-      // Custom Map Icons
-      const createRiderIcon = () => {
-        return L.divIcon({
-          className: 'custom-rider-icon',
-          html: `<div class="pulse-ring-purple w-11 h-11 rounded-full bg-purple-700 text-white flex items-center justify-center border-2 border-white shadow-2xl text-xl font-bold">
-                   🛵
-                 </div>`,
-          iconSize: [44, 44],
-          iconAnchor: [22, 22]
+      // Initialize Leaflet Map
+      let map = null;
+      try {
+        map = L.map('bhusawal-map', { 
+          zoomControl: false, 
+          attributionControl: false,
+          fadeAnimation: false
+        }).setView([21.0487, 75.7919], 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19
+        }).addTo(map);
+
+        setTimeout(() => map.invalidateSize(), 200);
+      } catch(e) {
+        console.error(e);
+      }
+
+      if (map) {
+        // Store Marker
+        L.marker([storeLat, storeLng], {
+          icon: L.divIcon({
+            html: '<div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg border border-white text-sm">🏪</div>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
+          })
+        }).addTo(map).bindPopup("Bhusawal Express Store");
+
+        // Customer Destination Marker
+        L.marker([custLat, custLng], {
+          icon: L.divIcon({
+            className: 'custom-pin-icon',
+            html: `<div class="bg-slate-900 text-white px-2.5 py-1 rounded-full text-[10px] font-black shadow-xl border border-white flex items-center gap-1">
+                     <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                     <span>Delivery Spot</span>
+                   </div>`,
+            iconSize: [90, 30],
+            iconAnchor: [45, 15]
+          })
+        }).addTo(map).bindPopup(activeOrder.address || "Customer House");
+
+        // Route Polyline
+        const waypoints = [
+          [storeLat, storeLng],
+          [21.0470, 75.7890],
+          [21.0495, 75.7930],
+          [custLat, custLng]
+        ];
+        const routeLine = L.polyline(waypoints, {
+          color: '#7c3aed',
+          weight: 6,
+          opacity: 0.9,
+          lineCap: 'round'
+        }).addTo(map);
+
+        map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
+
+        // Rider Marker
+        const riderMarker = L.marker([storeLat, storeLng], {
+          icon: L.divIcon({
+            className: 'custom-rider-icon',
+            html: `<div class="pulse-ring-purple w-11 h-11 rounded-full bg-purple-700 text-white flex items-center justify-center border-2 border-white shadow-2xl text-xl font-bold">🛵</div>`,
+            iconSize: [44, 44],
+            iconAnchor: [22, 22]
+          })
+        }).addTo(map);
+
+        document.getElementById('btn-recenter-map')?.addEventListener('click', () => {
+          map.invalidateSize();
+          map.fitBounds(routeLine.getBounds(), { padding: [40, 40] });
         });
-      };
 
-      const createPinIcon = (label) => {
-        return L.divIcon({
-          className: 'custom-pin-icon',
-          html: `<div class="bg-slate-900 text-white px-2.5 py-1 rounded-full text-[10px] font-black shadow-xl border border-white flex items-center gap-1">
-                   <span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
-                   <span>${label}</span>
-                 </div>`,
-          iconSize: [90, 30],
-          iconAnchor: [45, 15]
-        });
-      };
+        // Dynamic Movement Simulation & Realtime Broadcast Listener
+        let progressStep = 0;
+        const totalSteps = 240;
+        
+        const simInterval = setInterval(() => {
+          progressStep++;
+          const ratio = progressStep / totalSteps;
 
-      // Store Marker
-      const storeMarker = L.marker([storeLat, storeLng], {
-        icon: L.divIcon({
-          html: '<div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg border border-white text-sm">🏪</div>',
-          iconSize: [32, 32],
-          iconAnchor: [16, 16]
-        })
-      }).addTo(map).bindPopup("Bhusawal Express Store");
+          const lat = storeLat + (custLat - storeLat) * ratio;
+          const lng = storeLng + (custLng - storeLng) * ratio;
+          riderMarker.setLatLng([lat, lng]);
 
-      // Customer Destination Marker
-      const destPin = L.marker([custLat, custLng], {
-        icon: createPinIcon("Destination")
-      }).addTo(map).bindPopup("Customer House (Shivaji Nagar)");
+          const remainingMins = Math.max(1, Math.ceil(8 * (1 - ratio)));
+          document.getElementById('top-eta-mins').textContent = remainingMins + ' mins';
+          document.getElementById('banner-eta-text').textContent = remainingMins + ' mins';
 
-      // Route Polyline (Vibrant Purple Line)
-      const routeWaypoints = [
-        [storeLat, storeLng],
-        [21.0470, 75.7890],
-        [21.0495, 75.7930],
-        [21.0510, 75.7955],
-        [custLat, custLng]
-      ];
+          if (ratio > 0.8 && ratio < 0.95) {
+            document.getElementById('rider-nearby-alert')?.classList.remove('hidden');
+          }
 
-      const routePolyline = L.polyline(routeWaypoints, {
-        color: '#7c3aed',
-        weight: 6,
-        opacity: 0.9,
-        lineCap: 'round',
-        lineJoin: 'round'
-      }).addTo(map);
+          if (ratio >= 0.98) {
+            clearInterval(simInterval);
+            onDeliveryComplete();
+          }
+        }, 300);
 
-      map.fitBounds(routePolyline.getBounds(), { padding: [50, 50] });
+        function onDeliveryComplete() {
+          document.getElementById('top-status-title').textContent = "Order Delivered!";
+          document.getElementById('top-status-sub').textContent = "Huzaifa delivered your order to your doorstep";
+          document.getElementById('bottom-eta-banner')?.classList.add('hidden');
+          document.getElementById('delivery-completed-banner')?.classList.remove('hidden');
+          showToast("🎉 Order Delivered Successfully!");
+        }
 
-      // Rider Marker
-      const riderMarker = L.marker([storeLat, storeLng], {
-        icon: createRiderIcon()
-      }).addTo(map);
-
-      // Recenter button click
-      document.getElementById('btn-recenter-map')?.addEventListener('click', () => {
-        map.invalidateSize();
-        map.fitBounds(routePolyline.getBounds(), { padding: [50, 50] });
-      });
-
-      // Live 2-3 Second Interval Movement Simulation & ETA Calculator
-      let progressStep = 0;
-      const totalSteps = 300;
-      const startMins = 8;
-
-      const interval = setInterval(() => {
-        progressStep++;
-        const ratio = progressStep / totalSteps;
-
-        // Smooth rider marker progression
-        const lat = storeLat + (custLat - storeLat) * ratio;
-        const lng = storeLng + (custLng - storeLng) * ratio;
-        riderMarker.setLatLng([lat, lng]);
-
-        // Decreasing ETA Calculation
-        const remainingMins = Math.max(1, Math.ceil(startMins * (1 - ratio)));
-
-        const topEtaMins = document.getElementById('top-eta-mins');
-        const bannerEtaText = document.getElementById('banner-eta-text');
-
-        if (topEtaMins) topEtaMins.textContent = remainingMins + ' mins';
-        if (bannerEtaText) bannerEtaText.textContent = remainingMins + ' mins';
-
-        // Proximity Banners (<300m / <100m)
-        const alertBox = document.getElementById('rider-nearby-alert');
-        const alertText = document.getElementById('nearby-alert-text');
-
-        if (ratio > 0.7 && ratio < 0.95) {
-          if (alertBox) {
-            alertBox.classList.remove('hidden');
-            if (ratio > 0.88) {
-              if (alertText) alertText.textContent = "Your Bhusawal Connect rider Huzaifa is at your doorstep (<100m)! Please receive your order.";
-            } else {
-              if (alertText) alertText.textContent = "Your Bhusawal Connect rider Huzaifa is nearby (<300m). Please be ready!";
+        // Listen for Realtime Sync events from Rider Dashboard / Admin
+        if (window.BhusawalRealtime) {
+          window.BhusawalRealtime.on('rider-location', (pos) => {
+            if (pos && pos.lat && pos.lng) {
+              riderMarker.setLatLng([pos.lat, pos.lng]);
             }
-          }
+          });
+
+          window.BhusawalRealtime.on('order-status', (data) => {
+            if (data && data.status) {
+              showToast("Status Update: " + data.status);
+              if (data.status === 'DELIVERED') {
+                clearInterval(simInterval);
+                riderMarker.setLatLng([custLat, custLng]);
+                onDeliveryComplete();
+              }
+            }
+          });
         }
-
-        // Status Updates
-        if (ratio > 0.4 && ratio < 0.85) {
-          const titleEl = document.getElementById('top-status-title');
-          const subEl = document.getElementById('top-status-sub');
-          if (titleEl) titleEl.textContent = "Huzaifa is near your locality";
-          if (subEl) subEl.textContent = "Approaching Shivaji Nagar, Bhusawal";
-        } else if (ratio >= 0.98) {
-          // Delivered!
-          clearInterval(interval);
-
-          const titleEl = document.getElementById('top-status-title');
-          const subEl = document.getElementById('top-status-sub');
-          if (titleEl) titleEl.textContent = "Order Delivered!";
-          if (subEl) subEl.textContent = "Huzaifa delivered to your doorstep";
-
-          if (topEtaMins) topEtaMins.textContent = "0 mins";
-          const etaBox = document.getElementById('top-eta-container');
-          if (etaBox) etaBox.className = "bg-emerald-100 border border-emerald-300 text-emerald-800 px-3 py-2 rounded-2xl text-center shrink-0";
-
-          const etaBanner = document.getElementById('bottom-eta-banner');
-          if (etaBanner) etaBanner.classList.add('hidden');
-
-          const celebrationBanner = document.getElementById('delivery-completed-banner');
-          if (celebrationBanner) {
-            celebrationBanner.classList.remove('hidden');
-            celebrationBanner.scrollIntoView({ behavior: 'smooth' });
-          }
-        }
-      }, 100);
-
-      // Listen to cross-tab rider status changes
-      window.addEventListener('storage', (e) => {
-        if (e.key === 'active_rider_order' || e.key === 'last_active_order') {
-          const order = JSON.parse(e.newValue || '{}');
-          if (order.status === 'DELIVERED') {
-            clearInterval(interval);
-            riderMarker.setLatLng([custLat, custLng]);
-            const titleEl = document.getElementById('top-status-title');
-            const subEl = document.getElementById('top-status-sub');
-            if (titleEl) titleEl.textContent = "Order Delivered!";
-            if (subEl) subEl.textContent = "Huzaifa delivered to your doorstep";
-            const etaBanner = document.getElementById('bottom-eta-banner');
-            if (etaBanner) etaBanner.classList.add('hidden');
-            const celebrationBanner = document.getElementById('delivery-completed-banner');
-            if (celebrationBanner) celebrationBanner.classList.remove('hidden');
-          }
-        }
-      });
-    }</script>
+      }
+    });
+  </script>
 
   <Switcher />
 </body>
