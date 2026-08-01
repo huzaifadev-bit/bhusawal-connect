@@ -36,7 +36,7 @@ import Switcher from '../components/Switcher.astro';
                     "inverse-surface": "#2f3131",
                     "tertiary": "#006e1c",
                     "surface-tint": "#b02f00",
-                    "primary-fixed": "#ffdbd1",
+                    "primary-fixed": "#fef3c7",
                     "on-primary-fixed": "#3b0900",
                     "on-background": "#1a1c1c",
                     "on-primary-fixed-variant": "#862200",
@@ -51,7 +51,7 @@ import Switcher from '../components/Switcher.astro';
                     "surface-container": "#eeeeee",
                     "on-surface-variant": "#5b4039",
                     "on-surface": "#1a1c1c",
-                    "primary": "#b02f00",
+                    "primary": "#d97706",
                     "outline-variant": "#e4beb4",
                     "on-tertiary-container": "#003208",
                     "surface-container-high": "#e8e8e8",
@@ -76,7 +76,7 @@ import Switcher from '../components/Switcher.astro';
                     "on-tertiary-fixed-variant": "#005313",
                     "surface-variant": "#e2e2e2",
                     "error-container": "#ffdad6",
-                    "primary-container": "#ff5722",
+                    "primary-container": "#f59e0b",
                     "on-secondary": "#ffffff",
                     "on-tertiary": "#ffffff",
                     "secondary": "#5f5e5e"
@@ -123,7 +123,19 @@ import Switcher from '../components/Switcher.astro';
       min-height: 100dvh;
     }
   </style>
-  </head>
+  
+    <!-- Leaflet Map CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        .custom-pin-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+
+</head>
 <body class="bg-surface text-on-surface font-body-md antialiased overflow-hidden">
 <!-- Top App Bar -->
 <header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm docked full-width top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
@@ -141,21 +153,18 @@ import Switcher from '../components/Switcher.astro';
 </header>
 <!-- Map Canvas (Background) -->
 <main class="fixed inset-0 pt-16 pb-20">
+    <div class="px-4 mt-3 max-w-md mx-auto">
+      <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-sm space-y-2">
+        <div class="flex items-center justify-between text-xs font-black text-neutral-800">
+          <span>🛺 Live Autorickshaws in Bhusawal</span>
+          <span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[10px]">Google Maps Live</span>
+        </div>
+        <div id="auto-bhusawal-map" class="h-40 w-full rounded-xl border border-neutral-200"></div>
+      </div>
+    </div>
 <div class="relative w-full h-full">
 <!-- Simulated Map Component -->
-<div class="w-full h-full grayscale-[20%] contrast-[90%] brightness-[105%]" data-location="Bhusawal, India" style="">
-<img class="w-full h-full object-cover" data-alt="A high-quality, top-down satellite view of a vibrant Indian urban landscape in Bhusawal. The map displays clean, stylized roads, green urban parks, and residential clusters under bright midday sunlight. The visual style is modern and high-contrast, optimized for a light-mode super-app UI, featuring soft ambient shadows on buildings and a clear, readable street grid." src="/assets/3c1d7d235563048e76ffef4606d7a7af.jpg" />
-</div>
-<!-- Current Location Pin (Pulsing) -->
-<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-<div class="relative flex items-center justify-center">
-<div class="absolute w-12 h-12 bg-primary/20 rounded-full animate-ping" />
-<div class="relative w-6 h-6 bg-primary rounded-full border-4 border-white shadow-lg z-10" />
-</div>
-<div class="mt-2 glass-panel px-3 py-1 rounded-full border border-white/40 shadow-sm">
-<span class="font-label-md text-label-md text-primary">You are here</span>
-</div>
-</div>
+<div id="map" class="w-full h-full" style="z-index: 1;"></div>
 <!-- Location Inputs Overlay -->
 <div class="absolute top-6 left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-md space-y-3 z-40">
 <div class="glass-panel p-4 rounded-3xl shadow-xl border border-white/30 flex flex-col gap-3">
@@ -277,19 +286,131 @@ import Switcher from '../components/Switcher.astro';
 <span class="font-label-sm text-label-sm">Account</span>
 </a>
 </nav>
-<script>
+<script is:inline>
+        if (!localStorage.getItem('bhusawal_user_token')) {
+            window.location.href = '/';
+        }
+
+        let userLatLng = [21.0478, 75.7896]; // Default Bhusawal
+        
+        // Initialize Leaflet Map
+        const map = L.map('map', { zoomControl: false }).setView(userLatLng, 14);
+        
+        // Add beautiful styled map tiles
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Move zoom controls to bottom-right out of the way
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        // Custom marker icon functions
+        const createMarkerIcon = (iconName, colorBg) => {
+            return L.divIcon({
+                className: 'custom-pin-icon',
+                html: `<div class="w-10 h-10 rounded-full ${colorBg} text-white flex items-center justify-center border-2 border-white shadow-xl transform active:scale-95 duration-100 animate-in zoom-in">
+                           <span class="material-symbols-outlined text-lg font-bold" style="font-variation-settings: 'FILL' 1;">${iconName}</span>
+                       </div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            });
+        };
+
+        // Add user marker
+        const userMarker = L.marker(userLatLng, {
+            icon: createMarkerIcon('person_pin_circle', 'bg-primary')
+        }).addTo(map);
+
+        let autoMarker1, autoMarker2, bikeMarker;
+
+        // Haversine Distance helper
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of Earth in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        }
+
+        // Randomly place vehicles around user location and update arrival times based on real distance
+        function initializeVehicles(lat, lng) {
+            const auto1LatLng = [lat + 0.003 + Math.random() * 0.002, lng + 0.003 + Math.random() * 0.002];
+            const auto2LatLng = [lat - 0.004 - Math.random() * 0.002, lng - 0.004 - Math.random() * 0.002];
+            const bikeLatLng = [lat + 0.002 - Math.random() * 0.001, lng - 0.003 + Math.random() * 0.002];
+
+            if (autoMarker1) map.removeLayer(autoMarker1);
+            if (autoMarker2) map.removeLayer(autoMarker2);
+            if (bikeMarker) map.removeLayer(bikeMarker);
+
+            // Calculate distances
+            const distAuto1 = getDistance(lat, lng, auto1LatLng[0], auto1LatLng[1]);
+            const distAuto2 = getDistance(lat, lng, auto2LatLng[0], auto2LatLng[1]);
+            const distBike = getDistance(lat, lng, bikeLatLng[0], bikeLatLng[1]);
+
+            // Calculate arrival times (approx 2.5 minutes per km, min 2 mins)
+            const timeAuto = Math.max(2, Math.round(Math.min(distAuto1, distAuto2) * 2.5 + 1));
+            const timeBike = Math.max(1, Math.round(distBike * 2.5 + 1));
+
+            // Update UI card badges
+            const autoBadge = document.querySelector('#ride-auto span.text-primary-container');
+            const bikeBadge = document.querySelector('#ride-bike span.text-primary-container');
+            if (autoBadge) autoBadge.textContent = `${timeAuto} mins`;
+            if (bikeBadge) bikeBadge.textContent = `${timeBike} mins`;
+
+            autoMarker1 = L.marker(auto1LatLng, { icon: createMarkerIcon('electric_rickshaw', 'bg-amber-600') }).addTo(map).bindPopup(`Auto (${timeAuto} mins away)`);
+            autoMarker2 = L.marker(auto2LatLng, { icon: createMarkerIcon('electric_rickshaw', 'bg-amber-600') }).addTo(map).bindPopup("Auto");
+            bikeMarker = L.marker(bikeLatLng, { icon: createMarkerIcon('pedal_bike', 'bg-orange-600') }).addTo(map).bindPopup(`Bike (${timeBike} mins away)`);
+        }
+
+        initializeVehicles(userLatLng[0], userLatLng[1]);
+
+        // Read cached location from launch or request permission
+        const cachedLat = localStorage.getItem('bhusawal_user_lat');
+        const cachedLng = localStorage.getItem('bhusawal_user_lng');
+
+        if (cachedLat && cachedLng) {
+            const lat = parseFloat(cachedLat);
+            const lng = parseFloat(cachedLng);
+            userLatLng = [lat, lng];
+            userMarker.setLatLng(userLatLng);
+            userMarker.bindPopup("Your Location").openPopup();
+            map.setView(userLatLng, 14);
+            initializeVehicles(lat, lng);
+        } else if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    userLatLng = [lat, lng];
+                    localStorage.setItem('bhusawal_user_lat', lat);
+                    localStorage.setItem('bhusawal_user_lng', lng);
+                    
+                    userMarker.setLatLng(userLatLng);
+                    userMarker.bindPopup("Your Current Location").openPopup();
+                    map.setView(userLatLng, 14);
+                    initializeVehicles(lat, lng);
+                },
+                (error) => {
+                    console.warn("Location permission denied or unavailable, using default Bhusawal.", error);
+                    userMarker.bindPopup("Your Location: Varangaon Road, Bhusawal").openPopup();
+                }
+            );
+        } else {
+            userMarker.bindPopup("Your Location: Varangaon Road, Bhusawal").openPopup();
+        }
+
+        let currentActiveRideType = 'auto';
+
         function selectRide(type) {
+            currentActiveRideType = type;
             const autoCard = document.getElementById('ride-auto');
             const bikeCard = document.getElementById('ride-bike');
             const bookBtn = document.querySelector('button.bg-primary');
 
             if (type === 'auto') {
-                autoCard.classList.add('border-primary', 'bg-primary-fixed/20');
-                autoCard.classList.remove('border-outline-variant', 'bg-white/50');
-                bikeCard.classList.remove('border-primary', 'bg-primary-fixed/20');
-                bikeCard.classList.add('border-outline-variant', 'bg-white/50');
+                autoCard.className = 'relative p-4 rounded-3xl border-2 border-primary bg-primary-fixed/20 shadow-md flex flex-col gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-[95]';
+                bikeCard.className = 'relative p-4 rounded-3xl border border-outline-variant bg-white/50 flex flex-col gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-95';
                 
-                // Add indicator to auto
                 if (!autoCard.querySelector('.absolute')) {
                     const indicator = document.createElement('div');
                     indicator.className = 'absolute top-2 right-2 w-4 h-4 bg-primary rounded-full border-2 border-white flex items-center justify-center';
@@ -301,12 +422,9 @@ import Switcher from '../components/Switcher.astro';
                 
                 bookBtn.textContent = 'Book Auto Now';
             } else {
-                bikeCard.classList.add('border-primary', 'bg-primary-fixed/20');
-                bikeCard.classList.remove('border-outline-variant', 'bg-white/50');
-                autoCard.classList.remove('border-primary', 'bg-primary-fixed/20');
-                autoCard.classList.add('border-outline-variant', 'bg-white/50');
+                bikeCard.className = 'relative p-4 rounded-3xl border-2 border-primary bg-primary-fixed/20 shadow-md flex flex-col gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-95';
+                autoCard.className = 'relative p-4 rounded-3xl border border-outline-variant bg-white/50 flex flex-col gap-2 cursor-pointer transition-all hover:scale-[1.02] active:scale-95';
 
-                // Add indicator to bike
                 if (!bikeCard.querySelector('.absolute')) {
                     const indicator = document.createElement('div');
                     indicator.className = 'absolute top-2 right-2 w-4 h-4 bg-primary rounded-full border-2 border-white flex items-center justify-center';
@@ -319,8 +437,95 @@ import Switcher from '../components/Switcher.astro';
                 bookBtn.textContent = 'Book Bike Now';
             }
         }
-        
-        // Simple entry animation for the bottom sheet
+
+        // Draw dynamic path once destination is focused
+        const dropInput = document.querySelector('input[placeholder="Where to?"]');
+        let routeLine = null;
+        let dropMarker = null;
+
+        dropInput.addEventListener('focus', () => {
+            if (!dropMarker) {
+                const dropLat = userLatLng[0] + 0.005;
+                const dropLng = userLatLng[1] - 0.008;
+
+                dropMarker = L.marker([dropLat, dropLng], {
+                    icon: createMarkerIcon('location_on', 'bg-emerald-600'),
+                    draggable: true
+                }).addTo(map).bindPopup("Drop Point").openPopup();
+                
+                // Draw route line
+                routeLine = L.polyline([userLatLng, [dropLat, dropLng]], {
+                    color: '#d97706',
+                    weight: 4,
+                    dashArray: '8, 8',
+                    opacity: 0.8
+                }).addTo(map);
+
+                // Fit map bounds
+                const bounds = L.latLngBounds([userLatLng, [dropLat, dropLng]]);
+                map.fitBounds(bounds, { padding: [50, 50] });
+                
+                dropInput.value = "Khandesh Bazar Center";
+
+                // Update values on drag end
+                dropMarker.on('dragend', () => {
+                    const newPos = dropMarker.getLatLng();
+                    routeLine.setLatLngs([userLatLng, newPos]);
+                    map.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
+                });
+            }
+        });
+
+        // Trigger dispatcher simulation
+        document.querySelector('button.bg-primary').addEventListener('click', () => {
+            const sheet = document.querySelector('.px-margin-mobile.space-y-6');
+            
+            // Show booking overlay card
+            sheet.innerHTML = `
+                <div class="p-6 text-center space-y-4 animate-in fade-in zoom-in duration-300">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner animate-bounce">
+                        <span class="material-symbols-outlined text-3xl">check_circle</span>
+                    </div>
+                    <div>
+                        <h3 class="font-headline-md text-xl font-bold text-on-surface">Ride Arriving!</h3>
+                        <p class="text-xs text-on-surface-variant mt-1 font-semibold text-[#0c831f]">Your driver has accepted and is heading towards you.</p>
+                        <div class="inline-flex bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-bold px-3 py-1 rounded-full mt-3">
+                            🚘 MH-19-AX-7782 (Yellow Auto)
+                        </div>
+                    </div>
+                    <button onclick="location.reload()" class="w-full bg-surface-container-high text-on-surface border border-outline-variant/30 font-bold h-12 rounded-2xl text-xs active:scale-95 transition-all">
+                        Cancel Ride
+                    </button>
+                </div>
+            `;
+
+            // Start animated ride simulation
+            const targetMarker = currentActiveRideType === 'auto' ? autoMarker1 : bikeMarker;
+            const startCoords = targetMarker.getLatLng();
+            const endCoords = userMarker.getLatLng();
+            
+            let progress = 0;
+            const steps = 100;
+            const interval = setInterval(() => {
+                progress++;
+                const lat = startCoords.lat + (endCoords.lat - startCoords.lat) * (progress / steps);
+                const lng = startCoords.lng + (endCoords.lng - startCoords.lng) * (progress / steps);
+                targetMarker.setLatLng([lat, lng]);
+                map.panTo([lat, lng]);
+                
+                if (progress >= steps) {
+                    clearInterval(interval);
+                    targetMarker.bindPopup("Driver Arrived!").openPopup();
+                    const statusText = document.querySelector('p.text-xs.text-on-surface-variant');
+                    if (statusText) {
+                        statusText.textContent = "Your driver has arrived at your location!";
+                        statusText.className = "text-xs text-emerald-600 font-extrabold";
+                    }
+                }
+            }, 100);
+        });
+
+        // Simple entry animation for bottom sheet
         window.addEventListener('DOMContentLoaded', () => {
             const sheet = document.querySelector('.glass-panel.bottom-sheet-shadow');
             sheet.style.transform = 'translateY(100%)';
@@ -330,4 +535,16 @@ import Switcher from '../components/Switcher.astro';
             });
         });
     </script>
+<script is:inline>
+    try {
+      const bhusawalAutoMap = L.map('auto-bhusawal-map', { zoomControl: false, attributionControl: false }).setView([21.0478, 75.7896], 15);
+      L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+      }).addTo(bhusawalAutoMap);
+      L.marker([21.0460, 75.7870]).addTo(bhusawalAutoMap).bindPopup("🛺 Auto #MH-19-AB-1029");
+      L.marker([21.0490, 75.7910]).addTo(bhusawalAutoMap).bindPopup("🛺 Auto #MH-19-AB-4821");
+      L.marker([21.0515, 75.7950]).addTo(bhusawalAutoMap).bindPopup("🛺 Auto #MH-19-AB-9012");
+    } catch(e){}
+  </script>
 </body></html>
