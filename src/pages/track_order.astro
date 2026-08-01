@@ -228,6 +228,30 @@ import Switcher from '../components/Switcher.astro';
         onEtaUpdate: (etaText, distText) => {
           document.getElementById('top-eta-mins').textContent = etaText;
           document.getElementById('banner-eta-text').textContent = etaText + ' (' + distText + ')';
+        },
+        onStatusChange: (status) => {
+          const titleEl = document.getElementById('top-status-title');
+          const subEl = document.getElementById('top-status-sub');
+          
+          if (status === 'RIDER_ASSIGNED' || status === 'ACCEPTED') {
+            if (titleEl) titleEl.textContent = "Huzaifa accepted your order";
+            if (subEl) subEl.textContent = "Rider is heading to Bhusawal Express store";
+            showToast("Rider accepted your order!");
+          } else if (status === 'REACHED_STORE') {
+            if (titleEl) titleEl.textContent = "Rider reached the store";
+            if (subEl) subEl.textContent = "Items being packed at store";
+            showToast("Rider reached the store!");
+          } else if (status === 'PICKED_UP') {
+            if (titleEl) titleEl.textContent = "Order Picked Up!";
+            if (subEl) subEl.textContent = "Huzaifa has picked up your order";
+            showToast("Order picked up from store!");
+          } else if (status === 'OUT_FOR_DELIVERY') {
+            if (titleEl) titleEl.textContent = "Out For Delivery";
+            if (subEl) subEl.textContent = "Rider is moving towards your doorstep";
+            showToast("Order is out for delivery!");
+          } else if (status === 'DELIVERED') {
+            onDeliveryComplete();
+          }
         }
       });
 
