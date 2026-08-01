@@ -3,41 +3,29 @@ import fs from 'fs';
 import path from 'path';
 import Switcher from '../components/Switcher.astro';
 
-// Read existing catalog database at build-time
+// Read restored original database at build-time
 const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
 let catalog = [];
 try {
   catalog = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
 } catch (err) {
-  console.error("Failed to read catalog at build time", err);
+  console.error("Failed to read grocery catalog at build time", err);
 }
 
-// Deduplication helper
-function dedupProducts(arr) {
-  const seen = new Set();
-  return arr.filter(p => {
-    const name = (p["Product Name"] || "").trim().toLowerCase();
-    if (seen.has(name)) return false;
-    seen.add(name);
-    return true;
-  });
-}
-
-// Extract distinct categories from catalog
+// Extract distinct categories from restored catalog
 const categoriesList = [
   { id: 'all', name: 'All Products', icon: '⚡' },
-  { id: 'veggies', name: 'Fruits & Vegetables', icon: '🥬' },
+  { id: 'personal', name: 'Personal Care', icon: '✨' },
+  { id: 'spices', name: 'Spices & Masalas', icon: '🌶️' },
   { id: 'dairy', name: 'Dairy & Breakfast', icon: '🥛' },
   { id: 'staples', name: 'Grocery Staples', icon: '🌾' },
   { id: 'snacks', name: 'Snacks & Confectionery', icon: '🍿' },
   { id: 'beverages', name: 'Beverages', icon: '🥤' },
-  { id: 'bakery', name: 'Bakery & Biscuits', icon: '🍞' },
   { id: 'home', name: 'Household Care', icon: '🧹' },
-  { id: 'personal', name: 'Personal Care', icon: '✨' },
 ];
 
-// Server-rendered initial batch for zero-CLS page load
-const initialProducts = dedupProducts(catalog).slice(0, 48);
+// Initial 48 items for server-rendering
+const initialProducts = catalog.slice(0, 48);
 ---
 
 <html lang="en" class="light">
@@ -112,19 +100,17 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
     
     <div class="flex items-center gap-2 bg-slate-100 rounded-2xl px-4 py-2.5 border border-slate-200/80 focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
       <span class="material-symbols-outlined text-slate-400">search</span>
-      <input type="text" id="grocery-search-input" placeholder="Search 25,000+ groceries, vegetables, milk, snacks..." class="w-full bg-transparent outline-none text-sm font-medium text-slate-800 placeholder-slate-400" autocomplete="off" />
+      <input type="text" id="grocery-search-input" placeholder="Search 5,000+ items across all categories..." class="w-full bg-transparent outline-none text-sm font-medium text-slate-800 placeholder-slate-400" autocomplete="off" />
       <button id="clear-search-btn" class="hidden text-slate-400 hover:text-slate-600">
         <span class="material-symbols-outlined text-lg">close</span>
       </button>
     </div>
 
-    <!-- Diet & Offer Filter Pills -->
+    <!-- Filter Pills & Sorting -->
     <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-1">
       <div class="flex items-center gap-2">
         <button class="diet-filter-btn px-3 py-1.5 rounded-xl bg-purpleBrand text-white text-xs font-black shadow-sm transition-all" data-filter="all">All</button>
-        <button class="diet-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold transition-all" data-filter="veg">🥦 Veg</button>
-        <button class="diet-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold transition-all" data-filter="nonveg">🍗 Non-Veg</button>
-        <button class="diet-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold transition-all" data-filter="deals">⚡ Deals</button>
+        <button class="diet-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold transition-all" data-filter="deals">⚡ Offers & Discounts</button>
       </div>
 
       <select id="sort-select" class="bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-2.5 py-1.5 outline-none cursor-pointer">
@@ -139,19 +125,19 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
 
   <!-- FEATURED PROMO BANNER -->
   <div class="px-4 pt-4">
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white p-5 shadow-lg shadow-emerald-900/10">
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-700 text-white p-5 shadow-lg shadow-purple-900/10">
       <div class="relative z-10">
-        <span class="px-2.5 py-0.5 bg-amber-400 text-slate-900 text-[10px] font-black uppercase tracking-wider rounded-full inline-block mb-2">DAILY SAVINGS</span>
-        <h2 class="text-xl font-black font-display leading-tight">Fresh Produce & Farm Dairy</h2>
-        <p class="text-xs text-emerald-100 mt-1">Get up to 30% OFF on organic fruits, vegetables & Dinshaw's milk</p>
+        <span class="px-2.5 py-0.5 bg-amber-400 text-slate-900 text-[10px] font-black uppercase tracking-wider rounded-full inline-block mb-2">BHUSAWAL EXPRESS</span>
+        <h2 class="text-xl font-black font-display leading-tight">5,050+ Original Products Live</h2>
+        <p class="text-xs text-purple-100 mt-1">Personal Care, Spices, Dairy, Snacks & Household Essentials</p>
       </div>
     </div>
   </div>
 
-  <!-- MAIN CONTENT LAYOUT (SIDEBAR DESKTOP + HORIZONTAL MOBILE CATEGORIES) -->
+  <!-- MAIN LAYOUT -->
   <div class="px-4 py-4 md:flex md:gap-6">
     
-    <!-- Mobile Horizontal Category Selector -->
+    <!-- Mobile Categories Horizontal Bar -->
     <div class="md:hidden flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-2 border-b border-slate-100">
       {categoriesList.map(cat => (
         <button class="mobile-cat-btn flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border border-slate-200 text-xs font-extrabold text-slate-700 hover:border-purpleBrand transition-all" data-category={cat.name}>
@@ -181,49 +167,61 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
     <main class="flex-1 space-y-4">
       <div class="flex items-center justify-between">
         <h2 id="active-category-title" class="text-lg font-black font-display text-slate-900">All Products</h2>
-        <span id="product-count-label" class="text-xs font-bold text-slate-400">{initialProducts.length} Items Shown</span>
+        <span id="product-count-label" class="text-xs font-bold text-slate-400">Total 5,050 Products</span>
       </div>
 
       <!-- Products Grid -->
       <div id="grocery-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-        {initialProducts.map(p => (
-          <div class="product-card bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between group cursor-pointer" data-id={p.id} data-name={p["Product Name"]} data-price={p["Offer Price"]} data-mrp={p.MRP} data-img={p["Image URL"]} data-unit={p.Unit || '1 Pack'} data-cat={p.Category}>
-            
-            {parseFloat(p.MRP) > parseFloat(p["Offer Price"]) && (
-              <span class="absolute top-2.5 left-2.5 bg-purpleBrand text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm">
-                {Math.round(((parseFloat(p.MRP) - parseFloat(p["Offer Price"])) / parseFloat(p.MRP)) * 100)}% OFF
-              </span>
-            )}
+        {initialProducts.map(p => {
+          const id = p["Product ID"] || p.ProductID || p.id || '';
+          const name = p["Product Name"] || '';
+          const cat = p.Category || 'Grocery';
+          const pack = p["Pack Size"] || p.Unit || '1 Unit';
+          const mrp = parseFloat(p.MRP || 0);
+          const price = parseFloat(p["Selling Price"] || p["Offer Price"] || mrp);
+          const img = p["Product Image URL"] || p["Thumbnail URL"] || p["Image URL"] || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const hasDiscount = mrp > price;
+          const discountPct = hasDiscount ? Math.round(((mrp - price) / mrp) * 100) : 0;
 
-            <div class="h-32 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50 relative group-hover:scale-105 transition-transform duration-300">
-              <img src={p["Image URL"]} alt={p["Product Name"]} class="max-h-full max-w-full object-contain p-2" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-            </div>
-
-            <div>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">{p.Category}</p>
-              <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">{p["Product Name"]}</h4>
-              <p class="text-[10px] text-slate-500 font-bold mb-2">{p.Unit || '1 Pack'}</p>
+          return (
+            <div class="product-card bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between group cursor-pointer" data-id={id} data-name={name} data-price={price} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-desc={p.Description || ''}>
               
-              <div class="flex items-center justify-between">
-                <div>
-                  <span class="text-xs font-black text-slate-900">₹{p["Offer Price"]}</span>
-                  {parseFloat(p.MRP) > parseFloat(p["Offer Price"]) && (
-                    <span class="text-[10px] text-slate-400 line-through ml-1">₹{p.MRP}</span>
-                  )}
+              {hasDiscount && discountPct > 0 && (
+                <span class="absolute top-2.5 left-2.5 bg-purpleBrand text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm">
+                  {discountPct}% OFF
+                </span>
+              )}
+
+              <div class="h-32 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50 relative group-hover:scale-105 transition-transform duration-300">
+                <img src={img} alt={name} class="max-h-full max-w-full object-contain p-2" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              </div>
+
+              <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">{cat}</p>
+                <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">{name}</h4>
+                <p class="text-[10px] text-slate-500 font-bold mb-2">{pack}</p>
+                
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-xs font-black text-slate-900">₹{price}</span>
+                    {hasDiscount && (
+                      <span class="text-[10px] text-slate-400 line-through ml-1">₹{mrp}</span>
+                    )}
+                  </div>
+                  <button class="add-to-cart-btn px-3 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={id} data-name={name} data-price={price} data-img={img}>
+                    ADD
+                  </button>
                 </div>
-                <button class="add-to-cart-btn px-3 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={p.id} data-name={p["Product Name"]} data-price={p["Offer Price"]} data-img={p["Image URL"]}>
-                  ADD
-                </button>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </main>
 
   </div>
 
-  <!-- FLOATING CART BUTTON -->
+  <!-- FLOATING CART BAR -->
   <div id="floating-cart-bar" class="hidden fixed bottom-6 left-4 right-4 max-w-xl mx-auto bg-purpleBrand text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between z-50">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-black text-sm" id="cart-count-badge">
@@ -248,13 +246,14 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
       </button>
 
       <div class="h-56 w-full bg-slate-50 rounded-2xl flex items-center justify-center p-4">
-        <img id="modal-img" src="" alt="" class="max-h-full max-w-full object-contain" />
+        <img id="modal-img" src="" alt="" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
       </div>
 
       <div>
         <span id="modal-cat" class="text-xs font-black text-purpleBrand uppercase tracking-wider">Category</span>
         <h3 id="modal-title" class="text-lg font-black font-display text-slate-900 mt-1">Product Title</h3>
         <p id="modal-unit" class="text-xs font-bold text-slate-500 mt-0.5">Unit Size</p>
+        <p id="modal-desc" class="text-xs text-slate-600 mt-2 leading-relaxed">Description</p>
       </div>
 
       <div class="flex items-center justify-between pt-2 border-t border-slate-100">
@@ -271,15 +270,16 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CATALOG INTERACTION ENGINE -->
+  <!-- CLIENT-SIDE CATALOG ENGINE FOR 5050 ORIGINAL ITEMS -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', async () => {
       let catalogData = [];
       try {
         const res = await fetch('/grocery_catalog.json');
         catalogData = await res.json();
+        console.log("Loaded original catalog items count:", catalogData.length);
       } catch(e) {
-        console.error("Failed to load live client catalog", e);
+        console.error("Failed to load original grocery catalog", e);
       }
 
       // 1. Cart Bar State
@@ -345,6 +345,7 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
       const modalTitle = document.getElementById('modal-title');
       const modalCat = document.getElementById('modal-cat');
       const modalUnit = document.getElementById('modal-unit');
+      const modalDesc = document.getElementById('modal-desc');
       const modalPrice = document.getElementById('modal-price');
       const modalMrp = document.getElementById('modal-mrp');
       const modalAddBtn = document.getElementById('modal-add-btn');
@@ -356,6 +357,7 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
             modalTitle.textContent = card.dataset.name;
             modalCat.textContent = card.dataset.cat || 'Grocery';
             modalUnit.textContent = card.dataset.unit || '1 Pack';
+            modalDesc.textContent = card.dataset.desc || '';
             modalPrice.textContent = '₹' + card.dataset.price;
             modalMrp.textContent = parseFloat(card.dataset.mrp) > parseFloat(card.dataset.price) ? '₹' + card.dataset.mrp : '';
 
@@ -383,7 +385,7 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
         modal.classList.add('hidden');
       });
 
-      // 4. Live Filtering & Search Engine
+      // 4. Client Search & Filtering over 5,050 Items
       const searchInput = document.getElementById('grocery-search-input');
       const clearBtn = document.getElementById('clear-search-btn');
       const grid = document.getElementById('grocery-products-grid');
@@ -392,36 +394,48 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
 
       let currentQuery = '';
       let currentCategory = 'all';
-      let currentDiet = 'all';
+      let currentFilter = 'all';
 
       function renderProducts(filtered) {
         if (filtered.length === 0) {
-          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No products found. Try searching for something else!</div>`;
+          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No products found matching your search.</div>`;
           countLabel.textContent = '0 Items';
           return;
         }
 
-        countLabel.textContent = filtered.length + ' Items Shown';
-        grid.innerHTML = filtered.map(p => `
-          <div class="product-card bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between group cursor-pointer" data-id="${p.id}" data-name="${p["Product Name"]}" data-price="${p["Offer Price"]}" data-mrp="${p.MRP}" data-img="${p["Image URL"]}" data-unit="${p.Unit || '1 Pack'}" data-cat="${p.Category}">
-            ${parseFloat(p.MRP) > parseFloat(p["Offer Price"]) ? `<span class="absolute top-2.5 left-2.5 bg-purpleBrand text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm">${Math.round(((parseFloat(p.MRP) - parseFloat(p["Offer Price"])) / parseFloat(p.MRP)) * 100)}% OFF</span>` : ''}
-            <div class="h-32 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50 relative group-hover:scale-105 transition-transform duration-300">
-              <img src="${p["Image URL"]}" alt="${p["Product Name"]}" class="max-h-full max-w-full object-contain p-2" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-            </div>
-            <div>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">${p.Category}</p>
-              <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">${p["Product Name"]}</h4>
-              <p class="text-[10px] text-slate-500 font-bold mb-2">${p.Unit || '1 Pack'}</p>
-              <div class="flex items-center justify-between">
-                <div>
-                  <span class="text-xs font-black text-slate-900">₹${p["Offer Price"]}</span>
-                  ${parseFloat(p.MRP) > parseFloat(p["Offer Price"]) ? `<span class="text-[10px] text-slate-400 line-through ml-1">₹${p.MRP}</span>` : ''}
+        countLabel.textContent = `Showing ${filtered.length} of ${catalogData.length} Products`;
+        grid.innerHTML = filtered.map(p => {
+          const id = p["Product ID"] || p.ProductID || p.id || '';
+          const name = p["Product Name"] || '';
+          const cat = p.Category || 'Grocery';
+          const pack = p["Pack Size"] || p.Unit || '1 Unit';
+          const mrp = parseFloat(p.MRP || 0);
+          const price = parseFloat(p["Selling Price"] || p["Offer Price"] || mrp);
+          const img = p["Product Image URL"] || p["Thumbnail URL"] || p["Image URL"] || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const hasDiscount = mrp > price;
+          const discountPct = hasDiscount ? Math.round(((mrp - price) / mrp) * 100) : 0;
+
+          return `
+            <div class="product-card bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between group cursor-pointer" data-id="${id}" data-name="${name}" data-price="${price}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-desc="${(p.Description || '').replace(/"/g, '&quot;')}">
+              ${hasDiscount && discountPct > 0 ? `<span class="absolute top-2.5 left-2.5 bg-purpleBrand text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm">${discountPct}% OFF</span>` : ''}
+              <div class="h-32 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50 relative group-hover:scale-105 transition-transform duration-300">
+                <img src="${img}" alt="${name}" class="max-h-full max-w-full object-contain p-2" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              </div>
+              <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">${cat}</p>
+                <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">${name}</h4>
+                <p class="text-[10px] text-slate-500 font-bold mb-2">${pack}</p>
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="text-xs font-black text-slate-900">₹${price}</span>
+                    ${hasDiscount ? `<span class="text-[10px] text-slate-400 line-through ml-1">₹${mrp}</span>` : ''}
+                  </div>
+                  <button class="add-to-cart-btn px-3 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id="${id}" data-name="${name}" data-price="${price}" data-img="${img}">ADD</button>
                 </div>
-                <button class="add-to-cart-btn px-3 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id="${p.id}" data-name="${p["Product Name"]}" data-price="${p["Offer Price"]}" data-img="${p["Image URL"]}">ADD</button>
               </div>
             </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
         attachAddToCartListeners();
         attachModalClickListeners();
@@ -432,22 +446,28 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
 
         let res = catalogData;
 
-        // Search Query
+        // Search Query over Product Name, Category, Brand Name, Search Keywords
         if (currentQuery) {
-          res = res.filter(p => (p["Product Name"] || '').toLowerCase().includes(currentQuery) || (p.Category || '').toLowerCase().includes(currentQuery));
+          res = res.filter(p => {
+            const name = (p["Product Name"] || '').toLowerCase();
+            const cat = (p.Category || '').toLowerCase();
+            const brand = (p["Brand Name"] || '').toLowerCase();
+            const kw = (p["Search Keywords"] || '').toLowerCase();
+            return name.includes(currentQuery) || cat.includes(currentQuery) || brand.includes(currentQuery) || kw.includes(currentQuery);
+          });
         }
 
-        // Category
+        // Category Filter
         if (currentCategory !== 'all') {
           res = res.filter(p => (p.Category || '').toLowerCase().includes(currentCategory.toLowerCase()));
         }
 
-        // Diet Filter
-        if (currentDiet === 'deals') {
-          res = res.filter(p => parseFloat(p["Offer Price"]) < parseFloat(p.MRP));
+        // Offers Filter
+        if (currentFilter === 'deals') {
+          res = res.filter(p => parseFloat(p.MRP || 0) > parseFloat(p["Selling Price"] || p["Offer Price"] || p.MRP || 0));
         }
 
-        renderProducts(res.slice(0, 60));
+        renderProducts(res.slice(0, 80));
       }
 
       searchInput?.addEventListener('input', (e) => {
@@ -476,7 +496,7 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
         });
       });
 
-      // Diet Filter Buttons
+      // Filter Buttons
       document.querySelectorAll('.diet-filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.diet-filter-btn').forEach(b => {
@@ -486,7 +506,7 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
           btn.classList.replace('bg-slate-100', 'bg-purpleBrand');
           btn.classList.replace('text-slate-700', 'text-white');
 
-          currentDiet = btn.dataset.filter || 'all';
+          currentFilter = btn.dataset.filter || 'all';
           filterCatalog();
         });
       });
@@ -505,7 +525,7 @@ const initialProducts = dedupProducts(catalog).slice(0, 48);
         titleLabel.textContent = catParam;
       }
       if (searchParam || catParam) {
-        setTimeout(filterCatalog, 500);
+        setTimeout(filterCatalog, 300);
       }
     });
   </script>
