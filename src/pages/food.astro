@@ -1,12 +1,80 @@
 ---
 import Switcher from '../components/Switcher.astro';
+
+const foodCatalog = [
+  // THALIS & COMBOS
+  { id: 'f01', name: 'Special North Indian Veg Thali', category: 'Thalis & Combos', type: 'veg', price: 260, desc: 'Paneer Butter Masala, Dal Makhani, Mix Veg, Jeera Rice, 2 Butter Naan, Gulab Jamun & Salad.', tag: 'Bestseller Thali', rating: 4.9, img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f02', name: 'Non-Veg Royal Chicken Thali', category: 'Thalis & Combos', type: 'nonveg', price: 310, desc: 'Butter Chicken, Chicken Sukka, Dal Tadka, Steamed Basmati Rice, 2 Butter Roti, Solkadhi & Sweet.', tag: 'Chef Special Thali', rating: 4.9, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f03', name: 'Mini Paneer Meal Combo', category: 'Thalis & Combos', type: 'veg', price: 180, desc: 'Kadhai Paneer + Jeera Rice + 2 Tandoori Butter Roti + Gulab Jamun.', tag: 'Value Combo', rating: 4.7, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=300&auto=format&fit=crop&q=80' },
+
+  // STARTERS & TANDOOR
+  { id: 'f1', name: 'Paneer Tikka', category: 'Starters', type: 'veg', price: 230, desc: '6 pieces of cottage cheese marinated in spiced yogurt and grilled in tandoor.', tag: 'Bestseller', rating: 4.7, img: 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f2', name: 'Chicken Tikka', category: 'Starters', type: 'nonveg', price: 260, desc: '6 pieces of juicy clay oven charcoal grilled chicken with mint chutney.', tag: 'Must Try', rating: 4.8, img: 'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f3', name: 'Veg Manchurian Dry', category: 'Starters', type: 'veg', price: 190, desc: 'Crispy veg dumplings tossed in spicy Indo-Chinese garlic soy sauce.', tag: 'Popular', rating: 4.4, img: 'https://images.unsplash.com/photo-1625398407796-82650a8c135f?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f4', name: 'Hara Bhara Kabab', category: 'Starters', type: 'veg', price: 210, desc: 'Pan-fried patties made with spinach, green peas, cottage cheese and spices.', tag: 'Healthy', rating: 4.5, img: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f5', name: 'Chicken 65', category: 'Starters', type: 'nonveg', price: 270, desc: 'Spicy deep-fried chicken cubes tempered with curry leaves and red chillies.', tag: 'Spicy', rating: 4.8, img: 'https://images.unsplash.com/photo-1610057099443-f63a158654a9?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f6', name: 'Crispy Corn Salt & Pepper', category: 'Starters', type: 'veg', price: 180, desc: 'Sweet corn kernels fried crisp and tossed with onion, capsicum & black pepper.', tag: 'Crunchy', rating: 4.3, img: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f7', name: 'Tandoori Chicken (Half)', category: 'Starters', type: 'nonveg', price: 320, desc: 'Whole chicken leg & breast marinated overnight in red spices and tandoor roasted.', tag: 'Chef Special', rating: 4.9, img: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=300&auto=format&fit=crop&q=80' },
+
+  // MAIN COURSE
+  { id: 'f8', name: 'Paneer Butter Masala', category: 'Main Course', type: 'veg', price: 240, desc: 'Soft paneer cubes cooked in a rich, creamy, spiced tomato & butter gravy.', tag: 'Bestseller', rating: 4.8, img: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f9', name: 'Kadhai Paneer', category: 'Main Course', type: 'veg', price: 230, desc: 'Paneer cooked with diced capsicum & onions in freshly ground kadhai spices.', tag: 'Spicy', rating: 4.6, img: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f10', name: 'Dal Makhani', category: 'Main Course', type: 'veg', price: 210, desc: 'Slow cooked black lentils with kidney beans, finished with white butter & cream.', tag: 'Must Try', rating: 4.9, img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f11', name: 'Dal Tadka', category: 'Main Course', type: 'veg', price: 170, desc: 'Yellow arhar dal tempered with ghee, cumin seeds, garlic, tomato & dried chillies.', tag: 'Comfort', rating: 4.5, img: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f12', name: 'Mix Vegetable Curry', category: 'Main Course', type: 'veg', price: 190, desc: 'Seasonal fresh garden vegetables cooked in North Indian onion tomato gravy.', tag: 'Healthy', rating: 4.3, img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f13', name: 'Palak Paneer', category: 'Main Course', type: 'veg', price: 220, desc: 'Cottage cheese cubes simmered in a smooth seasoned spinach puree with garlic.', tag: 'Healthy', rating: 4.6, img: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f14', name: 'Malai Kofta', category: 'Main Course', type: 'veg', price: 250, desc: 'Melt-in-mouth cottage cheese & potato dumplings in a velvety cashew cream gravy.', tag: 'Rich', rating: 4.7, img: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f15', name: 'Butter Chicken', category: 'Main Course', type: 'nonveg', price: 290, desc: 'Iconic Delhi style rich creamy gravy with tender tandoori chicken tikka.', tag: 'Bestseller', rating: 4.9, img: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f16', name: 'Chicken Kolhapuri', category: 'Main Course', type: 'nonveg', price: 270, desc: 'Fiery spicy Maharashtrian chicken curry cooked with roasted coconut & chillies.', tag: 'Spicy Special', rating: 4.7, img: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f17', name: 'Mutton Rogan Josh', category: 'Main Course', type: 'nonveg', price: 360, desc: 'Tender mutton slow cooked in authentic Kashmiri aromatic spices & rattan jot.', tag: 'Chef Special', rating: 4.8, img: 'https://images.unsplash.com/photo-1545247181-516773cae754?w=300&auto=format&fit=crop&q=80' },
+
+  // BIRYANI & RICE
+  { id: 'f19', name: 'Chicken Dum Biryani', category: 'Biryani', type: 'nonveg', price: 260, desc: 'Long grain Basmati rice layered with marinated chicken, saffron & slow cooked on dum.', tag: 'Top Rated', rating: 4.9, img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f20', name: 'Veg Hyderabadi Biryani', category: 'Biryani', type: 'veg', price: 210, desc: 'Fragrant Basmati rice cooked with fresh vegetables, mint, caramelized onions & spices.', tag: 'Must Try', rating: 4.6, img: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f21', name: 'Paneer Tikka Biryani', category: 'Biryani', type: 'veg', price: 240, desc: 'Charcoal grilled paneer tikka layered with aromatic dum rice and fresh herbs.', tag: 'Popular', rating: 4.7, img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f22', name: 'Jeera Rice', category: 'Biryani', type: 'veg', price: 130, desc: 'Fluffy Basmati rice tempered with aromatic cumin seeds and pure desi ghee.', tag: 'Classic', rating: 4.5, img: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=300&auto=format&fit=crop&q=80' },
+
+  // NAAN & ROTI
+  { id: 'f23', name: 'Garlic Butter Naan', category: 'Naan & Roti', type: 'veg', price: 50, desc: 'Soft clay oven baked flatbread brushed with garlic butter and fresh coriander.', tag: 'Bestseller', rating: 4.8, img: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f24', name: 'Butter Naan', category: 'Naan & Roti', type: 'veg', price: 40, desc: 'Traditional tandoori refined flour naan topped with rich melted butter.', tag: 'Popular', rating: 4.7, img: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f25', name: 'Tandoori Butter Roti', category: 'Naan & Roti', type: 'veg', price: 25, desc: 'Whole wheat roti baked in clay oven and brushed with fresh butter.', tag: 'Daily Essential', rating: 4.6, img: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f26', name: 'Cheese Garlic Naan', category: 'Naan & Roti', type: 'veg', price: 75, desc: 'Naan stuffed with gooey melted mozzarella cheese, garlic and herbs.', tag: 'Kids Favorite', rating: 4.9, img: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=300&auto=format&fit=crop&q=80' },
+
+  // CHINESE & FAST FOOD
+  { id: 'f27', name: 'Veg Hakka Noodles', category: 'Chinese', type: 'veg', price: 170, desc: 'Wok tossed noodles with crunchy cabbage, capsicum, carrots & soya sauce.', tag: 'Popular', rating: 4.5, img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f28', name: 'Chicken Schezwan Fried Rice', category: 'Chinese', type: 'nonveg', price: 210, desc: 'Spicy Schezwan rice stir fried with tender chicken pieces, egg and veggies.', tag: 'Spicy', rating: 4.7, img: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f29', name: 'Chilli Chicken Gravy', category: 'Chinese', type: 'nonveg', price: 240, desc: 'Crispy chicken morsels tossed with bell peppers and green chillies in soy sauce.', tag: 'Must Try', rating: 4.6, img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f30', name: 'Veg Supreme Burger', category: 'Chinese', type: 'veg', price: 120, desc: 'Crispy veg patty topped with cheese slice, onion rings, lettuce & special sauce.', tag: 'Fast Food', rating: 4.4, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f31', name: 'Peri Peri French Fries', category: 'Chinese', type: 'veg', price: 110, desc: 'Golden potato fries dusted with spicy African peri peri seasoning.', tag: 'Snack', rating: 4.6, img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=300&auto=format&fit=crop&q=80' },
+
+  // SOUTH INDIAN
+  { id: 'f32', name: 'Masala Dosa', category: 'South Indian', type: 'veg', price: 120, desc: 'Crispy rice crepe filled with spiced potato masala, served with sambar & chutneys.', tag: 'Bestseller', rating: 4.8, img: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f33', name: 'Steamed Idli Sambar (2 Pcs)', category: 'South Indian', type: 'veg', price: 80, desc: 'Soft fluffy steamed rice cakes served with piping hot lentil sambar.', tag: 'Healthy', rating: 4.6, img: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=300&auto=format&fit=crop&q=80' },
+
+  // DESSERTS & DRINKS
+  { id: 'f34', name: 'Gulab Jamun (2 Pcs)', category: 'Desserts & Drinks', type: 'veg', price: 70, desc: 'Warm milk solid dumplings soaked in cardamom infused sugar syrup.', tag: 'Sweet', rating: 4.8, img: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f35', name: 'Mango Lassi', category: 'Desserts & Drinks', type: 'veg', price: 90, desc: 'Thick chilled sweet yogurt drink blended with Alphonso mango pulp.', tag: 'Refreshing', rating: 4.9, img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f36', name: 'Sizzling Brownie with Ice Cream', category: 'Desserts & Drinks', type: 'veg', price: 150, desc: 'Fudgy chocolate brownie served on a hot sizzler plate with vanilla ice cream.', tag: 'Chef Special', rating: 4.9, img: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=300&auto=format&fit=crop&q=80' },
+  { id: 'f37', name: 'Masala Chaas (Buttermilk)', category: 'Desserts & Drinks', type: 'veg', price: 40, desc: 'Chilled spiced buttermilk with roasted cumin, green chilli and fresh coriander.', tag: 'Digestive', rating: 4.7, img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&auto=format&fit=crop&q=80' },
+];
+
+const categoryOrder = [
+  { key: 'Thalis & Combos', title: '🍱 Special Thalis & Combos' },
+  { key: 'Starters', title: '🍢 Starters & Tandoori Kababs' },
+  { key: 'Main Course', title: '🥘 Main Course (Veg & Non-Veg)' },
+  { key: 'Biryani', title: '🍚 Biryani & Basmati Rice' },
+  { key: 'Naan & Roti', title: '🫓 Tandoori Roti & Naan' },
+  { key: 'Chinese', title: '🍜 Chinese & Fast Food' },
+  { key: 'South Indian', title: '🥞 South Indian Specialties' },
+  { key: 'Desserts & Drinks', title: '🍨 Desserts & Beverages' }
+];
 ---
 
 <html class="light" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Spice Village - Food Menu</title>
+  <title>Food Delivery - Restaurant Menu</title>
   <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
   <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
   <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
@@ -39,12 +107,12 @@ import Switcher from '../components/Switcher.astro';
             "tertiary-fixed": "#94f990",
             "surface-container": "#eeeeee",
             "on-surface": "#1a1c1c",
-            "primary": "#b02f00",
-            "primary-container": "#ff5722",
+            "primary": "#ea580c",
+            "primary-container": "#ff782e",
             "on-secondary-container": "#656464",
             "surface-container-low": "#f3f3f3",
             "surface-dim": "#dadada",
-            "primary-fixed": "#ffdbd1",
+            "primary-fixed": "#ffedd5",
             "on-primary-fixed-variant": "#862200",
             "error": "#ba1a1a",
             "on-error-container": "#93000a",
@@ -74,99 +142,310 @@ import Switcher from '../components/Switcher.astro';
     .material-symbols-outlined {
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="text-on-surface bg-background pb-32">
   <!-- Top App Bar -->
-  <header class="bg-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
-    <div class="flex items-center gap-3">
-      <a href="/home" class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-150">
-        <span class="material-symbols-outlined text-primary">arrow_back</span>
-      </a>
+  <header class="bg-surface/90 dark:bg-inverse-surface/90 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
+    <div class="flex items-center gap-2 min-w-0">
+        <a href="/home" class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-150 flex-shrink-0 flex items-center justify-center mr-1">
+            <span class="material-symbols-outlined text-primary">arrow_back</span>
+        </a>
+  
+        <!-- Delivery Time & Location Info -->
+        <div class="flex flex-col min-w-0">
+            <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-primary text-sm font-black animate-pulse" style="font-variation-settings: 'FILL' 1;">bolt</span>
+                <span class="font-extrabold text-[13px] tracking-tight text-on-surface" id="header-eta">20 minutes</span>
+            </div>
+            <div class="flex items-center gap-0.5 text-[10px] text-on-surface-variant font-extrabold cursor-pointer hover:text-primary transition-colors min-w-0 uppercase tracking-wide">
+                <span class="truncate" id="header-address">Home - Varangaon Road, Bhusawal</span>
+                <span class="material-symbols-outlined text-xs flex-shrink-0">keyboard_arrow_down</span>
+            </div>
+        </div>
+    </div>
+    <!-- Profile Avatar on Top Right -->
+    <a href="/profile" class="w-9 h-9 rounded-full overflow-hidden border border-outline-variant/30 flex-shrink-0 hover:ring-2 hover:ring-primary/20 active:scale-90 transition-all flex items-center justify-center">
+        <img class="w-full h-full object-cover" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Profile"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+    </a>
+</header>
+
+  <main class="max-w-xl mx-auto px-margin-mobile pt-4 space-y-5">
+    <!-- Restaurant Menu Banner -->
+    <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_16px_rgba(0,0,0,0.03)] flex justify-between items-center">
       <div>
-        <h1 class="font-headline-lg-mobile text-headline-md text-on-surface">Spice Village</h1>
-        <p class="text-[10px] text-on-surface-variant font-bold">North Indian • Varangaon Road</p>
+        <div class="flex items-center gap-2">
+          <h1 class="font-extrabold text-lg text-on-surface">Food Menu & Delivery</h1>
+          <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">38+ Dishes</span>
+        </div>
+        <p class="text-xs text-neutral-500 mt-0.5">Thalis • Starters • Main Course • Biryani • Chinese • Desserts</p>
+        <div class="flex items-center gap-3 mt-2 text-xs font-bold text-neutral-700">
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-yellow-500 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span>4.8 (3.1k+ ratings)</span>
+          </div>
+          <span class="text-neutral-300">•</span>
+          <span class="text-primary">20-25 mins</span>
+        </div>
+      </div>
+      <div class="w-14 h-14 rounded-2xl overflow-hidden bg-primary/10 flex items-center justify-center flex-shrink-0 border border-primary/20">
+        <span class="material-symbols-outlined text-primary text-3xl">restaurant_menu</span>
       </div>
     </div>
-  </header>
 
-  <main class="max-w-md mx-auto px-margin-mobile pt-6 space-y-6">
-    <!-- Restaurant Rating & Details Banner -->
-    <div class="bg-white rounded-2xl p-5 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex justify-between items-center">
+    <!-- Clean Search Input Bar -->
+    <div class="relative">
+      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 text-lg">search</span>
+      <input 
+        id="search-food" 
+        type="text" 
+        placeholder="Search menu (Paneer, Butter Chicken, Biryani, Naan...)" 
+        class="w-full bg-white border border-neutral-200/80 rounded-2xl py-3 pl-11 pr-10 text-xs font-semibold text-neutral-800 shadow-[0_2px_8px_rgba(0,0,0,0.02)] focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all placeholder:text-neutral-400" 
+      />
+      <button id="clear-search" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+    </div>
+
+    <!-- Unified Quick Filter Pills (Diet & Categories) -->
+    <div class="bg-white p-3 rounded-2xl border border-outline-variant/10 shadow-sm space-y-3">
+      <!-- Dietary Preference Buttons (Primary Filters) -->
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-extrabold text-neutral-500 uppercase tracking-wider pl-1">Diet Filter</span>
+        <div class="flex gap-2" id="diet-buttons">
+          <button id="btn-all" data-diet="all" class="diet-btn px-4 py-1.5 rounded-xl border border-primary bg-primary text-white font-extrabold text-xs shadow-sm active:scale-95 transition-all flex items-center gap-1">
+            🍽️ All Dishes
+          </button>
+          <button id="btn-veg" data-diet="veg" class="diet-btn px-4 py-1.5 rounded-xl border border-emerald-300 bg-white text-emerald-700 font-extrabold text-xs active:scale-95 transition-all flex items-center gap-1 hover:bg-emerald-50">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span> Veg Only
+          </button>
+          <button id="btn-nonveg" data-diet="nonveg" class="diet-btn px-4 py-1.5 rounded-xl border border-red-300 bg-white text-red-700 font-extrabold text-xs active:scale-95 transition-all flex items-center gap-1 hover:bg-red-50">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span> Non-Veg
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills (Horizontal Scroll) -->
+      <div class="flex gap-2 overflow-x-auto no-scrollbar pt-2 border-t border-neutral-100" id="category-pills">
+        <button data-cat="all" class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all bg-primary text-white shadow-sm active:scale-95">
+          ✨ All Menu
+        </button>
+        {categoryOrder.map(cat => (
+          <button data-cat={cat.key} class="cat-btn px-3.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all bg-neutral-100 text-neutral-700 hover:bg-primary/10 active:scale-95">
+            {cat.title}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Clean Active Filter Status Bar -->
+    <div id="filter-status-banner" class="bg-white border border-neutral-200/80 rounded-xl px-4 py-2 flex items-center justify-between text-xs font-bold text-neutral-700 shadow-sm">
       <div class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
-        <span class="font-bold text-label-md">4.2 (100+ ratings)</span>
+        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+        <span id="filter-status-text" class="truncate font-bold">Showing: All Menu (38 Dishes)</span>
       </div>
-      <div class="h-4 w-px bg-outline-variant/30" />
-      <div>
-        <span class="text-xs text-on-surface-variant">25-30 Mins Delivery</span>
-      </div>
+      <button id="reset-all-filters" class="text-primary hover:text-primary/80 font-extrabold text-[11px] flex-shrink-0 transition-colors">Reset</button>
     </div>
 
-    <!-- Veg / Non-Veg Toggle -->
-    <div class="flex gap-3" id="veg-filters">
-      <button id="btn-all" class="px-4 py-2 rounded-full border border-primary bg-primary-fixed/30 text-primary font-bold text-xs active:scale-95 transition-all">All</button>
-      <button id="btn-veg" class="px-4 py-2 rounded-full border border-outline-variant bg-white text-tertiary font-bold text-xs flex items-center gap-1 active:scale-95 transition-all">
-        <span class="w-3 h-3 rounded-sm border border-tertiary flex items-center justify-center"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span></span>
-        Veg Only
-      </button>
-      <button id="btn-nonveg" class="px-4 py-2 rounded-full border border-outline-variant bg-white text-error font-bold text-xs flex items-center gap-1 active:scale-95 transition-all">
-        <span class="w-3 h-3 rounded-sm border border-error flex items-center justify-center"><span class="w-1.5 h-1.5 rounded-full bg-error"></span></span>
-        Non-Veg
-      </button>
+    <!-- Static Pre-Rendered Menu Sections with Explicit Veg/NonVeg Grouping -->
+    <div class="space-y-6" id="menu-container">
+      {categoryOrder.map(cat => {
+        const vegItems = foodCatalog.filter(item => item.category === cat.key && item.type === 'veg');
+        const nonvegItems = foodCatalog.filter(item => item.category === cat.key && item.type === 'nonveg');
+        if (vegItems.length === 0 && nonvegItems.length === 0) return null;
+
+        return (
+          <section class="space-y-4 food-category-section" data-cat={cat.key}>
+            <div class="flex items-center justify-between pb-1 border-b border-neutral-200">
+              <h2 class="font-extrabold text-base text-on-surface">{cat.title}</h2>
+              <span class="text-xs font-bold text-neutral-400">({vegItems.length + nonvegItems.length})</span>
+            </div>
+
+            <!-- Veg Sub-group -->
+            {vegItems.length > 0 && (
+              <div class="space-y-3 food-diet-group" data-group-diet="veg">
+                <div class="flex items-center gap-1.5 pt-1">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                  <h3 class="text-xs font-extrabold text-emerald-800 uppercase tracking-wider">🟢 Pure Veg {cat.key} ({vegItems.length})</h3>
+                </div>
+                <div class="space-y-3">
+                  {vegItems.map(item => (
+                    <div 
+                      class="bg-white rounded-2xl p-4 border border-outline-variant/10 border-l-[5px] border-l-emerald-600 shadow-[0_4px_12px_rgba(0,0,0,0.03)] flex justify-between items-center food-item gap-3 transition-all" 
+                      data-id={item.id} 
+                      data-type={item.type}
+                      data-cat={item.category}
+                      data-name={item.name.toLowerCase()}
+                      data-desc={item.desc.toLowerCase()}
+                    >
+                      <div class="flex-1 min-w-0 pr-2">
+                        <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                          <span class="bg-emerald-50 text-emerald-700 border border-emerald-300 text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0">
+                            <span class="w-2 h-2 rounded-full bg-emerald-600"></span> VEG
+                          </span>
+                          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-amber-100 text-amber-900">{item.tag}</span>
+                          <span class="text-[10px] font-extrabold text-neutral-600 flex items-center gap-0.5">
+                            <span class="text-yellow-500">★</span> {item.rating}
+                          </span>
+                        </div>
+                        <h3 class="font-extrabold text-label-md text-on-surface leading-tight mt-1">{item.name}</h3>
+                        <p class="text-[11px] text-on-surface-variant mt-1 line-clamp-2 leading-snug">{item.desc}</p>
+                        <p class="font-extrabold text-on-surface mt-2 text-sm">₹{item.price}</p>
+                      </div>
+                      
+                      <div class="flex flex-col items-center flex-shrink-0 relative">
+                        <div class="w-24 h-24 rounded-2xl overflow-hidden bg-neutral-100 border border-neutral-100 shadow-inner relative">
+                          <img 
+                            src={item.img} 
+                            alt={item.name} 
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform" 
+                            onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';"
+                          />
+                        </div>
+                        <div class="btn-slot mt-2">
+                          <button 
+                            class="bg-white border border-primary text-primary px-5 py-1.5 rounded-xl text-xs font-extrabold shadow-md hover:bg-primary/5 active:scale-95 transition-all btn-add" 
+                            data-name={item.name} 
+                            data-price={item.price} 
+                            data-img={item.img}
+                          >
+                            ADD
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <!-- Non-Veg Sub-group -->
+            {nonvegItems.length > 0 && (
+              <div class="space-y-3 food-diet-group" data-group-diet="nonveg">
+                <div class="flex items-center gap-1.5 pt-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
+                  <h3 class="text-xs font-extrabold text-red-800 uppercase tracking-wider">🔴 Non-Veg {cat.key} ({nonvegItems.length})</h3>
+                </div>
+                <div class="space-y-3">
+                  {nonvegItems.map(item => (
+                    <div 
+                      class="bg-white rounded-2xl p-4 border border-outline-variant/10 border-l-[5px] border-l-red-600 shadow-[0_4px_12px_rgba(0,0,0,0.03)] flex justify-between items-center food-item gap-3 transition-all" 
+                      data-id={item.id} 
+                      data-type={item.type}
+                      data-cat={item.category}
+                      data-name={item.name.toLowerCase()}
+                      data-desc={item.desc.toLowerCase()}
+                    >
+                      <div class="flex-1 min-w-0 pr-2">
+                        <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                          <span class="bg-red-50 text-red-700 border border-red-300 text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1 flex-shrink-0">
+                            <span class="w-2 h-2 rounded-full bg-red-600"></span> NON-VEG
+                          </span>
+                          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-amber-100 text-amber-900">{item.tag}</span>
+                          <span class="text-[10px] font-extrabold text-neutral-600 flex items-center gap-0.5">
+                            <span class="text-yellow-500">★</span> {item.rating}
+                          </span>
+                        </div>
+                        <h3 class="font-extrabold text-label-md text-on-surface leading-tight mt-1">{item.name}</h3>
+                        <p class="text-[11px] text-on-surface-variant mt-1 line-clamp-2 leading-snug">{item.desc}</p>
+                        <p class="font-extrabold text-on-surface mt-2 text-sm">₹{item.price}</p>
+                      </div>
+                      
+                      <div class="flex flex-col items-center flex-shrink-0 relative">
+                        <div class="w-24 h-24 rounded-2xl overflow-hidden bg-neutral-100 border border-neutral-100 shadow-inner relative">
+                          <img 
+                            src={item.img} 
+                            alt={item.name} 
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform" 
+                            onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';"
+                          />
+                        </div>
+                        <div class="btn-slot mt-2">
+                          <button 
+                            class="bg-white border border-primary text-primary px-5 py-1.5 rounded-xl text-xs font-extrabold shadow-md hover:bg-primary/5 active:scale-95 transition-all btn-add" 
+                            data-name={item.name} 
+                            data-price={item.price} 
+                            data-img={item.img}
+                          >
+                            ADD
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+        );
+      })}
     </div>
-
-    <!-- Menu Items List -->
-    <section class="space-y-4">
-      <h2 class="font-bold text-headline-md text-on-surface">Popular Menu</h2>
-      <div class="space-y-4" id="menu-container">
-        <!-- Item 1 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex justify-between items-center food-item" data-type="nonveg">
-          <div class="flex-1 pr-4">
-            <span class="w-4 h-4 rounded-sm border border-error flex items-center justify-center mb-1"><span class="w-2 h-2 rounded-full bg-error"></span></span>
-            <h3 class="font-bold text-label-md text-on-surface">Butter Chicken</h3>
-            <p class="text-xs text-on-surface-variant mt-1">Rich creamy gravy with tender tandoori chicken pieces.</p>
-            <p class="font-bold text-on-surface mt-2">₹280</p>
-          </div>
-          <button class="bg-primary text-on-primary px-6 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all self-center">Add</button>
-        </div>
-
-        <!-- Item 2 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex justify-between items-center food-item" data-type="veg">
-          <div class="flex-1 pr-4">
-            <span class="w-4 h-4 rounded-sm border border-tertiary flex items-center justify-center mb-1"><span class="w-2 h-2 rounded-full bg-tertiary"></span></span>
-            <h3 class="font-bold text-label-md text-on-surface">Paneer Butter Masala</h3>
-            <p class="text-xs text-on-surface-variant mt-1">Soft paneer cubes cooked in a spiced rich tomato butter sauce.</p>
-            <p class="font-bold text-on-surface mt-2">₹220</p>
-          </div>
-          <button class="bg-primary text-on-primary px-6 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all self-center">Add</button>
-        </div>
-
-        <!-- Item 3 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex justify-between items-center food-item" data-type="nonveg">
-          <div class="flex-1 pr-4">
-            <span class="w-4 h-4 rounded-sm border border-error flex items-center justify-center mb-1"><span class="w-2 h-2 rounded-full bg-error"></span></span>
-            <h3 class="font-bold text-label-md text-on-surface">Chicken Tikka</h3>
-            <p class="text-xs text-on-surface-variant mt-1">6 pieces of juicy clay oven charcoal grilled chicken.</p>
-            <p class="font-bold text-on-surface mt-2">₹220</p>
-          </div>
-          <button class="bg-primary text-on-primary px-6 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all self-center">Add</button>
-        </div>
-
-        <!-- Item 4 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex justify-between items-center food-item" data-type="veg">
-          <div class="flex-1 pr-4">
-            <span class="w-4 h-4 rounded-sm border border-tertiary flex items-center justify-center mb-1"><span class="w-2 h-2 rounded-full bg-tertiary"></span></span>
-            <h3 class="font-bold text-label-md text-on-surface">Garlic Naan</h3>
-            <p class="text-xs text-on-surface-variant mt-1">Tandoori flatbread garnished with minced garlic and butter.</p>
-            <p class="font-bold text-on-surface mt-2">₹45</p>
-          </div>
-          <button class="bg-primary text-on-primary px-6 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all self-center">Add</button>
-        </div>
-      </div>
-    </section>
   </main>
 
+    <!-- Interactive Food Dish Details Modal -->
+  <div id="food-modal" class="hidden fixed inset-0 z-[100] flex items-end justify-center sm:items-center p-0 sm:p-4 bg-black/60 backdrop-blur-sm transition-all duration-300">
+    <div class="bg-white w-full max-w-md rounded-t-[32px] sm:rounded-[32px] p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto relative animate-in slide-in-from-bottom duration-300">
+      <!-- Close Button -->
+      <button id="close-food-modal" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 transition-colors z-10">
+        <span class="material-symbols-outlined text-lg">close</span>
+      </button>
+
+      <!-- Dish Image -->
+      <div class="w-full h-56 rounded-2xl bg-neutral-50 border border-neutral-100 flex items-center justify-center p-2 relative overflow-hidden">
+        <img id="fmodal-img" src="/assets/d686bc969706f3bd6cf093f663be9579.jpg" alt="Dish" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+        <span id="fmodal-diet-badge" class="absolute top-3 left-3 bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1">
+          🟢 VEG
+        </span>
+      </div>
+
+      <!-- Header Info -->
+      <div>
+        <div class="flex items-center justify-between">
+          <span id="fmodal-category" class="text-[11px] font-extrabold text-primary uppercase tracking-wider">Restaurant Specialty</span>
+          <div class="flex items-center gap-1 text-xs font-bold text-neutral-600">
+            <span class="text-yellow-500">★</span>
+            <span id="fmodal-rating">4.8 (1.2k+ ratings)</span>
+          </div>
+        </div>
+        <h2 id="fmodal-title" class="text-xl font-extrabold text-neutral-900 mt-1 leading-tight">Dish Name</h2>
+        <p id="fmodal-tag" class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded w-max mt-1">Bestseller</p>
+      </div>
+
+      <!-- Pricing Row -->
+      <div class="flex items-baseline gap-2 pt-1 border-t border-neutral-100">
+        <span id="fmodal-price" class="text-2xl font-black text-on-surface">₹240</span>
+        <span class="text-xs font-bold text-neutral-400">Taxes & Packaging included</span>
+      </div>
+
+      <!-- Description & Ingredients -->
+      <div class="space-y-2 pt-1">
+        <h3 class="text-xs font-extrabold text-neutral-900 uppercase tracking-wider">Dish Description</h3>
+        <p id="fmodal-desc" class="text-xs text-neutral-600 leading-relaxed font-medium">
+          Prepared fresh to order using authentic spices and premium ingredients. Delivered hot in leak-proof packaging.
+        </p>
+        <div class="grid grid-cols-2 gap-2 pt-2 text-[11px] font-bold text-neutral-700">
+          <div class="bg-neutral-50 p-2 rounded-xl border border-neutral-100 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-base">timer</span>
+            <span>20-25 Mins Hot</span>
+          </div>
+          <div class="bg-neutral-50 p-2 rounded-xl border border-neutral-100 flex items-center gap-2">
+            <span class="material-symbols-outlined text-emerald-600 text-base">restaurant</span>
+            <span>Freshly Cooked</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Action Footer -->
+      <div class="pt-3 border-t border-neutral-100">
+        <button id="fmodal-btn-add" class="w-full bg-primary text-white font-extrabold py-3.5 rounded-2xl shadow-lg shadow-primary/20 hover:brightness-105 active:scale-[0.98] transition-all text-xs flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-base">shopping_basket</span>
+          <span>Add Item • <strong id="fmodal-btn-price">₹240</strong></span>
+        </button>
+      </div>
+    </div>
+  </div>
   <!-- Cart Floating Bar -->
   <div class="fixed bottom-24 left-4 right-4 z-50">
     <div class="bg-primary text-on-primary h-16 rounded-2xl flex items-center justify-between px-6 shadow-xl cursor-pointer hover:brightness-110 transition-all">
@@ -176,7 +455,7 @@ import Switcher from '../components/Switcher.astro';
         </div>
         <div>
           <p class="font-bold text-label-md leading-none">0 Items</p>
-          <p class="text-[10px] text-white/80">₹0 • Spice Village Order</p>
+          <p class="text-[10px] text-white/80">₹0 • Food Order</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -207,99 +486,347 @@ import Switcher from '../components/Switcher.astro';
   </nav>
 
   <script is:inline>
-    // Veg/Non-veg filter toggling
-    const btnAll = document.getElementById('btn-all');
-    const btnVeg = document.getElementById('btn-veg');
-    const btnNonVeg = document.getElementById('btn-nonveg');
-    const items = document.querySelectorAll('.food-item');
+    // Bulletproof Client-side Filtering using setProperty !important
+    let currentCategory = 'all';
+    let currentDietFilter = 'all';
+    let searchQuery = '';
 
-    function applyFilter(type) {
-      items.forEach(item => {
-        if (type === 'all' || item.getAttribute('data-type') === type) {
-          item.classList.remove('hidden');
-          item.classList.add('flex');
-        } else {
-          item.classList.remove('flex');
-          item.classList.add('hidden');
-        }
-      });
-    }
-
-    btnAll.addEventListener('click', () => {
-      btnAll.className = "px-4 py-2 rounded-full border border-primary bg-primary-fixed/30 text-primary font-bold text-xs transition-all";
-      btnVeg.className = "px-4 py-2 rounded-full border border-outline-variant bg-white text-tertiary font-bold text-xs flex items-center gap-1 transition-all";
-      btnNonVeg.className = "px-4 py-2 rounded-full border border-outline-variant bg-white text-error font-bold text-xs flex items-center gap-1 transition-all";
-      applyFilter('all');
-    });
-
-    btnVeg.addEventListener('click', () => {
-      btnAll.className = "px-4 py-2 rounded-full border border-outline-variant bg-white text-on-surface font-bold text-xs transition-all";
-      btnVeg.className = "px-4 py-2 rounded-full border border-tertiary bg-tertiary-fixed/30 text-tertiary font-bold text-xs flex items-center gap-1 transition-all";
-      btnNonVeg.className = "px-4 py-2 rounded-full border border-outline-variant bg-white text-error font-bold text-xs flex items-center gap-1 transition-all";
-      applyFilter('veg');
-    });
-
-    btnNonVeg.addEventListener('click', () => {
-      btnAll.className = "px-4 py-2 rounded-full border border-outline-variant bg-white text-on-surface font-bold text-xs transition-all";
-      btnVeg.className = "px-4 py-2 rounded-full border border-outline-variant bg-white text-tertiary font-bold text-xs flex items-center gap-1 transition-all";
-      btnNonVeg.className = "px-4 py-2 rounded-full border border-error bg-error-container text-error font-bold text-xs flex items-center gap-1 transition-all";
-      applyFilter('nonveg');
-    });
-
-    // Cart details
-    let cart = [];
+    let cart = JSON.parse(localStorage.getItem('bhusawal_cart_food') || '{}');
     let cartCount = 0;
     let cartTotal = 0;
 
     const cartBar = document.querySelector('.fixed.bottom-24');
-    const cartTextCount = cartBar.querySelector('p.font-bold');
-    const cartTextDetails = cartBar.querySelector('p.text-white\\/80');
+    const cartTextCount = cartBar ? cartBar.querySelector('p.font-bold') : null;
+    const cartTextDetails = cartBar ? cartBar.querySelector('p.text-white\/80') : null;
 
-    cartBar.classList.add('hidden');
+    function updateCartBar() {
+      if (!cartBar) return;
+      localStorage.setItem('bhusawal_cart_food', JSON.stringify(cart));
+      cartCount = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+      cartTotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
+      if (cartCount > 0) {
+        cartBar.style.setProperty('display', 'flex', 'important');
+        if (cartTextCount) cartTextCount.textContent = cartCount + ' Item' + (cartCount > 1 ? 's' : '');
+        if (cartTextDetails) cartTextDetails.textContent = `₹${cartTotal} • Food Order`;
+      } else {
+        cartBar.style.setProperty('display', 'none', 'important');
+      }
+    }
 
-    document.querySelectorAll('.food-item button').forEach(btn => {
+    function updateFilterStatusBanner(totalVisible) {
+      const statusText = document.getElementById('filter-status-text');
+      if (!statusText) return;
+
+      let catText = currentCategory === 'all' ? 'All Categories' : currentCategory;
+      let dietText = currentDietFilter === 'all' ? 'All Dishes' : (currentDietFilter === 'veg' ? '🟢 Veg Only' : '🔴 Non-Veg Only');
+      let searchText = searchQuery ? ` for "${searchQuery}"` : '';
+
+      statusText.textContent = `Showing: ${dietText} • ${catText}${searchText} (${totalVisible} Dishes)`;
+    }
+
+    function filterMenu() {
+      const sections = document.querySelectorAll('.food-category-section');
+      let totalVisible = 0;
+
+      sections.forEach(sec => {
+        const secCat = sec.getAttribute('data-cat');
+        let secVisibleCount = 0;
+
+        // Check category level
+        const matchesCategory = (currentCategory === 'all') || (secCat === currentCategory);
+
+        // Sub diet groups
+        const dietGroups = sec.querySelectorAll('.food-diet-group');
+        dietGroups.forEach(group => {
+          const groupDiet = group.getAttribute('data-group-diet');
+          let groupVisibleCount = 0;
+
+          const items = group.querySelectorAll('.food-item');
+          items.forEach(item => {
+            const type = item.getAttribute('data-type');
+            const name = item.getAttribute('data-name') || '';
+            const desc = item.getAttribute('data-desc') || '';
+
+            const matchesDiet = (currentDietFilter === 'all') || (type === currentDietFilter);
+            const matchesSearch = !searchQuery || name.includes(searchQuery) || desc.includes(searchQuery);
+
+            if (matchesCategory && matchesDiet && matchesSearch) {
+              item.style.setProperty('display', 'flex', 'important');
+              groupVisibleCount++;
+              secVisibleCount++;
+              totalVisible++;
+            } else {
+              item.style.setProperty('display', 'none', 'important');
+            }
+          });
+
+          if (groupVisibleCount > 0 && matchesCategory) {
+            group.style.setProperty('display', 'block', 'important');
+          } else {
+            group.style.setProperty('display', 'none', 'important');
+          }
+        });
+
+        if (secVisibleCount > 0 && matchesCategory) {
+          sec.style.setProperty('display', 'block', 'important');
+        } else {
+          sec.style.setProperty('display', 'none', 'important');
+        }
+      });
+
+      updateFilterStatusBanner(totalVisible);
+    }
+
+    function replaceWithStepper(btn, title, price, imgUrl = '') {
+      const stepper = document.createElement('div');
+      stepper.className = 'flex items-center rounded-xl shadow-md overflow-hidden bg-primary z-10';
+      stepper.innerHTML = `
+        <button class="qty-minus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">−</button>
+        <span class="qty-value w-6 h-7 flex items-center justify-center text-white text-[11px] font-extrabold">1</span>
+        <button class="qty-plus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">+</button>
+      `;
+      btn.replaceWith(stepper);
+
+      if (!cart[title]) {
+        cart[title] = { price, qty: 1, themeColor: '#ea580c', imgUrl, packSize: '1 serving', category: 'Food Delivery' };
+      }
+      updateCartBar();
+
+      const qtyDisplay = stepper.querySelector('.qty-value');
+      qtyDisplay.textContent = cart[title].qty;
+
+      stepper.querySelector('.qty-plus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        cart[title].qty++;
+        qtyDisplay.textContent = cart[title].qty;
+        updateCartBar();
+      });
+
+      stepper.querySelector('.qty-minus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        cart[title].qty--;
+        if (cart[title].qty <= 0) {
+          delete cart[title];
+          const addBtn = document.createElement('button');
+          addBtn.className = 'bg-white border border-primary text-primary px-5 py-1.5 rounded-xl text-xs font-extrabold shadow-md hover:bg-primary/5 active:scale-95 transition-all btn-add';
+          addBtn.setAttribute('data-name', title);
+          addBtn.setAttribute('data-price', price);
+          addBtn.setAttribute('data-img', imgUrl);
+          addBtn.textContent = 'ADD';
+          stepper.replaceWith(addBtn);
+          bindAddButton(addBtn);
+        } else {
+          qtyDisplay.textContent = cart[title].qty;
+        }
+        updateCartBar();
+      });
+    }
+
+    function bindAddButton(btn) {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const card = btn.closest('.food-item');
-        const title = card.querySelector('h3').textContent.trim();
-        const priceText = card.querySelector('.font-bold.text-on-surface').textContent.trim();
-        const price = parseInt(priceText.replace(/[^\d]/g, ''));
+        const title = btn.getAttribute('data-name');
+        const price = parseInt(btn.getAttribute('data-price'));
+        const imgUrl = btn.getAttribute('data-img');
+        replaceWithStepper(btn, title, price, imgUrl);
+      });
+    }
 
-        btn.textContent = 'Added';
-        btn.classList.remove('bg-primary');
-        btn.classList.add('bg-tertiary');
-        btn.disabled = true;
+    function syncUIWithCart() {
+      document.querySelectorAll('.food-item').forEach(card => {
+        const titleEl = card.querySelector('h3');
+        if (!titleEl) return;
+        const title = titleEl.textContent.trim();
+        if (cart[title]) {
+          const btn = card.querySelector('.btn-add');
+          if (btn) {
+            const price = cart[title].price;
+            const imgUrl = cart[title].imgUrl;
+            replaceWithStepper(btn, title, price, imgUrl);
+          }
+        }
+      });
+      updateCartBar();
+    }
 
-        cart.push({ title, price });
-        cartCount++;
-        cartTotal += price;
-
-        cartBar.classList.remove('hidden');
-        cartTextCount.textContent = `${cartCount} Item${cartCount > 1 ? 's' : ''}`;
-        cartTextDetails.textContent = `₹${cartTotal} • Spice Village Order`;
+    // Category Pill Handlers
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cat-btn').forEach(b => {
+          b.className = 'cat-btn px-3.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all bg-neutral-100 text-neutral-700 hover:bg-primary/10 active:scale-95';
+        });
+        btn.className = 'cat-btn px-3.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all bg-primary text-white shadow-sm active:scale-95';
+        currentCategory = btn.getAttribute('data-cat');
+        filterMenu();
       });
     });
 
-    cartBar.addEventListener('click', () => {
-      if (cart.length > 0) {
-        const order = {
-          id: `FD-${Math.floor(1000 + Math.random() * 9000)}`,
-          items: cart.map(item => item.title).join(', '),
-          total: cartTotal,
-          date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          status: 'Preparing'
-        };
+    // Diet Filter Handlers
+    const btnAll = document.getElementById('btn-all');
+    const btnVeg = document.getElementById('btn-veg');
+    const btnNonVeg = document.getElementById('btn-nonveg');
 
-        const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
-        orders.unshift(order);
-        localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
-        localStorage.setItem('bhusawal_active_order', JSON.stringify(order));
+    if (btnAll) {
+      btnAll.addEventListener('click', () => {
+        btnAll.className = "diet-btn px-4 py-1.5 rounded-xl border border-primary bg-primary text-white font-extrabold text-xs shadow-sm active:scale-95 transition-all flex items-center gap-1";
+        if (btnVeg) btnVeg.className = "diet-btn px-4 py-1.5 rounded-xl border border-emerald-300 bg-white text-emerald-700 font-extrabold text-xs active:scale-95 transition-all flex items-center gap-1 hover:bg-emerald-50";
+        if (btnNonVeg) btnNonVeg.className = "diet-btn px-4 py-1.5 rounded-xl border border-red-300 bg-white text-red-700 font-extrabold text-xs active:scale-95 transition-all flex items-center gap-1 hover:bg-red-50";
+        currentDietFilter = 'all';
+        filterMenu();
+      });
+    }
 
-        window.location.href = '/track_order';
+    if (btnVeg) {
+      btnVeg.addEventListener('click', () => {
+        if (btnAll) btnAll.className = "diet-btn px-4 py-1.5 rounded-xl border border-outline-variant bg-white text-neutral-600 font-extrabold text-xs active:scale-95 transition-all flex items-center gap-1 hover:bg-neutral-50";
+        btnVeg.className = "diet-btn px-4 py-1.5 rounded-xl border border-emerald-600 bg-emerald-600 text-white font-extrabold text-xs shadow-sm active:scale-95 transition-all flex items-center gap-1";
+        if (btnNonVeg) btnNonVeg.className = "diet-btn px-4 py-1.5 rounded-xl border border-red-300 bg-white text-red-700 font-extrabold text-xs active:scale-95 transition-all flex items-center gap-1 hover:bg-red-50";
+        currentDietFilter = 'veg';
+        filterMenu();
+      });
+    }
+
+    if (btnNonVeg) {
+      btnNonVeg.addEventListener('click', () => {
+        if (btnAll) btnAll.className = "diet-btn px-4 py-1.5 rounded-xl border border-outline-variant bg-white text-neutral-600 font-extrabold text-xs active:scale-95 transition-all flex items-center gap-1 hover:bg-neutral-50";
+        if (btnVeg) btnVeg.className = "diet-btn px-4 py-1.5 rounded-xl border border-emerald-300 bg-white text-emerald-700 font-extrabold text-xs active:scale-95 transition-all flex items-center gap-1 hover:bg-emerald-50";
+        btnNonVeg.className = "diet-btn px-4 py-1.5 rounded-xl border border-red-600 bg-red-600 text-white font-extrabold text-xs shadow-sm active:scale-95 transition-all flex items-center gap-1";
+        currentDietFilter = 'nonveg';
+        filterMenu();
+      });
+    }
+
+    // Reset All Filters
+    const resetBtn = document.getElementById('reset-all-filters');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        currentCategory = 'all';
+        currentDietFilter = 'all';
+        searchQuery = '';
+
+        const searchInput = document.getElementById('search-food');
+        if (searchInput) searchInput.value = '';
+
+        // Reset Category Buttons
+        document.querySelectorAll('.cat-btn').forEach((b, idx) => {
+          if (idx === 0) b.className = 'cat-btn px-3.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all bg-primary text-white shadow-sm active:scale-95';
+          else b.className = 'cat-btn px-3.5 py-1.5 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all bg-neutral-100 text-neutral-700 hover:bg-primary/10 active:scale-95';
+        });
+
+        // Reset Diet Buttons
+        if (btnAll) btnAll.className = "diet-btn px-4 py-1.5 rounded-xl border border-primary bg-primary text-white font-extrabold text-xs shadow-sm active:scale-95 transition-all flex items-center gap-1";
+        if (btnVeg) btnVeg.className = "diet-btn px-4 py-1.5 rounded-xl border border-emerald-300 bg-white text-emerald-700 font-extrabold text-xs active:scale-95 transition-all flex items-center gap-1 hover:bg-emerald-50";
+        if (btnNonVeg) btnNonVeg.className = "diet-btn px-4 py-1.5 rounded-xl border border-red-300 bg-white text-red-700 font-extrabold text-xs active:scale-95 transition-all flex items-center gap-1 hover:bg-red-50";
+
+        filterMenu();
+      });
+    }
+
+    // Search Input Handler
+    const searchInput = document.getElementById('search-food');
+    const clearBtn = document.getElementById('clear-search');
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.toLowerCase().trim();
+        if (searchQuery) {
+          if (clearBtn) clearBtn.classList.remove('hidden');
+        } else {
+          if (clearBtn) clearBtn.classList.add('hidden');
+        }
+        filterMenu();
+      });
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        searchQuery = '';
+        clearBtn.classList.add('hidden');
+        filterMenu();
+      });
+    }
+
+    
+    // Food Details Modal Script
+    const fModal = document.getElementById('food-modal');
+    const closeFoodModalBtn = document.getElementById('close-food-modal');
+    let currentFoodModalItem = null;
+
+    if (closeFoodModalBtn && fModal) {
+      closeFoodModalBtn.addEventListener('click', () => fModal.classList.add('hidden'));
+      fModal.addEventListener('click', (e) => {
+        if (e.target === fModal) fModal.classList.add('hidden');
+      });
+    }
+
+    function openFoodModal(card) {
+      if (!fModal) return;
+      const titleEl = card.querySelector('h3');
+      const title = titleEl ? titleEl.textContent.trim() : '';
+      const type = card.getAttribute('data-type') || 'veg';
+      const priceText = card.querySelector('p.font-extrabold') ? card.querySelector('p.font-extrabold').textContent.trim() : '₹0';
+      const price = parseInt(priceText.replace(/[^\d]/g, '')) || 0;
+      const desc = card.querySelector('p.text-\[11px\]') ? card.querySelector('p.text-\[11px\]').textContent.trim() : '';
+      const imgEl = card.querySelector('img');
+      const imgUrl = imgEl ? imgEl.getAttribute('src') : '';
+
+      document.getElementById('fmodal-title').textContent = title;
+      document.getElementById('fmodal-price').textContent = priceText;
+      document.getElementById('fmodal-btn-price').textContent = priceText;
+      document.getElementById('fmodal-desc').textContent = desc || 'Prepared fresh using authentic spices and premium ingredients.';
+      document.getElementById('fmodal-img').src = imgUrl || '/assets/d686bc969706f3bd6cf093f663be9579.jpg';
+
+      const dietBadge = document.getElementById('fmodal-diet-badge');
+      if (type === 'nonveg') {
+        dietBadge.className = 'absolute top-3 left-3 bg-red-100 text-red-800 border border-red-300 text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1';
+        dietBadge.innerHTML = '🔴 NON-VEG';
+      } else {
+        dietBadge.className = 'absolute top-3 left-3 bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1';
+        dietBadge.innerHTML = '🟢 VEG';
+      }
+
+      currentFoodModalItem = { title, price, imgUrl };
+      fModal.classList.remove('hidden');
+    }
+
+    const fmodalAddBtn = document.getElementById('fmodal-btn-add');
+    if (fmodalAddBtn) {
+      fmodalAddBtn.addEventListener('click', () => {
+        if (currentFoodModalItem) {
+          if (!cart[currentFoodModalItem.title]) {
+            cart[currentFoodModalItem.title] = { price: currentFoodModalItem.price, qty: 1, themeColor: '#ea580c', imgUrl: currentFoodModalItem.imgUrl, packSize: '1 serving', category: 'Food Delivery' };
+          } else {
+            cart[currentFoodModalItem.title].qty++;
+          }
+          updateCartBar();
+          syncUIWithCart();
+          fModal.classList.add('hidden');
+        }
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      const foodCard = e.target.closest('.food-item');
+      if (foodCard && !e.target.closest('button')) {
+        openFoodModal(foodCard);
       }
     });
+
+    // Initial binding
+    document.querySelectorAll('.btn-add').forEach(btn => bindAddButton(btn));
+    syncUIWithCart();
+
+    if (cartBar) {
+      cartBar.addEventListener('click', () => {
+        if (cartCount > 0) {
+          window.location.href = '/billing?type=food';
+        }
+      });
+    }
   </script>
 
   <Switcher />
+  <script src="/assets/zepto_search.js" defer></script>
 </body>
 </html>
