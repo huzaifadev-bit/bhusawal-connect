@@ -1,5 +1,69 @@
 ---
+import fs from 'fs';
+import path from 'path';
 import Switcher from '../components/Switcher.astro';
+
+// Read the database at build-time for static rendering
+const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
+let catalog = [];
+try {
+ catalog = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+} catch (err) {
+ console.error("Failed to read grocery catalog at build time", err);
+}
+
+// Helper deduplicator
+function dedupHome(arr) {
+  const seen = new Set();
+  return arr.filter(p => {
+    const name = (p["Product Name"] || "").trim().toLowerCase();
+    if (seen.has(name)) return false;
+    seen.add(name);
+    return true;
+  });
+}
+
+// 1. Trending & Hot Sellers
+const trendingKws = ['lays', 'pringles', 'kurkure', 'coca', 'pepsi', 'sprite', 'red bull', 'dairy milk', 'kitkat', 'nutella', 'oreo', 'good day', 'maggi', 'durex', 'pedigree', 'nivea', 'dettol'];
+let trendingProducts = [];
+const seenTrending = new Set();
+
+for (const kw of trendingKws) {
+  const matches = catalog.filter(p => (p["Product Name"] || "").toLowerCase().includes(kw));
+  for (const p of matches) {
+    const cleanName = (p["Product Name"] || "").split(" (Batch")[0];
+    if (!seenTrending.has(cleanName)) {
+      trendingProducts.push(p);
+      seenTrending.add(cleanName);
+      if (trendingProducts.length >= 16) break;
+    }
+  }
+  if (trendingProducts.length >= 16) break;
+}
+if (trendingProducts.length < 16) {
+  trendingProducts = dedupHome([...trendingProducts, ...catalog.filter(p => p.Category === 'Snacks & Confectionery' || p.Category === 'Beverages')]).slice(0, 16);
+}
+
+// 2. Daily Need Essentials
+const dailyKws = ['banana', 'apple', 'tomato', 'onion', 'potato', 'palak', 'spinach', 'milk', 'dahi', 'curd', 'paneer', 'bread', 'atta', 'rice', 'dal', 'oil', 'ghee', 'soap', 'toothpaste'];
+let dailyNeedProducts = [];
+const seenDaily = new Set();
+
+for (const kw of dailyKws) {
+  const matches = catalog.filter(p => (p["Product Name"] || "").toLowerCase().includes(kw));
+  for (const p of matches) {
+    const cleanName = (p["Product Name"] || "").split(" (Batch")[0];
+    if (!seenDaily.has(cleanName)) {
+      dailyNeedProducts.push(p);
+      seenDaily.add(cleanName);
+      if (dailyNeedProducts.length >= 16) break;
+    }
+  }
+  if (dailyNeedProducts.length >= 16) break;
+}
+if (dailyNeedProducts.length < 16) {
+  dailyNeedProducts = dedupHome([...dailyNeedProducts, ...catalog.filter(p => p.Category === 'Fruits & Vegetables' || p.Category === 'Dairy & Breakfast' || p.Category === 'Grocery Staples')]).slice(0, 16);
+}
 ---
 
 <html class="light" lang="en"><head>
@@ -11,136 +75,179 @@ import Switcher from '../components/Switcher.astro';
 <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
 <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .glass-effect {
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-    </style>
-<!-- Insert Tailwind Config -->
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "inverse-surface": "#2f3131",
-                    "tertiary": "#006e1c",
-                    "surface-tint": "#b02f00",
-                    "primary-fixed": "#ffdbd1",
-                    "on-primary-fixed": "#3b0900",
-                    "on-background": "#1a1c1c",
-                    "on-primary-fixed-variant": "#862200",
-                    "error": "#ba1a1a",
-                    "surface-bright": "#f9f9f9",
-                    "on-primary-container": "#541200",
-                    "inverse-primary": "#ffb5a0",
-                    "on-secondary-fixed": "#1c1b1b",
-                    "on-tertiary-fixed": "#002204",
-                    "on-secondary-fixed-variant": "#474646",
-                    "on-error-container": "#93000a",
-                    "surface-container": "#eeeeee",
-                    "on-surface-variant": "#5b4039",
-                    "on-surface": "#1a1c1c",
-                    "primary": "#b02f00",
-                    "outline-variant": "#e4beb4",
-                    "on-tertiary-container": "#003208",
-                    "surface-container-high": "#e8e8e8",
-                    "on-primary": "#ffffff",
-                    "surface-container-lowest": "#ffffff",
-                    "primary-fixed-dim": "#ffb5a0",
-                    "secondary-container": "#e5e2e1",
-                    "secondary-fixed": "#e5e2e1",
-                    "outline": "#907067",
-                    "surface-container-highest": "#e2e2e2",
-                    "inverse-on-surface": "#f1f1f1",
-                    "on-secondary-container": "#656464",
-                    "background": "#f9f9f9",
-                    "tertiary-container": "#41a447",
-                    "surface-dim": "#dadada",
-                    "surface": "#f9f9f9",
-                    "secondary-fixed-dim": "#c8c6c5",
-                    "tertiary-fixed": "#94f990",
-                    "on-error": "#ffffff",
-                    "tertiary-fixed-dim": "#78dc77",
-                    "surface-container-low": "#f3f3f3",
-                    "on-tertiary-fixed-variant": "#005313",
-                    "surface-variant": "#e2e2e2",
-                    "error-container": "#ffdad6",
-                    "primary-container": "#ff5722",
-                    "on-secondary": "#ffffff",
-                    "on-tertiary": "#ffffff",
-                    "secondary": "#5f5e5e"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
-            },
-            "spacing": {
-                    "margin-desktop": "64px",
-                    "gutter": "16px",
-                    "container-max": "1280px",
-                    "unit": "4px",
-                    "margin-mobile": "16px"
-            },
-            "fontFamily": {
-                    "body-md": ["Plus Jakarta Sans"],
-                    "headline-md": ["Plus Jakarta Sans"],
-                    "headline-lg-mobile": ["Plus Jakarta Sans"],
-                    "headline-xl": ["Plus Jakarta Sans"],
-                    "label-sm": ["Plus Jakarta Sans"],
-                    "body-lg": ["Plus Jakarta Sans"],
-                    "headline-lg": ["Plus Jakarta Sans"],
-                    "label-md": ["Plus Jakarta Sans"]
-            },
-            "fontSize": {
-                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
-                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
-                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
-                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
-                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
-                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
-            }
-          },
-        },
-      }
-    </script>
-<style>
-    body {
-      min-height: 100dvh;
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .glass-effect {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
-  </head>
+<!-- Insert Tailwind Config -->
+<script id="tailwind-config">
+   tailwind.config = {
+    darkMode: "class",
+    theme: {
+     extend: {
+      "colors": {
+          "inverse-surface": "#2f3131",
+          "tertiary": "#006e1c",
+          "surface-tint": "#b02f00",
+          "primary-fixed": "#ffdbd1",
+          "on-primary-fixed": "#3b0900",
+          "on-background": "#1a1c1c",
+          "on-primary-fixed-variant": "#862200",
+          "error": "#ba1a1a",
+          "surface-bright": "#f9f9f9",
+          "on-primary-container": "#541200",
+          "inverse-primary": "#ffb5a0",
+          "on-secondary-fixed": "#1c1b1b",
+          "on-tertiary-fixed": "#002204",
+          "on-secondary-fixed-variant": "#474646",
+          "on-error-container": "#93000a",
+          "surface-container": "#eeeeee",
+          "on-surface-variant": "#5b4039",
+          "on-surface": "#1a1c1c",
+          "primary": "#b02f00",
+          "outline-variant": "#e4beb4",
+          "on-tertiary-container": "#003208",
+          "surface-container-high": "#e8e8e8",
+          "on-primary": "#ffffff",
+          "surface-container-lowest": "#ffffff",
+          "primary-fixed-dim": "#ffb5a0",
+          "secondary-container": "#e5e2e1",
+          "secondary-fixed": "#e5e2e1",
+          "outline": "#907067",
+          "surface-container-highest": "#e2e2e2",
+          "inverse-on-surface": "#f1f1f1",
+          "on-secondary-container": "#656464",
+          "background": "#f9f9f9",
+          "tertiary-container": "#41a447",
+          "surface-dim": "#dadada",
+          "surface": "#f9f9f9",
+          "secondary-fixed-dim": "#c8c6c5",
+          "tertiary-fixed": "#94f990",
+          "on-error": "#ffffff",
+          "tertiary-fixed-dim": "#78dc77",
+          "surface-container-low": "#f3f3f3",
+          "on-tertiary-fixed-variant": "#005313",
+          "surface-variant": "#e2e2e2",
+          "error-container": "#ffdad6",
+          "primary-container": "#ff5722",
+          "on-secondary": "#ffffff",
+          "on-tertiary": "#ffffff",
+          "secondary": "#5f5e5e"
+      },
+      "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+      },
+      "spacing": {
+          "margin-desktop": "64px",
+          "gutter": "16px",
+          "container-max": "1280px",
+          "unit": "4px",
+          "margin-mobile": "16px"
+      },
+      "fontFamily": {
+          "body-md": ["Plus Jakarta Sans"],
+          "headline-md": ["Plus Jakarta Sans"],
+          "headline-lg-mobile": ["Plus Jakarta Sans"],
+          "headline-xl": ["Plus Jakarta Sans"],
+          "label-sm": ["Plus Jakarta Sans"],
+          "body-lg": ["Plus Jakarta Sans"],
+          "headline-lg": ["Plus Jakarta Sans"],
+          "label-md": ["Plus Jakarta Sans"]
+      },
+      "fontSize": {
+          "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+          "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+          "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+          "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+          "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+          "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+          "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+          "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}]
+      }
+     },
+    },
+   }
+  </script>
+<style>
+  body {
+   min-height: 100dvh;
+  }
+ </style>
+ </head>
 <body class="bg-background text-on-background font-body-md min-h-screen">
 <!-- TopAppBar -->
-<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-50 shadow-sm flex items-center justify-between px-margin-mobile h-16 w-full">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
-<div class="flex flex-col">
-<span class="font-label-md text-label-md text-primary font-bold">Bhusawal, Maharashtra</span>
-<span class="text-[10px] text-on-surface-variant flex items-center">Current Location <span class="material-symbols-outlined text-[12px]" data-icon="expand_more">expand_more</span></span>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-full active:scale-95 duration-150 ease-in-out" data-icon="notifications">notifications</button>
-<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a modern, smiling user with a minimalist background, styled with soft directional lighting to match a premium tech app aesthetic. The color palette is neutral with clean highlights, emphasizing a reliable and friendly persona for a super-app profile." src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" />
-</div>
-</div>
+<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
+  <div class="flex items-center gap-2 min-w-0">
+    
+    <!-- Delivery Time & Location Info -->
+    <div class="flex flex-col min-w-0">
+      <div class="flex items-center gap-1">
+        <span class="material-symbols-outlined text-primary text-sm font-black animate-pulse" style="font-variation-settings: 'FILL' 1;">bolt</span>
+        <span class="font-extrabold text-[13px] tracking-tight text-on-surface" id="header-eta">10 minutes</span>
+      </div>
+      <div class="flex items-center gap-0.5 text-[10px] text-on-surface-variant font-extrabold cursor-pointer hover:text-primary transition-colors min-w-0 uppercase tracking-wide">
+        <span class="truncate" id="header-address">Home - Varangaon Road, Bhusawal</span>
+        <span class="material-symbols-outlined text-xs flex-shrink-0">keyboard_arrow_down</span>
+      </div>
+    </div>
+  </div>
+  <!-- Profile Avatar on Top Right -->
+  <a href="/profile" class="w-9 h-9 rounded-full overflow-hidden border border-outline-variant/30 flex-shrink-0 hover:ring-2 hover:ring-primary/20 active:scale-90 transition-all flex items-center justify-center">
+    <img class="w-full h-full object-cover" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Profile"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+  </a>
 </header>
+<script is:inline>
+ (function() {
+  const cachedAddr = localStorage.getItem('bhusawal_user_address') || 'Home - Varangaon Rd, Bhusawal';
+  const cachedLat = localStorage.getItem('bhusawal_user_lat');
+  const cachedLng = localStorage.getItem('bhusawal_user_lng');
+  
+  document.addEventListener('DOMContentLoaded', () => {
+   const addrEl = document.getElementById('header-address');
+   if (addrEl) {
+    // Shorten the address to make it look clean (max 30 chars) and append "..." if longer
+    let shortAddr = cachedAddr;
+    if (shortAddr.length > 30) {
+     shortAddr = shortAddr.substring(0, 27) + '...';
+    }
+    addrEl.textContent = shortAddr;
+   }
+   
+   const etaEl = document.getElementById('header-eta');
+   if (etaEl) {
+    if (cachedLat && cachedLng) {
+     const lat1 = parseFloat(cachedLat);
+     const lng1 = parseFloat(cachedLng);
+     const lat2 = 21.0478;
+     const lng2 = 75.7896;
+     const R = 6371;
+     const dLat = (lat2 - lat1) * Math.PI / 180;
+     const dLon = (lng2 - lng1) * Math.PI / 180;
+     const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+     const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+     const minutes = Math.max(7, Math.round(dist * 2.5 + 4));
+     etaEl.textContent = minutes + ' minutes';
+    } else {
+     etaEl.textContent = '10 minutes';
+    }
+   }
+  });
+ })();
+</script>
 <main class="pb-24 max-w-container-max mx-auto">
 <!-- Search Bar -->
 <section class="px-margin-mobile pt-4 pb-2">
@@ -190,102 +297,111 @@ import Switcher from '../components/Switcher.astro';
 </a>
 </div>
 </section>
-<!-- Featured Banner -->
-<section class="px-margin-mobile py-4">
-<div class="relative w-full h-44 rounded-2xl overflow-hidden shadow-lg group">
-<img class="w-full h-full object-cover" data-alt="A vibrant, cinematic wide shot of a delivery professional on a sleek orange scooter navigating a clean, modern street in Bhusawal at sunset. The lighting is warm and energetic, suggesting speed and reliability. The visual style is polished and high-end, with a soft motion blur on the wheels to convey the '10 Mins' fast delivery promise." src="/assets/9bd7215ebcf9a61eea5be1ef3574174c.jpg" />
-<div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-transparent flex flex-col justify-center px-8">
-<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-white max-w-[200px]">Fastest Delivery in Bhusawal</h2>
-<div class="mt-2 inline-flex bg-white text-primary font-bold px-4 py-1 rounded-full text-label-md">
-                        10 Mins Delivery
-                    </div>
-</div>
-</div>
+<!-- Daily Need Essentials Section -->
+<section class="px-margin-mobile pt-4 pb-6">
+ <div class="flex items-center justify-between mb-4">
+  <div class="flex items-center gap-2">
+   <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+    <span class="material-symbols-outlined text-emerald-700 text-xl font-bold">eco</span>
+   </div>
+   <div>
+    <h3 class="font-headline-md text-headline-md text-on-surface leading-none">Daily Need Essentials</h3>
+    <p class="text-[10px] text-neutral-500 font-extrabold mt-0.5">Fresh Veggies, Milk, Atta, Rice & Daily Household Items</p>
+   </div>
+  </div>
+  <a href="/grocery" class="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-extrabold hover:bg-emerald-100 active:scale-95 transition-all">
+   View All <span class="material-symbols-outlined text-base">chevron_right</span>
+  </a>
+ </div>
+ <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3" id="daily-products-grid">
+  {
+   dailyNeedProducts.map(p => (
+    <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-emerald-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
+     <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
+      <img alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+         src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+      <div class="absolute top-2 left-2 bg-emerald-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Daily Need</div>
+      <button class="absolute bottom-2 right-2 bg-white border border-[#0c831f] text-[#0c831f] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#0c831f]/5 active:scale-95 transition-all duration-200 btn-add-home-product">ADD</button>
+     </div>
+     <div class="flex-grow flex flex-col justify-between">
+      <div>
+       <div class="flex items-center flex-wrap gap-1">
+        <span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹{p.MRP}</span>
+       </div>
+       <h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">{p["Product Name"]}</h3>
+      </div>
+      <div class="mt-1">
+       <p class="text-[9px] text-neutral-500 font-bold">{p["Pack Size"] || '1 Unit'}</p>
+       <div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">
+        <span class="text-[#0c831f]">★</span>
+        <span>4.8</span>
+        <span class="text-neutral-400 font-normal">({p.StockQuantity || '100'})</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   ))
+  }
+ </div>
 </section>
-<!-- Quick Tasks -->
-<section class="px-margin-mobile py-8">
-<h3 class="font-headline-md text-headline-md text-on-surface mb-4">Quick Tasks</h3>
-<div class="grid grid-cols-2 gap-4">
-<a href="/parcel" class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-md transition-shadow active:scale-[0.98] duration-200 cursor-pointer">
-<div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
-<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
-</div>
-<div class="text-left">
-<p class="font-label-md text-on-surface">Send Parcel</p>
-<p class="text-[10px] text-on-surface-variant">Pick &amp; Drop</p>
-</div>
-</a>
-<a href="/auto" class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-md transition-shadow active:scale-[0.98] duration-200 cursor-pointer">
-<div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center text-yellow-700">
-<span class="material-symbols-outlined" data-icon="hail">hail</span>
-</div>
-<div class="text-left">
-<p class="font-label-md text-on-surface">Book Auto</p>
-<p class="text-[10px] text-on-surface-variant">Instant Pickup</p>
-</div>
-</a>
-</div>
+
+<!-- Trending & Hot Sellers Section -->
+<section class="px-margin-mobile py-6">
+ <div class="flex items-center justify-between mb-4">
+  <div class="flex items-center gap-2">
+   <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+    <span class="material-symbols-outlined text-amber-700 text-xl font-bold">local_fire_department</span>
+   </div>
+   <div>
+    <h3 class="font-headline-md text-headline-md text-on-surface leading-none">Trending & Hot Sellers</h3>
+    <p class="text-[10px] text-neutral-500 font-extrabold mt-0.5">Top Selling Snacks, Drinks, Chocolates & Brands in Bhusawal</p>
+   </div>
+  </div>
+  <a href="/grocery" class="flex items-center gap-1 bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-xs font-extrabold hover:bg-amber-100 active:scale-95 transition-all">
+   View All <span class="material-symbols-outlined text-base">chevron_right</span>
+  </a>
+ </div>
+ <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3" id="all-products-grid">
+  {
+   trendingProducts.map(p => (
+    <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-amber-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
+     <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
+      <img alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+         src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+      <div class="absolute top-2 left-2 bg-[#ffc107] text-neutral-900 text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">HOT SELLER</div>
+      <button class="absolute bottom-2 right-2 bg-white border border-primary text-primary px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-primary/5 active:scale-95 transition-all duration-200 btn-add-home-product">ADD</button>
+     </div>
+     <div class="flex-grow flex flex-col justify-between">
+      <div>
+       <div class="flex items-center flex-wrap gap-1">
+        <span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹{p.MRP}</span>
+       </div>
+       <h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">{p["Product Name"]}</h3>
+      </div>
+      <div class="mt-1">
+       <p class="text-[9px] text-neutral-500 font-bold">{p["Pack Size"] || '1 Unit'}</p>
+       <div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">
+        <span class="text-[#0c831f]">★</span>
+        <span>4.9</span>
+        <span class="text-neutral-400 font-normal">({p.StockQuantity || '100'})</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   ))
+  }
+ </div>
 </section>
-<!-- Popular Near You -->
-<section class="py-4">
-<div class="flex items-center justify-between px-margin-mobile mb-4">
-<h3 class="font-headline-md text-headline-md text-on-surface">Popular Near You</h3>
-<button class="text-primary font-label-md">View All</button>
+<!-- Search Results Overlay -->
+<div id="search-results-overlay" class="hidden px-margin-mobile pb-8">
+ <div class="flex items-center justify-between mb-4">
+  <h3 class="font-headline-md text-headline-md text-on-surface" id="search-results-title">Results</h3>
+  <button id="btn-clear-search" class="text-primary font-label-md text-label-md flex items-center gap-1 hover:brightness-110 active:scale-95 transition-all">
+   Clear <span class="material-symbols-outlined text-sm">close</span>
+  </button>
+ </div>
+ <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3" id="search-results-grid"></div>
 </div>
-<div class="flex overflow-x-auto hide-scrollbar gap-4 px-margin-mobile pb-4">
-<!-- Card 1 -->
-<div class="flex-shrink-0 w-72 bg-white rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all group">
-<div class="h-40 relative">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close-up artistic shot of gourmet North Indian cuisine, specifically steaming butter chicken and garlic naan, served on elegant ceramic dishes. The lighting is warm and appetizing, highlighting textures and colors. The background is a blurred, high-end restaurant interior to denote quality and local popularity." src="/assets/d343ccc14e92e8c2c560bc3a944b9c31.jpg" />
-<div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
-<span class="material-symbols-outlined text-yellow-500 text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-label-sm font-bold">4.2</span>
-</div>
-</div>
-<div class="p-4">
-<h4 class="font-label-md text-on-surface text-lg">Spice Village</h4>
-<p class="text-label-sm text-on-surface-variant">North Indian • 25-30 mins</p>
-<div class="mt-3 flex items-center gap-2">
-<span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">FREE DELIVERY</span>
-</div>
-</div>
-</div>
-<!-- Card 2 -->
-<div class="flex-shrink-0 w-72 bg-white rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all group">
-<div class="h-40 relative">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean, minimalist shop front of a local high-end organic grocery store. The display features vibrant, fresh fruits and neatly arranged health products under warm, recessed lighting. The atmosphere is premium and fresh, aligning with the reliable service of a hyperlocal super-app." src="/assets/e3241a3ee12ab053f6c14cc48144a87d.jpg" />
-<div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
-<span class="material-symbols-outlined text-yellow-500 text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-label-sm font-bold">4.8</span>
-</div>
-</div>
-<div class="p-4">
-<h4 class="font-label-md text-on-surface text-lg">Fresh Mart Bhusawal</h4>
-<p class="text-label-sm text-on-surface-variant">Groceries • 15 mins</p>
-<div class="mt-3 flex items-center gap-2">
-<span class="bg-tertiary/10 text-tertiary text-[10px] px-2 py-0.5 rounded-full font-bold">ORGANIC</span>
-</div>
-</div>
-</div>
-<!-- Card 3 -->
-<div class="flex-shrink-0 w-72 bg-white rounded-2xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all group">
-<div class="h-40 relative">
-<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An inviting, modern bakery counter filled with various artisanal pastries, colorful macarons, and freshly baked breads. The lighting is soft and natural, emphasizing the 'freshly made' appeal. The overall aesthetic is warm, vibrant, and upscale, targeted at users looking for premium local treats." src="/assets/eb07c0498924dba72c7bd001cdd7232d.jpg" />
-<div class="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm">
-<span class="material-symbols-outlined text-yellow-500 text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
-<span class="text-label-sm font-bold">4.5</span>
-</div>
-</div>
-<div class="p-4">
-<h4 class="font-label-md text-on-surface text-lg">The Sweet Tooth</h4>
-<p class="text-label-sm text-on-surface-variant">Bakery • 20 mins</p>
-<div class="mt-3 flex items-center gap-2">
-<span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">BEST SELLER</span>
-</div>
-</div>
-</div>
-</div>
-</section>
 </main>
 <!-- BottomNavBar -->
 <nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-[0_-4px_12px_rgba(0,0,0,0.04)] border-t border-outline-variant/30 fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4">
@@ -311,26 +427,257 @@ import Switcher from '../components/Switcher.astro';
 <span class="material-symbols-outlined text-3xl" data-icon="add_shopping_cart">add_shopping_cart</span>
 </button>
 <script>
-        // Micro-interactions for scrolling effects
-        window.addEventListener('scroll', () => {
-            const header = document.querySelector('header');
-            if (window.scrollY > 20) {
-                header.classList.add('shadow-md');
-                header.classList.remove('shadow-sm');
-            } else {
-                header.classList.add('shadow-sm');
-                header.classList.remove('shadow-md');
-            }
-        });
+    if (!localStorage.getItem('bhusawal_user_token')) {
+      window.location.href = '/';
+    }
 
-        // Search bar focus behavior
-        const searchInput = document.querySelector('input');
-        searchInput.addEventListener('focus', () => {
-            searchInput.parentElement.classList.add('scale-[1.02]');
+    // Micro-interactions for scrolling effects
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 20) {
+        header.classList.add('shadow-md');
+        header.classList.remove('shadow-sm');
+      } else {
+        header.classList.add('shadow-sm');
+        header.classList.remove('shadow-md');
+      }
+    });
+
+    // Search bar focus behavior
+    const searchInput = document.querySelector('input');
+    searchInput.addEventListener('focus', () => {
+      searchInput.parentElement.classList.add('scale-[1.02]');
+    });
+    searchInput.addEventListener('blur', () => {
+      searchInput.parentElement.classList.remove('scale-[1.02]');
+    });
+
+    // Load full catalog for search
+    let fullCatalog = [];
+    fetch('/grocery_catalog.json?v=' + new Date().getTime())
+     .then(r => r.json())
+     .then(data => { fullCatalog = data; })
+     .catch(err => console.error('Failed to load catalog', err));
+
+    const allSection = document.getElementById('all-products-grid').closest('section');
+    const searchOverlay = document.getElementById('search-results-overlay');
+    const searchGrid = document.getElementById('search-results-grid');
+    const searchTitle = document.getElementById('search-results-title');
+
+    document.getElementById('btn-clear-search').addEventListener('click', () => {
+      searchInput.value = '';
+      searchOverlay.classList.add('hidden');
+      allSection.classList.remove('hidden');
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value.trim().toLowerCase();
+      if (query.length > 1 && fullCatalog.length > 0) {
+        const matches = fullCatalog.filter(item => {
+          const name = (item['Product Name'] || '').toLowerCase();
+          const brand = (item['Brand Name'] || '').toLowerCase();
+          const cat = (item['Category'] || '').toLowerCase();
+          return name.includes(query) || brand.includes(query) || cat.includes(query);
         });
-        searchInput.addEventListener('blur', () => {
-            searchInput.parentElement.classList.remove('scale-[1.02]');
-        });
-    </script>
-    <Switcher />
+        renderSearchResults(query, matches.slice(0, 40));
+      } else if (query.length === 0) {
+        searchOverlay.classList.add('hidden');
+        allSection.classList.remove('hidden');
+      }
+    });
+
+    function renderSearchResults(query, products) {
+      allSection.classList.add('hidden');
+      searchOverlay.classList.remove('hidden');
+      searchTitle.textContent = 'Results for "' + query + '" (' + products.length + ')';
+
+      let html = '';
+      products.forEach(p => {
+        const imgUrl = p['Product Image URL'] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg';
+        html += '<div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-primary/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">' +
+         '<div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">' +
+          '<img alt="' + (p['Product Name'] || '') + '" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" src="' + imgUrl + '" onerror="this.onerror=null;this.src=\'/assets/d686bc969706f3bd6cf093f663be9579.jpg\';" />' +
+          '<div class="absolute top-2 left-2 bg-[#ffc107] text-neutral-900 text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">' + (p.Category || 'Grocery') + '</div>' +
+          '<button class="absolute bottom-2 right-2 bg-white border border-primary text-primary px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-primary/5 active:scale-95 transition-all duration-200 btn-add-search">ADD</button>' +
+         '</div>' +
+         '<div class="flex-grow flex flex-col justify-between">' +
+          '<div>' +
+           '<div class="flex items-center flex-wrap gap-1">' +
+            '<span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹' + p.MRP + '</span>' +
+           '</div>' +
+           '<h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">' + p['Product Name'] + '</h3>' +
+          '</div>' +
+          '<div class="mt-1">' +
+           '<p class="text-[9px] text-neutral-500 font-bold">' + (p['Pack Size'] || '1 Unit') + '</p>' +
+          '</div>' +
+         '</div>' +
+        '</div>';
+      });
+      searchGrid.innerHTML = html;
+
+      // Bind add buttons on search results
+      searchGrid.querySelectorAll('.btn-add-search').forEach(btn => bindAddButton(btn));
+    }
+  
+    // Cart interaction logic on Home
+    let cart = JSON.parse(localStorage.getItem('bhusawal_cart_grocery') || '{}');
+    let cartCount = 0;
+    let cartTotal = 0;
+
+    // Floating Cart Bar element
+    const cartBar = document.createElement('div');
+    cartBar.className = "fixed bottom-24 left-4 right-4 z-50 hidden";
+    cartBar.innerHTML = `
+      <div class="bg-primary text-on-primary h-16 rounded-2xl flex items-center justify-between px-6 shadow-xl cursor-pointer hover:brightness-110 transition-all">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+         <span class="material-symbols-outlined">shopping_basket</span>
+        </div>
+        <div>
+         <p class="font-bold text-label-md leading-none" id="home-cart-count">0 Items</p>
+         <p class="text-[10px] text-white/80" id="home-cart-total">₹0 • Super-App Delivery</p>
+        </div>
+       </div>
+       <div class="flex items-center gap-2">
+        <span class="font-bold uppercase tracking-widest text-sm">View Cart</span>
+        <span class="material-symbols-outlined">arrow_forward</span>
+       </div>
+      </div>
+    `;
+    document.body.appendChild(cartBar);
+
+    function updateCartBar() {
+      localStorage.setItem('bhusawal_cart_grocery', JSON.stringify(cart));
+      cartCount = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+      cartTotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
+      if (cartCount > 0) {
+        cartBar.classList.remove('hidden');
+        document.getElementById('home-cart-count').textContent = cartCount + ' Item' + (cartCount > 1 ? 's' : '');
+        document.getElementById('home-cart-total').textContent = '₹' + cartTotal + ' • Super-App Delivery';
+      } else {
+        cartBar.classList.add('hidden');
+      }
+    }
+
+    function replaceWithStepper(btn, title, price, imgUrl = '', packSize = '', category = '') {
+      const btnClass = btn.className;
+      const stepper = document.createElement('div');
+      stepper.className = 'absolute bottom-2 right-2 flex items-center bg-primary rounded-lg shadow-md overflow-hidden z-10';
+      stepper.innerHTML = `
+        <button class="qty-minus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">−</button>
+        <span class="qty-value w-6 h-7 flex items-center justify-center text-white text-[11px] font-extrabold">1</span>
+        <button class="qty-plus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">+</button>
+      `;
+      btn.replaceWith(stepper);
+
+      // Initialize cart entry
+      if (!cart[title]) {
+        cart[title] = { price, qty: 1, imgUrl, packSize, category, btnClass };
+      }
+      updateCartBar();
+
+      const qtyDisplay = stepper.querySelector('.qty-value');
+      qtyDisplay.textContent = cart[title].qty;
+
+      stepper.querySelector('.qty-plus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        cart[title].qty++;
+        qtyDisplay.textContent = cart[title].qty;
+        updateCartBar();
+      });
+
+      stepper.querySelector('.qty-minus').addEventListener('click', (e) => {
+        e.stopPropagation();
+        cart[title].qty--;
+        if (cart[title].qty <= 0) {
+          delete cart[title];
+          // Restore ADD button
+          const addBtn = document.createElement('button');
+          addBtn.className = btnClass;
+          addBtn.textContent = 'ADD';
+          stepper.replaceWith(addBtn);
+          bindAddButton(addBtn);
+        } else {
+          qtyDisplay.textContent = cart[title].qty;
+        }
+        updateCartBar();
+      });
+    }
+
+    function bindAddButton(btn) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.group');
+        const title = card.querySelector('h3').textContent.trim();
+        const priceEl = card.querySelector('.selling-price') || card.querySelector('[class*="bg-[#0c831f]"]');
+        const priceText = priceEl ? priceEl.textContent.trim() : '0';
+        const price = parseInt(priceText.replace(/[^\d]/g, ''));
+        
+        const imgEl = card.querySelector('img');
+        const imgUrl = imgEl ? imgEl.getAttribute('src') : '';
+        
+        const packEl = card.querySelector('p.text-neutral-500');
+        const packSize = packEl ? packEl.textContent.trim() : '';
+        
+        const catEl = card.querySelector('.absolute.top-2.left-2');
+        const category = catEl ? catEl.textContent.trim() : '';
+
+        replaceWithStepper(btn, title, price, imgUrl, packSize, category);
+      });
+    }
+
+    function syncUIWithCart() {
+      document.querySelectorAll('.group').forEach(card => {
+        const titleEl = card.querySelector('h3');
+        if (!titleEl) return;
+        const title = titleEl.textContent.trim();
+        if (cart[title]) {
+          const btn = card.querySelector('.btn-add-home-product') || card.querySelector('.btn-add-search');
+          if (btn) {
+            const priceEl = card.querySelector('.selling-price') || card.querySelector('[class*="bg-[#0c831f]"]');
+            const priceText = priceEl ? priceEl.textContent.trim() : '0';
+            const price = parseInt(priceText.replace(/[^\d]/g, ''));
+            
+            const imgEl = card.querySelector('img');
+            const imgUrl = imgEl ? imgEl.getAttribute('src') : '';
+            
+            const packEl = card.querySelector('p.text-neutral-500');
+            const packSize = packEl ? packEl.textContent.trim() : '';
+            
+            const catEl = card.querySelector('.absolute.top-2.left-2');
+            const category = catEl ? catEl.textContent.trim() : '';
+
+            replaceWithStepper(btn, title, price, imgUrl, packSize, category);
+          }
+        }
+      });
+      updateCartBar();
+    }
+
+    // Bind all static ADD buttons and sync UI
+    document.querySelectorAll('.btn-add-home-product').forEach(btn => bindAddButton(btn));
+    syncUIWithCart();
+
+    cartBar.addEventListener('click', () => {
+      if (cartCount > 0) {
+        window.location.href = '/billing';
+      }
+    });
+ </script>
+  <Switcher />
+  <script src="/assets/zepto_search.js" defer></script>
+
+<script>
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest('.group');
+    if (card && !e.target.closest('button') && !e.target.closest('a')) {
+      const titleEl = card.querySelector('h3, h4');
+      if (titleEl) {
+        const title = titleEl.textContent.trim();
+        window.location.href = '/product?name=' + encodeURIComponent(title);
+      }
+    }
+  });
+</script>
+
 </body></html>
