@@ -1,0 +1,66 @@
+PRODUCT: Fresho Apple Royal Gala
+URLS FOUND: []
+============================================================
+PRODUCT: Zespri Apple Royal Gala
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Banana Robusta
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Potato
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Onion
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Tomato
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Garlic
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Ginger
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Lemon
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Coriander Leaves
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Green Chilli
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Cabbage
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Cauliflower
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Carrot - Orange
+URLS FOUND: []
+============================================================
+PRODUCT: Fresho Cucumber English
+URLS FOUND: []
+============================================================
+PRODUCT: Capsicum Green
+URLS FOUND: ['https://www.starquik.com/cdn/shop/files/SQ109057_2_5827a361-6209-4f2a-9820-3ed1a966723a.png?v=1772025203', 'https://www.carrefouruae.com/mafuae/en/cucumber/mf-fresh-cucumber-500g/p/1876556?utm_source=chatgpt', 'https://images.openai.com/static-rsc-4/qDWx0fAM61sq8PtuYvagLVSA800ZJ1f854TwRSXt9MpEvSZ_vK57XoyNsvIW-3M0YljQu-4fKu-RE7H63mw1iWIcBdFm72J-akAOwD3PL_B-WNWXx0c5OUF-Vyfkcxh5arxOWJKKoab49cwxoFD97wtBDJXM3VxlmnzE-aNKGyY?purpose=inline', 'https://cdn.mafrservices.com/pim-content/UAE/media/product/1876556/1773068673/1876556_main.jpg', 'https://naturalsupermarket.sg/products/carrot-500g?utm_source=chatgpt', 'https://images.openai.com/static-rsc-4/vo_prUzrIun2oujN2yS-zFeSxhq-XHRCe2GzsnaFkONl7kUgU4cWfjJ2CiVeOeFA-IlQzyMIgGk9a8pw3uv6qLKnk85Gs9oBaDn7bFvo5Y06hialsBaDf0SPoej2NN54wXawWuuMSXNOKXrecE7KSkN4KPZwJBAW-fusDXAYanw?purpose=inline', 'https://naturalsupermarket.sg/cdn/shop/files/carrot.jpg?v=1749536173', 'https://www.masgusto.com/en/grocery-near-me/lang-en/explore/couve-flor?srsltid=AfmBOorba9d0lzsOI_JdhrF0g2323IvKr5bsO98fB2tEUdTH93VbNtQh', 'https://images.openai.com/static-rsc-4/qekUjZo88UrA5Iam-VJ462AJle1jbjzWrbpBU-prKrAO_yfQwcZ_EtfrDxKdJiqqgdqd3zMnO43BjigaBET5J5Ap2Hy8Nm0rYcJSEGTmpmRTubrlHK3Fu0bq-w3viCsXwM3Le7J4vct3Nwwn3b71l90XmT-BinJsvGoEHvjcFjg?purpose=inline']
+============================================================
+PRODUCT: Fresh Broccoli
+URLS FOUND: []
+============================================================
+PRODUCT: Button Mushroom
+URLS FOUND: []
+============================================================
+PRODUCT: Yellow Zucchini
+URLS FOUND: []
+============================================================
+PRODUCT: Fresh Pomegranate
+URLS FOUND: []
+============================================================
+PRODUCT: Fresh Guava
+URLS FOUND: []
+============================================================
+PRODUCT: Fresh Muskmelon
+URLS FOUND: []
+============================================================
