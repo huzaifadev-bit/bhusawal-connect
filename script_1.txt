@@ -1,0 +1,1 @@
+!function(){try{const t=localStorage.getItem("oai/apps/chatTheme");document.documentElement.dataset.chatTheme="string"==typeof t?JSON.parse(t):void 0}catch(e){}}();
