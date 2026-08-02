@@ -18,14 +18,14 @@ const foodCategories = [
 
 // Verified Bhusawal Restaurants
 const restaurants = [
-  { id: 'royal_biryani', name: 'Royal Biryani & Caterers', rating: '4.8', logo: '🍲' },
-  { id: 'sagar_grand', name: 'Hotel Sagar Grand', rating: '4.9', logo: '🏨' },
-  { id: 'shiv_dairy', name: 'Shiv Dairy & Sweets', rating: '4.9', logo: '🥛' },
-  { id: 'kwality_hub', name: "Kwality Wall's Ice Cream Hub", rating: '4.7', logo: '🍦' },
-  { id: 'tandoor_hut', name: 'Tandoor Hut Chinese & Grill', rating: '4.6', logo: '🍜' },
-  { id: 'thali_house', name: 'Bhusawal Thali House', rating: '4.8', logo: '🍱' },
-  { id: 'south_corner', name: 'South Corner Dosa Point', rating: '4.7', logo: '🥞' },
-  { id: 'burger_station', name: 'Burger & Fries Station', rating: '4.5', logo: '🍔' }
+  { id: 'royal_biryani', name: 'Royal Biryani & Caterers', rating: '4.8', logo: '🍲', cuisine: 'Mughlai • Dum Biryani • North Indian' },
+  { id: 'sagar_grand', name: 'Hotel Sagar Grand', rating: '4.9', logo: '🏨', cuisine: 'Multi-Cuisine • Thalis • North Indian' },
+  { id: 'shiv_dairy', name: 'Shiv Dairy & Sweets', rating: '4.9', logo: '🥛', cuisine: 'Fresh Milk • Paneer • Traditional Sweets • Desserts' },
+  { id: 'kwality_hub', name: "Kwality Wall's Ice Cream Hub", rating: '4.7', logo: '🍦', cuisine: 'Ice Creams • Shakes • Sundaes • Desserts • Beverages' },
+  { id: 'tandoor_hut', name: 'Tandoor Hut Chinese & Grill', rating: '4.6', logo: '🍜', cuisine: 'Indo-Chinese • Hakka Noodles • Chinese • Starters • Rolls' },
+  { id: 'thali_house', name: 'Bhusawal Thali House', rating: '4.8', logo: '🍱', cuisine: 'Special Veg Thalis • Solkadhi • Maharashtrian • North Indian' },
+  { id: 'south_corner', name: 'South Corner Dosa Point', rating: '4.7', logo: '🥞', cuisine: 'Masala Dosa • Idli Sambar • Filter Coffee • South Indian' },
+  { id: 'burger_station', name: 'Burger & Fries Station', rating: '4.5', logo: '🍔', cuisine: 'Burgers • Pizza • Peri Peri Fries • Shakes • Fast Food' }
 ];
 
 // Real Existing Food Catalog Items
@@ -241,14 +241,55 @@ const foodItems = [
 
   <main class="px-4 sm:px-6 py-5 space-y-6">
 
-    <!-- 2. STICKY SEARCH BAR -->
-    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2">
+    <!-- 2. STICKY SEARCH BAR WITH MULTI-DOMAIN LIVE SEARCH DROPDOWN -->
+    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2 relative">
       <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-redBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
-        <input type="text" id="food-search-input" placeholder="Search dishes, restaurants, cuisines (e.g. Biryani, Thali, Paneer)..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
+        <input type="text" id="food-search-input" placeholder="Search across restaurants, cuisines, dishes, categories..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
         <button id="clear-food-search" class="hidden text-slate-400 hover:text-slate-600">
           <span class="material-symbols-outlined text-lg">close</span>
         </button>
+      </div>
+
+      <!-- LIVE SEARCH DROPDOWN PANEL -->
+      <div id="food-search-dropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-3xl border border-slate-200 shadow-2xl overflow-hidden z-50 p-4 space-y-4 max-h-[75vh] overflow-y-auto">
+        
+        <!-- Recent Searches -->
+        <div id="recent-searches-box" class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">history</span> Recent Searches
+            </span>
+            <button id="clear-recent-searches" class="text-[10px] font-extrabold text-redBrand hover:underline">Clear</button>
+          </div>
+          <div id="recent-searches-chips" class="flex flex-wrap gap-2">
+            <!-- Dynamically rendered recent search chips -->
+          </div>
+        </div>
+
+        <!-- Popular Searches -->
+        <div class="space-y-2">
+          <span class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm text-amber-500">trending_up</span> Popular Searches
+          </span>
+          <div class="flex flex-wrap gap-2">
+            <button class="popular-search-tag px-3 py-1 bg-slate-100 hover:bg-redLight hover:text-redBrand text-slate-700 text-xs font-black rounded-xl border border-slate-200/80 transition-all">Biryani</button>
+            <button class="popular-search-tag px-3 py-1 bg-slate-100 hover:bg-redLight hover:text-redBrand text-slate-700 text-xs font-black rounded-xl border border-slate-200/80 transition-all">Deluxe Thali</button>
+            <button class="popular-search-tag px-3 py-1 bg-slate-100 hover:bg-redLight hover:text-redBrand text-slate-700 text-xs font-black rounded-xl border border-slate-200/80 transition-all">Paneer Butter Masala</button>
+            <button class="popular-search-tag px-3 py-1 bg-slate-100 hover:bg-redLight hover:text-redBrand text-slate-700 text-xs font-black rounded-xl border border-slate-200/80 transition-all">Masala Dosa</button>
+            <button class="popular-search-tag px-3 py-1 bg-slate-100 hover:bg-redLight hover:text-redBrand text-slate-700 text-xs font-black rounded-xl border border-slate-200/80 transition-all">Pizza</button>
+            <button class="popular-search-tag px-3 py-1 bg-slate-100 hover:bg-redLight hover:text-redBrand text-slate-700 text-xs font-black rounded-xl border border-slate-200/80 transition-all">Hakka Noodles</button>
+          </div>
+        </div>
+
+        <!-- Live Suggestions Container -->
+        <div id="live-suggestions-box" class="hidden space-y-3 pt-2 border-t border-slate-100">
+          <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Live Results</span>
+          <div id="live-suggestions-list" class="space-y-2">
+            <!-- Live suggestion items -->
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -284,7 +325,6 @@ const foodItems = [
     </section>
 
     <!-- 5. REDESIGNED FOOD CARDS GRID -->
-    <!-- DESKTOP: 4 per row, LAPTOP: 3 per row, TABLET: 2 per row, MOBILE: 1 per row -->
     <section class="space-y-4">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -384,112 +424,117 @@ const foodItems = [
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CART ENGINE & ANIMATED QUANTITY CONTROLS -->
+  <!-- ADVANCED MULTI-DOMAIN SEARCH & RECENT SEARCHES ENGINE -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // Cart Storage Helper
-      function getCart() {
+      // Dataset for Multi-Domain Search
+      const searchDataset = [
+        { type: 'restaurant', title: 'Royal Biryani & Caterers', sub: 'Mughlai • Dum Biryani', icon: '🏪' },
+        { type: 'restaurant', title: 'Hotel Sagar Grand', sub: 'Multi-Cuisine • Thalis', icon: '🏨' },
+        { type: 'restaurant', title: 'Shiv Dairy & Sweets', sub: 'Fresh Milk • Sweets', icon: '🥛' },
+        { type: 'restaurant', title: "Kwality Wall's Ice Cream Hub", sub: 'Ice Creams • Shakes', icon: '🍦' },
+        { type: 'restaurant', title: 'Tandoor Hut Chinese & Grill', sub: 'Indo-Chinese • Noodles', icon: '🍜' },
+        { type: 'restaurant', title: 'Bhusawal Thali House', sub: 'Maharashtrian Thalis', icon: '🍱' },
+        { type: 'restaurant', title: 'South Corner Dosa Point', sub: 'South Indian • Dosa', icon: '🥞' },
+        { type: 'restaurant', title: 'Burger & Fries Station', sub: 'Burgers • Pizza', icon: '🍔' },
+        
+        { type: 'dish', title: 'Special Hyderabadi Chicken Dum Biryani', sub: 'Royal Biryani • ₹240', icon: '🍲' },
+        { type: 'dish', title: 'Royal Shahi Mutton Dum Biryani', sub: 'Royal Biryani • ₹320', icon: '🍲' },
+        { type: 'dish', title: 'Special Veg Deluxe Unlimited Thali', sub: 'Hotel Sagar Grand • ₹180', icon: '🍱' },
+        { type: 'dish', title: 'Paneer Butter Masala & Butter Naan Combo', sub: 'Hotel Sagar Grand • ₹210', icon: '🍲' },
+        { type: 'dish', title: 'Fresh Cow Ghee Sweets & Pedha Gift Box', sub: 'Shiv Dairy • ₹250', icon: '🍨' },
+        { type: 'dish', title: 'Chocolate Lava Fudge Sundae Tub', sub: "Kwality Wall's • ₹190", icon: '🍨' },
+        { type: 'dish', title: 'Schezwan Hakka Noodles & Manchurian Gravy', sub: 'Tandoor Hut • ₹160', icon: '🍜' },
+        { type: 'dish', title: 'Crispy Double Chicken Kathi Roll Supreme', sub: 'Tandoor Hut • ₹140', icon: '🌯' },
+        { type: 'dish', title: 'Special Butter Masala Dosa & Filter Coffee', sub: 'South Corner • ₹120', icon: '🥞' },
+        { type: 'dish', title: 'Double Cheese Burst Margherita Pizza', sub: 'Burger Station • ₹260', icon: '🍕' },
+        { type: 'dish', title: 'Crispy Veg Loaded Burger & Fries Combo', sub: 'Burger Station • ₹110', icon: '🍔' },
+        
+        { type: 'cuisine', title: 'Biryani', sub: 'Hyderabadi & Dum Biryani', icon: '🍲' },
+        { type: 'cuisine', title: 'Chinese', sub: 'Hakka Noodles & Manchurian', icon: '🍜' },
+        { type: 'cuisine', title: 'South Indian', sub: 'Dosa, Idli & Sambhar', icon: '🥞' },
+        { type: 'cuisine', title: 'North Indian', sub: 'Thalis, Paneer & Naan', icon: '🍱' },
+        { type: 'cuisine', title: 'Desserts', sub: 'Ice Creams & Sweets', icon: '🍨' },
+        { type: 'cuisine', title: 'Pizza & Burgers', sub: 'Cheesy Italian & Fast Food', icon: '🍕' }
+      ];
+
+      // Elements
+      const searchInput = document.getElementById('food-search-input');
+      const clearBtn = document.getElementById('clear-food-search');
+      const dropdown = document.getElementById('food-search-dropdown');
+      const recentBox = document.getElementById('recent-searches-box');
+      const recentChipsContainer = document.getElementById('recent-searches-chips');
+      const clearRecentBtn = document.getElementById('clear-recent-searches');
+      const liveBox = document.getElementById('live-suggestions-box');
+      const liveList = document.getElementById('live-suggestions-list');
+
+      const foodCards = document.querySelectorAll('.food-item-card');
+      const categoryChips = document.querySelectorAll('.food-cat-chip');
+
+      let activeCategoryKw = '';
+
+      // Recent Searches LocalStorage Helpers
+      function getRecentSearches() {
         try {
-          return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+          return JSON.parse(localStorage.getItem('bhusawal_food_recent_searches') || '[]');
         } catch(e) {
           return [];
         }
       }
 
-      function setCart(cart) {
-        localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-        updateCartBadge();
-        syncFoodCardQtyUi();
+      function saveRecentSearch(query) {
+        if (!query || query.length < 2) return;
+        let recent = getRecentSearches();
+        recent = recent.filter(q => q.toLowerCase() !== query.toLowerCase());
+        recent.unshift(query);
+        recent = recent.slice(0, 5); // Limit to top 5 recent
+        localStorage.setItem('bhusawal_food_recent_searches', JSON.stringify(recent));
+        renderRecentSearches();
       }
 
-      // Update Header Cart Badge
-      function updateCartBadge() {
-        const cart = getCart();
-        const badge = document.getElementById('food-cart-badge');
-        const totalQty = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
-        if (badge) badge.textContent = totalQty;
+      function renderRecentSearches() {
+        const recent = getRecentSearches();
+        if (recent.length === 0) {
+          recentBox?.classList.add('hidden');
+          return;
+        }
+        recentBox?.classList.remove('hidden');
+        if (recentChipsContainer) {
+          recentChipsContainer.innerHTML = recent.map(q => `
+            <button class="recent-search-chip px-3 py-1 bg-slate-100 hover:bg-redLight hover:text-redBrand text-slate-700 text-xs font-bold rounded-xl border border-slate-200/80 transition-all flex items-center gap-1.5" data-q="${q.replace(/"/g, '&quot;')}">
+              <span>🕒 ${q}</span>
+            </button>
+          `).join('');
+
+          recentChipsContainer.querySelectorAll('.recent-search-chip').forEach(btn => {
+            btn.onclick = () => {
+              const q = btn.dataset.q;
+              if (searchInput) searchInput.value = q;
+              executeSearch(q);
+            };
+          });
+        }
       }
 
-      // Sync All Food Card UI with Cart Quantities
-      function syncFoodCardQtyUi() {
-        const cart = getCart();
-        document.querySelectorAll('.food-card-action-box').forEach(box => {
-          const id = box.dataset.id;
-          const item = cart.find(i => i.id === id);
-          const addBtn = box.querySelector('.btn-add-food');
-          const qtyWrapper = box.querySelector('.qty-control-wrapper');
-          const qtyNum = box.querySelector('.food-qty-num');
-
-          if (item && item.quantity > 0) {
-            addBtn?.classList.add('hidden');
-            qtyWrapper?.classList.remove('hidden');
-            qtyWrapper?.classList.add('flex');
-            if (qtyNum) qtyNum.textContent = item.quantity;
-          } else {
-            addBtn?.classList.remove('hidden');
-            qtyWrapper?.classList.add('hidden');
-            qtyWrapper?.classList.remove('flex');
-          }
-        });
-      }
-
-      // Initialize UI
-      updateCartBadge();
-      syncFoodCardQtyUi();
-
-      // Bind Add Button & Quantity Selectors
-      document.querySelectorAll('.food-card-action-box').forEach(box => {
-        const id = box.dataset.id;
-        const name = box.dataset.name;
-        const price = parseFloat(box.dataset.price);
-        const img = box.dataset.img;
-
-        const addBtn = box.querySelector('.btn-add-food');
-        const minusBtn = box.querySelector('.btn-qty-minus');
-        const plusBtn = box.querySelector('.btn-qty-plus');
-
-        addBtn?.addEventListener('click', () => {
-          let cart = getCart();
-          const existing = cart.find(i => i.id === id);
-          if (existing) {
-            existing.quantity += 1;
-          } else {
-            cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Food Delivery' });
-          }
-          setCart(cart);
-        });
-
-        minusBtn?.addEventListener('click', () => {
-          let cart = getCart();
-          const existing = cart.find(i => i.id === id);
-          if (existing) {
-            if (existing.quantity > 1) {
-              existing.quantity -= 1;
-            } else {
-              cart = cart.filter(i => i.id !== id);
-            }
-            setCart(cart);
-          }
-        });
-
-        plusBtn?.addEventListener('click', () => {
-          let cart = getCart();
-          const existing = cart.find(i => i.id === id);
-          if (existing) {
-            existing.quantity += 1;
-            setCart(cart);
-          }
-        });
+      clearRecentBtn?.addEventListener('click', () => {
+        localStorage.removeItem('bhusawal_food_recent_searches');
+        renderRecentSearches();
       });
 
-      // Search & Category Filtering
-      const searchInput = document.getElementById('food-search-input');
-      const clearBtn = document.getElementById('clear-food-search');
-      const foodCards = document.querySelectorAll('.food-item-card');
-      const categoryChips = document.querySelectorAll('.food-cat-chip');
+      renderRecentSearches();
 
-      let activeCategoryKw = '';
+      // Execute Filter & Search
+      function executeSearch(query) {
+        if (query.length > 0) {
+          clearBtn?.classList.remove('hidden');
+          saveRecentSearch(query);
+        } else {
+          clearBtn?.classList.add('hidden');
+        }
+
+        applyFoodFilters();
+      }
 
       function applyFoodFilters() {
         const query = (searchInput?.value || '').trim().toLowerCase();
@@ -499,7 +544,7 @@ const foodItems = [
           const rest = card.dataset.restaurant || '';
           const cat = card.dataset.category || '';
 
-          const matchesSearch = !query || name.includes(query) || rest.includes(query);
+          const matchesSearch = !query || name.includes(query) || rest.includes(query) || cat.includes(query);
           const matchesCategory = !activeCategoryKw || cat.includes(activeCategoryKw) || name.includes(activeCategoryKw);
 
           if (matchesSearch && matchesCategory) {
@@ -510,21 +555,94 @@ const foodItems = [
         });
       }
 
-      searchInput?.addEventListener('input', (e) => {
-        if (e.target.value.length > 0) {
-          clearBtn?.classList.remove('hidden');
-        } else {
-          clearBtn?.classList.add('hidden');
+      // Live Suggestions Dropdown Renderer
+      function updateLiveSuggestions(query) {
+        if (!query) {
+          liveBox?.classList.add('hidden');
+          return;
         }
-        applyFoodFilters();
+
+        const matches = searchDataset.filter(item => 
+          item.title.toLowerCase().includes(query.toLowerCase()) || 
+          item.sub.toLowerCase().includes(query.toLowerCase())
+        ).slice(0, 6);
+
+        if (matches.length === 0) {
+          liveBox?.classList.add('hidden');
+          return;
+        }
+
+        liveBox?.classList.remove('hidden');
+        if (liveList) {
+          liveList.innerHTML = matches.map(item => `
+            <div class="live-suggestion-row p-2.5 rounded-2xl hover:bg-redLight/60 cursor-pointer flex items-center justify-between transition-colors group" data-title="${item.title.replace(/"/g, '&quot;')}">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-lg shrink-0 group-hover:bg-white">${item.icon}</span>
+                <div>
+                  <p class="text-xs font-black text-slate-800 group-hover:text-redBrand transition-colors">${item.title}</p>
+                  <p class="text-[10px] font-bold text-slate-400 mt-0.5">${item.sub}</p>
+                </div>
+              </div>
+              <span class="material-symbols-outlined text-sm text-slate-400 group-hover:text-redBrand">north_west</span>
+            </div>
+          `).join('');
+
+          liveList.querySelectorAll('.live-suggestion-row').forEach(row => {
+            row.onclick = () => {
+              const title = row.dataset.title;
+              if (searchInput) searchInput.value = title;
+              executeSearch(title);
+              dropdown?.classList.add('hidden');
+            };
+          });
+        }
+      }
+
+      // Event Listeners for Dropdown & Search Input
+      searchInput?.addEventListener('focus', () => {
+        dropdown?.classList.remove('hidden');
+      });
+
+      searchInput?.addEventListener('input', (e) => {
+        const query = e.target.value.trim();
+        dropdown?.classList.remove('hidden');
+        updateLiveSuggestions(query);
+        executeSearch(query);
+      });
+
+      searchInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const query = searchInput.value.trim();
+          executeSearch(query);
+          dropdown?.classList.add('hidden');
+        }
       });
 
       clearBtn?.addEventListener('click', () => {
-        searchInput.value = '';
+        if (searchInput) searchInput.value = '';
         clearBtn.classList.add('hidden');
+        liveBox?.classList.add('hidden');
         applyFoodFilters();
       });
 
+      // Popular Searches Tags Click
+      document.querySelectorAll('.popular-search-tag').forEach(tag => {
+        tag.addEventListener('click', () => {
+          const query = tag.textContent.trim();
+          if (searchInput) searchInput.value = query;
+          executeSearch(query);
+          dropdown?.classList.add('hidden');
+        });
+      });
+
+      // Close Dropdown On Outside Click
+      document.addEventListener('click', (e) => {
+        if (!searchInput?.contains(e.target) && !dropdown?.contains(e.target)) {
+          dropdown?.classList.add('hidden');
+        }
+      });
+
+      // Food Category Chips Listener
       categoryChips.forEach(chip => {
         chip.addEventListener('click', () => {
           categoryChips.forEach(c => {
