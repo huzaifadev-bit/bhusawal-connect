@@ -173,46 +173,93 @@ const initialProducts = catalog.slice(0, 48);
       </div>
 
       <!-- Products Grid -->
-      <div id="grocery-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div id="grocery-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4.5">
         {initialProducts.map(p => {
           const id = p["Product ID"] || p.ProductID || p.id || '';
           const name = p["Product Name"] || '';
+          const brand = p["Brand Name"] || p.brand || 'Bhusawal Fresh';
           const cat = p.Category || 'Grocery';
-          const pack = p["Pack Size"] || p.Unit || '1 Unit';
-          const mrp = parseFloat(p.MRP || 0);
-          const price = parseFloat(p["Selling Price"] || p["Offer Price"] || mrp);
-          const img = p["Product Image URL"] || p["Thumbnail URL"] || p["Image URL"] || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
+          const mrp = parseFloat(p.MRP || p.mrp || 0);
+          const price = parseFloat(p["Selling Price"] || p.sp || mrp);
+          const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
           const hasDiscount = mrp > price;
           const discountPct = hasDiscount ? Math.round(((mrp - price) / mrp) * 100) : 0;
+          const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
+          const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
+          const nameSafe = name.replace(/"/g, '&quot;');
 
           return (
-            <div class="product-card bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between group cursor-pointer" data-id={id} data-name={name} data-price={price} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-desc={p.Description || ''}>
-              
-              {hasDiscount && discountPct > 0 && (
-                <span class="absolute top-2.5 left-2.5 bg-purpleBrand text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm">
-                  {discountPct}% OFF
-                </span>
-              )}
+            <div class="product-card group bg-white rounded-[20px] border border-slate-100/90 shadow-sm hover:shadow-xl hover:border-purple-200/80 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-2.5 sm:p-3" data-id={id} data-name={name} data-price={price} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
 
-              <div class="h-32 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50 relative group-hover:scale-105 transition-transform duration-300">
-                <img src={img} alt={name} class="max-h-full max-w-full object-contain p-2" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              {/* IMAGE CONTAINER WITH GRADIENT BACKGROUND */}
+              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50/90 via-slate-50/40 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
+                
+                {/* Discount Badge */}
+                {hasDiscount && discountPct > 0 && (
+                  <span class="absolute top-2 left-2 z-10 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg shadow-sm flex items-center gap-0.5 tracking-tight">
+                    {discountPct}% OFF
+                  </span>
+                )}
+
+                {/* Out of Stock Overlay */}
+                {isOutOfStock && (
+                  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
+                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md border border-slate-700">Out of Stock</span>
+                  </div>
+                )}
+
+                {/* Favourite Heart */}
+                <button class="fav-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all duration-200 z-10 shadow-sm" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+                  <span class="material-symbols-outlined text-[19px]" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+                </button>
+
+                {/* Large Product Image */}
+                <img src={img} alt={name} class="max-h-full max-w-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300 ease-out" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+
+                {/* Fast Delivery Badge */}
+                <div class="absolute bottom-2 left-2 z-10">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400/95 backdrop-blur-sm text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
+                    <span class="material-symbols-outlined text-[11px]">bolt</span>
+                    10 MINS
+                  </span>
+                </div>
               </div>
 
-              <div>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">{cat}</p>
-                <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">{name}</h4>
-                <p class="text-[10px] text-slate-500 font-bold mb-2">{pack}</p>
-                
-                <div class="flex items-center justify-between">
-                  <div>
-                    <span class="text-xs font-black text-slate-900">₹{price}</span>
+              {/* DETAILS */}
+              <div class="flex flex-col flex-1 px-1 pt-0.5 pb-1">
+                {/* Brand Name */}
+                <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">{brand}</span>
+
+                {/* Product Name */}
+                <h3 class="text-xs sm:text-[13px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">{name}</h3>
+
+                {/* Pack Size / Variant */}
+                <p class="text-[11px] font-semibold text-slate-500 mb-2">{pack}</p>
+
+                {/* Price + Action */}
+                <div class="flex items-center justify-between gap-2 mt-auto pt-1.5 border-t border-slate-100">
+                  <div class="flex flex-col">
+                    <div class="flex items-baseline gap-1">
+                      <span class="text-sm sm:text-base font-black text-slate-900 leading-none">₹{price}</span>
+                      {hasDiscount && (
+                        <span class="text-[10px] sm:text-[11px] font-bold text-slate-400 line-through leading-none">₹{mrp}</span>
+                      )}
+                    </div>
                     {hasDiscount && (
-                      <span class="text-[10px] text-slate-400 line-through ml-1">₹{mrp}</span>
+                      <span class="text-[9px] font-extrabold text-emerald-600 mt-0.5">Save ₹{mrp - price}</span>
                     )}
                   </div>
-                  <button class="add-to-cart-btn px-3 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={id} data-name={name} data-price={price} data-img={img}>
-                    ADD
-                  </button>
+
+                  {isOutOfStock ? (
+                    <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[11px] font-extrabold rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
+                  ) : (
+                    <div class="cart-action-container" data-id={id} data-name={nameSafe} data-price={price} data-img={img}>
+                      <button class="add-to-cart-btn px-4 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 hover:border-purpleBrand text-[11px] font-black rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all duration-200" data-id={id} data-name={nameSafe} data-price={price} data-img={img}>
+                        ADD
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -317,8 +364,39 @@ const initialProducts = catalog.slice(0, 48);
 
       updateCartBar();
 
-      // 2. Add to Cart Handler
-      function attachAddToCartListeners() {
+      // 2. Interactive Quantity & Cart Action Controller
+      function syncCartActionButtons() {
+        let cart = [];
+        try { cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); } catch(e) {}
+
+        document.querySelectorAll('.cart-action-container').forEach(container => {
+          const id = container.dataset.id;
+          const name = container.dataset.name;
+          const price = container.dataset.price;
+          const img = container.dataset.img;
+          if (!id) return;
+
+          const cartItem = cart.find(i => i.id === id);
+          const qty = cartItem ? (cartItem.quantity || 1) : 0;
+
+          if (qty > 0) {
+            container.innerHTML = `
+              <div class="flex items-center justify-between bg-purpleBrand text-white font-extrabold text-xs rounded-xl overflow-hidden shadow-md shadow-purple-900/20">
+                <button class="qty-minus-btn px-2.5 py-1.5 hover:bg-purpleDark active:scale-90 transition-all" data-id="${id}">-</button>
+                <span class="px-1.5 text-[11px] font-black min-w-[1.2rem] text-center">${qty}</span>
+                <button class="qty-plus-btn px-2.5 py-1.5 hover:bg-purpleDark active:scale-90 transition-all" data-id="${id}" data-name="${name ? name.replace(/"/g, '&quot;') : ''}" data-price="${price}" data-img="${img}">+</button>
+              </div>
+            `;
+          } else {
+            container.innerHTML = `
+              <button class="add-to-cart-btn px-4 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 hover:border-purpleBrand text-[11px] font-black rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all duration-200" data-id="${id}" data-name="${name ? name.replace(/"/g, '&quot;') : ''}" data-price="${price}" data-img="${img}">
+                ADD
+              </button>
+            `;
+          }
+        });
+
+        // Attach ADD click handlers
         document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
@@ -326,7 +404,6 @@ const initialProducts = catalog.slice(0, 48);
             const name = btn.dataset.name;
             const price = btn.dataset.price;
             const img = btn.dataset.img;
-
             let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
             const existing = cart.find(i => i.id === id);
             if (existing) {
@@ -336,15 +413,51 @@ const initialProducts = catalog.slice(0, 48);
             }
             localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
             updateCartBar();
-
-            btn.textContent = 'ADDED!';
-            btn.classList.replace('bg-purpleBrand', 'bg-emerald-600');
-            setTimeout(() => {
-              btn.textContent = 'ADD';
-              btn.classList.replace('bg-emerald-600', 'bg-purpleBrand');
-            }, 1200);
+            syncCartActionButtons();
           };
         });
+
+        // Attach Plus click handlers
+        document.querySelectorAll('.qty-plus-btn').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.id;
+            let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+            const existing = cart.find(i => i.id === id);
+            if (existing) {
+              existing.quantity = (existing.quantity || 1) + 1;
+            } else {
+              cart.push({ id, name: btn.dataset.name, price: btn.dataset.price, image: btn.dataset.img, quantity: 1 });
+            }
+            localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+            updateCartBar();
+            syncCartActionButtons();
+          };
+        });
+
+        // Attach Minus click handlers
+        document.querySelectorAll('.qty-minus-btn').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.id;
+            let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+            const existingIndex = cart.findIndex(i => i.id === id);
+            if (existingIndex > -1) {
+              if (cart[existingIndex].quantity > 1) {
+                cart[existingIndex].quantity -= 1;
+              } else {
+                cart.splice(existingIndex, 1);
+              }
+            }
+            localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+            updateCartBar();
+            syncCartActionButtons();
+          };
+        });
+      }
+
+      function attachAddToCartListeners() {
+        syncCartActionButtons();
       }
       attachAddToCartListeners();
 
@@ -429,30 +542,71 @@ const initialProducts = catalog.slice(0, 48);
         grid.innerHTML = visibleItems.map(p => {
           const id = p["Product ID"] || p.ProductID || p.id || '';
           const name = p["Product Name"] || '';
+          const brand = p["Brand Name"] || p.brand || 'Bhusawal Fresh';
           const cat = p.Category || 'Grocery';
-          const pack = p["Pack Size"] || p.Unit || '1 Unit';
-          const mrp = parseFloat(p.MRP || 0);
-          const price = parseFloat(p["Selling Price"] || p["Offer Price"] || mrp);
-          const img = p["Product Image URL"] || p["Thumbnail URL"] || p["Image URL"] || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
+          const mrp = parseFloat(p.MRP || p.mrp || 0);
+          const price = parseFloat(p["Selling Price"] || p.sp || mrp);
+          const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
           const hasDiscount = mrp > price;
           const discountPct = hasDiscount ? Math.round(((mrp - price) / mrp) * 100) : 0;
+          const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
+          const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
+          const nameSafe = name.replace(/"/g, '&quot;');
 
           return `
-            <div class="product-card bg-white rounded-2xl border border-slate-100 p-3 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between group cursor-pointer" data-id="${id}" data-name="${name}" data-price="${price}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-desc="${(p.Description || '').replace(/"/g, '&quot;')}">
-              ${hasDiscount && discountPct > 0 ? `<span class="absolute top-2.5 left-2.5 bg-purpleBrand text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10 shadow-sm">${discountPct}% OFF</span>` : ''}
-              <div class="h-32 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50 relative group-hover:scale-105 transition-transform duration-300">
-                <img src="${img}" alt="${name}" class="max-h-full max-w-full object-contain p-2" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              </div>
-              <div>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">${cat}</p>
-                <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">${name}</h4>
-                <p class="text-[10px] text-slate-500 font-bold mb-2">${pack}</p>
-                <div class="flex items-center justify-between">
-                  <div>
-                    <span class="text-xs font-black text-slate-900">₹${price}</span>
-                    ${hasDiscount ? `<span class="text-[10px] text-slate-400 line-through ml-1">₹${mrp}</span>` : ''}
+            <div class="product-card group bg-white rounded-[20px] border border-slate-100/90 shadow-sm hover:shadow-xl hover:border-purple-200/80 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-2.5 sm:p-3" data-id="${id}" data-name="${nameSafe}" data-price="${price}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-brand="${brand}" data-desc="${descSafe}">
+
+              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50/90 via-slate-50/40 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
+                ${hasDiscount && discountPct > 0 ? `
+                  <span class="absolute top-2 left-2 z-10 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg shadow-sm flex items-center gap-0.5 tracking-tight">
+                    ${discountPct}% OFF
+                  </span>
+                ` : ''}
+
+                ${isOutOfStock ? `
+                  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
+                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md border border-slate-700">Out of Stock</span>
                   </div>
-                  <button class="add-to-cart-btn px-3 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id="${id}" data-name="${name}" data-price="${price}" data-img="${img}">ADD</button>
+                ` : ''}
+
+                <button class="fav-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all duration-200 z-10 shadow-sm" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+                  <span class="material-symbols-outlined text-[19px]" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+                </button>
+
+                <img src="${img}" alt="${nameSafe}" class="max-h-full max-w-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300 ease-out" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+
+                <div class="absolute bottom-2 left-2 z-10">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400/95 backdrop-blur-sm text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
+                    <span class="material-symbols-outlined text-[11px]">bolt</span>
+                    10 MINS
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex flex-col flex-1 px-1 pt-0.5 pb-1">
+                <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">${brand}</span>
+                <h3 class="text-xs sm:text-[13px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">${name}</h3>
+                <p class="text-[11px] font-semibold text-slate-500 mb-2">${pack}</p>
+
+                <div class="flex items-center justify-between gap-2 mt-auto pt-1.5 border-t border-slate-100">
+                  <div class="flex flex-col">
+                    <div class="flex items-baseline gap-1">
+                      <span class="text-sm sm:text-base font-black text-slate-900 leading-none">₹${price}</span>
+                      ${hasDiscount ? `<span class="text-[10px] sm:text-[11px] font-bold text-slate-400 line-through leading-none">₹${mrp}</span>` : ''}
+                    </div>
+                    ${hasDiscount ? `<span class="text-[9px] font-extrabold text-emerald-600 mt-0.5">Save ₹${mrp - price}</span>` : ''}
+                  </div>
+
+                  ${isOutOfStock ? `
+                    <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[11px] font-extrabold rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
+                  ` : `
+                    <div class="cart-action-container" data-id="${id}" data-name="${nameSafe}" data-price="${price}" data-img="${img}">
+                      <button class="add-to-cart-btn px-4 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 hover:border-purpleBrand text-[11px] font-black rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all duration-200" data-id="${id}" data-name="${nameSafe}" data-price="${price}" data-img="${img}">
+                        ADD
+                      </button>
+                    </div>
+                  `}
                 </div>
               </div>
             </div>
@@ -510,7 +664,7 @@ const initialProducts = catalog.slice(0, 48);
 
         // Offers Filter
         if (currentFilter === 'deals') {
-          res = res.filter(p => parseFloat(p.MRP || 0) > parseFloat(p["Selling Price"] || p["Offer Price"] || p.MRP || 0));
+          res = res.filter(p => parseFloat(p.MRP || 0) > parseFloat(p["Selling Price"] || p.MRP || p.mrp || p["Selling Price"] || p.sp || p.MRP || 0));
         }
 
         currentFiltered = res;
