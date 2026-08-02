@@ -40,10 +40,7 @@ for (const kw of trendingKws) {
   if (trendingProducts.length >= 12) break;
 }
 
-let popularProducts = dedupProducts(catalog.filter(p => p.Category === 'Snacks & Confectionery' || p.Category === 'Beverages')).slice(0, 12);
-let dailyNeedsProducts = dedupProducts(catalog.filter(p => p.Category === 'Dairy & Breakfast' || p.Category === 'Fruits & Vegetables')).slice(0, 12);
-
-// Verified Partner Stores Data (NO DISCOUNTS OR OFFERS)
+// Verified Partner Stores Data
 const verifiedPartnerStores = [
   { id: 'express_superstore', name: 'Bhusawal Express Superstore', tag: 'Supermarket • 25,500+ Items', rating: '4.9', count: '1,240+ ratings', time: '10-15 min', cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=800&q=80', logo: '🏬' },
   { id: 'royal_biryani', name: 'Royal Biryani & Caterers', tag: 'Mughlai & North Indian', rating: '4.8', count: '850+ ratings', time: '20-25 min', cover: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80', logo: '🍲' },
@@ -122,19 +119,91 @@ const verifiedPartnerStores = [
 
   <main class="px-4 py-5 space-y-7">
 
-    <!-- 2. STICKY UNIVERSAL SEARCH BAR -->
+    <!-- 2. IMPROVED GLOBAL SEARCH BAR & DROPDOWN -->
     <div class="relative z-40">
       <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
-        <input type="text" id="main-search-input" placeholder="Search 25,000+ items ('Milk', 'Biryani', 'Lays')..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
-        <span class="material-symbols-outlined text-purpleBrand cursor-pointer">mic</span>
+        <input type="text" id="main-search-input" placeholder="Search Products, Stores, Medicines, Food, Brands..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
+        <button id="mic-search-btn" class="text-purpleBrand hover:text-purpleDark flex items-center justify-center p-1 rounded-full hover:bg-purple-100 transition-colors" title="Voice Search">
+          <span class="material-symbols-outlined text-xl">mic</span>
+        </button>
       </div>
 
-      <!-- Live Search Autocomplete Dropdown -->
-      <div id="search-results-dropdown" class="hidden absolute top-14 left-0 right-0 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden max-h-96 overflow-y-auto z-50">
-        <div class="p-2 divide-y divide-slate-100" id="search-dropdown-list">
-          <!-- Dynamically populated -->
+      <!-- Live Global Search Dropdown Overlay -->
+      <div id="search-results-dropdown" class="hidden absolute top-14 left-0 right-0 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden max-h-[80vh] overflow-y-auto z-50">
+        
+        <!-- INITIAL DEFAULT STATE: RECENT & POPULAR SEARCHES -->
+        <div id="search-default-view" class="p-5 space-y-5">
+          
+          <!-- Recent Searches Section -->
+          <div id="recent-searches-box" class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">history</span>
+                Recent Searches
+              </span>
+              <button id="clear-recent-btn" class="text-[10px] font-black text-rose-500 hover:underline">Clear History</button>
+            </div>
+            <div id="recent-searches-list" class="flex flex-wrap gap-2 pt-1">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Popular Searches Section -->
+          <div class="space-y-2">
+            <span class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm text-amber-500">local_fire_department</span>
+              Popular Searches in Bhusawal
+            </span>
+            <div class="flex flex-wrap gap-2 pt-1">
+              <button class="pop-search-tag px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand text-xs font-bold border border-purple-100 transition-all">Amul Taaza Milk</button>
+              <button class="pop-search-tag px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand text-xs font-bold border border-purple-100 transition-all">Maggi Noodles</button>
+              <button class="pop-search-tag px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand text-xs font-bold border border-purple-100 transition-all">Paracetamol 500mg</button>
+              <button class="pop-search-tag px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand text-xs font-bold border border-purple-100 transition-all">Royal Chicken Biryani</button>
+              <button class="pop-search-tag px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand text-xs font-bold border border-purple-100 transition-all">Fortune Sunflower Oil</button>
+              <button class="pop-search-tag px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand text-xs font-bold border border-purple-100 transition-all">Lay's Chips</button>
+              <button class="pop-search-tag px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand text-xs font-bold border border-purple-100 transition-all">Bhusawal Bananas</button>
+            </div>
+          </div>
+
+          <!-- Quick Categories Links -->
+          <div class="space-y-2 pt-2 border-t border-slate-100">
+            <span class="text-xs font-black text-slate-400 uppercase tracking-wider">Explore Services</span>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <a href="/grocery" class="p-2.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-100 flex items-center gap-2 text-xs font-extrabold text-slate-800">
+                <span class="text-lg">🛒</span>
+                <span>Grocery Store</span>
+              </a>
+              <a href="/medicines" class="p-2.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-100 flex items-center gap-2 text-xs font-extrabold text-slate-800">
+                <span class="text-lg">💊</span>
+                <span>Pharmacy</span>
+              </a>
+              <a href="/food" class="p-2.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-100 flex items-center gap-2 text-xs font-extrabold text-slate-800">
+                <span class="text-lg">🍔</span>
+                <span>Food Delivery</span>
+              </a>
+              <a href="/shops" class="p-2.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-100 flex items-center gap-2 text-xs font-extrabold text-slate-800">
+                <span class="text-lg">🏪</span>
+                <span>Partner Shops</span>
+              </a>
+              <a href="/auto" class="p-2.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-100 flex items-center gap-2 text-xs font-extrabold text-slate-800">
+                <span class="text-lg">🛺</span>
+                <span>Auto Booking</span>
+              </a>
+              <a href="/parcel" class="p-2.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-100 flex items-center gap-2 text-xs font-extrabold text-slate-800">
+                <span class="text-lg">📦</span>
+                <span>Parcel Express</span>
+              </a>
+            </div>
+          </div>
+
         </div>
+
+        <!-- ACTIVE TYPING: SEARCH RESULTS CONTAINER -->
+        <div id="search-active-results" class="hidden p-3 divide-y divide-slate-100">
+          <!-- Dynamically populated grouped results -->
+        </div>
+
       </div>
     </div>
 
@@ -222,7 +291,7 @@ const verifiedPartnerStores = [
           </div>
         </a>
 
-        <!-- 5. Pickup & Drop (TWO PEOPLE RIDING A SCOOTER/BIKE ILLUSTRATION) -->
+        <!-- 5. Pickup & Drop -->
         <a href="/auto" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-teal-50 to-emerald-100 flex items-center justify-center p-3 overflow-hidden">
             <img src="/assets/services/service_pickup_drop.jpg" alt="Pickup & Drop" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
@@ -236,7 +305,7 @@ const verifiedPartnerStores = [
           </div>
         </a>
 
-        <!-- 6. Parcel Delivery (DELIVERY RIDER CARRYING A PARCEL BOX ON A SCOOTER) -->
+        <!-- 6. Parcel Delivery -->
         <a href="/parcel" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center p-3 overflow-hidden">
             <img src="/assets/services/service_parcel.jpg" alt="Parcel Delivery" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
@@ -252,56 +321,60 @@ const verifiedPartnerStores = [
 
         <!-- 7. Local Shops -->
         <a href="/shops" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
-          <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-purple-50 to-fuchsia-100 flex items-center justify-center p-3 overflow-hidden">
-            <img src="/assets/services/service_shops.jpg" alt="Local Shops" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+          <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center p-3 overflow-hidden">
+            <img src="/assets/services/service_local_shops.jpg" alt="Local Shops" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
           <div class="p-3">
-            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-purple-100 to-fuchsia-200 flex items-center justify-center shadow-xs">
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-purple-100 to-pink-200 flex items-center justify-center shadow-xs">
               <span class="material-symbols-outlined text-purple-700 text-lg">storefront</span>
             </div>
             <h4 class="text-xs font-black text-slate-900">Local Shops</h4>
-            <p class="text-[10px] font-bold text-purple-600 mt-0.5 leading-tight">Verified Local Merchants</p>
+            <p class="text-[10px] font-bold text-purple-600 mt-0.5 leading-tight">Trusted Bhusawal Retailers</p>
           </div>
         </a>
 
       </div>
     </section>
 
-    <!-- 5. FEATURED PARTNER STORES (DIRECTLY BELOW SERVICES SECTION) -->
+    <!-- 5. FEATURED PARTNER STORES SECTION -->
     <section class="space-y-4">
       <div class="flex items-center justify-between px-1">
         <div>
           <h3 class="text-xl font-black font-display text-slate-900 tracking-tight">Featured Partner Stores</h3>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Order directly from verified Bhusawal merchants</p>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Top verified merchants in Bhusawal</p>
         </div>
-        <a href="/shops" class="text-xs font-bold text-purpleBrand hover:underline">View All</a>
+        <a href="/shops" class="text-xs font-bold text-purpleBrand hover:underline flex items-center gap-0.5">
+          View All Stores
+          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        </a>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {verifiedPartnerStores.map(store => (
-          <a href={`/shops?id=${store.id}`} class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group">
-            <div class="h-36 w-full relative overflow-hidden bg-slate-100">
-              <img src={store.cover} alt={store.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+          <a href="/shops" class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all duration-300 overflow-hidden group cursor-pointer flex flex-col">
+            <div class="h-36 bg-slate-100 relative overflow-hidden">
+              <img src={store.cover} alt={store.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
               
-              <!-- Verified Partner Badge -->
-              <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
-                <span class="material-symbols-outlined text-xs">verified</span>
-                Verified Partner
-              </span>
+              <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-emerald-700 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-xs">
+                <span>✓ Verified Partner Store</span>
+              </div>
 
-              <span class="absolute bottom-2 right-3 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black px-2.5 py-1 rounded-full shadow-xs">
-                ⚡ {store.time}
-              </span>
+              <div class="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-1 shadow-xs">
+                <span class="material-symbols-outlined text-xs">schedule</span>
+                <span>{store.time}</span>
+              </div>
             </div>
 
-            <div class="p-5 space-y-3 relative">
-              <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
-                {store.logo}
-              </div>
-              <div>
-                <h4 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">{store.name}</h4>
-                <p class="text-xs font-bold text-slate-400 mt-0.5">{store.tag}</p>
+            <div class="p-4 space-y-2 flex-1 flex flex-col justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purpleBrand flex items-center justify-center text-xl shrink-0 border border-purple-100 shadow-xs">
+                  {store.logo}
+                </div>
+                <div>
+                  <h4 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">{store.name}</h4>
+                  <p class="text-xs font-bold text-slate-400 mt-0.5">{store.tag}</p>
+                </div>
               </div>
               <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
                 <span class="flex items-center gap-1 text-amber-600">
@@ -316,7 +389,7 @@ const verifiedPartnerStores = [
       </div>
     </section>
 
-    <!-- 6. TRENDING ESSENTIALS CATALOG GRID (AT MRP) -->
+    <!-- 6. TRENDING ESSENTIALS CATALOG GRID -->
     <section class="space-y-4 pt-2">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -360,9 +433,291 @@ const verifiedPartnerStores = [
 
   <Switcher />
 
-  <!-- CLIENT-SIDE ADD TO CART LOGIC -->
+  <!-- CLIENT-SIDE GLOBAL SEARCH ENGINE -->
   <script is:inline>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
+
+      let fullCatalog = [];
+      try {
+        const res = await fetch('/grocery_catalog.json');
+        fullCatalog = await res.json();
+      } catch(e) {
+        console.error("Failed to load search catalog", e);
+      }
+
+      // Sample Stores & Food Datasets for Cross-Domain Search
+      const STORES_LIST = [
+        { name: 'Bhusawal Express Superstore', tag: 'Supermarket • 25,500+ Items', link: '/grocery', icon: '🏬' },
+        { name: 'Royal Biryani & Caterers', tag: 'Mughlai & North Indian', link: '/food', icon: '🍲' },
+        { name: 'Modern Pharmacy & Wellness', tag: 'Essential Medicines', link: '/medicines', icon: '💊' },
+        { name: 'Shiv Dairy & Sweets', tag: 'Fresh Milk & Paneer', link: '/shops', icon: '🥛' },
+        { name: 'Kwality Wall's Ice Cream Hub', tag: 'Ice Creams & Shakes', link: '/shops', icon: '🍦' }
+      ];
+
+      const MEDICINES_LIST = [
+        { name: 'Paracetamol 500mg Tablet', desc: 'Fever & Pain Relief', price: 15, link: '/medicines' },
+        { name: 'Dolo 650mg Anti-Pyretic', desc: 'High Fever Relief', price: 30, link: '/medicines' },
+        { name: 'Crocin Pain Relief 650', desc: 'Headache & Body Pain', price: 24, link: '/medicines' },
+        { name: 'Gelusil Antacid Syrup (200ml)', desc: 'Acidity & Gas Relief', price: 110, link: '/medicines' },
+        { name: 'Vicks Vaporub (50g)', desc: 'Cold & Cough Balm', price: 145, link: '/medicines' },
+        { name: 'ORAL REHYDRATION SALTS ORS', desc: 'Dehydration Solution', price: 20, link: '/medicines' }
+      ];
+
+      const FOOD_ITEMS_LIST = [
+        { name: 'Royal Chicken Dum Biryani', desc: 'Aromatic Basmati Rice & Tender Spiced Chicken', price: 180, link: '/food' },
+        { name: 'Paneer Butter Masala', desc: 'Rich Tomato Butter Gravy with Fresh Cottage Cheese', price: 160, link: '/food' },
+        { name: 'Butter Tandoori Roti (4 Pcs)', desc: 'Whole Wheat Clay Oven Bread', price: 40, link: '/food' },
+        { name: 'Special Bhusawal Banana Halwa', desc: 'Traditional Local Sweet', price: 90, link: '/food' }
+      ];
+
+      const CATEGORIES_LIST = [
+        { name: 'Fruits & Vegetables', link: '/grocery?category=Fruits%20%26%20Vegetables' },
+        { name: 'Dairy & Breakfast', link: '/grocery?category=Dairy%20%26%20Breakfast' },
+        { name: 'Grocery Staples', link: '/grocery?category=Grocery%20Staples' },
+        { name: 'Snacks & Confectionery', link: '/grocery?category=Snacks%20%26%20Confectionery' },
+        { name: 'Beverages', link: '/grocery?category=Beverages' },
+        { name: 'Personal Care', link: '/grocery?category=Personal%20Care' }
+      ];
+
+      // Recent Searches LocalStorage System
+      function getRecentSearches() {
+        try {
+          return JSON.parse(localStorage.getItem('bhusawal_recent_searches') || '[]');
+        } catch(e) { return []; }
+      }
+
+      function addRecentSearch(query) {
+        if (!query || query.trim().length < 2) return;
+        let list = getRecentSearches();
+        list = list.filter(q => q.toLowerCase() !== query.toLowerCase());
+        list.unshift(query);
+        if (list.length > 6) list = list.slice(0, 6);
+        localStorage.setItem('bhusawal_recent_searches', JSON.stringify(list));
+        renderRecentSearches();
+      }
+
+      function renderRecentSearches() {
+        const box = document.getElementById('recent-searches-box');
+        const listEl = document.getElementById('recent-searches-list');
+        const recent = getRecentSearches();
+
+        if (!recent || recent.length === 0) {
+          box?.classList.add('hidden');
+          return;
+        }
+
+        box?.classList.remove('hidden');
+        listEl.innerHTML = recent.map(q => `
+          <button class="recent-search-tag px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-purple-100 text-slate-700 hover:text-purpleBrand text-xs font-bold transition-all flex items-center gap-1" data-query="${q.replace(/"/g, '&quot;')}">
+            <span class="material-symbols-outlined text-xs text-slate-400">history</span>
+            <span>${q}</span>
+          </button>
+        `).join('');
+
+        listEl.querySelectorAll('.recent-search-tag').forEach(btn => {
+          btn.onclick = () => {
+            const query = btn.dataset.query;
+            searchInput.value = query;
+            performGlobalSearch(query);
+          };
+        });
+      }
+
+      document.getElementById('clear-recent-btn')?.addEventListener('click', () => {
+        localStorage.removeItem('bhusawal_recent_searches');
+        renderRecentSearches();
+      });
+
+      renderRecentSearches();
+
+      // Input & Dropdown Handlers
+      const searchInput = document.getElementById('main-search-input');
+      const dropdown = document.getElementById('search-results-dropdown');
+      const defaultView = document.getElementById('search-default-view');
+      const activeResults = document.getElementById('search-active-results');
+
+      searchInput?.addEventListener('focus', () => {
+        dropdown?.classList.remove('hidden');
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#main-search-input') && !e.target.closest('#search-results-dropdown')) {
+          dropdown?.classList.add('hidden');
+        }
+      });
+
+      // Popular Searches Tags Handler
+      document.querySelectorAll('.pop-search-tag').forEach(tag => {
+        tag.addEventListener('click', () => {
+          const query = tag.textContent.trim();
+          searchInput.value = query;
+          performGlobalSearch(query);
+        });
+      });
+
+      // Voice Search Support
+      const micBtn = document.getElementById('mic-search-btn');
+      if (micBtn && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-IN';
+        
+        micBtn.onclick = () => {
+          micBtn.classList.add('animate-pulse', 'text-rose-500');
+          recognition.start();
+        };
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          searchInput.value = transcript;
+          micBtn.classList.remove('animate-pulse', 'text-rose-500');
+          performGlobalSearch(transcript);
+        };
+
+        recognition.onerror = () => {
+          micBtn.classList.remove('animate-pulse', 'text-rose-500');
+        };
+      }
+
+      // Fast Global Search Algorithm across Products, Stores, Medicines, Food, Categories, Brands
+      function performGlobalSearch(query) {
+        if (!query || query.trim().length === 0) {
+          defaultView?.classList.remove('hidden');
+          activeResults?.classList.add('hidden');
+          return;
+        }
+
+        const q = query.trim().toLowerCase();
+        addRecentSearch(query.trim());
+
+        defaultView?.classList.add('hidden');
+        activeResults?.classList.remove('hidden');
+
+        // 1. Search Stores
+        const matchingStores = STORES_LIST.filter(s => s.name.toLowerCase().includes(q) || s.tag.toLowerCase().includes(q));
+
+        // 2. Search Medicines
+        const matchingMedicines = MEDICINES_LIST.filter(m => m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q));
+
+        // 3. Search Food
+        const matchingFood = FOOD_ITEMS_LIST.filter(f => f.name.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q));
+
+        // 4. Search Categories
+        const matchingCategories = CATEGORIES_LIST.filter(c => c.name.toLowerCase().includes(q));
+
+        // 5. Search Products from 25,500+ Database
+        const matchingProducts = fullCatalog.filter(p => {
+          const name = (p["Product Name"] || '').toLowerCase();
+          const brand = (p["Brand Name"] || '').toLowerCase();
+          const cat = (p.Category || '').toLowerCase();
+          return name.includes(q) || brand.includes(q) || cat.includes(q);
+        }).slice(0, 15);
+
+        let html = '';
+
+        // Render Stores Matches
+        if (matchingStores.length > 0) {
+          html += `
+            <div class="py-2">
+              <span class="text-[10px] font-black text-purpleBrand uppercase tracking-wider block px-2 mb-1">🏬 Partner Stores</span>
+              ${matchingStores.map(s => `
+                <a href="${s.link}" class="flex items-center justify-between p-2 hover:bg-purple-50 rounded-2xl transition-all">
+                  <div class="flex items-center gap-2">
+                    <span class="text-lg">${s.icon}</span>
+                    <div>
+                      <h4 class="text-xs font-black text-slate-900">${s.name}</h4>
+                      <p class="text-[10px] font-bold text-slate-400">${s.tag}</p>
+                    </div>
+                  </div>
+                  <span class="text-xs font-black text-purpleBrand">Visit Store →</span>
+                </a>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        // Render Medicine Matches
+        if (matchingMedicines.length > 0) {
+          html += `
+            <div class="py-2">
+              <span class="text-[10px] font-black text-blue-600 uppercase tracking-wider block px-2 mb-1">💊 Medicines & Healthcare</span>
+              ${matchingMedicines.map(m => `
+                <a href="/medicines" class="flex items-center justify-between p-2 hover:bg-blue-50 rounded-2xl transition-all">
+                  <div>
+                    <h4 class="text-xs font-black text-slate-900">${m.name}</h4>
+                    <p class="text-[10px] font-bold text-slate-400">${m.desc}</p>
+                  </div>
+                  <span class="text-xs font-black text-slate-900">MRP ₹${m.price}</span>
+                </a>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        // Render Food Matches
+        if (matchingFood.length > 0) {
+          html += `
+            <div class="py-2">
+              <span class="text-[10px] font-black text-orange-600 uppercase tracking-wider block px-2 mb-1">🍔 Restaurant Food</span>
+              ${matchingFood.map(f => `
+                <a href="/food" class="flex items-center justify-between p-2 hover:bg-orange-50 rounded-2xl transition-all">
+                  <div>
+                    <h4 class="text-xs font-black text-slate-900">${f.name}</h4>
+                    <p class="text-[10px] font-bold text-slate-400">${f.desc}</p>
+                  </div>
+                  <span class="text-xs font-black text-slate-900">₹${f.price}</span>
+                </a>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        // Render Products Matches
+        if (matchingProducts.length > 0) {
+          html += `
+            <div class="py-2">
+              <span class="text-[10px] font-black text-emerald-600 uppercase tracking-wider block px-2 mb-1">🛒 Products (${matchingProducts.length} results)</span>
+              ${matchingProducts.map(p => {
+                const name = (p["Product Name"] || '').split(" (Batch")[0];
+                const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || 50);
+                const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+                return `
+                  <a href="/grocery?search=${encodeURIComponent(name)}" class="flex items-center justify-between p-2 hover:bg-emerald-50 rounded-2xl transition-all">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <img src="${img}" alt="${name}" class="w-8 h-8 object-contain rounded-lg bg-slate-50 border p-0.5 shrink-0" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                      <div class="min-w-0">
+                        <h4 class="text-xs font-black text-slate-900 truncate">${name}</h4>
+                        <p class="text-[10px] font-bold text-slate-400">${p.Category || 'Grocery'}</p>
+                      </div>
+                    </div>
+                    <span class="text-xs font-black text-slate-900 shrink-0">MRP ₹${mrp}</span>
+                  </a>
+                `;
+              }).join('')}
+            </div>
+          `;
+        }
+
+        if (html === '') {
+          activeResults.innerHTML = `
+            <div class="py-8 text-center space-y-2">
+              <span class="material-symbols-outlined text-3xl text-slate-300">search_off</span>
+              <p class="text-xs font-bold text-slate-500">No exact matches found for "${query}".</p>
+              <a href="/grocery?search=${encodeURIComponent(query)}" class="inline-block px-4 py-2 bg-purpleBrand text-white text-xs font-black rounded-xl shadow-xs">
+                Search full 25,500+ Grocery Catalog →
+              </a>
+            </div>
+          `;
+        } else {
+          activeResults.innerHTML = html;
+        }
+      }
+
+      searchInput?.addEventListener('input', (e) => {
+        performGlobalSearch(e.target.value);
+      });
+
+      // Add to Cart Buttons
       document.querySelectorAll('.add-home-cart-btn').forEach(btn => {
         btn.onclick = () => {
           const id = btn.dataset.id;
@@ -393,6 +748,7 @@ const verifiedPartnerStores = [
           }, 1200);
         };
       });
+
     });
   </script>
 </body>
