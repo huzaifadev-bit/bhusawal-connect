@@ -55,8 +55,9 @@ import Switcher from '../components/Switcher.astro';
     </div>
 
     <div class="flex items-center gap-2">
-      <a href="/grocery" class="px-4 py-1.5 bg-purpleBrand text-white text-xs font-black rounded-xl hover:bg-purpleDark transition-all shadow-xs">
-        + New Order
+      <a href="/grocery" class="px-4 py-1.5 bg-purpleBrand text-white text-xs font-black rounded-xl hover:bg-purpleDark transition-all shadow-xs flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+        <span>+ New Order</span>
       </a>
     </div>
   </header>
@@ -67,8 +68,8 @@ import Switcher from '../components/Switcher.astro';
     <!-- PAGE TITLE & SEARCH BAR -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/60 pb-4">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900">My Orders History</h1>
-        <p class="text-xs font-bold text-slate-400 mt-0.5" id="orders-subtitle">Track, view invoices, or repeat your past orders</p>
+        <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900">My Orders</h1>
+        <p class="text-xs font-bold text-slate-400 mt-0.5" id="orders-subtitle">View current active orders, past purchase history & tax invoices</p>
       </div>
 
       <!-- Live Search Input -->
@@ -78,42 +79,91 @@ import Switcher from '../components/Switcher.astro';
       </div>
     </div>
 
-    <!-- FILTER TABS (ALL, ACTIVE, DELIVERED, CANCELLED) -->
+    <!-- FILTER TABS (CURRENT ORDERS, PAST ORDERS, ALL) -->
     <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-      <button class="order-filter-tab px-4 py-2 rounded-xl bg-purpleBrand text-white font-black text-xs transition-all shadow-xs" data-filter="all">
-        All Orders (<span id="count-all">0</span>)
+      <button class="order-filter-tab px-4 py-2 rounded-xl bg-purpleBrand text-white font-black text-xs transition-all shadow-xs flex items-center gap-1.5" data-filter="all">
+        <span>All Orders</span>
+        <span class="px-2 py-0.5 rounded-md bg-white/20 text-[10px]" id="count-all">0</span>
       </button>
-      <button class="order-filter-tab px-4 py-2 rounded-xl bg-white hover:bg-purple-50 text-slate-700 font-extrabold text-xs border border-slate-200 transition-all" data-filter="active">
-        ⚡ Active / In-Progress (<span id="count-active">0</span>)
+
+      <button class="order-filter-tab px-4 py-2 rounded-xl bg-white hover:bg-purple-50 text-slate-700 font-black text-xs border border-slate-200 transition-all flex items-center gap-1.5" data-filter="active">
+        <span class="w-2 h-2 rounded-full bg-purpleBrand animate-ping"></span>
+        <span>Current Orders</span>
+        <span class="px-2 py-0.5 rounded-md bg-slate-100 text-[10px]" id="count-active">0</span>
       </button>
-      <button class="order-filter-tab px-4 py-2 rounded-xl bg-white hover:bg-purple-50 text-slate-700 font-extrabold text-xs border border-slate-200 transition-all" data-filter="delivered">
-        ✓ Delivered (<span id="count-delivered">0</span>)
+
+      <button class="order-filter-tab px-4 py-2 rounded-xl bg-white hover:bg-purple-50 text-slate-700 font-black text-xs border border-slate-200 transition-all flex items-center gap-1.5" data-filter="past">
+        <span>📦 Past Orders</span>
+        <span class="px-2 py-0.5 rounded-md bg-slate-100 text-[10px]" id="count-past">0</span>
       </button>
-      <button class="order-filter-tab px-4 py-2 rounded-xl bg-white hover:bg-purple-50 text-slate-700 font-extrabold text-xs border border-slate-200 transition-all" data-filter="cancelled">
-        × Cancelled (<span id="count-cancelled">0</span>)
+
+      <button class="order-filter-tab px-4 py-2 rounded-xl bg-white hover:bg-purple-50 text-slate-700 font-black text-xs border border-slate-200 transition-all flex items-center gap-1.5" data-filter="cancelled">
+        <span>× Cancelled</span>
+        <span class="px-2 py-0.5 rounded-md bg-slate-100 text-[10px]" id="count-cancelled">0</span>
       </button>
     </div>
 
     <!-- ORDERS CARDS CONTAINER -->
-    <div id="orders-cards-container" class="space-y-4">
+    <div id="orders-cards-container" class="space-y-5">
       <!-- Dynamically populated by JS -->
     </div>
 
   </main>
 
-  <!-- INVOICE MODAL -->
+  <!-- TRACKING PREPARATION MODAL -->
+  <div id="tracking-prep-modal" class="fixed inset-0 z-[10000] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-in fade-in duration-300">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-4 shadow-2xl relative text-center">
+      <button id="close-tracking-modal" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+
+      <div class="w-16 h-16 rounded-full bg-purple-50 text-purpleBrand mx-auto flex items-center justify-center shadow-inner">
+        <span class="material-symbols-outlined text-3xl">near_me</span>
+      </div>
+
+      <div>
+        <span class="px-3 py-1 bg-purple-100 text-purpleBrand text-[10px] font-black rounded-full uppercase tracking-wider">TRACKING INTEGRATION PREPARED</span>
+        <h3 class="text-xl font-black font-display text-slate-900 mt-2" id="track-modal-order-id">Order Tracking</h3>
+        <p class="text-xs font-bold text-slate-500 mt-1 leading-relaxed">
+          Your order is confirmed & packed. Live GPS rider tracking integration will launch soon across Bhusawal!
+        </p>
+      </div>
+
+      <!-- Preparation Timeline Preview -->
+      <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left space-y-2 text-xs font-bold text-slate-700">
+        <div class="flex items-center gap-2 text-emerald-600">
+          <span class="material-symbols-outlined text-base">check_circle</span>
+          <span>Order Confirmed & Payment Verified</span>
+        </div>
+        <div class="flex items-center gap-2 text-purpleBrand">
+          <span class="material-symbols-outlined text-base">storefront</span>
+          <span>Store Preparing Your Package</span>
+        </div>
+        <div class="flex items-center gap-2 text-slate-400">
+          <span class="material-symbols-outlined text-base">two_wheeler</span>
+          <span>Rider Assignment & Dispatch</span>
+        </div>
+      </div>
+
+      <button id="close-tracking-modal-btn" class="w-full py-3 bg-purpleBrand text-white font-black text-xs rounded-xl shadow-md">
+        Got It
+      </button>
+    </div>
+  </div>
+
+  <!-- TAX INVOICE MODAL -->
   <div id="invoice-modal" class="fixed inset-0 z-[10000] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-in fade-in duration-300">
     <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-4 shadow-2xl relative max-h-[90vh] overflow-y-auto">
       <button id="close-invoice-modal" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
         <span class="material-symbols-outlined text-sm">close</span>
       </button>
 
-      <!-- Invoice Content -->
+      <!-- Printable Tax Invoice Content -->
       <div id="invoice-print-area" class="space-y-4 text-left">
         <div class="flex items-center justify-between border-b border-slate-200 pb-3">
           <div>
             <h2 class="text-xl font-black font-display text-purpleBrand">Bhusawal Connect</h2>
-            <p class="text-[10px] text-slate-400 font-bold">Tax Invoice / Order Receipt</p>
+            <p class="text-[10px] text-slate-400 font-bold">Official Tax Invoice / Bill Receipt</p>
           </div>
           <div class="text-right">
             <span class="text-xs font-black text-slate-900 block" id="inv-order-id">#BHU-98214</span>
@@ -121,19 +171,19 @@ import Switcher from '../components/Switcher.astro';
           </div>
         </div>
 
-        <div class="text-xs font-bold text-slate-600 space-y-1 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-          <p class="text-slate-900 font-black">Customer Details:</p>
+        <div class="text-xs font-bold text-slate-600 space-y-1 bg-slate-50 p-3.5 rounded-2xl border border-slate-100">
+          <p class="text-slate-900 font-black">Delivery Details:</p>
           <p id="inv-customer-name">Sahil Patel</p>
-          <p id="inv-address" class="text-[11px] text-slate-500">Plot 42, Station Road, Shivaji Nagar, Bhusawal</p>
+          <p id="inv-address" class="text-[11px] text-slate-500 leading-snug">Plot 42, Station Road, Shivaji Nagar, Bhusawal</p>
         </div>
 
         <!-- Items Table -->
         <table class="w-full text-left text-xs">
           <thead>
             <tr class="border-b border-slate-200 text-slate-400 font-black text-[10px] uppercase">
-              <th class="py-2">Item</th>
+              <th class="py-2">Item Description</th>
               <th class="py-2 text-center">Qty</th>
-              <th class="py-2 text-right">Price</th>
+              <th class="py-2 text-right">MRP</th>
               <th class="py-2 text-right">Total</th>
             </tr>
           </thead>
@@ -147,11 +197,11 @@ import Switcher from '../components/Switcher.astro';
           <div class="flex justify-between"><span>Subtotal (MRP):</span><span id="inv-subtotal">₹0</span></div>
           <div class="flex justify-between"><span>Delivery Fee (Fixed):</span><span id="inv-delivery">₹30</span></div>
           <div class="flex justify-between"><span>Platform Fee:</span><span id="inv-platform">₹5</span></div>
-          <div class="flex justify-between text-sm font-black text-slate-900 pt-2 border-t border-slate-100"><span>Grand Total:</span><span id="inv-grand-total" class="text-purpleBrand">₹0</span></div>
+          <div class="flex justify-between text-sm font-black text-slate-900 pt-2 border-t border-slate-100"><span>Grand Total:</span><span id="inv-grand-total" class="text-purpleBrand text-base">₹0</span></div>
         </div>
       </div>
 
-      <button onclick="window.print();" class="w-full py-3 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
+      <button onclick="window.print();" class="w-full py-3.5 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
         <span class="material-symbols-outlined text-base">print</span>
         <span>Print or Download PDF Invoice</span>
       </button>
@@ -167,7 +217,7 @@ import Switcher from '../components/Switcher.astro';
       let currentFilter = 'all';
       let searchQuery = '';
 
-      // Sample fallback order dataset if local storage is empty
+      // Sample fallback order dataset
       const SAMPLE_ORDERS = [
         {
           id: 'BHU-98214',
@@ -175,6 +225,7 @@ import Switcher from '../components/Switcher.astro';
           status: 'Confirmed',
           total: 320,
           address: 'Plot 42, Station Road, Shivaji Nagar, Bhusawal',
+          payment: 'UPI (GPay)',
           items: [
             { id: '1', name: 'Amul Taaza Toned Milk', price: 27, quantity: 2, image: 'https://www.bbassets.com/media/uploads/p/l/306926_4-amul-taaza-toned-milk.jpg' },
             { id: '2', name: 'Maggi 2-Minute Noodles', price: 14, quantity: 4, image: 'https://www.bbassets.com/media/uploads/p/l/266109_15-nestle-maggi-2-minute-instant-noodles-masala.jpg' },
@@ -187,6 +238,7 @@ import Switcher from '../components/Switcher.astro';
           status: 'Delivered',
           total: 185,
           address: 'Shop 12, Main Market, Jamner Road, Bhusawal',
+          payment: 'Cash on Delivery',
           items: [
             { id: '4', name: 'Bhusawal Golden Bananas', price: 50, quantity: 2, image: '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg' },
             { id: '5', name: 'Lay's Magic Masala Chips', price: 20, quantity: 3, image: 'https://www.bbassets.com/media/uploads/p/l/102739_10-lays-potato-chips-indias-magic-masala.jpg' }
@@ -198,6 +250,7 @@ import Switcher from '../components/Switcher.astro';
           status: 'Delivered',
           total: 450,
           address: 'Flat 3B, Ordnance Factory Colony, Bhusawal',
+          payment: 'UPI (PhonePe)',
           items: [
             { id: '6', name: 'Brooke Bond Red Label Tea (250g)', price: 140, quantity: 2, image: 'https://www.bbassets.com/media/uploads/p/l/266542_9-brooke-bond-red-label-tea.jpg' },
             { id: '7', name: 'Amul Pasteurised Butter (100g)', price: 58, quantity: 2, image: 'https://www.bbassets.com/media/uploads/p/l/100001_19-amul-butter-pasteurised.jpg' }
@@ -223,20 +276,20 @@ import Switcher from '../components/Switcher.astro';
         const allOrders = getAllOrders();
         const container = document.getElementById('orders-cards-container');
 
-        // Update Counts
-        const activeCount = allOrders.filter(o => o.status === 'Confirmed' || o.status === 'Processing' || o.status === 'Out for Delivery').length;
-        const deliveredCount = allOrders.filter(o => o.status === 'Delivered').length;
-        const cancelledCount = allOrders.filter(o => o.status === 'Cancelled').length;
+        // Filter categories counts
+        const activeOrders = allOrders.filter(o => o.status === 'Confirmed' || o.status === 'Processing' || o.status === 'Out for Delivery');
+        const pastOrders = allOrders.filter(o => o.status === 'Delivered');
+        const cancelledOrders = allOrders.filter(o => o.status === 'Cancelled');
 
         document.getElementById('count-all').textContent = allOrders.length;
-        document.getElementById('count-active').textContent = activeCount;
-        document.getElementById('count-delivered').textContent = deliveredCount;
-        document.getElementById('count-cancelled').textContent = cancelledCount;
+        document.getElementById('count-active').textContent = activeOrders.length;
+        document.getElementById('count-past').textContent = pastOrders.length;
+        document.getElementById('count-cancelled').textContent = cancelledOrders.length;
 
-        // Apply Filter & Search
+        // Apply Tab Filter & Search
         let filtered = allOrders.filter(o => {
           if (currentFilter === 'active') return o.status === 'Confirmed' || o.status === 'Processing' || o.status === 'Out for Delivery';
-          if (currentFilter === 'delivered') return o.status === 'Delivered';
+          if (currentFilter === 'past') return o.status === 'Delivered';
           if (currentFilter === 'cancelled') return o.status === 'Cancelled';
           return true;
         });
@@ -255,7 +308,7 @@ import Switcher from '../components/Switcher.astro';
             <div class="bg-white rounded-3xl p-8 text-center space-y-3 border border-slate-100">
               <span class="material-symbols-outlined text-4xl text-slate-300">search_off</span>
               <h3 class="text-base font-black text-slate-800">No orders found</h3>
-              <p class="text-xs font-bold text-slate-400">Try adjusting your filter or search query</p>
+              <p class="text-xs font-bold text-slate-400">Try adjusting your search query or switching tabs</p>
             </div>
           `;
           return;
@@ -267,80 +320,125 @@ import Switcher from '../components/Switcher.astro';
           const status = order.status || 'Delivered';
           const total = order.total || 0;
           const address = order.address || 'Bhusawal';
+          const payment = order.payment || 'UPI';
           const dateStr = order.date ? new Date(order.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recent';
           const items = order.items || [];
           const itemCount = items.length;
 
-          // Status Badge Styling
-          let statusBadgeHtml = '<span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black">✓ Delivered</span>';
           const isActive = status === 'Confirmed' || status === 'Processing' || status === 'Out for Delivery';
           
+          let statusBadgeHtml = '<span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black flex items-center gap-1">✓ Delivered</span>';
           if (isActive) {
-            statusBadgeHtml = '<span class="px-3 py-1 rounded-full bg-purple-100 text-purpleBrand text-xs font-black animate-pulse">⚡ Active / Out for Delivery</span>';
+            statusBadgeHtml = '<span class="px-3 py-1 rounded-full bg-purple-100 text-purpleBrand text-xs font-black flex items-center gap-1 animate-pulse"><span class="w-2 h-2 rounded-full bg-purpleBrand"></span> In Progress</span>';
           } else if (status === 'Cancelled') {
             statusBadgeHtml = '<span class="px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-black">× Cancelled</span>';
           }
 
           html += `
-            <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4 hover:border-purple-200 transition-all">
+            <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-5 hover:border-purple-200 transition-all">
               
-              <!-- Card Header -->
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+              <!-- Card Header: ID, Date, Status, Total -->
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
                 <div>
                   <div class="flex items-center gap-2">
                     <h3 class="text-base font-black font-display text-slate-900">Order #${id}</h3>
                     ${statusBadgeHtml}
                   </div>
-                  <p class="text-xs font-bold text-slate-400 mt-0.5">Placed on ${dateStr} • ${itemCount} ${itemCount === 1 ? 'item' : 'items'}</p>
+                  <p class="text-xs font-bold text-slate-400 mt-0.5">Placed on ${dateStr} • ${itemCount} ${itemCount === 1 ? 'item' : 'items'} • Payment: ${payment}</p>
                 </div>
                 <div class="text-left sm:text-right">
-                  <span class="text-sm font-black font-display text-slate-900 block">Total: ₹${total}</span>
-                  <span class="text-[10px] font-semibold text-slate-400">MRP Pricing</span>
+                  <span class="text-base font-black font-display text-purpleBrand block">Total: ₹${total}</span>
+                  <span class="text-[10px] font-bold text-slate-400">Includes ₹30 Fixed Delivery</span>
                 </div>
               </div>
 
-              <!-- Item Thumbnails Preview -->
-              <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
-                ${items.map(i => `
-                  <div class="flex items-center gap-2 p-1.5 bg-slate-50 rounded-xl border border-slate-100 shrink-0">
-                    <img src="${i.image || i.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'}" alt="${i.name}" class="w-10 h-10 object-contain rounded-lg bg-white p-0.5" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-                    <div>
-                      <h4 class="text-xs font-extrabold text-slate-800 max-w-[120px] truncate">${i.name}</h4>
-                      <p class="text-[10px] font-bold text-slate-400">Qty: ${i.quantity || 1} × ₹${i.price}</p>
-                    </div>
+              <!-- ORDER TIMELINE STAGES (ORDER PLACED -> PREPARING -> DISPATCHED -> DELIVERED) -->
+              <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100/90 space-y-2">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Order Timeline Status:</span>
+                <div class="grid grid-cols-4 gap-1 text-center text-[10px] font-extrabold">
+                  
+                  <div class="space-y-1">
+                    <div class="w-7 h-7 rounded-full bg-purpleBrand text-white mx-auto flex items-center justify-center text-xs shadow-xs">✓</div>
+                    <span class="text-slate-900 block leading-tight">Order Placed</span>
                   </div>
-                `).join('')}
+
+                  <div class="space-y-1">
+                    <div class="w-7 h-7 rounded-full ${isActive ? 'bg-purpleBrand text-white animate-bounce' : 'bg-emerald-500 text-white'} mx-auto flex items-center justify-center text-xs shadow-xs">👨‍🍳</div>
+                    <span class="text-slate-900 block leading-tight">Store Packing</span>
+                  </div>
+
+                  <div class="space-y-1">
+                    <div class="w-7 h-7 rounded-full ${status === 'Delivered' ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400'} mx-auto flex items-center justify-center text-xs">🛵</div>
+                    <span class="${status === 'Delivered' ? 'text-slate-900' : 'text-slate-400'} block leading-tight">Out for Delivery</span>
+                  </div>
+
+                  <div class="space-y-1">
+                    <div class="w-7 h-7 rounded-full ${status === 'Delivered' ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400'} mx-auto flex items-center justify-center text-xs">🏡</div>
+                    <span class="${status === 'Delivered' ? 'text-slate-900' : 'text-slate-400'} block leading-tight">Delivered</span>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- Item Thumbnails Preview Grid -->
+              <div class="space-y-2">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Order Items:</span>
+                <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+                  ${items.map(i => `
+                    <div class="flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-100 shrink-0">
+                      <img src="${i.image || i.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'}" alt="${i.name}" class="w-10 h-10 object-contain rounded-lg bg-white p-0.5 border" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                      <div>
+                        <h4 class="text-xs font-extrabold text-slate-800 max-w-[130px] truncate">${i.name}</h4>
+                        <p class="text-[10px] font-bold text-slate-400">Qty: ${i.quantity || 1} × ₹${i.price}</p>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
               </div>
 
               <!-- Address Line -->
-              <p class="text-xs font-bold text-slate-500 flex items-center gap-1">
-                <span class="material-symbols-outlined text-sm text-purpleBrand">location_on</span>
+              <div class="text-xs font-bold text-slate-600 flex items-center gap-1.5 pt-1">
+                <span class="material-symbols-outlined text-sm text-purpleBrand shrink-0">location_on</span>
                 <span class="truncate">${address}</span>
-              </p>
+              </div>
 
-              <!-- Action Buttons Row -->
-              <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
-                <div class="flex gap-2">
-                  ${isActive ? `
-                    <a href="/track_order?orderId=${id}" class="px-4 py-2 bg-purpleBrand hover:bg-purpleDark text-white text-xs font-black rounded-xl shadow-xs transition-all flex items-center gap-1">
-                      <span class="material-symbols-outlined text-sm">near_me</span>
-                      <span>Track Rider</span>
-                    </a>
-                    <button class="btn-cancel-order px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-black rounded-xl border border-rose-200 transition-all" data-id="${id}">
-                      Cancel Order
-                    </button>
-                  ` : `
-                    <button class="btn-repeat-order px-4 py-2 bg-purpleBrand hover:bg-purpleDark text-white text-xs font-black rounded-xl shadow-xs transition-all flex items-center gap-1" data-id="${id}">
-                      <span class="material-symbols-outlined text-sm">replay</span>
-                      <span>Repeat Order</span>
-                    </button>
-                  `}
+              <!-- ACTION BUTTONS BAR (TRACK ORDER, REPEAT ORDER, CALL STORE, SUPPORT, INVOICE) -->
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100">
+                
+                <div class="flex flex-wrap items-center gap-2">
+                  <!-- Track Order Button (Prepared for future tracking) -->
+                  <button class="btn-track-order px-3.5 py-2 bg-purpleBrand hover:bg-purpleDark text-white text-xs font-black rounded-xl shadow-xs transition-all flex items-center gap-1.5 active:scale-95" data-id="${id}">
+                    <span class="material-symbols-outlined text-sm">near_me</span>
+                    <span>Track Order</span>
+                  </button>
+
+                  <!-- Repeat Order Button -->
+                  <button class="btn-repeat-order px-3.5 py-2 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 active:scale-95" data-id="${id}">
+                    <span class="material-symbols-outlined text-sm">replay</span>
+                    <span>Repeat Order</span>
+                  </button>
                 </div>
 
-                <button class="btn-view-invoice px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-black rounded-xl border border-slate-200 transition-all flex items-center gap-1" data-id="${id}">
-                  <span class="material-symbols-outlined text-sm">receipt_long</span>
-                  <span>Invoice</span>
-                </button>
+                <div class="flex flex-wrap items-center gap-2">
+                  <!-- Call Store -->
+                  <a href="tel:+919923456789" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black rounded-xl border border-slate-200 transition-all flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">call</span>
+                    <span>Call Store</span>
+                  </a>
+
+                  <!-- Support -->
+                  <a href="https://wa.me/919923456789?text=Help%20with%20Order%20${id}" target="_blank" class="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-black rounded-xl border border-emerald-200 transition-all flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">support_agent</span>
+                    <span>Support</span>
+                  </a>
+
+                  <!-- Tax Invoice Modal -->
+                  <button class="btn-view-invoice px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black rounded-xl transition-all flex items-center gap-1" data-id="${id}">
+                    <span class="material-symbols-outlined text-sm">receipt_long</span>
+                    <span>Invoice</span>
+                  </button>
+                </div>
+
               </div>
 
             </div>
@@ -354,6 +452,15 @@ import Switcher from '../components/Switcher.astro';
       }
 
       function bindOrderActions() {
+        // Track Order Modal (Prepared for Future Tracking)
+        document.querySelectorAll('.btn-track-order').forEach(btn => {
+          btn.onclick = () => {
+            const id = btn.dataset.id;
+            document.getElementById('track-modal-order-id').textContent = 'Order #' + id;
+            document.getElementById('tracking-prep-modal').classList.remove('hidden');
+          };
+        });
+
         // Repeat Order Handler
         document.querySelectorAll('.btn-repeat-order').forEach(btn => {
           btn.onclick = () => {
@@ -371,24 +478,8 @@ import Switcher from '../components/Switcher.astro';
               });
 
               localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-              alert(`Items from Order #${id} added to cart! Redirecting...`);
+              alert(`Items from Order #${id} re-added to cart! Redirecting...`);
               window.location.href = '/cart';
-            }
-          };
-        });
-
-        // Cancel Order Handler
-        document.querySelectorAll('.btn-cancel-order').forEach(btn => {
-          btn.onclick = () => {
-            const id = btn.dataset.id;
-            if (confirm(`Are you sure you want to cancel Order #${id}?`)) {
-              let orders = getAllOrders();
-              const target = orders.find(o => o.id === id);
-              if (target) {
-                target.status = 'Cancelled';
-                saveOrders(orders);
-                alert(`Order #${id} has been cancelled successfully.`);
-              }
             }
           };
         });
@@ -423,10 +514,10 @@ import Switcher from '../components/Switcher.astro';
 
           html += `
             <tr>
-              <td class="py-2">${item.name}</td>
-              <td class="py-2 text-center">${qty}</td>
-              <td class="py-2 text-right">₹${price}</td>
-              <td class="py-2 text-right">₹${itemTotal}</td>
+              <td class="py-2.5">${item.name}</td>
+              <td class="py-2.5 text-center">${qty}</td>
+              <td class="py-2.5 text-right">₹${price}</td>
+              <td class="py-2.5 text-right">₹${itemTotal}</td>
             </tr>
           `;
         });
@@ -447,6 +538,14 @@ import Switcher from '../components/Switcher.astro';
 
       document.getElementById('close-invoice-modal')?.addEventListener('click', () => {
         document.getElementById('invoice-modal').classList.add('hidden');
+      });
+
+      document.getElementById('close-tracking-modal')?.addEventListener('click', () => {
+        document.getElementById('tracking-prep-modal').classList.add('hidden');
+      });
+
+      document.getElementById('close-tracking-modal-btn')?.addEventListener('click', () => {
+        document.getElementById('tracking-prep-modal').classList.add('hidden');
       });
 
       // Filter Tabs Handler
@@ -471,7 +570,7 @@ import Switcher from '../components/Switcher.astro';
         renderOrdersList();
       });
 
-      // Initial Call
+      // Initial Render
       renderOrdersList();
     });
   </script>
