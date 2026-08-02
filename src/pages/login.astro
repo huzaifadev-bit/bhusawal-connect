@@ -1,0 +1,312 @@
+---
+import Switcher from '../components/Switcher.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Login | Bhusawal Connect</title>
+  
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <script is:inline>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            purpleBrand: '#7c3aed',
+            purpleDark: '#6d28d9',
+            purpleLight: '#f3e8ff'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6 text-slate-800 antialiased">
+
+  <!-- MAIN LOGIN CARD CONTAINER -->
+  <div class="max-w-md w-full bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-2xl space-y-6 relative overflow-hidden my-auto">
+    
+    <!-- BRAND LOGO HEADER -->
+    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+      <a href="/home" class="flex items-center gap-1.5">
+        <span class="text-xl font-black font-display text-purpleBrand tracking-tight">bhusawal<span class="text-slate-900">connect</span></span>
+      </a>
+      <span class="px-2.5 py-1 bg-purple-50 text-purpleBrand text-[10px] font-black uppercase rounded-full">
+        ⚡ 10 Min App
+      </span>
+    </div>
+
+    <!-- STEP 1: MOBILE NUMBER INPUT SCREEN -->
+    <div id="step-mobile-screen" class="space-y-5 animate-in fade-in duration-300">
+      
+      <!-- WELCOME ILLUSTRATION CONTAINER -->
+      <div class="w-full h-36 rounded-2xl bg-gradient-to-br from-purple-50 via-indigo-50 to-purple-100 border border-purple-100 flex flex-col items-center justify-center p-4 text-center relative overflow-hidden group">
+        <div class="w-16 h-16 rounded-full bg-purpleBrand text-white flex items-center justify-center font-black shadow-lg shadow-purple-900/20 mb-2 group-hover:scale-110 transition-transform">
+          <span class="material-symbols-outlined text-3xl">shopping_cart</span>
+        </div>
+        <span class="text-xs font-black text-purpleBrand">Fastest Delivery Super-App in Bhusawal</span>
+      </div>
+
+      <!-- HEADING -->
+      <div>
+        <h1 class="text-2xl font-black font-display text-slate-900">Welcome to Bhusawal Connect</h1>
+        <p class="text-xs font-bold text-slate-400 mt-1">Enter your mobile number to receive a 4-digit OTP for instant login</p>
+      </div>
+
+      <!-- MOBILE NUMBER INPUT FORM -->
+      <div class="space-y-3">
+        <label class="text-xs font-black text-slate-700 block uppercase tracking-wider">Mobile Number</label>
+        
+        <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:border-purpleBrand transition-all">
+          <div class="flex items-center gap-1 px-3 py-1.5 bg-white rounded-xl border border-slate-200 text-xs font-black text-slate-800 shrink-0 shadow-xs">
+            <span>🇮🇳</span>
+            <span>+91</span>
+          </div>
+          <input type="tel" id="mobile-input" maxlength="10" placeholder="Enter 10-digit mobile number" class="w-full bg-transparent px-2 py-1 text-sm font-black text-slate-900 outline-none placeholder-slate-400 tracking-wider" autocomplete="tel" />
+        </div>
+
+        <!-- Validation Error Message -->
+        <p id="mobile-error-msg" class="text-[11px] font-bold text-rose-500 hidden flex items-center gap-1">
+          <span class="material-symbols-outlined text-xs">error</span>
+          <span>Please enter a valid 10-digit mobile number.</span>
+        </p>
+      </div>
+
+      <!-- SEND OTP BUTTON -->
+      <button id="btn-send-otp" class="w-full py-4 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs sm:text-sm rounded-2xl shadow-xl shadow-purple-900/20 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
+        <span id="btn-send-otp-text">Send OTP</span>
+        <span class="material-symbols-outlined text-base">arrow_forward</span>
+      </button>
+
+    </div>
+
+    <!-- STEP 2: OTP VERIFICATION SCREEN (HIDDEN INITIALLY) -->
+    <div id="step-otp-screen" class="hidden space-y-5 animate-in slide-in-from-right-4 duration-300">
+      
+      <!-- BACK BUTTON & HEADING -->
+      <div class="flex items-center gap-3">
+        <button id="btn-back-to-mobile" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+          <span class="material-symbols-outlined text-lg">arrow_back</span>
+        </button>
+        <div>
+          <h2 class="text-xl font-black font-display text-slate-900">Verify Mobile Number</h2>
+          <p class="text-xs font-bold text-slate-400 mt-0.5">OTP sent to <span id="display-mobile-number" class="text-slate-900 font-black">+91 99234 56789</span></p>
+        </div>
+      </div>
+
+      <!-- OTP DIGITS INPUT BOXES -->
+      <div class="space-y-3">
+        <label class="text-xs font-black text-slate-700 block uppercase tracking-wider">Enter 4-Digit OTP</label>
+        
+        <div class="flex items-center justify-between gap-2">
+          <input type="text" maxlength="1" class="otp-box w-14 h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-xl font-black text-slate-900 rounded-2xl outline-none transition-all" />
+          <input type="text" maxlength="1" class="otp-box w-14 h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-xl font-black text-slate-900 rounded-2xl outline-none transition-all" />
+          <input type="text" maxlength="1" class="otp-box w-14 h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-xl font-black text-slate-900 rounded-2xl outline-none transition-all" />
+          <input type="text" maxlength="1" class="otp-box w-14 h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-xl font-black text-slate-900 rounded-2xl outline-none transition-all" />
+        </div>
+
+        <!-- Demo OTP Helper Hint -->
+        <p class="text-[10px] font-extrabold text-purpleBrand text-center bg-purple-50 py-1 rounded-lg">
+          💡 Demo Hint: Enter any 4 digits (e.g. 1234) to verify
+        </p>
+
+        <!-- OTP Error Message -->
+        <p id="otp-error-msg" class="text-[11px] font-bold text-rose-500 hidden text-center">
+          Invalid OTP code. Please try again.
+        </p>
+      </div>
+
+      <!-- RESEND OTP TIMER CONTAINER -->
+      <div class="flex items-center justify-between text-xs font-bold text-slate-500 pt-1">
+        <span id="resend-timer-text">Resend OTP in <strong id="timer-seconds" class="text-slate-900 font-black">30s</strong></span>
+        <button id="btn-resend-otp" class="hidden text-purpleBrand hover:underline font-black">Resend OTP via SMS</button>
+      </div>
+
+      <!-- VERIFY & CONTINUE BUTTON -->
+      <button id="btn-verify-otp" class="w-full py-4 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs sm:text-sm rounded-2xl shadow-xl shadow-purple-900/20 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
+        <span id="btn-verify-text">Verify & Continue</span>
+        <span class="material-symbols-outlined text-base">check_circle</span>
+      </button>
+
+    </div>
+
+    <!-- STEP 3: LOGIN SUCCESS SCREEN (TEMPORARY OVERLAY BEFORE REDIRECT) -->
+    <div id="step-success-screen" class="hidden text-center py-6 space-y-4 animate-in zoom-in-95 duration-300">
+      <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-lg animate-bounce">
+        <span class="material-symbols-outlined text-5xl">check_circle</span>
+      </div>
+      <div>
+        <h2 class="text-xl font-black font-display text-slate-900">Login Successful!</h2>
+        <p class="text-xs font-bold text-slate-400 mt-1">Redirecting you to Bhusawal Connect Home...</p>
+      </div>
+      <div class="w-8 h-8 border-4 border-purpleBrand border-t-transparent rounded-full animate-spin mx-auto"></div>
+    </div>
+
+    <!-- FOOTER TERMS & PRIVACY LINKS -->
+    <div class="border-t border-slate-100 pt-4 text-center">
+      <p class="text-[10px] font-bold text-slate-400 leading-normal">
+        By continuing, you agree to Bhusawal Connect's 
+        <a href="#" class="text-purpleBrand hover:underline font-black">Terms of Service</a> & 
+        <a href="#" class="text-purpleBrand hover:underline font-black">Privacy Policy</a>
+      </p>
+    </div>
+
+  </div>
+
+  <Switcher />
+
+  <!-- CLIENT-SIDE OTP LOGIN LOGIC -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const mobileScreen = document.getElementById('step-mobile-screen');
+      const otpScreen = document.getElementById('step-otp-screen');
+      const successScreen = document.getElementById('step-success-screen');
+
+      const mobileInput = document.getElementById('mobile-input');
+      const mobileError = document.getElementById('mobile-error-msg');
+      const sendOtpBtn = document.getElementById('btn-send-otp');
+      const sendOtpText = document.getElementById('btn-send-otp-text');
+
+      const displayMobile = document.getElementById('display-mobile-number');
+      const backBtn = document.getElementById('btn-back-to-mobile');
+      const otpBoxes = document.querySelectorAll('.otp-box');
+      const otpError = document.getElementById('otp-error-msg');
+      const verifyBtn = document.getElementById('btn-verify-otp');
+      const verifyText = document.getElementById('btn-verify-text');
+
+      const timerText = document.getElementById('resend-timer-text');
+      const timerSec = document.getElementById('timer-seconds');
+      const resendBtn = document.getElementById('btn-resend-otp');
+
+      let timerInterval;
+
+      // 1. Send OTP Action
+      sendOtpBtn?.addEventListener('click', () => {
+        const val = mobileInput.value.trim();
+        if (!val || val.length !== 10 || isNaN(val)) {
+          mobileError.classList.remove('hidden');
+          return;
+        }
+        mobileError.classList.add('hidden');
+
+        // Loading animation
+        sendOtpText.textContent = 'Sending OTP...';
+        sendOtpBtn.disabled = true;
+
+        setTimeout(() => {
+          sendOtpText.textContent = 'Send OTP';
+          sendOtpBtn.disabled = false;
+
+          displayMobile.textContent = `+91 ${val}`;
+          mobileScreen.classList.add('hidden');
+          otpScreen.classList.remove('hidden');
+
+          startResendTimer();
+        }, 600);
+      });
+
+      // Allow Enter key on mobile input
+      mobileInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendOtpBtn.click();
+      });
+
+      // 2. OTP Box Auto-Focus Behavior
+      otpBoxes.forEach((box, index) => {
+        box.addEventListener('input', (e) => {
+          if (e.target.value.length === 1 && index < otpBoxes.length - 1) {
+            otpBoxes[index + 1].focus();
+          }
+        });
+
+        box.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && index > 0) {
+            otpBoxes[index - 1].focus();
+          }
+        });
+      });
+
+      // 3. Back to Mobile Entry Screen
+      backBtn?.addEventListener('click', () => {
+        clearInterval(timerInterval);
+        otpScreen.classList.add('hidden');
+        mobileScreen.classList.remove('hidden');
+      });
+
+      // 4. Start Resend Countdown Timer
+      function startResendTimer() {
+        let sec = 30;
+        timerText.classList.remove('hidden');
+        resendBtn.classList.add('hidden');
+        if (timerSec) timerSec.textContent = '30s';
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          sec--;
+          if (timerSec) timerSec.textContent = `${sec}s`;
+          if (sec <= 0) {
+            clearInterval(timerInterval);
+            timerText.classList.add('hidden');
+            resendBtn.classList.remove('hidden');
+          }
+        }, 1000);
+      }
+
+      resendBtn?.addEventListener('click', () => {
+        alert('OTP resent via SMS!');
+        startResendTimer();
+      });
+
+      // 5. Verify OTP & Submit
+      verifyBtn?.addEventListener('click', () => {
+        let enteredOtp = '';
+        otpBoxes.forEach(box => enteredOtp += box.value);
+
+        if (enteredOtp.length < 4) {
+          otpError.classList.remove('hidden');
+          return;
+        }
+        otpError.classList.add('hidden');
+
+        verifyText.textContent = 'Verifying OTP...';
+        verifyBtn.disabled = true;
+
+        setTimeout(() => {
+          // Store authentication state
+          localStorage.setItem('bhusawal_user_logged_in', 'true');
+          localStorage.setItem('bhusawal_user_mobile', mobileInput.value.trim());
+
+          otpScreen.classList.add('hidden');
+          successScreen.classList.remove('hidden');
+
+          // Redirect to Home
+          setTimeout(() => {
+            window.location.href = '/home';
+          }, 800);
+        }, 600);
+      });
+
+    });
+  </script>
+</body>
+</html>
