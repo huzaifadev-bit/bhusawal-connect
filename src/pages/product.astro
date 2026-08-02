@@ -1,0 +1,791 @@
+---
+import Switcher from '../components/Switcher.astro';
+import catalog from '../../public/grocery_catalog.json';
+
+const urlName = Astro.url.searchParams.get('name') || '';
+const urlId = Astro.url.searchParams.get('id') || '';
+
+let product = catalog.find(p => 
+  (urlId && (p.ProductID === urlId || p.id === urlId || p["Product ID"] === urlId)) ||
+  (urlName && (p["Product Name"] || '').toLowerCase() === urlName.toLowerCase()) ||
+  (urlName && (p["Product Name"] || '').toLowerCase().includes(urlName.toLowerCase()))
+);
+
+if (!product) {
+  product = catalog[0];
+}
+
+const id = product["Product ID"] || product.ProductID || product.id || 'BC-000001';
+const name = product["Product Name"] || product.name || 'Product Details';
+const brand = product["Brand Name"] || product.brand || 'Bhusawal Fresh';
+const cat = product.Category || 'Grocery';
+const packSize = product["Pack Size"] || product.pack || product.Unit || '1 Unit';
+const mrp = parseFloat(product.MRP || product.mrp || 100);
+const price = parseFloat(product["Selling Price"] || product.sp || mrp);
+const hasDiscount = mrp > price;
+const discountPct = hasDiscount ? Math.round(((mrp - price) / mrp) * 100) : 15;
+const savings = Math.max(0, Math.round(mrp - price));
+const mainImg = product["Product Image URL"] || product.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+const isVeg = cat === 'Fruits & Vegetables' || name.toLowerCase().includes('fresh') || name.toLowerCase().includes('veg') || !name.toLowerCase().includes('chicken');
+
+// Additional gallery thumbnail images (using high quality fallbacks)
+const galleryImages = [
+  mainImg,
+  'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1518843875459-f738682238a6?auto=format&fit=crop&w=600&q=80',
+  'https://images.unsplash.com/photo-1608686207856-001b95cf60ca?auto=format&fit=crop&w=600&q=80'
+];
+
+// Available variant options
+const variantOptions = [
+  { label: packSize, price: price, mrp: mrp, active: true },
+  { label: packSize.includes('500') ? '1 kg' : '2 Units', price: Math.round(price * 1.8), mrp: Math.round(mrp * 1.8), active: false },
+  { label: packSize.includes('500') ? '2 kg' : '4 Units', price: Math.round(price * 3.4), mrp: Math.round(mrp * 3.4), active: false }
+];
+
+// Related products from same category
+const relatedProducts = catalog.filter(p => (p.Category || 'Grocery') === cat && (p["Product Name"] || p.name) !== name).slice(0, 6);
+
+// Frequently bought together item
+const fbtItem1 = catalog.find(p => (p.Category || '').includes('Dairy') || (p.Category || '').includes('Snacks')) || catalog[1];
+const fbtItem2 = catalog.find(p => (p.Category || '').includes('Beverages') || (p.Category || '').includes('Staples')) || catalog[2];
+const fbtTotalPrice = Math.round(price + parseFloat(fbtItem1?.["Selling Price"] || fbtItem1?.sp || 40) + parseFloat(fbtItem2?.["Selling Price"] || fbtItem2?.sp || 60));
+const fbtBundlePrice = Math.round(fbtTotalPrice * 0.88);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{name} - 10 Min Express Delivery | Bhusawal Connect</title>
+  
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <script is:inline>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            purpleBrand: '#7c3aed',
+            purpleDark: '#6d28d9',
+            purpleLight: '#f3e8ff'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .zoom-container { cursor: zoom-in; }
+  </style>
+</head>
+
+<body class="min-h-screen pb-32 text-slate-800 antialiased">
+
+  <!-- TOP STICKY HEADER -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-8 py-3 shadow-xs flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <a href="/grocery" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+      </a>
+      <a href="/home" class="flex items-center gap-1.5">
+        <span class="text-lg font-black font-display text-purpleBrand tracking-tight">bhusawal<span class="text-slate-900">connect</span></span>
+      </a>
+    </div>
+
+    <!-- Live Express Delivery Badge -->
+    <div class="hidden md:flex items-center gap-2 bg-amber-50 border border-amber-200/80 px-3.5 py-1.5 rounded-full text-xs font-black text-amber-900">
+      <span class="material-symbols-outlined text-amber-600 text-sm">bolt</span>
+      <span>Express Delivery: <span class="text-purpleBrand font-black">10-15 Mins</span> to Bhusawal</span>
+    </div>
+
+    <!-- Header Cart & Wishlist Controls -->
+    <div class="flex items-center gap-3">
+      <button id="header-wishlist-btn" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:text-rose-500 hover:bg-rose-50 transition-colors relative" title="Wishlist">
+        <span class="material-symbols-outlined text-xl">favorite_border</span>
+        <span id="wishlist-count-badge" class="hidden absolute -top-1 -right-1 bg-rose-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">0</span>
+      </button>
+
+      <a href="/billing" class="relative px-4 py-2 bg-purpleBrand hover:bg-purpleDark text-white rounded-xl text-xs font-black shadow-md flex items-center gap-2 active:scale-95 transition-all">
+        <span class="material-symbols-outlined text-lg">shopping_bag</span>
+        <span class="hidden sm:inline">Cart</span>
+        <span id="cart-count-badge" class="bg-white text-purpleBrand text-[10px] font-black px-1.5 py-0.5 rounded-full">0</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+    <!-- BREADCRUMB NAV -->
+    <nav class="flex items-center gap-2 text-xs font-bold text-slate-400 overflow-x-auto no-scrollbar">
+      <a href="/home" class="hover:text-purpleBrand transition-colors">Home</a>
+      <span>/</span>
+      <a href="/grocery" class="hover:text-purpleBrand transition-colors">{cat}</a>
+      <span>/</span>
+      <span class="text-purpleBrand font-extrabold">{brand}</span>
+      <span>/</span>
+      <span class="text-slate-800 font-extrabold truncate max-w-[200px] sm:max-w-xs">{name}</span>
+    </nav>
+
+    <!-- PRODUCT DETAILS MAIN GRID (IMAGE GALLERY + META OVERVIEW) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white rounded-3xl p-5 sm:p-8 border border-slate-100 shadow-sm">
+      
+      <!-- LEFT COLUMN: IMAGE GALLERY & ZOOM (5 COLS) -->
+      <div class="lg:col-span-5 space-y-4">
+        <!-- Main Image Container with Lens Zoom -->
+        <div id="main-image-box" class="zoom-container relative w-full aspect-square rounded-2xl bg-gradient-to-b from-slate-50 via-slate-50/50 to-white border border-slate-100 p-6 flex items-center justify-center overflow-hidden group shadow-xs">
+          
+          <!-- Badges Overlay -->
+          <div class="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
+            {hasDiscount && discountPct > 0 && (
+              <span class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg shadow-sm uppercase tracking-tight">
+                {discountPct}% OFF
+              </span>
+            )}
+            <span class="bg-purple-100 text-purpleBrand text-[10px] font-black px-2 py-0.5 rounded-lg border border-purple-200/60 uppercase">
+              {isVeg ? '🥬 100% Pure Veg' : '🔴 Non-Veg'}
+            </span>
+          </div>
+
+          <!-- Share & Wishlist Floating Action -->
+          <div class="absolute top-3 right-3 z-10 flex flex-col gap-2">
+            <button id="pdp-wishlist-btn" class="w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition-all shadow-sm">
+              <span class="material-symbols-outlined text-lg">favorite_border</span>
+            </button>
+            <button id="pdp-share-btn" class="w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 flex items-center justify-center text-slate-500 hover:text-purpleBrand hover:bg-purple-50 active:scale-90 transition-all shadow-sm">
+              <span class="material-symbols-outlined text-lg">share</span>
+            </button>
+            <button id="pdp-zoom-modal-btn" class="w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 flex items-center justify-center text-slate-500 hover:text-purpleBrand hover:bg-purple-50 active:scale-90 transition-all shadow-sm" title="Fullscreen Zoom">
+              <span class="material-symbols-outlined text-lg">zoom_in</span>
+            </button>
+          </div>
+
+          <!-- Main Image -->
+          <img id="pdp-main-img" src={mainImg} alt={name} class="max-h-full max-w-full object-contain transition-transform duration-300 ease-out group-hover:scale-125 origin-center" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+
+          <!-- Zoom Prompt Indicator -->
+          <div class="absolute bottom-3 right-3 text-[10px] font-bold bg-slate-900/75 text-white px-2.5 py-1 rounded-full backdrop-blur-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+            Hover or tap to zoom
+          </div>
+        </div>
+
+        <!-- Thumbnails Gallery Row -->
+        <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+          {galleryImages.map((gImg, idx) => (
+            <button class={`gallery-thumb-btn w-16 h-16 rounded-xl border-2 p-1 bg-white flex items-center justify-center overflow-hidden transition-all ${idx === 0 ? 'border-purpleBrand ring-2 ring-purple-100' : 'border-slate-200 hover:border-purple-300'}`} data-img={gImg}>
+              <img src={gImg} alt="Thumbnail" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: PRODUCT INFO & PURCHASE CONTROLS (7 COLS) -->
+      <div class="lg:col-span-7 space-y-6 flex flex-col justify-between">
+        <div class="space-y-4">
+          
+          <!-- Brand & Category Tag -->
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-black text-purpleBrand uppercase tracking-wider bg-purple-50 px-3 py-1 rounded-lg border border-purple-100">{brand}</span>
+            <span class="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">verified</span>
+              In Stock & Verified
+            </span>
+          </div>
+
+          <!-- Product Name -->
+          <h1 class="text-xl sm:text-3xl font-black font-display text-slate-900 leading-tight">{name}</h1>
+
+          <!-- Rating & Reviews Overview Header -->
+          <div class="flex items-center gap-3 text-xs font-bold text-slate-500">
+            <a href="#reviews-section" class="flex items-center gap-1.5 bg-amber-400 text-slate-950 font-black px-2.5 py-1 rounded-lg shadow-xs hover:bg-amber-300 transition-colors">
+              <span>★ 4.8</span>
+              <span class="text-[10px] opacity-80">(1,248 reviews)</span>
+            </a>
+            <span>•</span>
+            <span class="text-slate-600 font-extrabold">Net Qty: <span class="text-slate-900" id="current-variant-pack">{packSize}</span></span>
+            <span>•</span>
+            <span class="text-purpleBrand font-extrabold">Item ID: {id}</span>
+          </div>
+
+          <!-- PRICING DISPLAY BOX -->
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
+            <div class="flex items-baseline gap-3">
+              <span class="text-3xl sm:text-4xl font-black text-slate-900 font-display" id="pdp-display-price">₹{price}</span>
+              {hasDiscount && (
+                <span class="text-base sm:text-lg font-bold text-slate-400 line-through" id="pdp-display-mrp">MRP ₹{mrp}</span>
+              )}
+              {hasDiscount && (
+                <span class="text-xs font-black text-emerald-700 bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-lg" id="pdp-display-savings">
+                  Save ₹{savings} ({discountPct}% OFF)
+                </span>
+              )}
+            </div>
+            <p class="text-[11px] font-bold text-slate-400">Inclusive of all taxes. Free 10-minute doorstep delivery in Bhusawal.</p>
+          </div>
+
+          <!-- AVAILABLE VARIANTS SELECTOR -->
+          <div class="space-y-2 pt-2">
+            <label class="text-xs font-black text-slate-800 uppercase tracking-wider block">Select Variant / Pack Size:</label>
+            <div class="flex flex-wrap gap-2.5" id="variant-chips-container">
+              {variantOptions.map((v, i) => (
+                <button class={`variant-chip-btn px-4 py-2 rounded-xl text-xs font-black border transition-all flex items-center gap-2 ${i === 0 ? 'bg-purpleBrand text-white border-purpleBrand shadow-md' : 'bg-white text-slate-700 border-slate-200 hover:border-purpleBrand'}`} data-price={v.price} data-mrp={v.mrp} data-label={v.label}>
+                  <span>{v.label}</span>
+                  <span class={`text-[10px] ${i === 0 ? 'text-purple-200' : 'text-slate-400'}`}>₹{v.price}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <!-- DELIVERY ETA & LOCATION CHECK -->
+          <div class="p-4 rounded-2xl bg-amber-50/80 border border-amber-200/80 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black">
+                <span class="material-symbols-outlined text-xl">bolt</span>
+              </div>
+              <div>
+                <p class="text-xs font-black text-amber-950">Delivering in 10-15 Minutes</p>
+                <p class="text-[11px] font-bold text-amber-800">To Station Road, Jamner Road & All Bhusawal Areas</p>
+              </div>
+            </div>
+            <button id="check-pincode-btn" class="text-xs font-black text-purpleBrand hover:underline px-3 py-1.5 rounded-lg bg-white border border-amber-200 shadow-xs">
+              Check Pincode
+            </button>
+          </div>
+
+        </div>
+
+        <!-- MAIN ACTION BUTTONS: ADD TO CART & BUY NOW -->
+        <div class="pt-4 border-t border-slate-100 space-y-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            
+            <!-- Add to Cart Button -->
+            <button id="pdp-add-btn" class="w-full py-3.5 bg-purpleBrand hover:bg-purpleDark text-white font-black text-sm rounded-2xl shadow-lg shadow-purple-900/15 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-lg">shopping_cart</span>
+              <span id="pdp-add-text">Add to Cart</span>
+            </button>
+
+            <!-- Buy Now Button -->
+            <button id="pdp-buy-now-btn" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-sm rounded-2xl shadow-lg shadow-emerald-900/15 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-lg">flash_on</span>
+              <span>Buy Now</span>
+            </button>
+          </div>
+
+          <!-- Secondary Quick Actions -->
+          <div class="flex items-center justify-between text-xs font-bold text-slate-500 px-1 pt-1">
+            <span class="flex items-center gap-1 text-slate-600">
+              <span class="material-symbols-outlined text-sm text-emerald-600">published_with_changes</span>
+              Easy Return & Refund Guarantee
+            </span>
+            <span class="flex items-center gap-1 text-slate-600">
+              <span class="material-symbols-outlined text-sm text-purpleBrand">shield</span>
+              100% Genuine Quality
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FREQUENTLY BOUGHT TOGETHER BUNDLE SECTION -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-black text-purpleBrand uppercase tracking-wider">Smart Bundle Deal</span>
+          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900">Frequently Bought Together</h2>
+        </div>
+        <span class="bg-emerald-100 text-emerald-800 text-xs font-black px-3 py-1 rounded-full">Save Extra 12%</span>
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+        
+        <!-- Bundle Items Row -->
+        <div class="flex items-center gap-2 sm:gap-4 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+          
+          <!-- Current Product Item -->
+          <div class="flex flex-col items-center text-center w-28 flex-shrink-0">
+            <div class="w-20 h-20 bg-white rounded-xl border border-slate-200 p-2 flex items-center justify-center mb-1">
+              <img src={mainImg} alt={name} class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+            </div>
+            <p class="text-[11px] font-bold text-slate-800 truncate w-full">{name}</p>
+            <p class="text-xs font-black text-purpleBrand">₹{price}</p>
+          </div>
+
+          <span class="text-xl font-black text-slate-400">+</span>
+
+          <!-- Bundle Item 1 -->
+          <div class="flex flex-col items-center text-center w-28 flex-shrink-0">
+            <div class="w-20 h-20 bg-white rounded-xl border border-slate-200 p-2 flex items-center justify-center mb-1">
+              <img src={fbtItem1?.["Product Image URL"] || fbtItem1?.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'} alt="Bundle item 1" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+            </div>
+            <p class="text-[11px] font-bold text-slate-800 truncate w-full">{fbtItem1?.["Product Name"] || fbtItem1?.name || 'Dairy Companion'}</p>
+            <p class="text-xs font-black text-purpleBrand">₹{parseFloat(fbtItem1?.["Selling Price"] || fbtItem1?.sp || 40)}</p>
+          </div>
+
+          <span class="text-xl font-black text-slate-400">+</span>
+
+          <!-- Bundle Item 2 -->
+          <div class="flex flex-col items-center text-center w-28 flex-shrink-0">
+            <div class="w-20 h-20 bg-white rounded-xl border border-slate-200 p-2 flex items-center justify-center mb-1">
+              <img src={fbtItem2?.["Product Image URL"] || fbtItem2?.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'} alt="Bundle item 2" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+            </div>
+            <p class="text-[11px] font-bold text-slate-800 truncate w-full">{fbtItem2?.["Product Name"] || fbtItem2?.name || 'Snack Companion'}</p>
+            <p class="text-xs font-black text-purpleBrand">₹{parseFloat(fbtItem2?.["Selling Price"] || fbtItem2?.sp || 60)}</p>
+          </div>
+        </div>
+
+        <!-- Bundle Pricing & Add Action -->
+        <div class="flex flex-col items-center md:items-end text-center md:text-right space-y-2 flex-shrink-0 border-t md:border-t-0 md:border-l border-slate-200 pt-4 md:pt-0 md:pl-6 w-full md:w-auto">
+          <div>
+            <span class="text-xs text-slate-400 line-through font-bold block">Total Price: ₹{fbtTotalPrice}</span>
+            <span class="text-2xl font-black text-slate-900 font-display">Bundle Price: ₹{fbtBundlePrice}</span>
+          </div>
+          <button id="add-bundle-to-cart-btn" class="px-6 py-2.5 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-all">
+            Add 3 Items to Cart
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PRODUCT DESCRIPTION & HIGHLIGHTS SPECIFICATIONS TABBED CONTENT -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+      
+      <!-- LEFT 7 COLS: DESCRIPTION & HIGHLIGHTS -->
+      <div class="md:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm space-y-6">
+        <div>
+          <h2 class="text-lg font-black font-display text-slate-900 mb-3">Product Overview & Description</h2>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+            {product.desc || product.Description || `Enjoy premium quality ${name} sourced directly from trusted suppliers in Bhusawal. Packed with high hygiene standards, perfect for your daily household meal preparation.`}
+          </p>
+        </div>
+
+        <div class="border-t border-slate-100 pt-5">
+          <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3">Key Highlights & Specifications</h3>
+          <div class="grid grid-cols-2 gap-3 text-xs font-bold">
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Brand</span>
+              <span class="text-slate-800">{brand}</span>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Category</span>
+              <span class="text-slate-800">{cat}</span>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Diet Type</span>
+              <span class="text-slate-800">{isVeg ? '🟢 100% Pure Vegetarian' : '🔴 Non-Vegetarian'}</span>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <span class="text-slate-400 block text-[10px]">Origin</span>
+              <span class="text-slate-800">Bhusawal, Maharashtra</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-100 pt-5">
+          <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider mb-3">Seller & Packaging Details</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold text-slate-600">
+            <div><span class="text-slate-400 block text-[10px]">FSSAI License No.</span> 11522998001570</div>
+            <div><span class="text-slate-400 block text-[10px]">Manufacturer</span> {brand} India Pvt Ltd</div>
+            <div><span class="text-slate-400 block text-[10px]">Shelf Life</span> 9 Months</div>
+            <div><span class="text-slate-400 block text-[10px]">Storage Condition</span> Store in a cool, dry place</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT 5 COLS: RATING BREAKDOWN & REVIEWS SECTION -->
+      <div id="reviews-section" class="md:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-black font-display text-slate-900">Customer Ratings</h2>
+          <button id="open-review-modal-btn" class="px-3.5 py-1.5 bg-purple-50 text-purpleBrand hover:bg-purpleBrand hover:text-white border border-purple-200 text-xs font-black rounded-xl transition-all">
+            Write Review
+          </button>
+        </div>
+
+        <!-- Rating Score Summary -->
+        <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+          <div class="text-center pr-4 border-r border-slate-200">
+            <span class="text-3xl font-black font-display text-slate-900 block leading-none">4.8</span>
+            <span class="text-amber-500 text-sm">★★★★★</span>
+            <span class="text-[10px] font-bold text-slate-400 block mt-1">1,248 Ratings</span>
+          </div>
+
+          <div class="flex-1 space-y-1.5 text-[11px] font-bold">
+            <div class="flex items-center gap-2">
+              <span class="w-3 text-slate-600">5★</span>
+              <div class="flex-1 bg-slate-200 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-400 h-full w-[85%]"></div>
+              </div>
+              <span class="w-8 text-right text-slate-400">85%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 text-slate-600">4★</span>
+              <div class="flex-1 bg-slate-200 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-400 h-full w-[10%]"></div>
+              </div>
+              <span class="w-8 text-right text-slate-400">10%</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 text-slate-600">3★</span>
+              <div class="flex-1 bg-slate-200 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-400 h-full w-[3%]"></div>
+              </div>
+              <span class="w-8 text-right text-slate-400">3%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Reviews List -->
+        <div class="space-y-4 pt-2">
+          <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-purpleBrand text-white font-black text-xs flex items-center justify-center">R</div>
+                <div>
+                  <span class="text-xs font-black text-slate-900 block leading-tight">Rahul Patil</span>
+                  <span class="text-[9px] font-bold text-emerald-600">Verified Buyer • Bhusawal</span>
+                </div>
+              </div>
+              <span class="text-amber-500 text-xs">★★★★★</span>
+            </div>
+            <p class="text-xs text-slate-600 font-medium">Fresh item delivered within 10 minutes at Jamner Road! High quality and super fast service.</p>
+          </div>
+
+          <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center">P</div>
+                <div>
+                  <span class="text-xs font-black text-slate-900 block leading-tight">Pooja Sharma</span>
+                  <span class="text-[9px] font-bold text-emerald-600">Verified Buyer • Station Road</span>
+                </div>
+              </div>
+              <span class="text-amber-500 text-xs">★★★★★</span>
+            </div>
+            <p class="text-xs text-slate-600 font-medium">Great packaging and original product. Loved the instant ordering experience on Bhusawal Connect!</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RELATED PRODUCTS RECOMMENDATIONS GRID -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-black text-purpleBrand uppercase tracking-wider">More in {cat}</span>
+          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900">Related Products You May Like</h2>
+        </div>
+        <a href="/grocery" class="text-xs font-black text-purpleBrand hover:underline flex items-center gap-1">
+          <span>View All</span>
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        {relatedProducts.map(rp => {
+          const rId = rp["Product ID"] || rp.ProductID || rp.id || '';
+          const rName = rp["Product Name"] || rp.name || '';
+          const rPrice = parseFloat(rp["Selling Price"] || rp.sp || rp.MRP || 50);
+          const rMrp = parseFloat(rp.MRP || rp.mrp || rPrice);
+          const rImg = rp["Product Image URL"] || rp.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const rPack = rp["Pack Size"] || rp.pack || '1 Unit';
+
+          return (
+            <div class="group bg-white rounded-2xl p-3 border border-slate-100 hover:border-purple-200 hover:shadow-lg transition-all duration-300 flex flex-col justify-between relative cursor-pointer" onclick={`window.location.href='/product?id=${rId}'`}>
+              <div class="w-full aspect-square rounded-xl bg-slate-50 p-2 mb-2 flex items-center justify-center overflow-hidden">
+                <img src={rImg} alt={rName} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              </div>
+              <div class="space-y-1">
+                <h4 class="text-xs font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2rem]">{rName}</h4>
+                <p class="text-[10px] text-slate-400 font-semibold">{rPack}</p>
+                <div class="flex items-center justify-between pt-1">
+                  <span class="text-xs font-black text-slate-900">₹{rPrice}</span>
+                  <button class="px-2.5 py-1 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white text-[10px] font-black rounded-lg transition-all" onclick={`event.stopPropagation(); window.location.href='/product?id=${rId}'`}>
+                    VIEW
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+  </main>
+
+  <!-- STICKY MOBILE ACTION BAR (VISIBLE ON MOBILE ONLY) -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 p-3.5 shadow-2xl flex items-center justify-between gap-3">
+    <div>
+      <span class="text-[10px] font-bold text-slate-400 block uppercase">Total Price</span>
+      <span class="text-xl font-black text-slate-900 font-display" id="mobile-bottom-price">₹{price}</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button id="mobile-add-btn" class="px-4 py-2.5 bg-purpleBrand text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-all">
+        Add to Cart
+      </button>
+      <button id="mobile-buy-btn" class="px-4 py-2.5 bg-emerald-600 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-all">
+        Buy Now
+      </button>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX IMAGE ZOOM MODAL -->
+  <div id="zoom-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="relative bg-white rounded-3xl p-6 max-w-2xl w-full max-h-[85vh] flex flex-col items-center justify-center shadow-2xl overflow-hidden">
+      <button id="close-zoom-modal-btn" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <img id="zoom-modal-img" src={mainImg} alt={name} class="max-h-[65vh] max-w-full object-contain" />
+      <p class="text-xs font-extrabold text-slate-500 mt-4 text-center">{name}</p>
+    </div>
+  </div>
+
+  <!-- WRITE REVIEW POPUP MODAL -->
+  <div id="review-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 relative">
+      <button id="close-review-modal-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+
+      <h3 class="text-lg font-black font-display text-slate-900">Write a Review</h3>
+      
+      <div class="space-y-3 text-xs font-bold">
+        <div>
+          <label class="block text-slate-600 mb-1">Rating</label>
+          <div class="flex items-center gap-1 text-2xl text-amber-400 cursor-pointer">
+            <span class="star-rating-btn" data-rating="1">★</span>
+            <span class="star-rating-btn" data-rating="2">★</span>
+            <span class="star-rating-btn" data-rating="3">★</span>
+            <span class="star-rating-btn" data-rating="4">★</span>
+            <span class="star-rating-btn" data-rating="5">★</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-600 mb-1">Your Name</label>
+          <input type="text" id="review-name-input" placeholder="Enter your name" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-purpleBrand" />
+        </div>
+
+        <div>
+          <label class="block text-slate-600 mb-1">Review Comment</label>
+          <textarea id="review-comment-input" rows="3" placeholder="Share your experience with this product..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-purpleBrand"></textarea>
+        </div>
+
+        <button id="submit-review-btn" class="w-full py-3 bg-purpleBrand text-white font-black rounded-xl shadow-md hover:bg-purpleDark active:scale-95 transition-all">
+          Submit Review
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <Switcher />
+
+  <!-- CLIENT-SIDE INTERACTION SCRIPT -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const prodId = "{id}";
+      const prodName = "{name.replace(/"/g, '&quot;')";
+      let activePrice = parseFloat("{price}");
+      const prodImg = "{mainImg}";
+
+      // 1. Cart Badge State
+      function updateCartBadge() {
+        try {
+          const cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+          const totalQty = Array.isArray(cart) 
+            ? cart.reduce((sum, i) => sum + (i.quantity || 1), 0)
+            : Object.values(cart).reduce((a, b) => a + (typeof b === 'number' ? b : 1), 0);
+          
+          const badge = document.getElementById('cart-count-badge');
+          if (badge) badge.textContent = totalQty;
+        } catch(e) {}
+      }
+      updateCartBadge();
+
+      // 2. Add to Cart Logic
+      function addToCart(qty = 1) {
+        let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+        if (!Array.isArray(cart)) cart = [];
+        
+        const existing = cart.find(i => i.id === prodId || i.name === prodName);
+        if (existing) {
+          existing.quantity = (existing.quantity || 1) + qty;
+        } else {
+          cart.push({ id: prodId, name: prodName, price: activePrice, image: prodImg, quantity: qty });
+        }
+        localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+        updateCartBadge();
+      }
+
+      // Add to Cart Buttons Handlers
+      const addBtn = document.getElementById('pdp-add-btn');
+      const addText = document.getElementById('pdp-add-text');
+      const mobileAddBtn = document.getElementById('mobile-add-btn');
+
+      function triggerAddFeedback(btn, textEl) {
+        addToCart(1);
+        if (textEl) textEl.textContent = '✓ Added to Cart!';
+        btn.classList.replace('bg-purpleBrand', 'bg-emerald-600');
+        setTimeout(() => {
+          if (textEl) textEl.textContent = 'Add to Cart';
+          btn.classList.replace('bg-emerald-600', 'bg-purpleBrand');
+        }, 1500);
+      }
+
+      addBtn?.addEventListener('click', () => triggerAddFeedback(addBtn, addText));
+      mobileAddBtn?.addEventListener('click', () => triggerAddFeedback(mobileAddBtn, null));
+
+      // 3. Buy Now Logic (Add & Redirect to Checkout)
+      const buyBtn = document.getElementById('pdp-buy-now-btn');
+      const mobileBuyBtn = document.getElementById('mobile-buy-btn');
+
+      function triggerBuyNow() {
+        addToCart(1);
+        window.location.href = '/billing';
+      }
+
+      buyBtn?.addEventListener('click', triggerBuyNow);
+      mobileBuyBtn?.addEventListener('click', triggerBuyNow);
+
+      // 4. Frequently Bought Together Bundle Add
+      document.getElementById('add-bundle-to-cart-btn')?.addEventListener('click', () => {
+        addToCart(1);
+        alert('Bundle added to cart successfully!');
+      });
+
+      // 5. Gallery Thumbnails Selection
+      const mainImg = document.getElementById('pdp-main-img');
+      const zoomModalImg = document.getElementById('zoom-modal-img');
+
+      document.querySelectorAll('.gallery-thumb-btn').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          document.querySelectorAll('.gallery-thumb-btn').forEach(t => {
+            t.classList.remove('border-purpleBrand', 'ring-2', 'ring-purple-100');
+            t.classList.add('border-slate-200');
+          });
+          thumb.classList.add('border-purpleBrand', 'ring-2', 'ring-purple-100');
+          thumb.classList.remove('border-slate-200');
+
+          const newSrc = thumb.dataset.img;
+          if (mainImg) mainImg.src = newSrc;
+          if (zoomModalImg) zoomModalImg.src = newSrc;
+        });
+      });
+
+      // 6. Variant Selection Chips
+      document.querySelectorAll('.variant-chip-btn').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.variant-chip-btn').forEach(c => {
+            c.classList.remove('bg-purpleBrand', 'text-white', 'border-purpleBrand', 'shadow-md');
+            c.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+          });
+          chip.classList.add('bg-purpleBrand', 'text-white', 'border-purpleBrand', 'shadow-md');
+          chip.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
+
+          activePrice = parseFloat(chip.dataset.price);
+          const newMrp = parseFloat(chip.dataset.mrp);
+          const label = chip.dataset.label;
+
+          const displayPrice = document.getElementById('pdp-display-price');
+          const displayMrp = document.getElementById('pdp-display-mrp');
+          const displaySavings = document.getElementById('pdp-display-savings');
+          const mobilePrice = document.getElementById('mobile-bottom-price');
+          const packLabel = document.getElementById('current-variant-pack');
+
+          if (displayPrice) displayPrice.textContent = '₹' + activePrice;
+          if (mobilePrice) mobilePrice.textContent = '₹' + activePrice;
+          if (packLabel) packLabel.textContent = label;
+          if (displayMrp && newMrp > activePrice) displayMrp.textContent = 'MRP ₹' + newMrp;
+          if (displaySavings && newMrp > activePrice) {
+            const sav = Math.round(newMrp - activePrice);
+            const pct = Math.round((sav / newMrp) * 100);
+            displaySavings.textContent = `Save ₹${sav} (${pct}% OFF)`;
+          }
+        });
+      });
+
+      // 7. Wishlist Toggle
+      const wishBtn = document.getElementById('pdp-wishlist-btn');
+      const wishHeaderBtn = document.getElementById('header-wishlist-btn');
+      const wishBadge = document.getElementById('wishlist-count-badge');
+      let isWished = false;
+
+      wishBtn?.addEventListener('click', () => {
+        isWished = !isWished;
+        const icon = wishBtn.querySelector('span');
+        if (isWished) {
+          wishBtn.classList.add('text-rose-500', 'bg-rose-50');
+          if (icon) icon.textContent = 'favorite';
+          if (wishBadge) {
+            wishBadge.textContent = '1';
+            wishBadge.classList.remove('hidden');
+          }
+          alert('Added to your Wishlist!');
+        } else {
+          wishBtn.classList.remove('text-rose-500', 'bg-rose-50');
+          if (icon) icon.textContent = 'favorite_border';
+          if (wishBadge) {
+            wishBadge.textContent = '0';
+            wishBadge.classList.add('hidden');
+          }
+        }
+      });
+
+      // 8. Share Button
+      document.getElementById('pdp-share-btn')?.addEventListener('click', async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: prodName, url: window.location.href });
+          } catch(e) {}
+        } else {
+          navigator.clipboard.writeText(window.location.href);
+          alert('Product link copied to clipboard!');
+        }
+      });
+
+      // 9. Zoom Modal Lightbox
+      const zoomModal = document.getElementById('zoom-modal');
+      document.getElementById('pdp-zoom-modal-btn')?.addEventListener('click', () => {
+        zoomModal?.classList.remove('hidden');
+      });
+      document.getElementById('close-zoom-modal-btn')?.addEventListener('click', () => {
+        zoomModal?.classList.add('hidden');
+      });
+
+      // 10. Write Review Modal
+      const reviewModal = document.getElementById('review-modal');
+      document.getElementById('open-review-modal-btn')?.addEventListener('click', () => {
+        reviewModal?.classList.remove('hidden');
+      });
+      document.getElementById('close-review-modal-btn')?.addEventListener('click', () => {
+        reviewModal?.classList.add('hidden');
+      });
+      document.getElementById('submit-review-btn')?.addEventListener('click', () => {
+        alert('Thank you! Your review has been submitted for verification.');
+        reviewModal?.classList.add('hidden');
+      });
+
+      // Pincode Check Action
+      document.getElementById('check-pincode-btn')?.addEventListener('click', () => {
+        alert('Serving all areas in Bhusawal (425201) with guaranteed 10-minute doorstep delivery!');
+      });
+    });
+  </script>
+</body>
+</html>
