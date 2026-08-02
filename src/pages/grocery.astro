@@ -180,28 +180,19 @@ const initialProducts = catalog.slice(0, 48);
           const brand = p["Brand Name"] || p.brand || 'Bhusawal Fresh';
           const cat = p.Category || 'Grocery';
           const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
-          const mrp = parseFloat(p.MRP || p.mrp || 0);
-          const price = parseFloat(p["Selling Price"] || p.sp || mrp);
+          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 0);
+          const price = mrp;
           const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-          const hasDiscount = mrp > price;
-          const discountPct = hasDiscount ? Math.round(((mrp - price) / mrp) * 100) : 0;
           const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
           const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
           const nameSafe = name.replace(/"/g, '&quot;');
 
           return (
-            <div class="product-card group bg-white rounded-[20px] border border-slate-100/90 shadow-sm hover:shadow-xl hover:border-purple-200/80 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-2.5 sm:p-3" data-id={id} data-name={name} data-price={price} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
+            <div class="product-card group bg-white rounded-[20px] border border-slate-100/90 shadow-sm hover:shadow-xl hover:border-purple-200/80 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-2.5 sm:p-3" data-id={id} data-name={nameSafe} data-price={mrp} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
 
               {/* IMAGE CONTAINER WITH GRADIENT BACKGROUND */}
               <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50/90 via-slate-50/40 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
                 
-                {/* Discount Badge */}
-                {hasDiscount && discountPct > 0 && (
-                  <span class="absolute top-2 left-2 z-10 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg shadow-sm flex items-center gap-0.5 tracking-tight">
-                    {discountPct}% OFF
-                  </span>
-                )}
-
                 {/* Out of Stock Overlay */}
                 {isOutOfStock && (
                   <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
@@ -240,22 +231,14 @@ const initialProducts = catalog.slice(0, 48);
                 {/* Price + Action */}
                 <div class="flex items-center justify-between gap-2 mt-auto pt-1.5 border-t border-slate-100">
                   <div class="flex flex-col">
-                    <div class="flex items-baseline gap-1">
-                      <span class="text-sm sm:text-base font-black text-slate-900 leading-none">₹{price}</span>
-                      {hasDiscount && (
-                        <span class="text-[10px] sm:text-[11px] font-bold text-slate-400 line-through leading-none">₹{mrp}</span>
-                      )}
-                    </div>
-                    {hasDiscount && (
-                      <span class="text-[9px] font-extrabold text-emerald-600 mt-0.5">Save ₹{mrp - price}</span>
-                    )}
+                    <span class="text-sm sm:text-base font-black text-slate-900 leading-none">MRP ₹{mrp}</span>
                   </div>
 
                   {isOutOfStock ? (
                     <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[11px] font-extrabold rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
                   ) : (
-                    <div class="cart-action-container" data-id={id} data-name={nameSafe} data-price={price} data-img={img}>
-                      <button class="add-to-cart-btn px-4 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 hover:border-purpleBrand text-[11px] font-black rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all duration-200" data-id={id} data-name={nameSafe} data-price={price} data-img={img}>
+                    <div class="cart-action-container" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
+                      <button class="add-to-cart-btn px-4 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 hover:border-purpleBrand text-[11px] font-black rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all duration-200" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
                         ADD
                       </button>
                     </div>
@@ -545,24 +528,17 @@ const initialProducts = catalog.slice(0, 48);
           const brand = p["Brand Name"] || p.brand || 'Bhusawal Fresh';
           const cat = p.Category || 'Grocery';
           const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
-          const mrp = parseFloat(p.MRP || p.mrp || 0);
-          const price = parseFloat(p["Selling Price"] || p.sp || mrp);
+          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 0);
+          const price = mrp;
           const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-          const hasDiscount = mrp > price;
-          const discountPct = hasDiscount ? Math.round(((mrp - price) / mrp) * 100) : 0;
           const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
           const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
           const nameSafe = name.replace(/"/g, '&quot;');
 
           return `
-            <div class="product-card group bg-white rounded-[20px] border border-slate-100/90 shadow-sm hover:shadow-xl hover:border-purple-200/80 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-2.5 sm:p-3" data-id="${id}" data-name="${nameSafe}" data-price="${price}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-brand="${brand}" data-desc="${descSafe}">
+            <div class="product-card group bg-white rounded-[20px] border border-slate-100/90 shadow-sm hover:shadow-xl hover:border-purple-200/80 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-2.5 sm:p-3" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-brand="${brand}" data-desc="${descSafe}">
 
               <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50/90 via-slate-50/40 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
-                ${hasDiscount && discountPct > 0 ? `
-                  <span class="absolute top-2 left-2 z-10 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[10px] sm:text-[11px] font-black px-2 py-0.5 rounded-lg shadow-sm flex items-center gap-0.5 tracking-tight">
-                    ${discountPct}% OFF
-                  </span>
-                ` : ''}
 
                 ${isOutOfStock ? `
                   <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
@@ -591,18 +567,14 @@ const initialProducts = catalog.slice(0, 48);
 
                 <div class="flex items-center justify-between gap-2 mt-auto pt-1.5 border-t border-slate-100">
                   <div class="flex flex-col">
-                    <div class="flex items-baseline gap-1">
-                      <span class="text-sm sm:text-base font-black text-slate-900 leading-none">₹${price}</span>
-                      ${hasDiscount ? `<span class="text-[10px] sm:text-[11px] font-bold text-slate-400 line-through leading-none">₹${mrp}</span>` : ''}
-                    </div>
-                    ${hasDiscount ? `<span class="text-[9px] font-extrabold text-emerald-600 mt-0.5">Save ₹${mrp - price}</span>` : ''}
+                    <span class="text-sm sm:text-base font-black text-slate-900 leading-none">MRP ₹${mrp}</span>
                   </div>
 
                   ${isOutOfStock ? `
                     <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[11px] font-extrabold rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
                   ` : `
-                    <div class="cart-action-container" data-id="${id}" data-name="${nameSafe}" data-price="${price}" data-img="${img}">
-                      <button class="add-to-cart-btn px-4 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 hover:border-purpleBrand text-[11px] font-black rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all duration-200" data-id="${id}" data-name="${nameSafe}" data-price="${price}" data-img="${img}">
+                    <div class="cart-action-container" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
+                      <button class="add-to-cart-btn px-4 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 hover:border-purpleBrand text-[11px] font-black rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all duration-200" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
                         ADD
                       </button>
                     </div>

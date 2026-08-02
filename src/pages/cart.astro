@@ -2,7 +2,7 @@
 import Switcher from '../components/Switcher.astro';
 import catalog from '../../public/grocery_catalog.json';
 
-// Get 6 popular recommendation items from catalog
+// Get 8 recommendation items from catalog
 const cartRecommendations = catalog.slice(0, 8);
 ---
 
@@ -82,7 +82,7 @@ const cartRecommendations = catalog.slice(0, 8);
       </button>
     </div>
 
-    <!-- EMPTY CART CONTAINER (Shown when cart is empty) -->
+    <!-- EMPTY CART CONTAINER -->
     <div id="empty-cart-container" class="hidden bg-white rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-sm text-center max-w-lg mx-auto space-y-5 animate-in fade-in duration-300">
       <div class="w-24 h-24 rounded-full bg-purple-50 text-purpleBrand mx-auto flex items-center justify-center shadow-inner">
         <span class="material-symbols-outlined text-5xl">shopping_cart</span>
@@ -103,18 +103,18 @@ const cartRecommendations = catalog.slice(0, 8);
       <!-- LEFT 7 COLS: GROUPED PRODUCTS & RECOMMENDED ITEMS -->
       <div class="lg:col-span-7 space-y-6">
         
-        <!-- FREE DELIVERY PROGRESS BANNER -->
-        <div class="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/80 space-y-2">
-          <div class="flex items-center justify-between text-xs font-black">
-            <span class="text-emerald-950 flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-emerald-600 text-base">local_shipping</span>
-              <span id="free-delivery-text">Add ₹45 more for FREE Delivery!</span>
-            </span>
-            <span class="text-emerald-700" id="free-delivery-status">Target ₹199</span>
+        <!-- STANDARD DELIVERY BANNER -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purpleBrand flex items-center justify-center font-black">
+              <span class="material-symbols-outlined text-xl">local_shipping</span>
+            </div>
+            <div>
+              <p class="text-xs font-black text-slate-900">Standard Doorstep Delivery</p>
+              <p class="text-[11px] font-bold text-slate-500">₹25 Delivery charge applies on all orders in Bhusawal</p>
+            </div>
           </div>
-          <div class="w-full bg-emerald-200/60 h-2 rounded-full overflow-hidden">
-            <div id="free-delivery-bar" class="bg-emerald-600 h-full w-[60%] transition-all duration-500"></div>
-          </div>
+          <span class="text-xs font-black text-purpleBrand bg-white px-3 py-1 rounded-lg border border-slate-200">₹25 Fee</span>
         </div>
 
         <!-- GROUPED PRODUCTS CONTAINERS -->
@@ -127,16 +127,16 @@ const cartRecommendations = catalog.slice(0, 8);
           <div class="flex items-center justify-between">
             <div>
               <span class="text-xs font-black text-purpleBrand uppercase tracking-wider">Before You Checkout</span>
-              <h3 class="text-base font-black font-display text-slate-900">Recommended Add-Ons</h3>
+              <h3 class="text-base font-black font-display text-slate-900">Recommended Products</h3>
             </div>
-            <span class="text-xs font-bold text-slate-400">⚡ 10 Min Delivery</span>
+            <span class="text-xs font-bold text-slate-400">⚡ MRP Price</span>
           </div>
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {cartRecommendations.map(rec => {
               const rId = rec["Product ID"] || rec.ProductID || rec.id || '';
               const rName = rec["Product Name"] || rec.name || '';
-              const rPrice = parseFloat(rec["Selling Price"] || rec.sp || rec.MRP || 50);
+              const rMrp = parseFloat(rec.MRP || rec.mrp || rec["Selling Price"] || rec.sp || 50);
               const rImg = rec["Product Image URL"] || rec.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
               const rPack = rec["Pack Size"] || rec.pack || '1 Unit';
 
@@ -149,8 +149,8 @@ const cartRecommendations = catalog.slice(0, 8);
                     <h4 class="text-[11px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[1.8rem]">{rName}</h4>
                     <p class="text-[10px] text-slate-400 font-semibold">{rPack}</p>
                     <div class="flex items-center justify-between pt-1">
-                      <span class="text-xs font-black text-slate-900">₹{rPrice}</span>
-                      <button class="add-rec-btn px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-lg hover:bg-purpleDark active:scale-90 transition-all" data-id={rId} data-name={rName.replace(/"/g, '&quot;')} data-price={rPrice} data-img={rImg}>
+                      <span class="text-xs font-black text-slate-900">MRP ₹{rMrp}</span>
+                      <button class="add-rec-btn px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-lg hover:bg-purpleDark active:scale-90 transition-all" data-id={rId} data-name={rName.replace(/"/g, '&quot;')} data-price={rMrp} data-img={rImg}>
                         + ADD
                       </button>
                     </div>
@@ -163,92 +163,35 @@ const cartRecommendations = catalog.slice(0, 8);
 
       </div>
 
-      <!-- RIGHT 5 COLS: COUPONS, PRICE SUMMARY & CHECKOUT BUTTON -->
+      <!-- RIGHT 5 COLS: PRICE SUMMARY & CHECKOUT BUTTON -->
       <div class="lg:col-span-5 space-y-6">
         
-        <!-- COUPONS & PROMO CODES SECTION -->
-        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
-          <div class="flex items-center justify-between">
-            <h3 class="text-sm font-black uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-purpleBrand text-lg">local_offer</span>
-              Coupons & Offers
-            </h3>
-            <span class="text-xs font-bold text-emerald-700" id="applied-coupon-status"></span>
-          </div>
-
-          <!-- Coupon Input Form -->
-          <div class="flex items-center gap-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-200 focus-within:ring-2 focus-within:ring-purpleBrand/40 transition-all">
-            <input type="text" id="coupon-input" placeholder="Enter Promo Code (e.g. BHUSAWAL10)" class="w-full bg-transparent px-3 py-1.5 text-xs font-bold uppercase text-slate-800 outline-none placeholder-slate-400" />
-            <button id="apply-coupon-btn" class="px-4 py-2 bg-purpleBrand hover:bg-purpleDark text-white text-xs font-black rounded-xl transition-all shadow-xs">
-              Apply
-            </button>
-          </div>
-
-          <!-- Quick Available Coupons Chips -->
-          <div class="space-y-2 pt-1">
-            <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Available Coupons for You:</span>
-            <div class="space-y-2">
-              <div class="select-coupon-card p-3 rounded-2xl bg-amber-50/60 border border-amber-200/80 flex items-center justify-between cursor-pointer hover:bg-amber-100/60 transition-colors" data-code="BHUSAWAL10">
-                <div class="flex items-center gap-2.5">
-                  <span class="px-2 py-1 bg-amber-400 text-slate-950 text-[10px] font-black rounded-lg">BHUSAWAL10</span>
-                  <div>
-                    <p class="text-xs font-black text-amber-950">10% OFF on all orders</p>
-                    <p class="text-[10px] font-bold text-amber-800">Save up to ₹100 on your purchase</p>
-                  </div>
-                </div>
-                <span class="text-xs font-black text-purpleBrand">Apply</span>
-              </div>
-
-              <div class="select-coupon-card p-3 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 flex items-center justify-between cursor-pointer hover:bg-emerald-100/60 transition-colors" data-code="FREEDEL">
-                <div class="flex items-center gap-2.5">
-                  <span class="px-2 py-1 bg-emerald-600 text-white text-[10px] font-black rounded-lg">FREEDEL</span>
-                  <div>
-                    <p class="text-xs font-black text-emerald-950">Free Delivery Guarantee</p>
-                    <p class="text-[10px] font-bold text-emerald-800">Waive delivery charges completely</p>
-                  </div>
-                </div>
-                <span class="text-xs font-black text-purpleBrand">Apply</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <!-- PRICE SUMMARY BREAKDOWN CARD -->
         <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
           <h3 class="text-sm font-black uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3">
             Bill Details & Price Summary
           </h3>
 
-          <div class="space-y-2.5 text-xs font-bold text-slate-600">
+          <div class="space-y-3 text-xs font-bold text-slate-600">
             <div class="flex items-center justify-between">
-              <span>Item Subtotal (<span id="summary-items-count">0 items</span>)</span>
+              <span>Item Subtotal (MRP) (<span id="summary-items-count">0 items</span>)</span>
               <span class="text-slate-900 font-black" id="summary-subtotal">₹0</span>
-            </div>
-
-            <div class="flex items-center justify-between text-emerald-700">
-              <span>Discount Savings</span>
-              <span class="font-black" id="summary-savings">-₹0</span>
-            </div>
-
-            <div id="coupon-discount-row" class="hidden flex items-center justify-between text-emerald-700">
-              <span>Coupon Discount (<span id="summary-coupon-name"></span>)</span>
-              <span class="font-black" id="summary-coupon-discount">-₹0</span>
             </div>
 
             <div class="flex items-center justify-between">
               <span>Delivery Charge</span>
-              <span class="font-black" id="summary-delivery">₹25</span>
+              <span class="font-black text-slate-900" id="summary-delivery">₹25</span>
             </div>
 
             <div class="flex items-center justify-between">
               <span>Handling & Platform Fee</span>
-              <span class="font-black" id="summary-platform">₹5</span>
+              <span class="font-black text-slate-900" id="summary-platform">₹5</span>
             </div>
 
             <div class="pt-3 border-t border-slate-100 flex items-baseline justify-between text-slate-900">
               <div>
                 <span class="text-sm font-black block font-display">To Pay (Grand Total)</span>
-                <span class="text-[10px] font-bold text-slate-400">Inclusive of all taxes & charges</span>
+                <span class="text-[10px] font-bold text-slate-400">All products at MRP + Standard Delivery Charge</span>
               </div>
               <span class="text-2xl font-black font-display text-purpleBrand" id="summary-grand-total">₹0</span>
             </div>
@@ -278,11 +221,9 @@ const cartRecommendations = catalog.slice(0, 8);
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CART ENGINE & CALCULATIONS -->
+  <!-- CLIENT-SIDE CART ENGINE -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
-
-      let activeCoupon = null; // { code: 'BHUSAWAL10', type: 'pct', val: 10 } or { code: 'FREEDEL', type: 'free_del', val: 25 }
 
       // 1. Get Normalized Cart Array
       function getNormalizedCart() {
@@ -292,7 +233,6 @@ const cartRecommendations = catalog.slice(0, 8);
         } catch(e) {}
 
         if (!Array.isArray(raw)) {
-          // Fallback if legacy object format { "Item": qty }
           const arr = [];
           Object.keys(raw).forEach((key, idx) => {
             const qty = raw[key];
@@ -364,9 +304,9 @@ const cartRecommendations = catalog.slice(0, 8);
             items.forEach(item => {
               const id = item.id;
               const name = item.name || 'Grocery Item';
-              const price = parseFloat(item.price || 0);
+              const mrpPrice = parseFloat(item.mrp || item.MRP || item.price || 0);
               const qty = item.quantity || 1;
-              const itemTotal = Math.round(price * qty);
+              const itemTotal = Math.round(mrpPrice * qty);
               const img = item.image || item.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
 
               html += `
@@ -377,7 +317,7 @@ const cartRecommendations = catalog.slice(0, 8);
                     </div>
                     <div class="min-w-0 flex-1">
                       <h4 class="text-xs sm:text-sm font-extrabold text-slate-800 truncate">${name}</h4>
-                      <p class="text-[11px] font-bold text-slate-400 mt-0.5">₹${price} / unit</p>
+                      <p class="text-[11px] font-bold text-slate-400 mt-0.5">MRP ₹${mrpPrice} / unit</p>
                     </div>
                   </div>
 
@@ -444,48 +384,18 @@ const cartRecommendations = catalog.slice(0, 8);
           });
         }
 
-        // 3. Perform Accurate Price Calculations
+        // 3. Perform Calculations (MRP Subtotal + Fixed Delivery ₹25 + Platform Fee ₹5)
         calculateSummary(cart);
       }
 
       function calculateSummary(cart) {
-        const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.price || 0) * (item.quantity || 1)), 0);
+        const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.mrp || item.MRP || item.price || 0) * (item.quantity || 1)), 0);
         const totalItemsCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
-        // Delivery Fee logic: Free if subtotal >= 199, else 25
-        let deliveryFee = subtotal >= 199 ? 0 : 25;
-        const platformFee = 5;
+        const deliveryFee = 25; // Standard Delivery Charge on EVERY order
+        const platformFee = 5;  // Standard Platform Fee
 
-        // Delivery Progress Bar
-        const freeText = document.getElementById('free-delivery-text');
-        const freeStatus = document.getElementById('free-delivery-status');
-        const freeBar = document.getElementById('free-delivery-bar');
-
-        if (subtotal >= 199) {
-          if (freeText) freeText.textContent = '🎉 Congratulations! You have unlocked FREE Delivery!';
-          if (freeStatus) freeStatus.textContent = 'FREE Delivery Unlocked';
-          if (freeBar) freeBar.style.width = '100%';
-        } else {
-          const needed = 199 - subtotal;
-          if (freeText) freeText.textContent = `Add ₹${Math.round(needed)} more for FREE Delivery!`;
-          if (freeStatus) freeStatus.textContent = `Target ₹199`;
-          if (freeBar) freeBar.style.width = `${Math.min(100, (subtotal / 199) * 100)}%`;
-        }
-
-        // Calculate Coupon Discount
-        let couponDiscount = 0;
-        if (activeCoupon) {
-          if (activeCoupon.code === 'BHUSAWAL10') {
-            couponDiscount = Math.round(subtotal * 0.10);
-          } else if (activeCoupon.code === 'FREEDEL') {
-            deliveryFee = 0;
-            couponDiscount = 25;
-          } else if (activeCoupon.code === 'WELCOME50' && subtotal >= 299) {
-            couponDiscount = 50;
-          }
-        }
-
-        const grandTotal = Math.max(0, Math.round(subtotal - couponDiscount + deliveryFee + platformFee));
+        const grandTotal = Math.round(subtotal + deliveryFee + platformFee);
 
         // Update DOM Price Summary Elements
         const countEl = document.getElementById('summary-items-count');
@@ -495,72 +405,20 @@ const cartRecommendations = catalog.slice(0, 8);
         const grandEl = document.getElementById('summary-grand-total');
         const btnGrandEl = document.getElementById('btn-grand-total');
 
-        const couponRow = document.getElementById('coupon-discount-row');
-        const couponName = document.getElementById('summary-coupon-name');
-        const couponDiscountEl = document.getElementById('summary-coupon-discount');
-
         if (countEl) countEl.textContent = `${totalItemsCount} ${totalItemsCount === 1 ? 'item' : 'items'}`;
         if (subtotalEl) subtotalEl.textContent = `₹${Math.round(subtotal)}`;
-        if (deliveryEl) deliveryEl.textContent = deliveryFee === 0 ? 'FREE' : `₹${deliveryFee}`;
+        if (deliveryEl) deliveryEl.textContent = `₹${deliveryFee}`;
         if (platformEl) platformEl.textContent = `₹${platformFee}`;
         if (grandEl) grandEl.textContent = `₹${grandTotal}`;
         if (btnGrandEl) btnGrandEl.textContent = `Proceed to Checkout • ₹${grandTotal}`;
-
-        if (activeCoupon && couponDiscount > 0) {
-          if (couponRow) couponRow.classList.remove('hidden');
-          if (couponName) couponName.textContent = activeCoupon.code;
-          if (couponDiscountEl) couponDiscountEl.textContent = `-₹${couponDiscount}`;
-        } else {
-          if (couponRow) couponRow.classList.add('hidden');
-        }
       }
 
-      // 4. Coupons Handling
-      const couponInput = document.getElementById('coupon-input');
-      const applyBtn = document.getElementById('apply-coupon-btn');
-      const appliedStatus = document.getElementById('applied-coupon-status');
-
-      function applyCouponCode(code) {
-        const c = code.trim().toUpperCase();
-        if (c === 'BHUSAWAL10') {
-          activeCoupon = { code: 'BHUSAWAL10', type: 'pct', val: 10 };
-          if (appliedStatus) appliedStatus.textContent = '✓ BHUSAWAL10 Applied';
-          alert('Coupon BHUSAWAL10 applied! You get 10% OFF.');
-        } else if (c === 'FREEDEL') {
-          activeCoupon = { code: 'FREEDEL', type: 'free_del', val: 25 };
-          if (appliedStatus) appliedStatus.textContent = '✓ FREEDEL Applied';
-          alert('Coupon FREEDEL applied! Free Delivery unlocked.');
-        } else if (c === 'WELCOME50') {
-          activeCoupon = { code: 'WELCOME50', type: 'flat', val: 50 };
-          if (appliedStatus) appliedStatus.textContent = '✓ WELCOME50 Applied';
-          alert('Coupon WELCOME50 applied! ₹50 OFF.');
-        } else {
-          alert('Invalid promo code. Try "BHUSAWAL10" or "FREEDEL".');
-          return;
-        }
-        renderCartUI();
-      }
-
-      applyBtn?.addEventListener('click', () => {
-        if (couponInput && couponInput.value) {
-          applyCouponCode(couponInput.value);
-        }
-      });
-
-      document.querySelectorAll('.select-coupon-card').forEach(card => {
-        card.addEventListener('click', () => {
-          const code = card.dataset.code;
-          if (couponInput) couponInput.value = code;
-          applyCouponCode(code);
-        });
-      });
-
-      // 5. Add Recommended Item to Cart
+      // 4. Add Recommended Item to Cart at MRP
       document.querySelectorAll('.add-rec-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const id = btn.dataset.id;
           const name = btn.dataset.name;
-          const price = parseFloat(btn.dataset.price);
+          const mrpPrice = parseFloat(btn.dataset.price);
           const img = btn.dataset.img;
 
           let cart = getNormalizedCart();
@@ -568,7 +426,7 @@ const cartRecommendations = catalog.slice(0, 8);
           if (existing) {
             existing.quantity = (existing.quantity || 1) + 1;
           } else {
-            cart.push({ id, name, price, image: img, quantity: 1, cat: 'Grocery & Add-ons' });
+            cart.push({ id, name, price: mrpPrice, mrp: mrpPrice, image: img, quantity: 1, cat: 'Grocery & Essentials' });
           }
           saveCart(cart);
 
@@ -581,7 +439,7 @@ const cartRecommendations = catalog.slice(0, 8);
         });
       });
 
-      // 6. Clear Entire Cart Action
+      // 5. Clear Entire Cart Action
       document.getElementById('clear-entire-cart-btn')?.addEventListener('click', () => {
         if (confirm('Are you sure you want to clear your entire cart?')) {
           localStorage.removeItem('bhusawal_cart');

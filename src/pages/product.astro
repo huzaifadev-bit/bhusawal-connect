@@ -20,11 +20,11 @@ const name = product["Product Name"] || product.name || 'Product Details';
 const brand = product["Brand Name"] || product.brand || 'Bhusawal Fresh';
 const cat = product.Category || 'Grocery';
 const packSize = product["Pack Size"] || product.pack || product.Unit || '1 Unit';
-const mrp = parseFloat(product.MRP || product.mrp || 100);
-const price = parseFloat(product["Selling Price"] || product.sp || mrp);
-const hasDiscount = mrp > price;
-const discountPct = hasDiscount ? Math.round(((mrp - price) / mrp) * 100) : 15;
-const savings = Math.max(0, Math.round(mrp - price));
+const mrp = parseFloat(product.MRP || product.mrp || product["Selling Price"] || product.sp || 100);
+const price = mrp;
+const hasDiscount = false;
+const discountPct = 0;
+const savings = 0;
 const mainImg = product["Product Image URL"] || product.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
 const isVeg = cat === 'Fruits & Vegetables' || name.toLowerCase().includes('fresh') || name.toLowerCase().includes('veg') || !name.toLowerCase().includes('chicken');
 
@@ -222,19 +222,12 @@ const fbtBundlePrice = Math.round(fbtTotalPrice * 0.88);
           </div>
 
           <!-- PRICING DISPLAY BOX -->
-          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
-            <div class="flex items-baseline gap-3">
-              <span class="text-3xl sm:text-4xl font-black text-slate-900 font-display" id="pdp-display-price">₹{price}</span>
-              {hasDiscount && (
-                <span class="text-base sm:text-lg font-bold text-slate-400 line-through" id="pdp-display-mrp">MRP ₹{mrp}</span>
-              )}
-              {hasDiscount && (
-                <span class="text-xs font-black text-emerald-700 bg-emerald-100 border border-emerald-200 px-2.5 py-1 rounded-lg" id="pdp-display-savings">
-                  Save ₹{savings} ({discountPct}% OFF)
-                </span>
-              )}
+          <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+            <div class="flex items-baseline gap-2">
+              <span class="text-xs font-black text-slate-400 uppercase tracking-wider">MRP</span>
+              <span class="text-3xl sm:text-4xl font-black text-slate-900 font-display" id="pdp-display-price">₹{mrp}</span>
             </div>
-            <p class="text-[11px] font-bold text-slate-400">Inclusive of all taxes. Free 10-minute doorstep delivery in Bhusawal.</p>
+            <p class="text-[11px] font-bold text-slate-400">Inclusive of all taxes. Standard doorstep delivery in Bhusawal.</p>
           </div>
 
           <!-- AVAILABLE VARIANTS SELECTOR -->
