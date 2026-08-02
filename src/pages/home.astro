@@ -23,7 +23,7 @@ function dedupProducts(arr) {
   });
 }
 
-// 1. Trending Products
+// Product sections from catalog
 const trendingKws = ['lays', 'pringles', 'kurkure', 'coca', 'pepsi', 'sprite', 'red bull', 'dairy milk', 'kitkat', 'nutella', 'oreo', 'good day', 'maggi', 'nivea', 'dettol'];
 let trendingProducts = [];
 const seenTrending = new Set();
@@ -40,44 +40,25 @@ for (const kw of trendingKws) {
   if (trendingProducts.length >= 12) break;
 }
 
-// 2. Popular Products
 let popularProducts = dedupProducts(catalog.filter(p => p.Category === 'Snacks & Confectionery' || p.Category === 'Beverages')).slice(0, 12);
+let dailyNeedsProducts = dedupProducts(catalog.filter(p => p.Category === 'Dairy & Breakfast' || p.Category === 'Fruits & Vegetables')).slice(0, 12);
 
-// 3. Today's Offers
-let offerProducts = dedupProducts(catalog.filter(p => p.Category === 'Snacks & Confectionery' || p.Category === 'Beverages' || p.Category === 'Dairy & Breakfast')).slice(0, 12);
-
-// 4. Buy Again (Daily Essentials)
-let buyAgainProducts = dedupProducts(catalog.filter(p => p.Category === 'Dairy & Breakfast' || p.Category === 'Fruits & Vegetables')).slice(0, 12);
-
-// 5. Recently Ordered
-let recentlyOrderedProducts = dedupProducts(catalog.filter(p => p.Category === 'Grocery Staples' || p.Category === 'Home Cleaning & Household')).slice(0, 12);
-
-// Dynamic Categories list
-const categoriesList = [
-  { name: 'Fruits & Vegetables', icon: '🥬', color: 'from-emerald-500/20 to-teal-500/20' },
-  { name: 'Dairy & Breakfast', icon: '🥛', color: 'from-blue-500/20 to-cyan-500/20' },
-  { name: 'Grocery Staples', icon: '🌾', color: 'from-yellow-500/20 to-amber-500/20' },
-  { name: 'Snacks & Confectionery', icon: '🍿', color: 'from-amber-500/20 to-orange-500/20' },
-  { name: 'Beverages', icon: '🥤', color: 'from-rose-500/20 to-pink-500/20' },
-  { name: 'Personal Care', icon: '✨', color: 'from-pink-500/20 to-rose-500/20' },
-  { name: 'Home Cleaning & Household', icon: '🧹', color: 'from-indigo-500/20 to-blue-500/20' },
-  { name: 'Instant & Frozen Foods', icon: '🍜', color: 'from-purple-500/20 to-indigo-500/20' },
-];
-
-// Featured Stores Data
-const featuredStores = [
-  { name: 'Bhusawal Express Store', tag: 'Superstore', rating: '4.9', time: '10-15 min', status: 'Open Now', cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=600&q=80', logo: '🏬', sponsored: true },
-  { name: 'Royal Biryani & Caterers', tag: 'Mughlai & Biryani', rating: '4.8', time: '25-30 min', status: 'Open Now', cover: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80', logo: '🍲', sponsored: true },
-  { name: 'Shiv Dairy & Sweets', tag: 'Fresh Dairy & Sweets', rating: '4.9', time: '15-20 min', status: 'Open Now', cover: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=600&q=80', logo: '🥛', sponsored: false },
-  { name: "Kwality Wall's Hub", tag: 'Ice Creams & Desserts', rating: '4.7', time: '12-18 min', status: 'Open Now', cover: 'https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=600&q=80', logo: '🍦', sponsored: false },
+// Verified Partner Stores Data (NO DISCOUNTS OR OFFERS)
+const verifiedPartnerStores = [
+  { id: 'express_superstore', name: 'Bhusawal Express Superstore', tag: 'Supermarket • 25,500+ Items', rating: '4.9', count: '1,240+ ratings', time: '10-15 min', cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=800&q=80', logo: '🏬' },
+  { id: 'royal_biryani', name: 'Royal Biryani & Caterers', tag: 'Mughlai & North Indian', rating: '4.8', count: '850+ ratings', time: '20-25 min', cover: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80', logo: '🍲' },
+  { id: 'modern_pharmacy', name: 'Modern Pharmacy & Wellness', tag: 'Essential Medicines & Healthcare', rating: '4.9', count: '920+ ratings', time: '10-15 min', cover: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&w=800&q=80', logo: '💊' },
+  { id: 'shiv_dairy', name: 'Shiv Dairy & Sweets', tag: 'Fresh Milk, Paneer & Sweets', rating: '4.9', count: '1,500+ ratings', time: '10-15 min', cover: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80', logo: '🥛' },
+  { id: 'kwality_hub', name: "Kwality Wall's Ice Cream Hub", tag: 'Ice Creams & Shakes', rating: '4.7', count: '610+ ratings', time: '12-18 min', cover: 'https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=800&q=80', logo: '🍦' }
 ];
 ---
 
+<!DOCTYPE html>
 <html lang="en" class="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bhusawal Connect | Super-App</title>
+  <title>Bhusawal Connect | Super App for Bhusawal</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
   <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
@@ -112,16 +93,15 @@ const featuredStores = [
     h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.6); }
   </style>
 </head>
 
-<body class="pb-24 max-w-7xl mx-auto min-h-screen text-slate-800">
+<body class="pb-28 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased">
 
   <!-- 1. TOP HEADER (LOCATION & PROFILE) -->
-  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3 shadow-sm flex items-center justify-between">
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3.5 shadow-xs flex items-center justify-between">
     <div class="flex items-center gap-2 cursor-pointer hover:opacity-95 transition-opacity" id="header-location-btn">
-      <div class="w-10 h-10 rounded-full bg-purple-100 text-purpleBrand flex items-center justify-center font-bold">
+      <div class="w-10 h-10 rounded-full bg-purple-100 text-purpleBrand flex items-center justify-center font-bold shadow-xs">
         <span class="material-symbols-outlined text-xl">location_on</span>
       </div>
       <div>
@@ -135,165 +115,55 @@ const featuredStores = [
       </div>
     </div>
 
-    <a href="/profile" class="w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold shadow-md hover:scale-105 active:scale-95 transition-all">
-      <span class="material-symbols-outlined">person</span>
+    <a href="/profile" class="w-10 h-10 rounded-full bg-purpleBrand text-white flex items-center justify-center font-bold shadow-md hover:scale-105 active:scale-95 transition-all">
+      <span class="material-symbols-outlined text-xl">person</span>
     </a>
   </header>
 
-  <main class="px-4 py-4 space-y-6">
+  <main class="px-4 py-5 space-y-7">
 
-    <!-- 2. STICKY SEARCH BAR WITH AUTOCOMPLETE -->
+    <!-- 2. STICKY UNIVERSAL SEARCH BAR -->
     <div class="relative z-40">
-      <div class="flex items-center gap-2 bg-slate-100 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
+      <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
-        <input type="text" id="main-search-input" placeholder="Search 'Milk', 'Biryani', 'Lays', 'Fruits'..." class="w-full bg-transparent outline-none text-sm font-medium text-slate-800 placeholder-slate-400" autocomplete="off" />
+        <input type="text" id="main-search-input" placeholder="Search 25,000+ items ('Milk', 'Biryani', 'Lays')..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
         <span class="material-symbols-outlined text-purpleBrand cursor-pointer">mic</span>
       </div>
 
       <!-- Live Search Autocomplete Dropdown -->
       <div id="search-results-dropdown" class="hidden absolute top-14 left-0 right-0 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden max-h-96 overflow-y-auto z-50">
         <div class="p-2 divide-y divide-slate-100" id="search-dropdown-list">
-          <!-- Results dynamically populated -->
+          <!-- Dynamically populated -->
         </div>
       </div>
     </div>
 
-    <!-- 3. HERO PROMO CAROUSEL (5 ROTATING BANNERS) -->
-    <div id="hero-carousel" class="relative overflow-hidden rounded-3xl shadow-2xl bg-slate-900 group h-[220px] sm:h-[260px] md:h-[280px]">
-      
-      <!-- Slides Container -->
-      <div id="hero-slides-wrapper" class="w-full h-full relative">
-        
-        <!-- Slide 1: Grocery -->
-        <div class="hero-slide absolute inset-0 opacity-100 transition-opacity duration-700 ease-in-out flex items-center p-6 md:p-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1200&q=80');">
-          <div class="absolute inset-0 bg-gradient-to-r from-purple-950/95 via-purple-900/75 to-transparent"></div>
-          <div class="relative z-10 max-w-lg space-y-2 text-white">
-            <div class="flex items-center gap-2">
-              <span class="px-3 py-1 bg-amber-400 text-slate-900 text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm">⚡ 10-15 MIN DELIVERY</span>
-              <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">SUPERSTORE</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight text-white drop-shadow-sm">Fresh Fruits, Veggies & Daily Grocery</h2>
-            <p class="text-xs sm:text-sm text-purple-100 font-medium line-clamp-2 max-w-md">Over 25,500+ items delivered fresh to your doorstep in Bhusawal.</p>
-            <div class="pt-1">
-              <a href="/grocery" class="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all">
-                <span>Shop Grocery</span>
-                <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
-              </a>
-            </div>
-          </div>
+    <!-- 3. HERO SUPER-APP SHOWCASE BANNER -->
+    <div class="relative overflow-hidden rounded-3xl shadow-xl bg-gradient-to-r from-purple-900 via-purple-950 to-slate-900 p-6 sm:p-8 text-white">
+      <div class="relative z-10 max-w-xl space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1 bg-purpleBrand text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-xs">BHUSAWAL SUPER APP</span>
+          <span class="px-2.5 py-0.5 bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">10-MIN EXPRESS</span>
         </div>
-
-        <!-- Slide 2: Food Delivery -->
-        <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out flex items-center p-6 md:p-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80');">
-          <div class="absolute inset-0 bg-gradient-to-r from-amber-950/95 via-orange-950/75 to-transparent"></div>
-          <div class="relative z-10 max-w-lg space-y-2 text-white">
-            <div class="flex items-center gap-2">
-              <span class="px-3 py-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm">🔥 HOT & FRESH</span>
-              <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">DOORSTEP DELIVERY</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight text-white drop-shadow-sm">Delicious Food from Top Restaurants</h2>
-            <p class="text-xs sm:text-sm text-orange-100 font-medium line-clamp-2 max-w-md">Craving Biryani, Pizza, or Thali? Order now & enjoy fast local delivery.</p>
-            <div class="pt-1">
-              <a href="/food" class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all">
-                <span>Order Food Now</span>
-                <span class="material-symbols-outlined text-sm font-bold">restaurant</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 3: Medicine -->
-        <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out flex items-center p-6 md:p-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=80');">
-          <div class="absolute inset-0 bg-gradient-to-r from-teal-950/95 via-emerald-950/75 to-transparent"></div>
-          <div class="relative z-10 max-w-lg space-y-2 text-white">
-            <div class="flex items-center gap-2">
-              <span class="px-3 py-1 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm">💊 100% GENUINE</span>
-              <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">EXPRESS PHARMACY</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight text-white drop-shadow-sm">Medicines & Everyday Health Care</h2>
-            <p class="text-xs sm:text-sm text-teal-100 font-medium line-clamp-2 max-w-md">Upload prescription or search medicines for instant doorstep delivery.</p>
-            <div class="pt-1">
-              <a href="/medicines" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all">
-                <span>Buy Medicines</span>
-                <span class="material-symbols-outlined text-sm font-bold">medical_services</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 4: Parcel Delivery -->
-        <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out flex items-center p-6 md:p-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80');">
-          <div class="absolute inset-0 bg-gradient-to-r from-blue-950/95 via-indigo-950/75 to-transparent"></div>
-          <div class="relative z-10 max-w-lg space-y-2 text-white">
-            <div class="flex items-center gap-2">
-              <span class="px-3 py-1 bg-blue-500 text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm">📦 INSTANT PICKUP & DROP</span>
-              <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">BHUSAWAL EXPRESS</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight text-white drop-shadow-sm">Send Packages & Documents Anywhere</h2>
-            <p class="text-xs sm:text-sm text-blue-100 font-medium line-clamp-2 max-w-md">Forgot keys, documents or gifts? Our riders pick up and drop across Bhusawal.</p>
-            <div class="pt-1">
-              <a href="/parcel" class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-400 text-white font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all">
-                <span>Book Parcel Rider</span>
-                <span class="material-symbols-outlined text-sm font-bold">local_shipping</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Slide 5: Local Shops -->
-        <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out flex items-center p-6 md:p-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1200&q=80');">
-          <div class="absolute inset-0 bg-gradient-to-r from-purple-950/95 via-indigo-950/75 to-transparent"></div>
-          <div class="relative z-10 max-w-lg space-y-2 text-white">
-            <div class="flex items-center gap-2">
-              <span class="px-3 py-1 bg-purple-500 text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm">🏪 LOCAL MARKETPLACE</span>
-              <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">SUPPORT BHUSAWAL</span>
-            </div>
-            <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight text-white drop-shadow-sm">Shop Your Favorite Local Stores</h2>
-            <p class="text-xs sm:text-sm text-purple-100 font-medium line-clamp-2 max-w-md">Order directly from trusted local Bhusawal merchants & specialty stores.</p>
-            <div class="pt-1">
-              <a href="/shops" class="inline-flex items-center gap-2 bg-purple-500 hover:bg-purple-400 text-white font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all">
-                <span>Explore Local Shops</span>
-                <span class="material-symbols-outlined text-sm font-bold">storefront</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
+        <h2 class="text-2xl sm:text-3xl font-black font-display text-white leading-tight">Everything Bhusawal Needs, In One App</h2>
+        <p class="text-xs sm:text-sm text-purple-100 font-semibold">Order Grocery, Food, Medicines, Rides & Parcels with 10-Minute Doorstep Delivery across Bhusawal.</p>
       </div>
-
-      <!-- Navigation Arrows -->
-      <button id="hero-prev-btn" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/30 flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all opacity-80 hover:opacity-100 shadow-md" aria-label="Previous Slide">
-        <span class="material-symbols-outlined text-lg">chevron_left</span>
-      </button>
-      <button id="hero-next-btn" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/30 flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all opacity-80 hover:opacity-100 shadow-md" aria-label="Next Slide">
-        <span class="material-symbols-outlined text-lg">chevron_right</span>
-      </button>
-
-      <!-- Indicator Dots -->
-      <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/30 backdrop-blur-md border border-white/10">
-        <button class="hero-dot w-2.5 h-2.5 rounded-full bg-white transition-all scale-125" data-index="0" aria-label="Slide 1"></button>
-        <button class="hero-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all" data-index="1" aria-label="Slide 2"></button>
-        <button class="hero-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all" data-index="2" aria-label="Slide 3"></button>
-        <button class="hero-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all" data-index="3" aria-label="Slide 4"></button>
-        <button class="hero-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all" data-index="4" aria-label="Slide 5"></button>
-      </div>
-
     </div>
 
-        <!-- 4. OUR SERVICES SECTION (7 DISTINCT SERVICES) -->
+    <!-- 4. SERVICES SECTION (EXACTLY 7 SERVICES WITH 3D ILLUSTRATIONS) -->
     <section class="space-y-4">
       <div class="flex items-center justify-between px-1">
         <div>
           <h3 class="text-xl font-black font-display text-slate-900 tracking-tight">Our Services</h3>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Everything Bhusawal needs, delivered & booked instantly</p>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Explore Bhusawal Connect services</p>
         </div>
-        <a href="/shops" class="text-xs font-bold text-emerald-600 hover:underline flex items-center gap-0.5">
+        <a href="/shops" class="text-xs font-bold text-purpleBrand hover:underline flex items-center gap-0.5">
           View All
           <span class="material-symbols-outlined text-sm">chevron_right</span>
         </a>
       </div>
 
-      <!-- 7-Card Scrollable Grid & Responsive Layout -->
+      <!-- 7-Card Responsive Scroll Grid -->
       <div class="flex gap-3.5 overflow-x-auto no-scrollbar pb-3 snap-x snap-mandatory">
 
         <!-- 1. Grocery -->
@@ -352,7 +222,7 @@ const featuredStores = [
           </div>
         </a>
 
-        <!-- 5. Pickup & Drop (TWO PEOPLE ON A SCOOTER/BIKE) -->
+        <!-- 5. Pickup & Drop (TWO PEOPLE RIDING A SCOOTER/BIKE ILLUSTRATION) -->
         <a href="/auto" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-teal-50 to-emerald-100 flex items-center justify-center p-3 overflow-hidden">
             <img src="/assets/services/service_pickup_drop.jpg" alt="Pickup & Drop" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
@@ -366,7 +236,7 @@ const featuredStores = [
           </div>
         </a>
 
-        <!-- 6. Parcel Delivery (RIDER CARRYING A PARCEL BOX ON A BIKE) -->
+        <!-- 6. Parcel Delivery (DELIVERY RIDER CARRYING A PARCEL BOX ON A SCOOTER) -->
         <a href="/parcel" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center p-3 overflow-hidden">
             <img src="/assets/services/service_parcel.jpg" alt="Parcel Delivery" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
@@ -397,34 +267,48 @@ const featuredStores = [
       </div>
     </section>
 
-    <!-- 5. FEATURED PARTNER STORES -->
-    <section>
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="text-lg font-black font-display text-slate-900 tracking-tight">Featured Partner Stores</h3>
+    <!-- 5. FEATURED PARTNER STORES (DIRECTLY BELOW SERVICES SECTION) -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between px-1">
+        <div>
+          <h3 class="text-xl font-black font-display text-slate-900 tracking-tight">Featured Partner Stores</h3>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Order directly from verified Bhusawal merchants</p>
+        </div>
         <a href="/shops" class="text-xs font-bold text-purpleBrand hover:underline">View All</a>
       </div>
-      <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
-        {featuredStores.map(store => (
-          <a href="/shops" class="flex-shrink-0 w-64 bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
-            <div class="h-28 relative overflow-hidden">
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {verifiedPartnerStores.map(store => (
+          <a href={`/shops?id=${store.id}`} class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group">
+            <div class="h-36 w-full relative overflow-hidden bg-slate-100">
               <img src={store.cover} alt={store.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-              {store.sponsored && (
-                <span class="absolute top-2 left-2 bg-slate-900/80 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">Sponsored</span>
-              )}
-              <span class="absolute bottom-2 right-2 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black px-2 py-0.5 rounded-full">⚡ {store.time}</span>
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+              
+              <!-- Verified Partner Badge -->
+              <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">verified</span>
+                Verified Partner
+              </span>
+
+              <span class="absolute bottom-2 right-3 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black px-2.5 py-1 rounded-full shadow-xs">
+                ⚡ {store.time}
+              </span>
             </div>
-            <div class="p-3 flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-xl flex-shrink-0 border border-purple-100">
+
+            <div class="p-5 space-y-3 relative">
+              <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
                 {store.logo}
               </div>
-              <div class="min-w-0">
-                <h4 class="text-xs font-black text-slate-900 truncate">{store.name}</h4>
-                <p class="text-[11px] text-slate-500 font-medium truncate">{store.tag}</p>
-                <div class="flex items-center gap-2 mt-1 text-[11px] font-bold text-slate-700">
-                  <span class="text-emerald-600">★ {store.rating}</span>
-                  <span>•</span>
-                  <span class="text-slate-400">{store.status}</span>
-                </div>
+              <div>
+                <h4 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">{store.name}</h4>
+                <p class="text-xs font-bold text-slate-400 mt-0.5">{store.tag}</p>
+              </div>
+              <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
+                <span class="flex items-center gap-1 text-amber-600">
+                  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                  {store.rating} <span class="text-[10px] text-slate-400 font-semibold">({store.count})</span>
+                </span>
+                <span class="text-purpleBrand font-extrabold">Open Now</span>
               </div>
             </div>
           </a>
@@ -432,377 +316,82 @@ const featuredStores = [
       </div>
     </section>
 
-    <!-- 6. DYNAMIC CATEGORIES LIST -->
-    <section>
-      <div class="flex items-center justify-between mb-3">
-        <h3 class="text-lg font-black font-display text-slate-900 tracking-tight">Explore Categories</h3>
-        <a href="/grocery" class="text-xs font-bold text-purpleBrand hover:underline">All Categories</a>
-      </div>
-      <div class="grid grid-cols-4 sm:grid-cols-8 gap-2">
-        {categoriesList.map(cat => (
-          <a href={`/grocery?category=${encodeURIComponent(cat.name)}`} class="flex flex-col items-center p-2 rounded-2xl bg-white border border-slate-100 hover:border-purple-200 active:scale-95 transition-all text-center group">
-            <div class={`w-12 h-12 rounded-xl bg-gradient-to-br ${cat.color} flex items-center justify-center text-2xl mb-1 group-hover:scale-110 transition-transform`}>
-              {cat.icon}
-            </div>
-            <span class="text-[11px] font-extrabold text-slate-700 leading-tight line-clamp-2">{cat.name}</span>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <!-- 7. 🔥 TRENDING PRODUCTS CAROUSEL -->
-    <section>
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">🔥</span>
-          <h3 class="text-lg font-black font-display text-slate-900 tracking-tight">Trending Products</h3>
+    <!-- 6. TRENDING ESSENTIALS CATALOG GRID (AT MRP) -->
+    <section class="space-y-4 pt-2">
+      <div class="flex items-center justify-between px-1">
+        <div>
+          <h3 class="text-xl font-black font-display text-slate-900 tracking-tight">Trending Essentials in Bhusawal</h3>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Top ordered items with 10-Min doorstep delivery</p>
         </div>
-        <a href="/grocery" class="text-xs font-bold text-purpleBrand hover:underline">See All</a>
+        <a href="/grocery" class="text-xs font-bold text-purpleBrand hover:underline">View Store</a>
       </div>
-      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-        {trendingProducts.map(p => (
-          <div class="flex-shrink-0 w-36 sm:w-44 bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between">
-            
-            <div class="h-28 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50">
-              <img src={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"} alt={p["Product Name"]} class="max-h-full max-w-full object-contain p-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-            </div>
-            <div>
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">{p.Category}</p>
-              <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">{p["Product Name"]}</h4>
-              <p class="text-[10px] text-slate-500 font-bold mb-2">{p["Pack Size"] || p.pack || p.Unit || '1 Pack'}</p>
-              <div class="flex items-center justify-between">
-                <div>
-                  <span class="text-xs font-black text-slate-900">₹{p.MRP || p.mrp || p["Selling Price"] || p.sp}</span>
-                  
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        {trendingProducts.map(p => {
+          const id = p["Product ID"] || p.ProductID || p.id;
+          const name = (p["Product Name"] || p.name || '').split(" (Batch")[0];
+          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50);
+          const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const pack = p["Pack Size"] || p.pack || '1 Unit';
+
+          return (
+            <div class="bg-white rounded-2xl p-3 border border-slate-100 shadow-xs hover:shadow-lg hover:border-purple-200 transition-all flex flex-col justify-between group">
+              <div>
+                <div class="w-full aspect-square bg-slate-50 rounded-xl p-1.5 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden">
+                  <img src={img} alt={name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                 </div>
-                <button class="add-to-cart-btn px-2.5 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={p.id} data-name={p["Product Name"]} data-price={p.MRP || p.mrp || p["Selling Price"] || p.sp} data-img={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"}>
-                  ADD
+                <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem]">{name}</h4>
+                <p class="text-[10px] font-semibold text-slate-400 mt-0.5">{pack}</p>
+              </div>
+
+              <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
+                <span class="text-xs font-black text-slate-900">MRP ₹{mrp}</span>
+                <button class="add-home-cart-btn px-2.5 py-1 bg-purple-50 text-purpleBrand hover:bg-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id={id} data-name={name.replace(/"/g, '&quot;')} data-price={mrp} data-img={img}>
+                  + ADD
                 </button>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
-
-    <!-- 8. ⭐ POPULAR PRODUCTS CAROUSEL -->
-    <section>
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">⭐</span>
-          <h3 class="text-lg font-black font-display text-slate-900 tracking-tight">Popular Products</h3>
-        </div>
-        <a href="/grocery" class="text-xs font-bold text-purpleBrand hover:underline">See All</a>
-      </div>
-      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-        {popularProducts.map(p => (
-          <div class="flex-shrink-0 w-36 sm:w-44 bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between">
-            <div class="h-28 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50">
-              <img src={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"} alt={p["Product Name"]} class="max-h-full max-w-full object-contain p-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-            </div>
-            <div>
-              <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">{p["Product Name"]}</h4>
-              <p class="text-[10px] text-slate-500 font-bold mb-2">{p["Pack Size"] || p.pack || p.Unit || '1 Pack'}</p>
-              <div class="flex items-center justify-between">
-                <div>
-                  <span class="text-xs font-black text-slate-900">₹{p.MRP || p.mrp || p["Selling Price"] || p.sp}</span>
-                  
-                </div>
-                <button class="add-to-cart-btn px-2.5 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={p.id} data-name={p["Product Name"]} data-price={p.MRP || p.mrp || p["Selling Price"] || p.sp} data-img={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"}>
-                  ADD
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- 9. ⚡ TODAY'S OFFERS -->
-    <section>
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">⚡</span>
-          <h3 class="text-lg font-black font-display text-slate-900 tracking-tight">Today's Deals</h3>
-        </div>
-        <a href="/grocery" class="text-xs font-bold text-purpleBrand hover:underline">View Offers</a>
-      </div>
-      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-        {offerProducts.map(p => (
-          <div class="flex-shrink-0 w-36 sm:w-44 bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between">
-            <span class="absolute top-2 left-2 bg-emerald-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10">
-              DEAL
-            </span>
-            <div class="h-28 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50">
-              <img src={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"} alt={p["Product Name"]} class="max-h-full max-w-full object-contain p-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-            </div>
-            <div>
-              <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">{p["Product Name"]}</h4>
-              <p class="text-[10px] text-slate-500 font-bold mb-2">{p["Pack Size"] || p.pack || p.Unit || '1 Pack'}</p>
-              <div class="flex items-center justify-between">
-                <div>
-                  <span class="text-xs font-black text-slate-900">₹{p.MRP || p.mrp || p["Selling Price"] || p.sp}</span>
-                  
-                </div>
-                <button class="add-to-cart-btn px-2.5 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={p.id} data-name={p["Product Name"]} data-price={p.MRP || p.mrp || p["Selling Price"] || p.sp} data-img={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"}>
-                  ADD
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- 10. 🔄 BUY AGAIN & 11. 🕒 RECENTLY ORDERED -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      
-      <!-- Buy Again -->
-      <div class="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-2">
-            <span class="text-xl">🔄</span>
-            <h3 class="text-base font-black font-display text-slate-900">Buy Again</h3>
-          </div>
-          <a href="/grocery" class="text-xs font-bold text-purpleBrand hover:underline">More</a>
-        </div>
-        <div class="grid grid-cols-3 gap-2">
-          {buyAgainProducts.slice(0, 3).map(p => (
-            <div class="bg-slate-50 rounded-xl p-2 flex flex-col justify-between">
-              <img src={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"} alt={p["Product Name"]} class="h-16 w-full object-contain mb-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              <h5 class="text-[10px] font-bold text-slate-800 truncate">{p["Product Name"]}</h5>
-              <div class="flex items-center justify-between mt-1">
-                <span class="text-[10px] font-black text-slate-900">₹{p.MRP || p.mrp || p["Selling Price"] || p.sp}</span>
-                <button class="add-to-cart-btn w-5 h-5 bg-purpleBrand text-white rounded-md flex items-center justify-center text-xs font-bold" data-id={p.id} data-name={p["Product Name"]} data-price={p.MRP || p.mrp || p["Selling Price"] || p.sp} data-img={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"}>+</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <!-- Recently Ordered -->
-      <div class="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm">
-        <div class="flex items-center justify-between mb-3">
-          <div class="flex items-center gap-2">
-            <span class="text-xl">🕒</span>
-            <h3 class="text-base font-black font-display text-slate-900">Recently Ordered</h3>
-          </div>
-          <a href="/orders" class="text-xs font-bold text-purpleBrand hover:underline">History</a>
-        </div>
-        <div class="grid grid-cols-3 gap-2">
-          {recentlyOrderedProducts.slice(0, 3).map(p => (
-            <div class="bg-slate-50 rounded-xl p-2 flex flex-col justify-between">
-              <img src={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"} alt={p["Product Name"]} class="h-16 w-full object-contain mb-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              <h5 class="text-[10px] font-bold text-slate-800 truncate">{p["Product Name"]}</h5>
-              <div class="flex items-center justify-between mt-1">
-                <span class="text-[10px] font-black text-slate-900">₹{p.MRP || p.mrp || p["Selling Price"] || p.sp}</span>
-                <button class="add-to-cart-btn w-5 h-5 bg-purpleBrand text-white rounded-md flex items-center justify-center text-xs font-bold" data-id={p.id} data-name={p["Product Name"]} data-price={p.MRP || p.mrp || p["Selling Price"] || p.sp} data-img={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"}>+</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-    </div>
 
   </main>
 
-  <!-- 12. BOTTOM NAVIGATION BAR -->
-  <nav class="fixed bottom-0 left-0 right-0 max-w-7xl mx-auto bg-white/95 backdrop-blur-lg border-t border-slate-200/80 px-6 py-2 flex items-center justify-between z-50 shadow-2xl">
-    
-    <a href="/home" class="flex flex-col items-center gap-0.5 text-purpleBrand font-bold">
-      <span class="material-symbols-outlined text-2xl">home</span>
-      <span class="text-[10px]">Home</span>
-    </a>
-
-    <a href="/grocery" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-purpleBrand transition-colors font-medium">
-      <span class="material-symbols-outlined text-2xl">shopping_basket</span>
-      <span class="text-[10px]">Grocery</span>
-    </a>
-
-    <a href="/shops" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-purpleBrand transition-colors font-medium">
-      <span class="material-symbols-outlined text-2xl">storefront</span>
-      <span class="text-[10px]">Shops</span>
-    </a>
-
-    <a href="/orders" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-purpleBrand transition-colors font-medium">
-      <span class="material-symbols-outlined text-2xl">receipt_long</span>
-      <span class="text-[10px]">Orders</span>
-    </a>
-
-    <a href="/profile" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-purpleBrand transition-colors font-medium">
-      <span class="material-symbols-outlined text-2xl">person</span>
-      <span class="text-[10px]">Profile</span>
-    </a>
-
-  </nav>
-
-  <!-- FLOATING CART BAR (IF ITEMS IN CART) -->
-  <div id="floating-cart-bar" class="hidden fixed bottom-16 left-4 right-4 max-w-xl mx-auto bg-purpleBrand text-white p-3 rounded-2xl shadow-xl flex items-center justify-between z-50">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center font-black text-sm" id="cart-count-badge">
-        0
-      </div>
-      <div>
-        <p class="text-xs font-black" id="cart-total-text">₹0</p>
-        <p class="text-[10px] text-purple-200">View items in basket</p>
-      </div>
-    </div>
-    <a href="/billing" class="bg-white text-purpleBrand font-extrabold text-xs px-4 py-2 rounded-xl flex items-center gap-1 shadow-md hover:bg-purple-50 active:scale-95 transition-all">
-      <span>Checkout</span>
-      <span class="material-symbols-outlined text-sm">arrow_forward</span>
-    </a>
-  </div>
-
   <Switcher />
 
-  <!-- SCRIPT FOR CART & LIVE SEARCH ENGINE -->
+  <!-- CLIENT-SIDE ADD TO CART LOGIC -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Cart Management & Floating Bar
-      function updateCartBar() {
-        try {
-          const cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-          const bar = document.getElementById('floating-cart-bar');
-          const countBadge = document.getElementById('cart-count-badge');
-          const totalText = document.getElementById('cart-total-text');
-
-          if (cart.length > 0) {
-            const totalQty = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
-            const totalPrice = cart.reduce((sum, i) => sum + (parseFloat(i.price || 0) * (i.quantity || 1)), 0);
-
-            if (countBadge) countBadge.textContent = totalQty;
-            if (totalText) totalText.textContent = '₹' + Math.round(totalPrice);
-            if (bar) bar.classList.remove('hidden');
-          } else {
-            if (bar) bar.classList.add('hidden');
-          }
-        } catch(e) {}
-      }
-
-      updateCartBar();
-
-      document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
+      document.querySelectorAll('.add-home-cart-btn').forEach(btn => {
+        btn.onclick = () => {
           const id = btn.dataset.id;
           const name = btn.dataset.name;
-          const price = btn.dataset.price;
+          const price = parseFloat(btn.dataset.price);
           const img = btn.dataset.img;
 
-          let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+          let cart = [];
+          try {
+            cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+          } catch(e) {}
+
           const existing = cart.find(i => i.id === id);
           if (existing) {
             existing.quantity = (existing.quantity || 1) + 1;
           } else {
-            cart.push({ id, name, price, image: img, quantity: 1 });
+            cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Home Item' });
           }
+
           localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-          updateCartBar();
-
-          btn.textContent = 'ADDED!';
-          btn.classList.replace('bg-purpleBrand', 'bg-emerald-600');
+          btn.textContent = '✓ ADDED';
+          btn.classList.replace('bg-purple-50', 'bg-emerald-600');
+          btn.classList.replace('text-purpleBrand', 'text-white');
           setTimeout(() => {
-            btn.textContent = 'ADD';
-            btn.classList.replace('bg-emerald-600', 'bg-purpleBrand');
-          }, 1500);
-        });
-      });
-
-      // 2. Live Search Dropdown Logic
-      const searchInput = document.getElementById('main-search-input');
-      const dropdown = document.getElementById('search-results-dropdown');
-      const dropdownList = document.getElementById('search-dropdown-list');
-
-      if (searchInput && dropdown && dropdownList) {
-        searchInput.addEventListener('input', (e) => {
-          const query = e.target.value.trim().toLowerCase();
-          if (query.length < 2) {
-            dropdown.classList.add('hidden');
-            return;
-          }
-
-          dropdownList.innerHTML = `
-            <a href="/grocery?search=${encodeURIComponent(query)}" class="flex items-center gap-3 p-3 hover:bg-slate-50 transition-colors">
-              <span class="material-symbols-outlined text-purpleBrand">search</span>
-              <div>
-                <p class="text-xs font-extrabold text-slate-800">Search for "${query}"</p>
-                <p class="text-[10px] text-slate-400">Search across 25,000+ groceries & daily needs</p>
-              </div>
-            </a>
-          `;
-          dropdown.classList.remove('hidden');
-        });
-
-        document.addEventListener('click', (e) => {
-          if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.add('hidden');
-          }
-        });
-      }
-
-      // Hero Carousel Auto-Sliding Logic
-      const heroSlides = document.querySelectorAll('.hero-slide');
-      const heroDots = document.querySelectorAll('.hero-dot');
-      const heroPrevBtn = document.getElementById('hero-prev-btn');
-      const heroNextBtn = document.getElementById('hero-next-btn');
-      let currentHeroSlide = 0;
-      let heroSlideTimer = null;
-
-      function goToHeroSlide(index) {
-        if (!heroSlides.length) return;
-        heroSlides[currentHeroSlide].classList.add('opacity-0', 'pointer-events-none');
-        heroSlides[currentHeroSlide].classList.remove('opacity-100');
-
-        heroDots[currentHeroSlide]?.classList.remove('bg-white', 'scale-125');
-        heroDots[currentHeroSlide]?.classList.add('bg-white/50');
-
-        currentHeroSlide = (index + heroSlides.length) % heroSlides.length;
-
-        heroSlides[currentHeroSlide].classList.remove('opacity-0', 'pointer-events-none');
-        heroSlides[currentHeroSlide].classList.add('opacity-100');
-
-        heroDots[currentHeroSlide]?.classList.remove('bg-white/50');
-        heroDots[currentHeroSlide]?.classList.add('bg-white', 'scale-125');
-      }
-
-      function startHeroSlideTimer() {
-        stopHeroSlideTimer();
-        heroSlideTimer = setInterval(() => {
-          goToHeroSlide(currentHeroSlide + 1);
-        }, 4000);
-      }
-
-      function stopHeroSlideTimer() {
-        if (heroSlideTimer) clearInterval(heroSlideTimer);
-      }
-
-      heroPrevBtn?.addEventListener('click', () => {
-        goToHeroSlide(currentHeroSlide - 1);
-        startHeroSlideTimer();
-      });
-
-      heroNextBtn?.addEventListener('click', () => {
-        goToHeroSlide(currentHeroSlide + 1);
-        startHeroSlideTimer();
-      });
-
-      heroDots.forEach((dot, idx) => {
-        dot.addEventListener('click', () => {
-          goToHeroSlide(idx);
-          startHeroSlideTimer();
-        });
-      });
-
-      const heroCarouselEl = document.getElementById('hero-carousel');
-      heroCarouselEl?.addEventListener('mouseenter', stopHeroSlideTimer);
-      heroCarouselEl?.addEventListener('mouseleave', startHeroSlideTimer);
-
-      startHeroSlideTimer();
-
-      // Address Header Click
-      document.getElementById('header-location-btn')?.addEventListener('click', () => {
-        window.location.href = '/profile';
+            btn.textContent = '+ ADD';
+            btn.classList.replace('bg-emerald-600', 'bg-purple-50');
+            btn.classList.replace('text-white', 'text-purpleBrand');
+          }, 1200);
+        };
       });
     });
   </script>
