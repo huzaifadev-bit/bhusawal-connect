@@ -10,129 +10,145 @@ const foodCategories = [
   { id: 'chinese', name: 'Chinese', icon: '🍜', kw: 'chinese' },
   { id: 'south_indian', name: 'South Indian', icon: '🥞', kw: 'south' },
   { id: 'north_indian', name: 'North Indian', icon: '🍱', kw: 'north' },
-  { id: 'desserts', name: 'Desserts', icon: '🍨', kw: 'ice cream' },
-  { id: 'beverages', name: 'Beverages', icon: '🥤', kw: 'shakes' },
-  { id: 'rolls', name: 'Rolls', icon: '🌯', kw: 'rolls' },
+  { id: 'desserts', name: 'Desserts', icon: '🍨', kw: 'dessert' },
+  { id: 'beverages', name: 'Beverages', icon: '🥤', kw: 'shake' },
+  { id: 'rolls', name: 'Rolls', icon: '🌯', kw: 'roll' },
   { id: 'fast_food', name: 'Fast Food', icon: '🍟', kw: 'fast food' }
 ];
 
-// Sponsored Restaurants (Always First)
-const sponsoredRestaurants = [
-  {
-    id: 'rest_royal_biryani',
-    name: 'Royal Biryani & Caterers',
-    logo: '🍲',
-    cover: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
-    rating: '4.8',
-    ratingsCount: '850+',
-    deliveryTime: '20-25 min',
-    distance: '1.2 km',
-    cuisine: 'Mughlai • Dum Biryani • North Indian',
-    isOpen: true,
-    isVerified: true,
-    isSponsored: true
-  },
-  {
-    id: 'rest_sagar_grand',
-    name: 'Hotel Sagar Grand',
-    logo: '🏨',
-    cover: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
-    rating: '4.9',
-    ratingsCount: '1,120+',
-    deliveryTime: '15-20 min',
-    distance: '0.8 km',
-    cuisine: 'Multi-Cuisine • Thalis • North Indian',
-    isOpen: true,
-    isVerified: true,
-    isSponsored: true
-  }
+// Verified Bhusawal Restaurants
+const restaurants = [
+  { id: 'royal_biryani', name: 'Royal Biryani & Caterers', rating: '4.8', logo: '🍲' },
+  { id: 'sagar_grand', name: 'Hotel Sagar Grand', rating: '4.9', logo: '🏨' },
+  { id: 'shiv_dairy', name: 'Shiv Dairy & Sweets', rating: '4.9', logo: '🥛' },
+  { id: 'kwality_hub', name: "Kwality Wall's Ice Cream Hub", rating: '4.7', logo: '🍦' },
+  { id: 'tandoor_hut', name: 'Tandoor Hut Chinese & Grill', rating: '4.6', logo: '🍜' },
+  { id: 'thali_house', name: 'Bhusawal Thali House', rating: '4.8', logo: '🍱' },
+  { id: 'south_corner', name: 'South Corner Dosa Point', rating: '4.7', logo: '🥞' },
+  { id: 'burger_station', name: 'Burger & Fries Station', rating: '4.5', logo: '🍔' }
 ];
 
-// Popular Restaurants
-const popularRestaurants = [
+// Real Existing Food Catalog Items
+const foodItems = [
   {
-    id: 'rest_shiv_dairy',
-    name: 'Shiv Dairy & Sweets',
-    logo: '🥛',
-    cover: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80',
+    id: 'food_royal_biryani_chicken',
+    name: 'Special Hyderabadi Chicken Dum Biryani',
+    restaurant: 'Royal Biryani & Caterers',
+    isVeg: false,
+    price: 240,
+    rating: '4.8',
+    category: 'biryani',
+    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'food_royal_biryani_mutton',
+    name: 'Royal Shahi Mutton Dum Biryani',
+    restaurant: 'Royal Biryani & Caterers',
+    isVeg: false,
+    price: 320,
     rating: '4.9',
-    ratingsCount: '1,500+',
-    deliveryTime: '10-15 min',
-    distance: '0.5 km',
-    cuisine: 'Fresh Milk • Paneer • Traditional Sweets • Desserts',
-    isOpen: true,
-    isVerified: true
+    category: 'biryani',
+    image: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=800&q=80'
   },
   {
-    id: 'rest_kwality_hub',
-    name: "Kwality Wall's Ice Cream Hub",
-    logo: '🍦',
-    cover: 'https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=800&q=80',
+    id: 'food_sagar_deluxe_thali',
+    name: 'Special Veg Deluxe Unlimited Thali',
+    restaurant: 'Hotel Sagar Grand',
+    isVeg: true,
+    price: 180,
+    rating: '4.9',
+    category: 'north_indian',
+    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'food_sagar_paneer_masala',
+    name: 'Paneer Butter Masala & Butter Naan Combo',
+    restaurant: 'Hotel Sagar Grand',
+    isVeg: true,
+    price: 210,
+    rating: '4.8',
+    category: 'north_indian',
+    image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'food_shiv_sweets_pack',
+    name: 'Fresh Cow Ghee Sweets & Pedha Gift Box',
+    restaurant: 'Shiv Dairy & Sweets',
+    isVeg: true,
+    price: 250,
+    rating: '4.9',
+    category: 'desserts',
+    image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'food_kwality_choco_brownie',
+    name: 'Chocolate Lava Fudge Sundae Tub (750ml)',
+    restaurant: "Kwality Wall's Ice Cream Hub",
+    isVeg: true,
+    price: 190,
     rating: '4.7',
-    ratingsCount: '610+',
-    deliveryTime: '12-18 min',
-    distance: '1.0 km',
-    cuisine: 'Ice Creams • Shakes • Sundaes • Desserts • Beverages',
-    isOpen: true,
-    isVerified: true
+    category: 'desserts',
+    image: 'https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=800&q=80'
   },
   {
-    id: 'rest_tandoor_hut',
-    name: 'Tandoor Hut Chinese & Grill',
-    logo: '🍜',
-    cover: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80',
+    id: 'food_tandoor_hakka_noodles',
+    name: 'Schezwan Hakka Noodles & Manchurian Gravy',
+    restaurant: 'Tandoor Hut Chinese & Grill',
+    isVeg: true,
+    price: 160,
     rating: '4.6',
-    ratingsCount: '740+',
-    deliveryTime: '25-30 min',
-    distance: '2.1 km',
-    cuisine: 'Indo-Chinese • Hakka Noodles • Chinese • Starters • Rolls',
-    isOpen: true,
-    isVerified: true
-  }
-];
-
-// All Restaurants (Comprehensive Combined List)
-const allRestaurants = [
-  ...sponsoredRestaurants,
-  ...popularRestaurants,
-  {
-    id: 'rest_thali_house',
-    name: 'Bhusawal Thali House',
-    logo: '🍱',
-    cover: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80',
-    rating: '4.8',
-    ratingsCount: '980+',
-    deliveryTime: '18-22 min',
-    distance: '1.4 km',
-    cuisine: 'Special Veg Thalis • Solkadhi • Maharashtrian • North Indian',
-    isOpen: true,
-    isVerified: true
+    category: 'chinese',
+    image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80'
   },
   {
-    id: 'rest_south_corner',
-    name: 'South Corner Dosa Point',
-    logo: '🥞',
-    cover: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80',
+    id: 'food_tandoor_chicken_roll',
+    name: 'Crispy Double Chicken Kathi Roll Supreme',
+    restaurant: 'Tandoor Hut Chinese & Grill',
+    isVeg: false,
+    price: 140,
     rating: '4.7',
-    ratingsCount: '520+',
-    deliveryTime: '15-20 min',
-    distance: '1.1 km',
-    cuisine: 'Masala Dosa • Idli Sambar • Filter Coffee • South Indian',
-    isOpen: true,
-    isVerified: true
+    category: 'rolls',
+    image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80'
   },
   {
-    id: 'rest_burger_station',
-    name: 'Burger & Fries Station',
-    logo: '🍔',
-    cover: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
+    id: 'food_south_masala_dosa',
+    name: 'Special Butter Masala Dosa & Filter Coffee',
+    restaurant: 'South Corner Dosa Point',
+    isVeg: true,
+    price: 120,
+    rating: '4.7',
+    category: 'south_indian',
+    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'food_burger_cheese_pizza',
+    name: 'Double Cheese Burst Margherita Pizza',
+    restaurant: 'Burger & Fries Station',
+    isVeg: true,
+    price: 260,
+    rating: '4.6',
+    category: 'pizza',
+    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'food_burger_crispy_veg',
+    name: 'Crispy Veg Loaded Burger & Fries Combo',
+    restaurant: 'Burger & Fries Station',
+    isVeg: true,
+    price: 110,
     rating: '4.5',
-    ratingsCount: '430+',
-    deliveryTime: '20-25 min',
-    distance: '1.8 km',
-    cuisine: 'Burgers • Pizza • Peri Peri Fries • Shakes • Fast Food',
-    isOpen: true,
-    isVerified: true
+    category: 'burger',
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'food_thali_maharashtrian',
+    name: 'Special Maharashtrian Pithla Bhakri Thali',
+    restaurant: 'Bhusawal Thali House',
+    isVeg: true,
+    price: 150,
+    rating: '4.8',
+    category: 'north_indian',
+    image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80'
   }
 ];
 ---
@@ -236,7 +252,7 @@ const allRestaurants = [
       </div>
     </div>
 
-    <!-- 3. STICKY FOOD CATEGORIES CHIPS SECTION (HORIZONTAL SCROLLING ON MOBILE) -->
+    <!-- 3. STICKY FOOD CATEGORIES CHIPS SECTION -->
     <section class="sticky top-32 z-30 bg-white/95 backdrop-blur-md py-2 border-y border-slate-100/80 -mx-4 sm:-mx-6 px-4 sm:px-6">
       <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
         {foodCategories.map((cat, idx) => (
@@ -267,210 +283,95 @@ const allRestaurants = [
       </div>
     </section>
 
-    <!-- 5. ⭐ SPONSORED RESTAURANTS (ALWAYS FIRST) -->
+    <!-- 5. REDESIGNED FOOD CARDS GRID -->
+    <!-- DESKTOP: 4 per row, LAPTOP: 3 per row, TABLET: 2 per row, MOBILE: 1 per row -->
     <section class="space-y-4">
       <div class="flex items-center justify-between px-1">
         <div>
           <h2 class="text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span class="text-amber-500">⭐</span>
-            <span>Sponsored Restaurants</span>
+            <span>🔥</span>
+            <span>Popular Food Dishes</span>
           </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Top featured dining spots in Bhusawal</p>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Top ordered items from verified Bhusawal kitchens</p>
         </div>
-        <span class="px-2.5 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-black uppercase tracking-wider rounded-md">FEATURED</span>
+        <span class="px-3 py-1 bg-redLight text-redBrand text-xs font-black rounded-full border border-red-100">
+          ⚡ 20-Min Express
+        </span>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-        {sponsoredRestaurants.map(rest => (
-          <div class="restaurant-card group bg-white rounded-3xl border-2 border-amber-200 shadow-sm hover:shadow-2xl hover:border-redBrand transition-all duration-300 overflow-hidden cursor-pointer flex flex-col relative" data-name={rest.name.toLowerCase()} data-cuisine={rest.cuisine.toLowerCase()} onclick="window.location.href='/shops';">
+      <div id="food-cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+        {foodItems.map(item => (
+          <div 
+            class="food-item-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 overflow-hidden flex flex-col justify-between relative" 
+            data-id={item.id}
+            data-name={item.name.toLowerCase()} 
+            data-restaurant={item.restaurant.toLowerCase()}
+            data-category={item.category.toLowerCase()}
+          >
             
-            <div class="h-48 bg-slate-100 relative overflow-hidden rounded-t-3xl">
-              <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent"></div>
+            <!-- Large Food Image Container -->
+            <div class="h-48 sm:h-52 w-full bg-slate-100 relative overflow-hidden rounded-t-3xl">
+              <img src={item.image} alt={item.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
               
-              <div class="absolute top-3 left-3 bg-amber-500 text-white px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md z-10">
-                <span>⭐ SPONSORED</span>
+              <!-- Veg / Non-Veg Badge -->
+              <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-1.5 shadow-md z-10 border border-slate-200">
+                {item.isVeg ? (
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 border border-emerald-700 flex items-center justify-center shrink-0"></span>
+                ) : (
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-600 border border-rose-700 flex items-center justify-center shrink-0"></span>
+                )}
+                <span class={item.isVeg ? 'text-emerald-700 font-extrabold' : 'text-rose-700 font-extrabold'}>
+                  {item.isVeg ? 'VEG' : 'NON-VEG'}
+                </span>
               </div>
 
-              <button class="fav-rest-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+              <!-- Favourite Heart Button -->
+              <button class="fav-food-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
                 <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
               </button>
 
-              <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-2 shadow-xs z-10">
-                <span class="flex items-center gap-1">⚡ {rest.deliveryTime}</span>
-                <span>•</span>
-                <span class="flex items-center gap-1">📍 {rest.distance}</span>
+              <!-- Rating Tag -->
+              <div class="absolute bottom-3 left-3 bg-slate-900/85 backdrop-blur-md text-amber-400 px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-1 shadow-xs z-10">
+                <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="text-white">{item.rating}</span>
               </div>
             </div>
 
+            <!-- Card Details -->
             <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-2xl shrink-0 border border-red-100 shadow-xs">
-                  {rest.logo}
+              <div class="space-y-1">
+                <p class="text-[11px] font-extrabold text-redBrand uppercase tracking-wider flex items-center gap-1">
+                  <span>🏪</span> {item.restaurant}
+                </p>
+                <h3 class="text-sm sm:text-base font-black font-display text-slate-900 group-hover:text-redBrand transition-colors line-clamp-2 leading-snug">
+                  {item.name}
+                </h3>
+              </div>
+
+              <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-3 border-t border-slate-100 mt-2">
+                <div>
+                  <span class="text-xs text-slate-400 font-bold block">MRP Price</span>
+                  <span class="text-base font-black text-slate-900">₹{item.price}</span>
                 </div>
-                <div class="min-w-0 flex-1">
-                  <div class="flex items-center gap-1.5">
-                    <h3 class="text-base sm:text-lg font-black font-display text-slate-900 group-hover:text-redBrand transition-colors truncate">{rest.name}</h3>
-                    <span class="text-emerald-600 text-xs shrink-0" title="Verified Partner">✓</span>
+
+                <!-- ADD BUTTON & ANIMATED QUANTITY SELECTOR CONTAINER -->
+                <div class="food-card-action-box" data-id={item.id} data-name={item.name} data-price={item.price} data-img={item.image}>
+                  <button class="btn-add-food px-4 py-2 bg-redBrand hover:bg-redDark text-white text-xs font-black rounded-2xl active:scale-95 transition-all shadow-md flex items-center gap-1">
+                    <span>+ ADD</span>
+                  </button>
+                  
+                  <div class="qty-control-wrapper hidden items-center bg-redLight border border-red-200 rounded-2xl p-0.5 shadow-sm">
+                    <button class="btn-qty-minus w-7 h-7 rounded-xl bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white shadow-xs">
+                      -
+                    </button>
+                    <span class="food-qty-num px-2.5 text-xs font-black text-redBrand min-w-[20px] text-center">1</span>
+                    <button class="btn-qty-plus w-7 h-7 rounded-xl bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white shadow-xs">
+                      +
+                    </button>
                   </div>
-                  <p class="text-xs font-bold text-slate-400 mt-0.5 truncate">{rest.cuisine}</p>
                 </div>
-              </div>
 
-              <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-                <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-100">
-                  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                  {rest.rating} <span class="text-[10px] text-slate-400 font-semibold">({rest.ratingsCount})</span>
-                </span>
-                
-                <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-extrabold uppercase">
-                    Verified Partner
-                  </span>
-                  <span class="px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-extrabold border border-emerald-100">
-                    Open Now
-                  </span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- 6. 🔥 POPULAR RESTAURANTS -->
-    <section class="space-y-4 pt-2">
-      <div class="flex items-center justify-between px-1">
-        <div>
-          <h2 class="text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span class="text-orange-500">🔥</span>
-            <span>Popular Restaurants</span>
-          </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Most ordered dining spots in Bhusawal</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-        {popularRestaurants.map(rest => (
-          <div class="restaurant-card group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl hover:border-redBrand transition-all duration-300 overflow-hidden cursor-pointer flex flex-col relative" data-name={rest.name.toLowerCase()} data-cuisine={rest.cuisine.toLowerCase()} onclick="window.location.href='/shops';">
-            
-            <div class="h-44 sm:h-48 bg-slate-100 relative overflow-hidden rounded-t-3xl">
-              <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent"></div>
-              
-              <button class="fav-rest-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
-                <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
-              </button>
-
-              <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-2 shadow-xs z-10">
-                <span>⚡ {rest.deliveryTime}</span>
-                <span>•</span>
-                <span>📍 {rest.distance}</span>
-              </div>
-            </div>
-
-            <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-2xl shrink-0 border border-red-100 shadow-xs">
-                  {rest.logo}
-                </div>
-                <div class="min-w-0 flex-1">
-                  <div class="flex items-center gap-1.5">
-                    <h3 class="text-base sm:text-lg font-black font-display text-slate-900 group-hover:text-redBrand transition-colors truncate">{rest.name}</h3>
-                    <span class="text-emerald-600 text-xs shrink-0" title="Verified Partner">✓</span>
-                  </div>
-                  <p class="text-xs font-bold text-slate-400 mt-0.5 truncate">{rest.cuisine}</p>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-                <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-100">
-                  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                  {rest.rating} <span class="text-[10px] text-slate-400 font-semibold">({rest.ratingsCount})</span>
-                </span>
-                
-                <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-extrabold uppercase">
-                    Verified Partner
-                  </span>
-                  <span class="px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-extrabold border border-emerald-100">
-                    Open Now
-                  </span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- 7. 🍽️ ALL RESTAURANTS -->
-    <section class="space-y-4 pt-2">
-      <div class="flex items-center justify-between px-1">
-        <div>
-          <h2 class="text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span>🍽️</span>
-            <span>All Restaurants</span>
-          </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Explore all food partners delivering across Bhusawal</p>
-        </div>
-      </div>
-
-      <div id="all-restaurants-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-        {allRestaurants.map(rest => (
-          <div class="restaurant-card group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl hover:border-redBrand transition-all duration-300 overflow-hidden cursor-pointer flex flex-col relative" data-name={rest.name.toLowerCase()} data-cuisine={rest.cuisine.toLowerCase()} onclick="window.location.href='/shops';">
-            
-            <div class="h-44 sm:h-48 bg-slate-100 relative overflow-hidden rounded-t-3xl">
-              <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent"></div>
-              
-              {rest.isSponsored && (
-                <div class="absolute top-3 left-3 bg-amber-500 text-white px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-xs z-10">
-                  ⭐ SPONSORED
-                </div>
-              )}
-
-              <button class="fav-rest-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
-                <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
-              </button>
-
-              <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-2 shadow-xs z-10">
-                <span>⚡ {rest.deliveryTime}</span>
-                <span>•</span>
-                <span>📍 {rest.distance}</span>
-              </div>
-            </div>
-
-            <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-2xl shrink-0 border border-red-100 shadow-xs">
-                  {rest.logo}
-                </div>
-                <div class="min-w-0 flex-1">
-                  <div class="flex items-center gap-1.5">
-                    <h3 class="text-base sm:text-lg font-black font-display text-slate-900 group-hover:text-redBrand transition-colors truncate">{rest.name}</h3>
-                    <span class="text-emerald-600 text-xs shrink-0" title="Verified Partner">✓</span>
-                  </div>
-                  <p class="text-xs font-bold text-slate-400 mt-0.5 truncate">{rest.cuisine}</p>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-                <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-100">
-                  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                  {rest.rating} <span class="text-[10px] text-slate-400 font-semibold">({rest.ratingsCount})</span>
-                </span>
-                
-                <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-extrabold uppercase">
-                    Verified Partner
-                  </span>
-                  <span class="px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-extrabold border border-emerald-100">
-                    Open Now
-                  </span>
-                </div>
               </div>
             </div>
 
@@ -483,40 +384,123 @@ const allRestaurants = [
 
   <Switcher />
 
-  <!-- CLIENT-SIDE SEARCH ENGINE & CATEGORY FILTERING -->
+  <!-- CLIENT-SIDE CART ENGINE & ANIMATED QUANTITY CONTROLS -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // Update Cart Badge
-      function updateCartBadge() {
+      // Cart Storage Helper
+      function getCart() {
         try {
-          const cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-          const badge = document.getElementById('food-cart-badge');
-          const totalQty = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
-          if (badge) badge.textContent = totalQty;
-        } catch(e) {}
+          return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+        } catch(e) {
+          return [];
+        }
       }
 
-      updateCartBadge();
+      function setCart(cart) {
+        localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+        updateCartBadge();
+        syncFoodCardQtyUi();
+      }
 
-      // Elements
+      // Update Header Cart Badge
+      function updateCartBadge() {
+        const cart = getCart();
+        const badge = document.getElementById('food-cart-badge');
+        const totalQty = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
+        if (badge) badge.textContent = totalQty;
+      }
+
+      // Sync All Food Card UI with Cart Quantities
+      function syncFoodCardQtyUi() {
+        const cart = getCart();
+        document.querySelectorAll('.food-card-action-box').forEach(box => {
+          const id = box.dataset.id;
+          const item = cart.find(i => i.id === id);
+          const addBtn = box.querySelector('.btn-add-food');
+          const qtyWrapper = box.querySelector('.qty-control-wrapper');
+          const qtyNum = box.querySelector('.food-qty-num');
+
+          if (item && item.quantity > 0) {
+            addBtn?.classList.add('hidden');
+            qtyWrapper?.classList.remove('hidden');
+            qtyWrapper?.classList.add('flex');
+            if (qtyNum) qtyNum.textContent = item.quantity;
+          } else {
+            addBtn?.classList.remove('hidden');
+            qtyWrapper?.classList.add('hidden');
+            qtyWrapper?.classList.remove('flex');
+          }
+        });
+      }
+
+      // Initialize UI
+      updateCartBadge();
+      syncFoodCardQtyUi();
+
+      // Bind Add Button & Quantity Selectors
+      document.querySelectorAll('.food-card-action-box').forEach(box => {
+        const id = box.dataset.id;
+        const name = box.dataset.name;
+        const price = parseFloat(box.dataset.price);
+        const img = box.dataset.img;
+
+        const addBtn = box.querySelector('.btn-add-food');
+        const minusBtn = box.querySelector('.btn-qty-minus');
+        const plusBtn = box.querySelector('.btn-qty-plus');
+
+        addBtn?.addEventListener('click', () => {
+          let cart = getCart();
+          const existing = cart.find(i => i.id === id);
+          if (existing) {
+            existing.quantity += 1;
+          } else {
+            cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Food Delivery' });
+          }
+          setCart(cart);
+        });
+
+        minusBtn?.addEventListener('click', () => {
+          let cart = getCart();
+          const existing = cart.find(i => i.id === id);
+          if (existing) {
+            if (existing.quantity > 1) {
+              existing.quantity -= 1;
+            } else {
+              cart = cart.filter(i => i.id !== id);
+            }
+            setCart(cart);
+          }
+        });
+
+        plusBtn?.addEventListener('click', () => {
+          let cart = getCart();
+          const existing = cart.find(i => i.id === id);
+          if (existing) {
+            existing.quantity += 1;
+            setCart(cart);
+          }
+        });
+      });
+
+      // Search & Category Filtering
       const searchInput = document.getElementById('food-search-input');
       const clearBtn = document.getElementById('clear-food-search');
-      const restaurantCards = document.querySelectorAll('.restaurant-card');
+      const foodCards = document.querySelectorAll('.food-item-card');
       const categoryChips = document.querySelectorAll('.food-cat-chip');
 
       let activeCategoryKw = '';
 
-      // Filter Function
-      function applyRestaurantFilters() {
-        const searchQuery = (searchInput?.value || '').trim().toLowerCase();
+      function applyFoodFilters() {
+        const query = (searchInput?.value || '').trim().toLowerCase();
 
-        restaurantCards.forEach(card => {
+        foodCards.forEach(card => {
           const name = card.dataset.name || '';
-          const cuisine = card.dataset.cuisine || '';
+          const rest = card.dataset.restaurant || '';
+          const cat = card.dataset.category || '';
 
-          const matchesSearch = !searchQuery || name.includes(searchQuery) || cuisine.includes(searchQuery);
-          const matchesCategory = !activeCategoryKw || cuisine.includes(activeCategoryKw) || name.includes(activeCategoryKw);
+          const matchesSearch = !query || name.includes(query) || rest.includes(query);
+          const matchesCategory = !activeCategoryKw || cat.includes(activeCategoryKw) || name.includes(activeCategoryKw);
 
           if (matchesSearch && matchesCategory) {
             card.classList.remove('hidden');
@@ -526,23 +510,21 @@ const allRestaurants = [
         });
       }
 
-      // Search Input Listener
       searchInput?.addEventListener('input', (e) => {
         if (e.target.value.length > 0) {
           clearBtn?.classList.remove('hidden');
         } else {
           clearBtn?.classList.add('hidden');
         }
-        applyRestaurantFilters();
+        applyFoodFilters();
       });
 
       clearBtn?.addEventListener('click', () => {
         searchInput.value = '';
         clearBtn.classList.add('hidden');
-        applyRestaurantFilters();
+        applyFoodFilters();
       });
 
-      // Food Category Chips Listener
       categoryChips.forEach(chip => {
         chip.addEventListener('click', () => {
           categoryChips.forEach(c => {
@@ -554,7 +536,7 @@ const allRestaurants = [
           chip.classList.add('bg-redBrand', 'text-white', 'shadow-md', 'ring-2', 'ring-redBrand/30');
 
           activeCategoryKw = chip.dataset.kw || '';
-          applyRestaurantFilters();
+          applyFoodFilters();
         });
       });
 
