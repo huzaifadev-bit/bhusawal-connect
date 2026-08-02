@@ -1,0 +1,395 @@
+---
+import Switcher from '../components/Switcher.astro';
+import catalog from '../../public/grocery_catalog.json';
+
+// Initial recommendations if wishlist is cleared
+const catalogRecommendations = catalog.slice(0, 8);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Wishlist & Favourites | Bhusawal Connect</title>
+  
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <script is:inline>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            purpleBrand: '#7c3aed',
+            purpleDark: '#6d28d9',
+            purpleLight: '#f3e8ff'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+
+<body class="min-h-screen pb-32 text-slate-800 antialiased">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-8 py-3.5 shadow-xs flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a href="/profile" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+      </a>
+      <a href="/home" class="flex items-center gap-1.5">
+        <span class="text-lg font-black font-display text-purpleBrand tracking-tight">bhusawal<span class="text-slate-900">connect</span></span>
+      </a>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <a href="/cart" class="px-4 py-1.5 bg-purple-50 text-purpleBrand border border-purple-200 text-xs font-black rounded-xl hover:bg-purpleBrand hover:text-white transition-all flex items-center gap-1.5 shadow-xs">
+        <span class="material-symbols-outlined text-base">shopping_cart</span>
+        <span>View Cart</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- PAGE TITLE & SEARCH -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/60 pb-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-rose-500 text-2xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+          <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900">My Wishlist</h1>
+        </div>
+        <p class="text-xs font-bold text-slate-400 mt-0.5" id="wishlist-subtitle">Loading your saved items...</p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-md w-full">
+        <!-- Live Search Input -->
+        <div class="relative flex-1">
+          <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+          <input type="text" id="search-wishlist-input" placeholder="Search saved items..." class="w-full bg-white border border-slate-200 rounded-2xl pl-10 pr-4 py-2 text-xs font-bold text-slate-800 outline-none focus:border-purpleBrand focus:ring-2 focus:ring-purpleBrand/20 transition-all shadow-xs" />
+        </div>
+
+        <button id="btn-move-all-cart" class="hidden px-4 py-2 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-xl shadow-xs transition-all whitespace-nowrap active:scale-95">
+          Move All to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- EMPTY WISHLIST STATE -->
+    <div id="empty-wishlist-container" class="hidden bg-white rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-sm text-center max-w-lg mx-auto space-y-5 animate-in fade-in duration-300">
+      <div class="w-24 h-24 rounded-full bg-rose-50 text-rose-500 mx-auto flex items-center justify-center shadow-inner">
+        <span class="material-symbols-outlined text-5xl" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+      </div>
+      <div>
+        <h2 class="text-xl font-black font-display text-slate-900">Your wishlist is empty!</h2>
+        <p class="text-xs font-bold text-slate-400 mt-1">Save your favourite items here by clicking the heart icon on any product in our Grocery Superstore.</p>
+      </div>
+      <a href="/grocery" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-purpleBrand hover:bg-purpleDark text-white font-black text-sm rounded-2xl shadow-lg shadow-purple-900/15 active:scale-95 transition-all">
+        <span class="material-symbols-outlined text-base">storefront</span>
+        <span>Explore Grocery Superstore</span>
+      </a>
+    </div>
+
+    <!-- ACTIVE WISHLIST PRODUCT CARDS GRID -->
+    <div id="wishlist-grid-wrapper" class="hidden grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <!-- Dynamically rendered -->
+    </div>
+
+    <!-- RECOMMENDED SECTION AT BOTTOM -->
+    <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-black text-purpleBrand uppercase tracking-wider">Suggested for You</span>
+          <h3 class="text-base font-black font-display text-slate-900">Popular Daily Essentials in Bhusawal</h3>
+        </div>
+        <a href="/grocery" class="text-xs font-bold text-slate-400 hover:text-purpleBrand">View Store →</a>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {catalogRecommendations.map(rec => {
+          const rId = rec["Product ID"] || rec.ProductID || rec.id || '';
+          const rName = rec["Product Name"] || rec.name || '';
+          const rMrp = parseFloat(rec.MRP || rec.mrp || rec["Selling Price"] || rec.sp || 50);
+          const rImg = rec["Product Image URL"] || rec.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const rPack = rec["Pack Size"] || rec.pack || '1 Unit';
+
+          return (
+            <div class="bg-slate-50/80 rounded-2xl p-2.5 border border-slate-100 flex flex-col justify-between group">
+              <div class="w-full aspect-square bg-white rounded-xl p-1 mb-2 flex items-center justify-center overflow-hidden border border-slate-100">
+                <img src={rImg} alt={rName} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              </div>
+              <div class="space-y-1">
+                <h4 class="text-[11px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[1.8rem]">{rName}</h4>
+                <p class="text-[10px] text-slate-400 font-semibold">{rPack}</p>
+                <div class="flex items-center justify-between pt-1">
+                  <span class="text-xs font-black text-slate-900">MRP ₹{rMrp}</span>
+                  <button class="add-rec-wishlist-btn px-2.5 py-1 bg-purple-50 text-purpleBrand hover:bg-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-lg active:scale-90 transition-all" data-id={rId} data-name={rName.replace(/"/g, '&quot;')} data-price={rMrp} data-img={rImg} data-pack={rPack}>
+                    + ADD
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+  </main>
+
+  <Switcher />
+
+  <!-- CLIENT-SIDE WISHLIST ENGINE -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      let searchQuery = '';
+
+      // Sample fallback wishlist items if localStorage is empty
+      const SAMPLE_WISHLIST = [
+        { id: 'W1', name: 'Amul Taaza Toned Milk (500 ml)', price: 27, mrp: 27, image: 'https://www.bbassets.com/media/uploads/p/l/306926_4-amul-taaza-toned-milk.jpg', pack: '500 ml', brand: 'Amul', stock: 'in_stock' },
+        { id: 'W2', name: 'Bhusawal Premium Golden Bananas (1 Dozen)', price: 60, mrp: 60, image: '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg', pack: '1 Dozen', brand: 'Bhusawal Fresh', stock: 'in_stock' },
+        { id: 'W3', name: 'Fortune Sunlite Sunflower Oil (1 L Pouch)', price: 135, mrp: 135, image: 'https://www.bbassets.com/media/uploads/p/l/274262_14-fortune-sunlite-refined-sunflower-oil.jpg', pack: '1 L Pouch', brand: 'Fortune', stock: 'in_stock' },
+        { id: 'W4', name: 'Brooke Bond Red Label Tea Box (250 g)', price: 140, mrp: 140, image: 'https://www.bbassets.com/media/uploads/p/l/266542_9-brooke-bond-red-label-tea.jpg', pack: '250 g Box', brand: 'Red Label', stock: 'out_of_stock' }
+      ];
+
+      function getWishlist() {
+        try {
+          const stored = JSON.parse(localStorage.getItem('bhusawal_wishlist') || '[]');
+          if (Array.isArray(stored) && stored.length > 0) return stored;
+        } catch(e) {}
+        return SAMPLE_WISHLIST;
+      }
+
+      function saveWishlist(wishlistArray) {
+        localStorage.setItem('bhusawal_wishlist', JSON.stringify(wishlistArray));
+        renderWishlistUI();
+      }
+
+      function renderWishlistUI() {
+        const wishlist = getWishlist();
+        const emptyBox = document.getElementById('empty-wishlist-container');
+        const gridWrapper = document.getElementById('wishlist-grid-wrapper');
+        const subtitle = document.getElementById('wishlist-subtitle');
+        const moveAllBtn = document.getElementById('btn-move-all-cart');
+
+        let filtered = wishlist;
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          filtered = wishlist.filter(item => 
+            (item.name || '').toLowerCase().includes(q) || 
+            (item.brand || '').toLowerCase().includes(q)
+          );
+        }
+
+        if (!wishlist || wishlist.length === 0) {
+          emptyBox?.classList.remove('hidden');
+          gridWrapper?.classList.add('hidden');
+          moveAllBtn?.classList.add('hidden');
+          if (subtitle) subtitle.textContent = '0 items in your wishlist';
+          return;
+        }
+
+        emptyBox?.classList.add('hidden');
+        gridWrapper?.classList.remove('hidden');
+        moveAllBtn?.classList.remove('hidden');
+        if (subtitle) subtitle.textContent = `${wishlist.length} ${wishlist.length === 1 ? 'item' : 'items'} saved for later`;
+
+        if (filtered.length === 0) {
+          gridWrapper.innerHTML = `
+            <div class="col-span-full bg-white rounded-3xl p-8 text-center space-y-2 border border-slate-100">
+              <span class="material-symbols-outlined text-3xl text-slate-300">search_off</span>
+              <p class="text-xs font-black text-slate-800">No wishlist items match "${searchQuery}"</p>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '';
+        filtered.forEach(item => {
+          const id = item.id || ('W-' + Math.random());
+          const name = item.name || 'Saved Product';
+          const brand = item.brand || 'Bhusawal Connect';
+          const pack = item.pack || item.unit || '1 Unit';
+          const mrp = parseFloat(item.mrp || item.MRP || item.price || 0);
+          const img = item.image || item.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const isOutOfStock = item.stock === 'out_of_stock' || item.stock === 0 || item.inStock === false;
+
+          html += `
+            <div class="bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-lg hover:border-purple-200 transition-all relative group">
+              
+              <!-- Remove Heart Button -->
+              <button class="btn-remove-wishlist absolute top-3 right-3 w-8 h-8 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white flex items-center justify-center transition-all z-10 shadow-xs" data-id="${id}" title="Remove from wishlist">
+                <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">favorite</span>
+              </button>
+
+              <div>
+                <!-- Image Container -->
+                <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-3 flex items-center justify-center border border-slate-100 relative overflow-hidden">
+                  <img src="${img}" alt="${name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                  
+                  <!-- Stock Status Badge -->
+                  <div class="absolute bottom-2 left-2 z-10">
+                    ${isOutOfStock ? `
+                      <span class="px-2 py-0.5 bg-slate-900/90 backdrop-blur-sm text-white text-[9px] font-black rounded-md uppercase">Out of Stock</span>
+                    ` : `
+                      <span class="px-2 py-0.5 bg-emerald-500/90 backdrop-blur-sm text-white text-[9px] font-black rounded-md uppercase">In Stock</span>
+                    `}
+                  </div>
+                </div>
+
+                <!-- Product Information -->
+                <div class="space-y-1 px-1">
+                  <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider block">${brand}</span>
+                  <h3 class="text-xs sm:text-[13px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem]">${name}</h3>
+                  <p class="text-[11px] font-semibold text-slate-400">${pack}</p>
+                </div>
+              </div>
+
+              <!-- Price & Move to Cart Button -->
+              <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 mt-2">
+                <span class="text-xs sm:text-sm font-black text-slate-900">MRP ₹${mrp}</span>
+
+                ${isOutOfStock ? `
+                  <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[10px] font-black rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
+                ` : `
+                  <button class="btn-move-to-cart px-3 py-1.5 bg-purpleBrand hover:bg-purpleDark text-white text-[10px] font-black rounded-xl shadow-xs active:scale-90 transition-all" data-id="${id}" data-name="${name.replace(/"/g, '&quot;')}" data-price="${mrp}" data-img="${img}">
+                    MOVE TO CART
+                  </button>
+                `}
+              </div>
+
+            </div>
+          `;
+        });
+
+        gridWrapper.innerHTML = html;
+
+        // Bind Remove & Move Handlers
+        bindWishlistActions();
+      }
+
+      function bindWishlistActions() {
+        // Remove Item
+        document.querySelectorAll('.btn-remove-wishlist').forEach(btn => {
+          btn.onclick = () => {
+            const id = btn.dataset.id;
+            const wishlist = getWishlist().filter(i => i.id !== id);
+            saveWishlist(wishlist);
+          };
+        });
+
+        // Move Item to Cart
+        document.querySelectorAll('.btn-move-to-cart').forEach(btn => {
+          btn.onclick = () => {
+            const id = btn.dataset.id;
+            const name = btn.dataset.name;
+            const price = parseFloat(btn.dataset.price);
+            const img = btn.dataset.img;
+
+            // Add to cart
+            let cart = [];
+            try {
+              cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+            } catch(e) {}
+
+            const existing = cart.find(i => i.id === id);
+            if (existing) {
+              existing.quantity = (existing.quantity || 1) + 1;
+            } else {
+              cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Wishlist Item' });
+            }
+            localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+
+            // Remove from wishlist
+            const wishlist = getWishlist().filter(i => i.id !== id);
+            saveWishlist(wishlist);
+
+            alert(`"${name}" moved to cart successfully!`);
+          };
+        });
+      }
+
+      // Move All to Cart Action
+      document.getElementById('btn-move-all-cart')?.addEventListener('click', () => {
+        const wishlist = getWishlist();
+        if (wishlist.length === 0) return;
+
+        let cart = [];
+        try {
+          cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+        } catch(e) {}
+
+        wishlist.forEach(item => {
+          const id = item.id || ('W-' + Math.random());
+          const price = parseFloat(item.mrp || item.MRP || item.price || 0);
+          const existing = cart.find(i => i.id === id);
+          if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+          } else {
+            cart.push({ id, name: item.name, price, mrp: price, image: item.image || item.img, quantity: 1, cat: 'Wishlist Item' });
+          }
+        });
+
+        localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+        localStorage.removeItem('bhusawal_wishlist');
+        renderWishlistUI();
+
+        alert('All wishlist items moved to your cart!');
+        window.location.href = '/cart';
+      });
+
+      // Add Recommended to Wishlist
+      document.querySelectorAll('.add-rec-wishlist-btn').forEach(btn => {
+        btn.onclick = () => {
+          const id = btn.dataset.id;
+          const name = btn.dataset.name;
+          const price = parseFloat(btn.dataset.price);
+          const img = btn.dataset.img;
+          const pack = btn.dataset.pack;
+
+          let wishlist = getWishlist();
+          if (!wishlist.some(i => i.id === id)) {
+            wishlist.push({ id, name, price, mrp: price, image: img, pack, brand: 'Bhusawal Connect', stock: 'in_stock' });
+            saveWishlist(wishlist);
+          }
+
+          btn.textContent = '✓ SAVED';
+          btn.classList.replace('bg-purple-50', 'bg-emerald-600');
+          btn.classList.replace('text-purpleBrand', 'text-white');
+          setTimeout(() => {
+            btn.textContent = '+ ADD';
+            btn.classList.replace('bg-emerald-600', 'bg-purple-50');
+            btn.classList.replace('text-white', 'text-purpleBrand');
+          }, 1200);
+        };
+      });
+
+      // Search input listener
+      document.getElementById('search-wishlist-input')?.addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim();
+        renderWishlistUI();
+      });
+
+      // Initial Call
+      renderWishlistUI();
+    });
+  </script>
+</body>
+</html>
