@@ -12,16 +12,18 @@ try {
   console.error("Failed to read grocery catalog at build time", err);
 }
 
-// Extract distinct categories from restored catalog
+// Extract distinct categories from master catalog
 const categoriesList = [
   { id: 'all', name: 'All Products', icon: '⚡' },
-  { id: 'personal', name: 'Personal Care', icon: '✨' },
-  { id: 'spices', name: 'Spices & Masalas', icon: '🌶️' },
+  { id: 'fruits', name: 'Fruits & Vegetables', icon: '🥬' },
   { id: 'dairy', name: 'Dairy & Breakfast', icon: '🥛' },
   { id: 'staples', name: 'Grocery Staples', icon: '🌾' },
   { id: 'snacks', name: 'Snacks & Confectionery', icon: '🍿' },
   { id: 'beverages', name: 'Beverages', icon: '🥤' },
-  { id: 'home', name: 'Household Care', icon: '🧹' },
+  { id: 'personal', name: 'Personal Care', icon: '✨' },
+  { id: 'home', name: 'Home Cleaning & Household', icon: '🧹' },
+  { id: 'instant', name: 'Instant & Frozen Foods', icon: '🍜' },
+  { id: 'baby', name: 'Baby, Health & Specialty', icon: '👶' },
 ];
 
 // Initial 48 items for server-rendering
@@ -167,7 +169,7 @@ const initialProducts = catalog.slice(0, 48);
     <main class="flex-1 space-y-4">
       <div class="flex items-center justify-between">
         <h2 id="active-category-title" class="text-lg font-black font-display text-slate-900">All Products</h2>
-        <span id="product-count-label" class="text-xs font-bold text-slate-400">Total 5,050 Products</span>
+        <span id="product-count-label" class="text-xs font-bold text-slate-400">Loading Products...</span>
       </div>
 
       <!-- Products Grid -->
@@ -217,8 +219,15 @@ const initialProducts = catalog.slice(0, 48);
           );
         })}
       </div>
-    </main>
 
+      <!-- LOAD MORE & PAGINATION CONTAINER -->
+      <div id="load-more-container" class="py-8 text-center space-y-3">
+        <button id="load-more-btn" class="px-8 py-3 bg-purpleBrand text-white font-extrabold text-xs rounded-2xl shadow-lg hover:bg-purpleDark active:scale-95 transition-all">
+          Load More Products
+        </button>
+        <p id="pagination-status-text" class="text-xs font-bold text-slate-400"></p>
+      </div>
+    </main>
   </div>
 
   <!-- FLOATING CART BAR -->
@@ -385,26 +394,39 @@ const initialProducts = catalog.slice(0, 48);
         modal.classList.add('hidden');
       });
 
-      // 4. Client Search & Filtering over 5,050 Items
+      // 4. Client Search & Filtering over 25,500 Items with Infinite Scroll
       const searchInput = document.getElementById('grocery-search-input');
       const clearBtn = document.getElementById('clear-search-btn');
       const grid = document.getElementById('grocery-products-grid');
       const countLabel = document.getElementById('product-count-label');
       const titleLabel = document.getElementById('active-category-title');
+      const loadMoreBtn = document.getElementById('load-more-btn');
+      const paginationStatusText = document.getElementById('pagination-status-text');
 
       let currentQuery = '';
-      let currentCategory = 'all';
+      let currentCategory = 'All Products'; // matches data-category="All Products"
       let currentFilter = 'all';
 
-      function renderProducts(filtered) {
-        if (filtered.length === 0) {
+      let currentFiltered = [];
+      let currentLimit = 48;
+      const BATCH_SIZE = 48;
+
+      function renderProducts() {
+        if (!currentFiltered || currentFiltered.length === 0) {
           grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No products found matching your search.</div>`;
-          countLabel.textContent = '0 Items';
+          if (countLabel) countLabel.textContent = '0 Products';
+          if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
+          if (paginationStatusText) paginationStatusText.textContent = '';
           return;
         }
 
-        countLabel.textContent = `Showing ${filtered.length} of ${catalogData.length} Products`;
-        grid.innerHTML = filtered.map(p => {
+        const visibleItems = currentFiltered.slice(0, currentLimit);
+        
+        if (countLabel) {
+          countLabel.textContent = `Showing ${visibleItems.length.toLocaleString()} of ${currentFiltered.length.toLocaleString()} Products (${catalogData.length.toLocaleString()} Total)`;
+        }
+
+        grid.innerHTML = visibleItems.map(p => {
           const id = p["Product ID"] || p.ProductID || p.id || '';
           const name = p["Product Name"] || '';
           const cat = p.Category || 'Grocery';
@@ -437,29 +459,53 @@ const initialProducts = catalog.slice(0, 48);
           `;
         }).join('');
 
+        if (currentLimit < currentFiltered.length) {
+          if (loadMoreBtn) {
+            loadMoreBtn.classList.remove('hidden');
+            const remaining = currentFiltered.length - currentLimit;
+            loadMoreBtn.textContent = `Load More (${Math.min(BATCH_SIZE, remaining).toLocaleString()} more)`;
+          }
+          if (paginationStatusText) {
+            paginationStatusText.textContent = `Showing ${visibleItems.length.toLocaleString()} of ${currentFiltered.length.toLocaleString()} products`;
+          }
+        } else {
+          if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
+          if (paginationStatusText) {
+            paginationStatusText.textContent = currentFiltered.length > 0 
+              ? `All ${currentFiltered.length.toLocaleString()} matching products loaded`
+              : '';
+          }
+        }
+
         attachAddToCartListeners();
         attachModalClickListeners();
       }
 
       function filterCatalog() {
-        if (catalogData.length === 0) return;
+        if (!catalogData || catalogData.length === 0) return;
 
         let res = catalogData;
 
         // Search Query over Product Name, Category, Brand Name, Search Keywords
         if (currentQuery) {
+          const q = currentQuery;
           res = res.filter(p => {
             const name = (p["Product Name"] || '').toLowerCase();
             const cat = (p.Category || '').toLowerCase();
             const brand = (p["Brand Name"] || '').toLowerCase();
             const kw = (p["Search Keywords"] || '').toLowerCase();
-            return name.includes(currentQuery) || cat.includes(currentQuery) || brand.includes(currentQuery) || kw.includes(currentQuery);
+            return name.includes(q) || cat.includes(q) || brand.includes(q) || kw.includes(q);
           });
         }
 
-        // Category Filter
-        if (currentCategory !== 'all') {
-          res = res.filter(p => (p.Category || '').toLowerCase().includes(currentCategory.toLowerCase()));
+        // Category Filter — "All Products" means no category filter
+        if (currentCategory && currentCategory !== 'All Products') {
+          const target = currentCategory.toLowerCase();
+          res = res.filter(p => {
+            const cat = (p.Category || '').toLowerCase();
+            // Exact match on category name (case-insensitive)
+            return cat === target;
+          });
         }
 
         // Offers Filter
@@ -467,7 +513,26 @@ const initialProducts = catalog.slice(0, 48);
           res = res.filter(p => parseFloat(p.MRP || 0) > parseFloat(p["Selling Price"] || p["Offer Price"] || p.MRP || 0));
         }
 
-        renderProducts(res.slice(0, 80));
+        currentFiltered = res;
+        currentLimit = BATCH_SIZE;
+        renderProducts();
+      }
+
+      // Load More Button Event
+      loadMoreBtn?.addEventListener('click', () => {
+        currentLimit += BATCH_SIZE;
+        renderProducts();
+      });
+
+      // Infinite Scroll via IntersectionObserver
+      if (loadMoreBtn) {
+        const observer = new IntersectionObserver((entries) => {
+          if (entries[0].isIntersecting && currentLimit < currentFiltered.length) {
+            currentLimit += BATCH_SIZE;
+            renderProducts();
+          }
+        }, { rootMargin: '300px' });
+        observer.observe(loadMoreBtn);
       }
 
       searchInput?.addEventListener('input', (e) => {
@@ -487,11 +552,32 @@ const initialProducts = catalog.slice(0, 48);
         filterCatalog();
       });
 
+      // Highlight active category button
+      function setActiveCategoryBtn(activeCategory) {
+        document.querySelectorAll('.desktop-cat-btn').forEach(b => {
+          if (b.dataset.category === activeCategory) {
+            b.classList.add('bg-purple-50', 'text-purpleBrand', 'border-purpleBrand');
+          } else {
+            b.classList.remove('bg-purple-50', 'text-purpleBrand', 'border-purpleBrand');
+          }
+        });
+        document.querySelectorAll('.mobile-cat-btn').forEach(b => {
+          if (b.dataset.category === activeCategory) {
+            b.classList.add('bg-purpleBrand', 'text-white', 'border-purpleBrand');
+            b.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
+          } else {
+            b.classList.remove('bg-purpleBrand', 'text-white', 'border-purpleBrand');
+            b.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+          }
+        });
+      }
+
       // Category Click Handlers
       document.querySelectorAll('.desktop-cat-btn, .mobile-cat-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          currentCategory = btn.dataset.category || 'all';
-          titleLabel.textContent = currentCategory === 'all' ? 'All Products' : currentCategory;
+          currentCategory = btn.dataset.category || 'All Products';
+          titleLabel.textContent = currentCategory;
+          setActiveCategoryBtn(currentCategory);
           filterCatalog();
         });
       });
@@ -523,10 +609,12 @@ const initialProducts = catalog.slice(0, 48);
       if (catParam) {
         currentCategory = catParam;
         titleLabel.textContent = catParam;
+        setActiveCategoryBtn(catParam);
       }
-      if (searchParam || catParam) {
-        setTimeout(filterCatalog, 300);
-      }
+
+      // Initial render — always call filterCatalog
+      filterCatalog();
+      setActiveCategoryBtn(currentCategory);
     });
   </script>
 </body>
