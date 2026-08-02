@@ -1,15 +1,5 @@
 ---
 import Switcher from '../components/Switcher.astro';
-import catalog from '../../public/grocery_catalog.json';
-
-// Build store catalog datasets from real grocery_catalog.json
-const totalProducts = catalog.length;
-
-// Filter subset samples for specific stores
-const dairyProducts = catalog.filter(p => (p.Category || '').includes('Dairy') || (p["Product Name"] || '').toLowerCase().includes('milk') || (p["Product Name"] || '').toLowerCase().includes('paneer')).slice(0, 40);
-const foodProducts = catalog.filter(p => (p.Category || '').includes('Instant') || (p.Category || '').includes('Snacks') || (p["Product Name"] || '').toLowerCase().includes('maggi') || (p["Product Name"] || '').toLowerCase().includes('biryani')).slice(0, 40);
-const pharmacyProducts = catalog.filter(p => (p.Category || '').includes('Personal') || (p.Category || '').includes('Wellness') || (p["Product Name"] || '').toLowerCase().includes('dettol') || (p["Product Name"] || '').toLowerCase().includes('nivea')).slice(0, 40);
-const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Beverages') || (p["Product Name"] || '').toLowerCase().includes('ice') || (p["Product Name"] || '').toLowerCase().includes('cadbury') || (p["Product Name"] || '').toLowerCase().includes('amul')).slice(0, 40);
 ---
 
 <!DOCTYPE html>
@@ -17,7 +7,7 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Local Stores & Shops | Bhusawal Connect</title>
+  <title>Partner Stores | Bhusawal Connect</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -53,7 +43,7 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
 
 <body class="min-h-screen pb-32 text-slate-800 antialiased">
 
-  <!-- TOP HEADER -->
+  <!-- TOP NAV HEADER -->
   <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-8 py-3.5 shadow-xs flex items-center justify-between">
     <div class="flex items-center gap-3">
       <a href="/home" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
@@ -65,29 +55,33 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
     </div>
 
     <div class="flex items-center gap-2">
-      <span class="px-3 py-1 bg-purple-50 text-purpleBrand text-xs font-black rounded-xl border border-purple-100">
-        🏬 Verified Stores
+      <span class="px-3 py-1 bg-purple-50 text-purpleBrand text-xs font-black rounded-xl border border-purple-100/80 flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm text-purpleBrand">verified</span>
+        <span>Verified Partner Stores</span>
       </span>
     </div>
   </header>
 
-  <!-- STORES DIRECTORY INDEX VIEW (SHOWN WHEN NO STORE SELECTED) -->
+  <!-- 1. STORES INDEX DIRECTORY VIEW (SHOWN WHEN NO STORE SELECTED) -->
   <main id="stores-index-view" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
     <div class="border-b border-slate-200/60 pb-4">
       <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900">Bhusawal Partner Stores</h1>
-      <p class="text-xs font-bold text-slate-400 mt-0.5">Order directly from your favorite local supermarkets, bakeries & pharmacies</p>
+      <p class="text-xs font-bold text-slate-400 mt-0.5">Order directly from verified local supermarkets, bakeries, dairies & pharmacies</p>
     </div>
 
     <!-- STORES CARDS GRID -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
       <!-- STORE 1: Express Superstore -->
       <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group" data-id="express_superstore">
-        <div class="h-36 w-full relative overflow-hidden bg-slate-100">
+        <div class="h-40 w-full relative overflow-hidden bg-slate-100">
           <img src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=800&q=80" alt="Bhusawal Express Superstore" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-          <span class="absolute top-3 right-3 px-2.5 py-1 bg-emerald-500 text-white text-[10px] font-black rounded-full uppercase shadow-xs">Open Now</span>
+          <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">verified</span> Verified Partner
+          </span>
+          <span class="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-full shadow-xs">⚡ 10-15 Mins</span>
         </div>
         <div class="p-5 space-y-3 relative">
           <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
@@ -95,22 +89,26 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           </div>
           <div>
             <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Bhusawal Express Superstore</h3>
-            <p class="text-xs font-bold text-slate-400">Shivaji Nagar • 25,500+ Products</p>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">Shivaji Nagar • 25,500+ Supermarket Items</p>
           </div>
           <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-            <span class="flex items-center gap-1 text-amber-600"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (1,240+)</span>
-            <span>⏱️ 10-15 Mins</span>
-            <span>7:00 AM - 10:30 PM</span>
+            <span class="flex items-center gap-1 text-amber-600">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (1,240+)
+            </span>
+            <span>🕒 7:00 AM - 10:30 PM</span>
           </div>
         </div>
       </div>
 
       <!-- STORE 2: Royal Biryani & Caterers -->
       <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group" data-id="royal_biryani">
-        <div class="h-36 w-full relative overflow-hidden bg-slate-100">
+        <div class="h-40 w-full relative overflow-hidden bg-slate-100">
           <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80" alt="Royal Biryani & Caterers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-          <span class="absolute top-3 right-3 px-2.5 py-1 bg-emerald-500 text-white text-[10px] font-black rounded-full uppercase shadow-xs">Open Now</span>
+          <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">verified</span> Verified Partner
+          </span>
+          <span class="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-full shadow-xs">⚡ 20-25 Mins</span>
         </div>
         <div class="p-5 space-y-3 relative">
           <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
@@ -118,22 +116,26 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           </div>
           <div>
             <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Royal Biryani & Caterers</h3>
-            <p class="text-xs font-bold text-slate-400">Jamner Road • Mughlai & North Indian</p>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">Jamner Road • Mughlai & North Indian</p>
           </div>
           <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-            <span class="flex items-center gap-1 text-amber-600"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.8 (850+)</span>
-            <span>⏱️ 20-25 Mins</span>
-            <span>11:00 AM - 11:00 PM</span>
+            <span class="flex items-center gap-1 text-amber-600">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.8 (850+)
+            </span>
+            <span>🕒 11:00 AM - 11:00 PM</span>
           </div>
         </div>
       </div>
 
       <!-- STORE 3: Modern Pharmacy -->
       <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group" data-id="modern_pharmacy">
-        <div class="h-36 w-full relative overflow-hidden bg-slate-100">
+        <div class="h-40 w-full relative overflow-hidden bg-slate-100">
           <img src="https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&w=800&q=80" alt="Modern Pharmacy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-          <span class="absolute top-3 right-3 px-2.5 py-1 bg-emerald-500 text-white text-[10px] font-black rounded-full uppercase shadow-xs">Open Now</span>
+          <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">verified</span> Verified Partner
+          </span>
+          <span class="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-full shadow-xs">⚡ 10-15 Mins</span>
         </div>
         <div class="p-5 space-y-3 relative">
           <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
@@ -141,22 +143,26 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           </div>
           <div>
             <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Modern Pharmacy & Wellness</h3>
-            <p class="text-xs font-bold text-slate-400">Station Road • Medicines & Hygiene</p>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">Station Road • Medicines & Hygiene</p>
           </div>
           <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-            <span class="flex items-center gap-1 text-amber-600"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (920+)</span>
-            <span>⏱️ 10-15 Mins</span>
-            <span>8:00 AM - 10:00 PM</span>
+            <span class="flex items-center gap-1 text-amber-600">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (920+)
+            </span>
+            <span>🕒 8:00 AM - 10:00 PM</span>
           </div>
         </div>
       </div>
 
       <!-- STORE 4: Shiv Dairy & Sweets -->
       <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group" data-id="shiv_dairy">
-        <div class="h-36 w-full relative overflow-hidden bg-slate-100">
+        <div class="h-40 w-full relative overflow-hidden bg-slate-100">
           <img src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80" alt="Shiv Dairy & Sweets" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-          <span class="absolute top-3 right-3 px-2.5 py-1 bg-emerald-500 text-white text-[10px] font-black rounded-full uppercase shadow-xs">Open Now</span>
+          <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">verified</span> Verified Partner
+          </span>
+          <span class="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-full shadow-xs">⚡ 10-15 Mins</span>
         </div>
         <div class="p-5 space-y-3 relative">
           <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
@@ -164,22 +170,26 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           </div>
           <div>
             <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Shiv Dairy & Sweets</h3>
-            <p class="text-xs font-bold text-slate-400">Varangaon Road • Fresh Milk, Paneer & Sweets</p>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">Varangaon Road • Fresh Milk, Paneer & Sweets</p>
           </div>
           <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-            <span class="flex items-center gap-1 text-amber-600"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (1,500+)</span>
-            <span>⏱️ 10-15 Mins</span>
-            <span>6:00 AM - 10:00 PM</span>
+            <span class="flex items-center gap-1 text-amber-600">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (1,500+)
+            </span>
+            <span>🕒 6:00 AM - 10:00 PM</span>
           </div>
         </div>
       </div>
 
       <!-- STORE 5: Kwality Wall's Hub -->
       <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group" data-id="kwality_hub">
-        <div class="h-36 w-full relative overflow-hidden bg-slate-100">
+        <div class="h-40 w-full relative overflow-hidden bg-slate-100">
           <img src="https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=800&q=80" alt="Kwality Wall's Hub" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
-          <span class="absolute top-3 right-3 px-2.5 py-1 bg-emerald-500 text-white text-[10px] font-black rounded-full uppercase shadow-xs">Open Now</span>
+          <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">verified</span> Verified Partner
+          </span>
+          <span class="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-full shadow-xs">⚡ 12-18 Mins</span>
         </div>
         <div class="p-5 space-y-3 relative">
           <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
@@ -187,12 +197,13 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           </div>
           <div>
             <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Kwality Wall's Ice Cream Hub</h3>
-            <p class="text-xs font-bold text-slate-400">City Center • Desserts & Shakes</p>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">City Center • Desserts & Shakes</p>
           </div>
           <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-            <span class="flex items-center gap-1 text-amber-600"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.7 (610+)</span>
-            <span>⏱️ 12-18 Mins</span>
-            <span>10:00 AM - 11:30 PM</span>
+            <span class="flex items-center gap-1 text-amber-600">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.7 (610+)
+            </span>
+            <span>🕒 10:00 AM - 11:30 PM</span>
           </div>
         </div>
       </div>
@@ -201,39 +212,59 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
 
   </main>
 
-  <!-- INDIVIDUAL DYNAMIC STORE PAGE VIEW (CONTAINER) -->
+  <!-- 2. INDIVIDUAL DYNAMIC STORE PAGE VIEW (CONTAINER) -->
   <main id="single-store-view" class="hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
     
-    <!-- BACK TO STORES BUTTON -->
-    <button id="btn-back-stores" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-slate-200 text-slate-700 font-extrabold text-xs rounded-xl hover:bg-slate-100 transition-all shadow-xs">
+    <!-- BACK TO ALL STORES BUTTON -->
+    <button id="btn-back-stores" class="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 text-slate-700 font-extrabold text-xs rounded-xl hover:bg-slate-100 transition-all shadow-xs">
       <span class="material-symbols-outlined text-base">arrow_back</span>
       <span>Back to All Stores</span>
     </button>
 
-    <!-- STORE COVER & HEADER HERO -->
+    <!-- LARGE COVER IMAGE & STORE HEADER HERO -->
     <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden space-y-4">
       
-      <!-- Cover Banner Image -->
-      <div class="h-44 sm:h-56 w-full relative bg-slate-100">
+      <!-- Large Cover Image -->
+      <div class="h-48 sm:h-64 w-full relative bg-slate-100">
         <img id="store-cover-img" src="" alt="Store Cover" class="w-full h-full object-cover" />
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent"></div>
+        <span class="absolute top-4 left-4 px-3 py-1 bg-purpleBrand text-white text-xs font-black rounded-full uppercase tracking-wider shadow-md flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">verified</span> Verified Partner Store
+        </span>
         <span id="store-status-badge" class="absolute top-4 right-4 px-3 py-1 bg-emerald-500 text-white text-xs font-black rounded-full uppercase shadow-md">Open Now</span>
       </div>
 
-      <!-- Store Info Content -->
+      <!-- Store Info Content (Logo, Name, Rating, Delivery Time, Store Timing, Description) -->
       <div class="px-6 pb-6 pt-0 relative flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div class="flex items-start gap-4">
-          <!-- Logo avatar -->
-          <div id="store-logo-avatar" class="w-20 h-20 rounded-3xl bg-white p-2 shadow-xl border border-slate-100 -mt-12 relative z-10 flex items-center justify-center text-4xl shrink-0">
+          <!-- Store Logo Avatar -->
+          <div id="store-logo-avatar" class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-white p-2 shadow-xl border border-slate-100 -mt-12 sm:-mt-14 relative z-10 flex items-center justify-center text-4xl shrink-0">
             🏬
           </div>
-          <div class="space-y-1">
+          <div class="space-y-1.5">
             <h1 id="store-name-title" class="text-2xl sm:text-3xl font-black font-display text-slate-900">Bhusawal Express Superstore</h1>
-            <p id="store-tag-desc" class="text-xs font-bold text-slate-400">Shivaji Nagar • Supermarket</p>
-            <div class="flex flex-wrap items-center gap-3 text-xs font-black text-slate-700 pt-1">
-              <span class="flex items-center gap-1 text-amber-600"><span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> <span id="store-rating-val">4.9</span></span>
-              <span>⏱️ <span id="store-eta-val">10-15 Mins</span></span>
-              <span>🕒 <span id="store-timing-val">7:00 AM - 10:30 PM</span></span>
+            <p id="store-desc-text" class="text-xs font-semibold text-slate-500 max-w-2xl leading-relaxed">
+              Bhusawal's largest quick-commerce superstore delivering 25,500+ fresh daily essentials, groceries, dairy & household products straight to your doorstep.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4 text-xs font-black text-slate-700 pt-1">
+              <!-- Rating -->
+              <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/60">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                <span id="store-rating-val">4.9 (1,240+ Ratings)</span>
+              </span>
+
+              <!-- Delivery Time -->
+              <span class="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/60">
+                <span class="material-symbols-outlined text-sm">bolt</span>
+                <span id="store-eta-val">10-15 Mins</span>
+              </span>
+
+              <!-- Store Timing -->
+              <span class="flex items-center gap-1 text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/60">
+                <span class="material-symbols-outlined text-sm">schedule</span>
+                <span id="store-timing-val">7:00 AM - 10:30 PM</span>
+              </span>
             </div>
           </div>
         </div>
@@ -241,23 +272,30 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
 
     </div>
 
-    <!-- STICKY STORE SEARCH BAR -->
-    <div class="sticky top-20 z-40 bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-slate-200 shadow-md">
+    <!-- STICKY SEARCH BAR (INSIDE STORE) -->
+    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-slate-200 shadow-md">
       <div class="relative w-full">
         <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-        <input type="text" id="store-search-input" placeholder="Search within this store (e.g. Milk, Biryani, Oil)..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand focus:bg-white transition-all" />
+        <input type="text" id="store-search-input" placeholder="Search inside this store..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand focus:bg-white transition-all" />
+      </div>
+    </div>
+
+    <!-- STICKY CATEGORY BAR -->
+    <div class="sticky top-32 z-30 bg-slate-100/90 backdrop-blur-md p-2 rounded-2xl border border-slate-200/80 shadow-xs">
+      <div id="store-categories-pills" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 px-1">
+        <!-- Dynamically populated category pills -->
       </div>
     </div>
 
     <!-- STORE PRODUCT GRID -->
-    <div class="space-y-4">
+    <div class="space-y-4 pt-2">
       <div class="flex items-center justify-between border-b border-slate-200 pb-2">
         <h2 class="text-lg font-black font-display text-slate-900" id="store-grid-heading">Store Products</h2>
-        <span class="text-xs font-bold text-slate-400" id="store-product-count">Showing catalog items</span>
+        <span class="text-xs font-bold text-slate-400" id="store-product-count">Showing store items</span>
       </div>
 
       <div id="store-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-        <!-- Dynamically rendered -->
+        <!-- Dynamically rendered store products -->
       </div>
     </div>
 
@@ -265,25 +303,28 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
 
   <Switcher />
 
-  <!-- CLIENT-SIDE STORE LOGIC -->
+  <!-- CLIENT-SIDE STORE ENGINE -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
       const indexView = document.getElementById('stores-index-view');
       const singleView = document.getElementById('single-store-view');
       const storeSearchInput = document.getElementById('store-search-input');
+      const categoryPillsWrapper = document.getElementById('store-categories-pills');
 
-      // STORES DATABASE SCHEMA (USES EXISTING CATALOG DATA)
+      // STORES DATABASE SCHEMA (USES REAL CATALOG DATABASE)
       const STORES = {
         express_superstore: {
           name: 'Bhusawal Express Superstore',
           tag: 'Shivaji Nagar • 25,500+ Supermarket Items',
           rating: '4.9 (1,240+ Ratings)',
-          eta: '10-15 Mins Doorstep Delivery',
+          eta: '10-15 Mins Delivery',
           timing: '7:00 AM - 10:30 PM',
+          desc: "Bhusawal's largest quick-commerce superstore delivering 25,500+ fresh daily essentials, groceries, dairy & household products straight to your doorstep.",
           cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=800&q=80',
           logo: '🏬',
-          filterKw: ''
+          filterKw: '',
+          categories: ['All Products', 'Fruits & Vegetables', 'Dairy & Breakfast', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
         },
         royal_biryani: {
           name: 'Royal Biryani & Caterers',
@@ -291,9 +332,11 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           rating: '4.8 (850+ Ratings)',
           eta: '20-25 Mins Express Delivery',
           timing: '11:00 AM - 11:00 PM',
+          desc: 'Authentic Hyderabadi Biryani, Mughlai Gravies, Tandoori Kebabs & Royal Thalis prepared fresh daily using rich Indian spices.',
           cover: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
           logo: '🍲',
-          filterKw: 'biryani'
+          filterKw: 'biryani',
+          categories: ['All Dishes', 'Hyderabadi Biryani', 'Mughlai Curries', 'Tandoori Kebabs', 'Snacks & Starters']
         },
         modern_pharmacy: {
           name: 'Modern Pharmacy & Wellness',
@@ -301,9 +344,11 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           rating: '4.9 (920+ Ratings)',
           eta: '10-15 Mins Priority Delivery',
           timing: '8:00 AM - 10:00 PM',
+          desc: 'Certified neighborhood pharmacy offering 100% genuine OTC medicines, daily health supplements, personal hygiene, and first-aid care.',
           cover: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&w=800&q=80',
           logo: '💊',
-          filterKw: 'personal'
+          filterKw: 'personal',
+          categories: ['All Healthcare', 'OTC Medicines', 'Personal Care', 'First Aid & Hygiene', 'Baby Care']
         },
         shiv_dairy: {
           name: 'Shiv Dairy & Sweets',
@@ -311,9 +356,11 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           rating: '4.9 (1,500+ Ratings)',
           eta: '10-15 Mins Fresh Delivery',
           timing: '6:00 AM - 10:00 PM',
+          desc: 'Fresh farm milk, pure cow ghee, fresh malai paneer, curd, khoa, and traditional Indian sweets prepared fresh every morning.',
           cover: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80',
           logo: '🥛',
-          filterKw: 'dairy'
+          filterKw: 'dairy',
+          categories: ['All Dairy', 'Fresh Milk & Curd', 'Paneer & Butter', 'Traditional Sweets', 'Lassi & Shakes']
         },
         kwality_hub: {
           name: 'Kwality Wall's Ice Cream Hub',
@@ -321,29 +368,60 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           rating: '4.7 (610+ Ratings)',
           eta: '12-18 Mins Cold-Chain Delivery',
           timing: '10:00 AM - 11:30 PM',
+          desc: 'Cold-chain express delivery of your favorite ice cream tubs, cones, sticks, sundaes, and dessert shakes.',
           cover: 'https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=800&q=80',
           logo: '🍦',
-          filterKw: 'beverages'
+          filterKw: 'beverages',
+          categories: ['All Ice Creams', 'Tubs & Family Packs', 'Cornetto & Cones', 'Stick Ice Creams', 'Dessert Shakes']
         }
       };
 
       let activeStoreId = null;
       let activeStoreProducts = [];
+      let activeCategoryFilter = 'All';
 
-      // Open Store Page Function
+      // Open Store Page
       function openStorePage(storeId) {
         const store = STORES[storeId] || STORES.express_superstore;
         activeStoreId = storeId;
+        activeCategoryFilter = 'All';
 
         document.getElementById('store-cover-img').src = store.cover;
         document.getElementById('store-logo-avatar').textContent = store.logo;
         document.getElementById('store-name-title').textContent = store.name;
-        document.getElementById('store-tag-desc').textContent = store.tag;
+        document.getElementById('store-desc-text').textContent = store.desc;
         document.getElementById('store-rating-val').textContent = store.rating;
         document.getElementById('store-eta-val').textContent = store.eta;
         document.getElementById('store-timing-val').textContent = store.timing;
 
-        // Fetch products for store from global catalog dataset window
+        // Render Sticky Category Bar Pills
+        let catHtml = '';
+        store.categories.forEach((cat, idx) => {
+          const isFirst = idx === 0;
+          catHtml += `
+            <button class="store-cat-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-black transition-all ${isFirst ? 'bg-purpleBrand text-white shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'}" data-cat="${cat}">
+              ${cat}
+            </button>
+          `;
+        });
+        categoryPillsWrapper.innerHTML = catHtml;
+
+        // Bind Category Pills Click
+        categoryPillsWrapper.querySelectorAll('.store-cat-pill').forEach(btn => {
+          btn.onclick = () => {
+            categoryPillsWrapper.querySelectorAll('.store-cat-pill').forEach(b => {
+              b.classList.remove('bg-purpleBrand', 'text-white', 'shadow-xs');
+              b.classList.add('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+            });
+            btn.classList.remove('bg-white', 'text-slate-700', 'border', 'border-slate-200');
+            btn.classList.add('bg-purpleBrand', 'text-white', 'shadow-xs');
+
+            activeCategoryFilter = btn.dataset.cat;
+            renderStoreProducts(storeSearchInput.value.trim());
+          };
+        });
+
+        // Fetch products strictly for this store
         window.fetchStoreProducts(store.filterKw, (products) => {
           activeStoreProducts = products;
           renderStoreProducts('');
@@ -359,11 +437,21 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
         const countEl = document.getElementById('store-product-count');
 
         let filtered = activeStoreProducts;
+
+        // Category Filter
+        if (activeCategoryFilter && !activeCategoryFilter.startsWith('All')) {
+          const catKw = activeCategoryFilter.toLowerCase();
+          filtered = filtered.filter(p => 
+            (p.cat || '').toLowerCase().includes(catKw) || 
+            (p.name || '').toLowerCase().includes(catKw)
+          );
+        }
+
+        // Search Query Filter inside Store
         if (query) {
           const q = query.toLowerCase();
-          filtered = activeStoreProducts.filter(p => 
-            (p.name || '').toLowerCase().includes(q) || 
-            (p.brand || '').toLowerCase().includes(q)
+          filtered = filtered.filter(p => 
+            (p.name || '').toLowerCase().includes(q)
           );
         }
 
@@ -373,7 +461,7 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           grid.innerHTML = `
             <div class="col-span-full bg-white rounded-3xl p-8 text-center space-y-2 border border-slate-100">
               <span class="material-symbols-outlined text-3xl text-slate-300">search_off</span>
-              <p class="text-xs font-black text-slate-800">No products match "${query}" in this store</p>
+              <p class="text-xs font-black text-slate-800">No products found matching your filter in this store</p>
             </div>
           `;
           return;
@@ -393,7 +481,7 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
                 <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden">
                   <img src="${img}" alt="${name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                 </div>
-                <h3 class="text-xs sm:text-[13px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem]">${name}</h3>
+                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem]">${name}</h3>
                 <p class="text-[11px] font-semibold text-slate-400 mt-0.5">${pack}</p>
               </div>
 
@@ -442,7 +530,7 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
         });
       }
 
-      // Store Click Event Listeners
+      // Store Selection Listeners
       document.querySelectorAll('.store-select-card').forEach(card => {
         card.addEventListener('click', () => {
           openStorePage(card.dataset.id);
@@ -455,7 +543,7 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
         indexView.classList.remove('hidden');
       });
 
-      // Store Search Input
+      // Search Inside Store Input
       storeSearchInput?.addEventListener('input', (e) => {
         renderStoreProducts(e.target.value.trim());
       });
@@ -470,7 +558,7 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
     });
   </script>
 
-  <!-- HELPER SCRIPT TO FETCH PRODUCTS FROM INLINE ASTRO JSON -->
+  <!-- HELPER SCRIPT TO FETCH PRODUCTS FROM DATABASE -->
   <script is:inline>
     window.fetchStoreProducts = function(kw, callback) {
       fetch('/grocery_catalog.json')
@@ -485,10 +573,11 @@ const icecreamProducts = catalog.filter(p => (p.Category || '').includes('Bevera
           }
           const formatted = items.slice(0, 100).map(p => ({
             id: p["Product ID"] || p.ProductID || p.id,
-            name: p["Product Name"] || p.name,
+            name: (p["Product Name"] || p.name).split(" (Batch")[0],
             mrp: parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50),
             img: p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg',
-            pack: p["Pack Size"] || p.pack || '1 Unit'
+            pack: p["Pack Size"] || p.pack || '1 Unit',
+            cat: p.Category || 'Grocery'
           }));
           callback(formatted);
         })
