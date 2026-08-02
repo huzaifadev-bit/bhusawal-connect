@@ -1,6 +1,21 @@
 ---
 import Switcher from '../components/Switcher.astro';
 
+// Food Categories with Icons
+const foodCategories = [
+  { id: 'all', name: 'All Foods', icon: '🍽️', kw: '' },
+  { id: 'pizza', name: 'Pizza', icon: '🍕', kw: 'pizza' },
+  { id: 'burger', name: 'Burger', icon: '🍔', kw: 'burger' },
+  { id: 'biryani', name: 'Biryani', icon: '🍲', kw: 'biryani' },
+  { id: 'chinese', name: 'Chinese', icon: '🍜', kw: 'chinese' },
+  { id: 'south_indian', name: 'South Indian', icon: '🥞', kw: 'south' },
+  { id: 'north_indian', name: 'North Indian', icon: '🍱', kw: 'north' },
+  { id: 'desserts', name: 'Desserts', icon: '🍨', kw: 'ice cream' },
+  { id: 'beverages', name: 'Beverages', icon: '🥤', kw: 'shakes' },
+  { id: 'rolls', name: 'Rolls', icon: '🌯', kw: 'rolls' },
+  { id: 'fast_food', name: 'Fast Food', icon: '🍟', kw: 'fast food' }
+];
+
 // Sponsored Restaurants (Always First)
 const sponsoredRestaurants = [
   {
@@ -44,7 +59,7 @@ const popularRestaurants = [
     ratingsCount: '1,500+',
     deliveryTime: '10-15 min',
     distance: '0.5 km',
-    cuisine: 'Fresh Milk • Paneer • Traditional Sweets',
+    cuisine: 'Fresh Milk • Paneer • Traditional Sweets • Desserts',
     isOpen: true,
     isVerified: true
   },
@@ -57,7 +72,7 @@ const popularRestaurants = [
     ratingsCount: '610+',
     deliveryTime: '12-18 min',
     distance: '1.0 km',
-    cuisine: 'Ice Creams • Shakes • Sundaes',
+    cuisine: 'Ice Creams • Shakes • Sundaes • Desserts • Beverages',
     isOpen: true,
     isVerified: true
   },
@@ -70,7 +85,7 @@ const popularRestaurants = [
     ratingsCount: '740+',
     deliveryTime: '25-30 min',
     distance: '2.1 km',
-    cuisine: 'Indo-Chinese • Hakka Noodles • Starters',
+    cuisine: 'Indo-Chinese • Hakka Noodles • Chinese • Starters • Rolls',
     isOpen: true,
     isVerified: true
   }
@@ -89,7 +104,7 @@ const allRestaurants = [
     ratingsCount: '980+',
     deliveryTime: '18-22 min',
     distance: '1.4 km',
-    cuisine: 'Special Veg Thalis • Solkadhi • Maharashtrian',
+    cuisine: 'Special Veg Thalis • Solkadhi • Maharashtrian • North Indian',
     isOpen: true,
     isVerified: true
   },
@@ -102,7 +117,7 @@ const allRestaurants = [
     ratingsCount: '520+',
     deliveryTime: '15-20 min',
     distance: '1.1 km',
-    cuisine: 'Masala Dosa • Idli Sambar • Filter Coffee',
+    cuisine: 'Masala Dosa • Idli Sambar • Filter Coffee • South Indian',
     isOpen: true,
     isVerified: true
   },
@@ -115,7 +130,7 @@ const allRestaurants = [
     ratingsCount: '430+',
     deliveryTime: '20-25 min',
     distance: '1.8 km',
-    cuisine: 'Burgers • Peri Peri Fries • Shakes',
+    cuisine: 'Burgers • Pizza • Peri Peri Fries • Shakes • Fast Food',
     isOpen: true,
     isVerified: true
   }
@@ -208,7 +223,7 @@ const allRestaurants = [
 
   </header>
 
-  <main class="px-4 sm:px-6 py-5 space-y-8">
+  <main class="px-4 sm:px-6 py-5 space-y-6">
 
     <!-- 2. STICKY SEARCH BAR -->
     <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2">
@@ -221,7 +236,26 @@ const allRestaurants = [
       </div>
     </div>
 
-    <!-- 3. BANNER CAROUSEL SHOWCASE -->
+    <!-- 3. STICKY FOOD CATEGORIES CHIPS SECTION (HORIZONTAL SCROLLING ON MOBILE) -->
+    <section class="sticky top-32 z-30 bg-white/95 backdrop-blur-md py-2 border-y border-slate-100/80 -mx-4 sm:-mx-6 px-4 sm:px-6">
+      <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
+        {foodCategories.map((cat, idx) => (
+          <button 
+            class={`food-cat-chip flex items-center gap-2 px-4 py-2.5 rounded-full font-black text-xs whitespace-nowrap cursor-pointer transition-all active:scale-95 shrink-0 ${
+              idx === 0 
+                ? 'bg-redBrand text-white shadow-md ring-2 ring-redBrand/30' 
+                : 'bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80'
+            }`}
+            data-kw={cat.kw}
+          >
+            <span class="text-base leading-none">{cat.icon}</span>
+            <span>{cat.name}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <!-- 4. BANNER CAROUSEL SHOWCASE -->
     <section class="relative overflow-hidden rounded-3xl shadow-xl bg-gradient-to-r from-red-600 via-red-700 to-rose-900 text-white p-6 sm:p-8">
       <div class="relative z-10 max-w-xl space-y-2">
         <div class="flex items-center gap-2">
@@ -233,8 +267,7 @@ const allRestaurants = [
       </div>
     </section>
 
-    <!-- 4. ⭐ SPONSORED RESTAURANTS (ALWAYS FIRST) -->
-    <!-- DESKTOP: 3 per row, TABLET: 2 per row, MOBILE: 1 per row -->
+    <!-- 5. ⭐ SPONSORED RESTAURANTS (ALWAYS FIRST) -->
     <section class="space-y-4">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -251,22 +284,18 @@ const allRestaurants = [
         {sponsoredRestaurants.map(rest => (
           <div class="restaurant-card group bg-white rounded-3xl border-2 border-amber-200 shadow-sm hover:shadow-2xl hover:border-redBrand transition-all duration-300 overflow-hidden cursor-pointer flex flex-col relative" data-name={rest.name.toLowerCase()} data-cuisine={rest.cuisine.toLowerCase()} onclick="window.location.href='/shops';">
             
-            <!-- Large Cover Image Container -->
             <div class="h-48 bg-slate-100 relative overflow-hidden rounded-t-3xl">
               <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
               <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent"></div>
               
-              <!-- Sponsored Badge -->
               <div class="absolute top-3 left-3 bg-amber-500 text-white px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md z-10">
                 <span>⭐ SPONSORED</span>
               </div>
 
-              <!-- Favourite Heart Button -->
               <button class="fav-rest-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
                 <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
               </button>
 
-              <!-- ETA & Distance Badge -->
               <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-2 shadow-xs z-10">
                 <span class="flex items-center gap-1">⚡ {rest.deliveryTime}</span>
                 <span>•</span>
@@ -274,7 +303,6 @@ const allRestaurants = [
               </div>
             </div>
 
-            <!-- Card Details Container -->
             <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
               <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-2xl shrink-0 border border-red-100 shadow-xs">
@@ -290,18 +318,15 @@ const allRestaurants = [
               </div>
 
               <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-                <!-- Rating -->
                 <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-100">
                   <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
                   {rest.rating} <span class="text-[10px] text-slate-400 font-semibold">({rest.ratingsCount})</span>
                 </span>
                 
                 <div class="flex items-center gap-2">
-                  <!-- Verified Badge -->
                   <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-extrabold uppercase">
                     Verified Partner
                   </span>
-                  <!-- Open Now Badge -->
                   <span class="px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-extrabold border border-emerald-100">
                     Open Now
                   </span>
@@ -314,8 +339,7 @@ const allRestaurants = [
       </div>
     </section>
 
-    <!-- 5. 🔥 POPULAR RESTAURANTS -->
-    <!-- DESKTOP: 3 per row, TABLET: 2 per row, MOBILE: 1 per row -->
+    <!-- 6. 🔥 POPULAR RESTAURANTS -->
     <section class="space-y-4 pt-2">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -335,7 +359,6 @@ const allRestaurants = [
               <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
               <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent"></div>
               
-              <!-- Favourite Heart Button -->
               <button class="fav-rest-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
                 <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
               </button>
@@ -383,8 +406,7 @@ const allRestaurants = [
       </div>
     </section>
 
-    <!-- 6. 🍽️ ALL RESTAURANTS -->
-    <!-- DESKTOP: 3 per row, TABLET: 2 per row, MOBILE: 1 per row -->
+    <!-- 7. 🍽️ ALL RESTAURANTS -->
     <section class="space-y-4 pt-2">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -410,7 +432,6 @@ const allRestaurants = [
                 </div>
               )}
 
-              <!-- Favourite Heart Button -->
               <button class="fav-rest-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
                 <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
               </button>
@@ -462,7 +483,7 @@ const allRestaurants = [
 
   <Switcher />
 
-  <!-- CLIENT-SIDE SEARCH ENGINE & CART BADGE -->
+  <!-- CLIENT-SIDE SEARCH ENGINE & CATEGORY FILTERING -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -478,36 +499,63 @@ const allRestaurants = [
 
       updateCartBadge();
 
-      // Search Filtering Engine for Restaurants
+      // Elements
       const searchInput = document.getElementById('food-search-input');
       const clearBtn = document.getElementById('clear-food-search');
       const restaurantCards = document.querySelectorAll('.restaurant-card');
+      const categoryChips = document.querySelectorAll('.food-cat-chip');
 
-      searchInput?.addEventListener('input', (e) => {
-        const query = e.target.value.trim().toLowerCase();
-        
-        if (query.length > 0) {
-          clearBtn?.classList.remove('hidden');
-        } else {
-          clearBtn?.classList.add('hidden');
-        }
+      let activeCategoryKw = '';
+
+      // Filter Function
+      function applyRestaurantFilters() {
+        const searchQuery = (searchInput?.value || '').trim().toLowerCase();
 
         restaurantCards.forEach(card => {
           const name = card.dataset.name || '';
           const cuisine = card.dataset.cuisine || '';
 
-          if (name.includes(query) || cuisine.includes(query)) {
+          const matchesSearch = !searchQuery || name.includes(searchQuery) || cuisine.includes(searchQuery);
+          const matchesCategory = !activeCategoryKw || cuisine.includes(activeCategoryKw) || name.includes(activeCategoryKw);
+
+          if (matchesSearch && matchesCategory) {
             card.classList.remove('hidden');
           } else {
             card.classList.add('hidden');
           }
         });
+      }
+
+      // Search Input Listener
+      searchInput?.addEventListener('input', (e) => {
+        if (e.target.value.length > 0) {
+          clearBtn?.classList.remove('hidden');
+        } else {
+          clearBtn?.classList.add('hidden');
+        }
+        applyRestaurantFilters();
       });
 
       clearBtn?.addEventListener('click', () => {
         searchInput.value = '';
         clearBtn.classList.add('hidden');
-        restaurantCards.forEach(card => card.classList.remove('hidden'));
+        applyRestaurantFilters();
+      });
+
+      // Food Category Chips Listener
+      categoryChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          categoryChips.forEach(c => {
+            c.classList.remove('bg-redBrand', 'text-white', 'shadow-md', 'ring-2', 'ring-redBrand/30');
+            c.classList.add('bg-slate-100', 'text-slate-700', 'border', 'border-slate-200/80');
+          });
+
+          chip.classList.remove('bg-slate-100', 'text-slate-700', 'border', 'border-slate-200/80');
+          chip.classList.add('bg-redBrand', 'text-white', 'shadow-md', 'ring-2', 'ring-redBrand/30');
+
+          activeCategoryKw = chip.dataset.kw || '';
+          applyRestaurantFilters();
+        });
       });
 
     });
