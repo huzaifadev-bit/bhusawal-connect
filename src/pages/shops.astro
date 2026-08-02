@@ -7,7 +7,7 @@ import Switcher from '../components/Switcher.astro';
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Partner Stores | Bhusawal Connect</title>
+  <title>Partner Restaurants & Stores | Bhusawal Connect</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -55,7 +55,7 @@ import Switcher from '../components/Switcher.astro';
     </div>
 
     <div class="flex items-center gap-2">
-      <span class="px-3 py-1 bg-purple-50 text-purpleBrand text-xs font-black rounded-xl border border-purple-100/80 flex items-center gap-1">
+      <span class="px-3.5 py-1.5 bg-purple-50 text-purpleBrand text-xs font-black rounded-full border border-purple-100 flex items-center gap-1">
         <span class="material-symbols-outlined text-sm text-purpleBrand">verified</span>
         <span>Verified Partner Stores</span>
       </span>
@@ -63,147 +63,162 @@ import Switcher from '../components/Switcher.astro';
   </header>
 
   <!-- 1. STORES INDEX DIRECTORY VIEW (SHOWN WHEN NO STORE SELECTED) -->
-  <main id="stores-index-view" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <main id="stores-index-view" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-    <div class="border-b border-slate-200/60 pb-4">
-      <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900">Bhusawal Partner Stores</h1>
-      <p class="text-xs font-bold text-slate-400 mt-0.5">Order directly from verified local supermarkets, bakeries, dairies & pharmacies</p>
+    <div class="border-b border-slate-200/60 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900">Bhusawal Partner Stores</h1>
+        <p class="text-xs font-bold text-slate-400 mt-0.5">Order directly from verified local supermarkets, restaurants, bakeries, & pharmacies</p>
+      </div>
+      <span class="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-black rounded-full border border-emerald-100 w-fit">
+        ⚡ 10-25 Mins Express Delivery
+      </span>
     </div>
 
     <!-- STORES CARDS GRID -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
       <!-- STORE 1: Express Superstore -->
-      <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group" data-id="express_superstore">
-        <div class="h-40 w-full relative overflow-hidden bg-slate-100">
+      <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group flex flex-col justify-between" data-id="express_superstore">
+        <div class="h-44 w-full relative overflow-hidden bg-slate-100">
           <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=800&q=80" alt="Bhusawal Express Superstore" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
           <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
             <span class="material-symbols-outlined text-xs">verified</span> Verified Partner
           </span>
           <span class="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-full shadow-xs">⚡ 10-15 Mins</span>
         </div>
-        <div class="p-5 space-y-3 relative">
-          <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
-            🏬
-          </div>
-          <div>
-            <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Bhusawal Express Superstore</h3>
-            <p class="text-xs font-bold text-slate-400 mt-0.5">Shivaji Nagar • 25,500+ Supermarket Items</p>
+        <div class="p-5 space-y-3 relative flex-1 flex flex-col justify-between">
+          <div class="flex items-start gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-9 relative z-10 flex items-center justify-center text-2xl shrink-0">
+              🏬
+            </div>
+            <div>
+              <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Bhusawal Express Superstore</h3>
+              <p class="text-xs font-bold text-slate-400 mt-0.5">Supermarket • 25,500+ Essentials</p>
+            </div>
           </div>
           <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
             <span class="flex items-center gap-1 text-amber-600">
               <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (1,240+)
             </span>
-            <span>🕒 7:00 AM - 10:30 PM</span>
+            <span class="text-emerald-600 font-extrabold">Open Now</span>
           </div>
         </div>
       </div>
 
       <!-- STORE 2: Royal Biryani & Caterers -->
-      <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group" data-id="royal_biryani">
-        <div class="h-40 w-full relative overflow-hidden bg-slate-100">
+      <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group flex flex-col justify-between" data-id="royal_biryani">
+        <div class="h-44 w-full relative overflow-hidden bg-slate-100">
           <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80" alt="Royal Biryani & Caterers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
           <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
             <span class="material-symbols-outlined text-xs">verified</span> Verified Partner
           </span>
           <span class="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-full shadow-xs">⚡ 20-25 Mins</span>
         </div>
-        <div class="p-5 space-y-3 relative">
-          <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
-            🍲
-          </div>
-          <div>
-            <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Royal Biryani & Caterers</h3>
-            <p class="text-xs font-bold text-slate-400 mt-0.5">Jamner Road • Mughlai & North Indian</p>
+        <div class="p-5 space-y-3 relative flex-1 flex flex-col justify-between">
+          <div class="flex items-start gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-9 relative z-10 flex items-center justify-center text-2xl shrink-0">
+              🍲
+            </div>
+            <div>
+              <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Royal Biryani & Caterers</h3>
+              <p class="text-xs font-bold text-slate-400 mt-0.5">Mughlai & Dum Biryani</p>
+            </div>
           </div>
           <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
             <span class="flex items-center gap-1 text-amber-600">
               <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.8 (850+)
             </span>
-            <span>🕒 11:00 AM - 11:00 PM</span>
+            <span class="text-emerald-600 font-extrabold">Open Now</span>
           </div>
         </div>
       </div>
 
       <!-- STORE 3: Modern Pharmacy -->
-      <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group" data-id="modern_pharmacy">
-        <div class="h-40 w-full relative overflow-hidden bg-slate-100">
+      <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group flex flex-col justify-between" data-id="modern_pharmacy">
+        <div class="h-44 w-full relative overflow-hidden bg-slate-100">
           <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&w=800&q=80" alt="Modern Pharmacy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
           <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
             <span class="material-symbols-outlined text-xs">verified</span> Verified Partner
           </span>
           <span class="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-full shadow-xs">⚡ 10-15 Mins</span>
         </div>
-        <div class="p-5 space-y-3 relative">
-          <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
-            💊
-          </div>
-          <div>
-            <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Modern Pharmacy & Wellness</h3>
-            <p class="text-xs font-bold text-slate-400 mt-0.5">Station Road • Medicines & Hygiene</p>
+        <div class="p-5 space-y-3 relative flex-1 flex flex-col justify-between">
+          <div class="flex items-start gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-9 relative z-10 flex items-center justify-center text-2xl shrink-0">
+              💊
+            </div>
+            <div>
+              <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Modern Pharmacy & Wellness</h3>
+              <p class="text-xs font-bold text-slate-400 mt-0.5">Essential Medicines & Hygiene</p>
+            </div>
           </div>
           <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
             <span class="flex items-center gap-1 text-amber-600">
               <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (920+)
             </span>
-            <span>🕒 8:00 AM - 10:00 PM</span>
+            <span class="text-emerald-600 font-extrabold">Open Now</span>
           </div>
         </div>
       </div>
 
       <!-- STORE 4: Shiv Dairy & Sweets -->
-      <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group" data-id="shiv_dairy">
-        <div class="h-40 w-full relative overflow-hidden bg-slate-100">
+      <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group flex flex-col justify-between" data-id="shiv_dairy">
+        <div class="h-44 w-full relative overflow-hidden bg-slate-100">
           <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80" alt="Shiv Dairy & Sweets" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
           <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
             <span class="material-symbols-outlined text-xs">verified</span> Verified Partner
           </span>
           <span class="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-full shadow-xs">⚡ 10-15 Mins</span>
         </div>
-        <div class="p-5 space-y-3 relative">
-          <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
-            🥛
-          </div>
-          <div>
-            <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Shiv Dairy & Sweets</h3>
-            <p class="text-xs font-bold text-slate-400 mt-0.5">Varangaon Road • Fresh Milk, Paneer & Sweets</p>
+        <div class="p-5 space-y-3 relative flex-1 flex flex-col justify-between">
+          <div class="flex items-start gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-9 relative z-10 flex items-center justify-center text-2xl shrink-0">
+              🥛
+            </div>
+            <div>
+              <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Shiv Dairy & Sweets</h3>
+              <p class="text-xs font-bold text-slate-400 mt-0.5">Fresh Milk, Paneer & Sweets</p>
+            </div>
           </div>
           <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
             <span class="flex items-center gap-1 text-amber-600">
               <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.9 (1,500+)
             </span>
-            <span>🕒 6:00 AM - 10:00 PM</span>
+            <span class="text-emerald-600 font-extrabold">Open Now</span>
           </div>
         </div>
       </div>
 
       <!-- STORE 5: Kwality Wall's Hub -->
-      <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group" data-id="kwality_hub">
-        <div class="h-40 w-full relative overflow-hidden bg-slate-100">
+      <div class="store-select-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all cursor-pointer overflow-hidden group flex flex-col justify-between" data-id="kwality_hub">
+        <div class="h-44 w-full relative overflow-hidden bg-slate-100">
           <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=800&q=80" alt="Kwality Wall's Hub" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
           <span class="absolute top-3 left-3 px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-full uppercase tracking-wider shadow-xs flex items-center gap-1">
             <span class="material-symbols-outlined text-xs">verified</span> Verified Partner
           </span>
           <span class="absolute bottom-3 right-3 px-2.5 py-1 bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-full shadow-xs">⚡ 12-18 Mins</span>
         </div>
-        <div class="p-5 space-y-3 relative">
-          <div class="w-14 h-14 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-10 mb-2 relative z-10 flex items-center justify-center text-2xl">
-            🍦
-          </div>
-          <div>
-            <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Kwality Wall's Ice Cream Hub</h3>
-            <p class="text-xs font-bold text-slate-400 mt-0.5">City Center • Desserts & Shakes</p>
+        <div class="p-5 space-y-3 relative flex-1 flex flex-col justify-between">
+          <div class="flex items-start gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-white p-1 shadow-lg border border-slate-100 -mt-9 relative z-10 flex items-center justify-center text-2xl shrink-0">
+              🍦
+            </div>
+            <div>
+              <h3 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">Kwality Wall's Ice Cream Hub</h3>
+              <p class="text-xs font-bold text-slate-400 mt-0.5">Ice Creams & Shakes</p>
+            </div>
           </div>
           <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
             <span class="flex items-center gap-1 text-amber-600">
               <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.7 (610+)
             </span>
-            <span>🕒 10:00 AM - 11:30 PM</span>
+            <span class="text-emerald-600 font-extrabold">Open Now</span>
           </div>
         </div>
       </div>
@@ -212,89 +227,99 @@ import Switcher from '../components/Switcher.astro';
 
   </main>
 
-  <!-- 2. INDIVIDUAL DYNAMIC STORE PAGE VIEW (CONTAINER) -->
-  <main id="single-store-view" class="hidden max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <!-- 2. INDIVIDUAL REDESIGNED RESTAURANT & STORE PAGE VIEW -->
+  <main id="single-store-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
     
     <!-- BACK TO ALL STORES BUTTON -->
-    <button id="btn-back-stores" class="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 text-slate-700 font-extrabold text-xs rounded-xl hover:bg-slate-100 transition-all shadow-xs">
+    <button id="btn-back-stores" class="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 text-slate-700 font-extrabold text-xs rounded-2xl hover:bg-slate-100 transition-all shadow-xs active:scale-95">
       <span class="material-symbols-outlined text-base">arrow_back</span>
       <span>Back to All Stores</span>
     </button>
 
-    <!-- LARGE COVER IMAGE & STORE HEADER HERO -->
-    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden space-y-4">
+    <!-- LARGE COVER IMAGE & RESTAURANT HEADER HERO -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-md overflow-hidden space-y-4">
       
       <!-- Large Cover Image -->
-      <div class="h-48 sm:h-64 w-full relative bg-slate-100">
+      <div class="h-64 sm:h-80 lg:h-96 w-full relative bg-slate-100">
         <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" id="store-cover-img" src="" alt="Store Cover" class="w-full h-full object-cover" />
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent"></div>
-        <span class="absolute top-4 left-4 px-3 py-1 bg-purpleBrand text-white text-xs font-black rounded-full uppercase tracking-wider shadow-md flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm">verified</span> Verified Partner Store
-        </span>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent"></div>
+        
+        <!-- Badges -->
+        <div class="absolute top-4 left-4 flex items-center gap-2">
+          <span class="px-3 py-1 bg-purpleBrand text-white text-xs font-black rounded-full uppercase tracking-wider shadow-md flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">verified</span> Verified Partner Store
+          </span>
+        </div>
+
         <span id="store-status-badge" class="absolute top-4 right-4 px-3 py-1 bg-emerald-500 text-white text-xs font-black rounded-full uppercase shadow-md">Open Now</span>
       </div>
 
-      <!-- Store Info Content (Logo, Name, Rating, Delivery Time, Store Timing, Description) -->
-      <div class="px-6 pb-6 pt-0 relative flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <div class="flex items-start gap-4">
-          <!-- Store Logo Avatar -->
-          <div id="store-logo-avatar" class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-white p-2 shadow-xl border border-slate-100 -mt-12 sm:-mt-14 relative z-10 flex items-center justify-center text-4xl shrink-0">
+      <!-- Restaurant Details Info Box (Logo, Name, Cuisine, Rating, Delivery Time, Store Description) -->
+      <div class="px-6 sm:px-8 pb-6 pt-0 relative flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div class="flex items-start gap-4 sm:gap-6">
+          
+          <!-- Restaurant Logo Avatar -->
+          <div id="store-logo-avatar" class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white p-2 shadow-2xl border-2 border-white -mt-14 sm:-mt-16 relative z-10 flex items-center justify-center text-4xl sm:text-5xl shrink-0">
             🏬
           </div>
-          <div class="space-y-1.5">
-            <h1 id="store-name-title" class="text-2xl sm:text-3xl font-black font-display text-slate-900">Bhusawal Express Superstore</h1>
-            <p id="store-desc-text" class="text-xs font-semibold text-slate-500 max-w-2xl leading-relaxed">
+
+          <div class="space-y-2">
+            <h1 id="store-name-title" class="text-2xl sm:text-3xl lg:text-4xl font-black font-display text-slate-900 tracking-tight">Bhusawal Express Superstore</h1>
+            <p id="store-cuisine-tag" class="text-xs sm:text-sm font-extrabold text-purpleBrand uppercase tracking-wider">Supermarket • 25,500+ Items</p>
+            
+            <p id="store-desc-text" class="text-xs sm:text-sm font-medium text-slate-600 max-w-3xl leading-relaxed">
               Bhusawal's largest quick-commerce superstore delivering 25,500+ fresh daily essentials, groceries, dairy & household products straight to your doorstep.
             </p>
 
-            <div class="flex flex-wrap items-center gap-4 text-xs font-black text-slate-700 pt-1">
+            <div class="flex flex-wrap items-center gap-3 text-xs font-black text-slate-700 pt-2">
               <!-- Rating -->
-              <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/60">
+              <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-3 py-1 rounded-xl border border-amber-200/60 shadow-xs">
                 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
                 <span id="store-rating-val">4.9 (1,240+ Ratings)</span>
               </span>
 
               <!-- Delivery Time -->
-              <span class="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/60">
+              <span class="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-3 py-1 rounded-xl border border-emerald-200/60 shadow-xs">
                 <span class="material-symbols-outlined text-sm">bolt</span>
-                <span id="store-eta-val">10-15 Mins</span>
+                <span id="store-eta-val">10-15 Mins Express Delivery</span>
               </span>
 
               <!-- Store Timing -->
-              <span class="flex items-center gap-1 text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200/60">
+              <span class="flex items-center gap-1 text-slate-600 bg-slate-100 px-3 py-1 rounded-xl border border-slate-200/60 shadow-xs">
                 <span class="material-symbols-outlined text-sm">schedule</span>
                 <span id="store-timing-val">7:00 AM - 10:30 PM</span>
               </span>
             </div>
           </div>
+
         </div>
       </div>
 
     </div>
 
-    <!-- STICKY SEARCH BAR (INSIDE STORE) -->
-    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-slate-200 shadow-md">
+    <!-- RESTAURANT SEARCH BAR (SEARCH INSIDE RESTAURANT) -->
+    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-slate-200/90 shadow-md">
       <div class="relative w-full">
         <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-        <input type="text" id="store-search-input" placeholder="Search inside this store..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand focus:bg-white transition-all" />
+        <input type="text" id="store-search-input" placeholder="Search inside this store or restaurant menu..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-bold text-slate-900 outline-none focus:border-purpleBrand focus:bg-white transition-all" />
       </div>
     </div>
 
-    <!-- STICKY CATEGORY BAR -->
-    <div class="sticky top-32 z-30 bg-slate-100/90 backdrop-blur-md p-2 rounded-2xl border border-slate-200/80 shadow-xs">
+    <!-- STICKY CATEGORY TABS BAR -->
+    <div class="sticky top-32 z-30 bg-slate-100/95 backdrop-blur-md p-2.5 rounded-2xl border border-slate-200/80 shadow-xs">
       <div id="store-categories-pills" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 px-1">
         <!-- Dynamically populated category pills -->
       </div>
     </div>
 
-    <!-- STORE PRODUCT GRID -->
+    <!-- FOOD & PRODUCT GRID -->
     <div class="space-y-4 pt-2">
       <div class="flex items-center justify-between border-b border-slate-200 pb-2">
-        <h2 class="text-lg font-black font-display text-slate-900" id="store-grid-heading">Store Products</h2>
-        <span class="text-xs font-bold text-slate-400" id="store-product-count">Showing store items</span>
+        <h2 class="text-lg font-black font-display text-slate-900" id="store-grid-heading">Store Menu & Products</h2>
+        <span class="text-xs font-bold text-slate-400" id="store-product-count">Showing items</span>
       </div>
 
-      <div id="store-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div id="store-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
         <!-- Dynamically rendered store products -->
       </div>
     </div>
@@ -303,7 +328,7 @@ import Switcher from '../components/Switcher.astro';
 
   <Switcher />
 
-  <!-- CLIENT-SIDE STORE ENGINE -->
+  <!-- CLIENT-SIDE RESTAURANT & STORE ENGINE -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -312,23 +337,23 @@ import Switcher from '../components/Switcher.astro';
       const storeSearchInput = document.getElementById('store-search-input');
       const categoryPillsWrapper = document.getElementById('store-categories-pills');
 
-      // STORES DATABASE SCHEMA (USES REAL CATALOG DATABASE)
+      // RESTAURANTS DATABASE MAPPING (PRESERVES EXISTING DATA)
       const STORES = {
         express_superstore: {
           name: 'Bhusawal Express Superstore',
-          tag: 'Shivaji Nagar • 25,500+ Supermarket Items',
+          tag: 'Supermarket • 25,500+ Items',
           rating: '4.9 (1,240+ Ratings)',
-          eta: '10-15 Mins Delivery',
+          eta: '10-15 Mins Express Delivery',
           timing: '7:00 AM - 10:30 PM',
           desc: "Bhusawal's largest quick-commerce superstore delivering 25,500+ fresh daily essentials, groceries, dairy & household products straight to your doorstep.",
           cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=800&q=80',
           logo: '🏬',
           filterKw: '',
-          categories: ['All Products', 'Fruits & Vegetables', 'Dairy & Breakfast', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
+          categories: ['All Products', 'Fruits & Vegetables', 'Dairy & Breakfast', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning']
         },
         royal_biryani: {
           name: 'Royal Biryani & Caterers',
-          tag: 'Jamner Road • Mughlai, Biryani & Fast Food',
+          tag: 'Mughlai • Dum Biryani • North Indian',
           rating: '4.8 (850+ Ratings)',
           eta: '20-25 Mins Express Delivery',
           timing: '11:00 AM - 11:00 PM',
@@ -340,7 +365,7 @@ import Switcher from '../components/Switcher.astro';
         },
         modern_pharmacy: {
           name: 'Modern Pharmacy & Wellness',
-          tag: 'Station Road • Essential Medicines & Hygiene',
+          tag: 'Essential Medicines & Healthcare',
           rating: '4.9 (920+ Ratings)',
           eta: '10-15 Mins Priority Delivery',
           timing: '8:00 AM - 10:00 PM',
@@ -352,7 +377,7 @@ import Switcher from '../components/Switcher.astro';
         },
         shiv_dairy: {
           name: 'Shiv Dairy & Sweets',
-          tag: 'Varangaon Road • Fresh Milk, Paneer, Curd & Sweets',
+          tag: 'Fresh Milk • Paneer • Traditional Sweets',
           rating: '4.9 (1,500+ Ratings)',
           eta: '10-15 Mins Fresh Delivery',
           timing: '6:00 AM - 10:00 PM',
@@ -364,7 +389,7 @@ import Switcher from '../components/Switcher.astro';
         },
         kwality_hub: {
           name: 'Kwality Wall's Ice Cream Hub',
-          tag: 'City Center • Ice Creams, Shakes & Frozen Desserts',
+          tag: 'Ice Creams • Shakes • Sundaes',
           rating: '4.7 (610+ Ratings)',
           eta: '12-18 Mins Cold-Chain Delivery',
           timing: '10:00 AM - 11:30 PM',
@@ -389,6 +414,7 @@ import Switcher from '../components/Switcher.astro';
         document.getElementById('store-cover-img').src = store.cover;
         document.getElementById('store-logo-avatar').textContent = store.logo;
         document.getElementById('store-name-title').textContent = store.name;
+        document.getElementById('store-cuisine-tag').textContent = store.tag;
         document.getElementById('store-desc-text').textContent = store.desc;
         document.getElementById('store-rating-val').textContent = store.rating;
         document.getElementById('store-eta-val').textContent = store.eta;
@@ -399,7 +425,7 @@ import Switcher from '../components/Switcher.astro';
         store.categories.forEach((cat, idx) => {
           const isFirst = idx === 0;
           catHtml += `
-            <button class="store-cat-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-black transition-all ${isFirst ? 'bg-purpleBrand text-white shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'}" data-cat="${cat}">
+            <button class="store-cat-pill flex-shrink-0 px-4 py-2 rounded-xl text-xs font-black transition-all ${isFirst ? 'bg-purpleBrand text-white shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'}" data-cat="${cat}">
               ${cat}
             </button>
           `;
@@ -476,9 +502,12 @@ import Switcher from '../components/Switcher.astro';
           const pack = p.pack;
 
           html += `
-            <div class="bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-lg hover:border-purple-200 transition-all group">
+            <div class="bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-purple-200 transition-all group">
               <div>
-                <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden">
+                <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden relative">
+                  <button class="fav-btn absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+                    <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+                  </button>
                   <img loading="lazy" src="${img}" alt="${name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                 </div>
                 <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem]">${name}</h3>
@@ -487,7 +516,7 @@ import Switcher from '../components/Switcher.astro';
 
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
                 <span class="text-xs sm:text-sm font-black text-slate-900">MRP ₹${mrp}</span>
-                <button class="btn-add-store-cart px-3 py-1.5 bg-purple-50 text-purpleBrand hover:bg-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id="${id}" data-name="${name.replace(/"/g, '&quot;')}" data-price="${mrp}" data-img="${img}">
+                <button class="btn-add-store-cart px-3.5 py-1.5 bg-purple-50 text-purpleBrand hover:bg-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id="${id}" data-name="${name.replace(/"/g, '&quot;')}" data-price="${mrp}" data-img="${img}">
                   + ADD
                 </button>
               </div>
