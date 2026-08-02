@@ -50,18 +50,18 @@ let offerProducts = dedupProducts(catalog.filter(p => p["Offer Price"] && parseF
 let buyAgainProducts = dedupProducts(catalog.filter(p => p.Category === 'Dairy & Breakfast' || p.Category === 'Fruits & Vegetables')).slice(0, 12);
 
 // 5. Recently Ordered
-let recentlyOrderedProducts = dedupProducts(catalog.filter(p => p.Category === 'Grocery Staples' || p.Category === 'Household Care')).slice(0, 12);
+let recentlyOrderedProducts = dedupProducts(catalog.filter(p => p.Category === 'Grocery Staples' || p.Category === 'Home Cleaning & Household')).slice(0, 12);
 
 // Dynamic Categories list
 const categoriesList = [
   { name: 'Fruits & Vegetables', icon: '🥬', color: 'from-emerald-500/20 to-teal-500/20' },
   { name: 'Dairy & Breakfast', icon: '🥛', color: 'from-blue-500/20 to-cyan-500/20' },
+  { name: 'Grocery Staples', icon: '🌾', color: 'from-yellow-500/20 to-amber-500/20' },
   { name: 'Snacks & Confectionery', icon: '🍿', color: 'from-amber-500/20 to-orange-500/20' },
   { name: 'Beverages', icon: '🥤', color: 'from-rose-500/20 to-pink-500/20' },
-  { name: 'Meat & Seafood', icon: '🍗', color: 'from-red-500/20 to-rose-500/20' },
-  { name: 'Bakery & Biscuits', icon: '🍞', color: 'from-yellow-500/20 to-amber-500/20' },
-  { name: 'Instant & Frozen', icon: '🍜', color: 'from-purple-500/20 to-indigo-500/20' },
-  { name: 'Household Care', icon: '🧹', color: 'from-indigo-500/20 to-blue-500/20' },
+  { name: 'Personal Care', icon: '✨', color: 'from-pink-500/20 to-rose-500/20' },
+  { name: 'Home Cleaning & Household', icon: '🧹', color: 'from-indigo-500/20 to-blue-500/20' },
+  { name: 'Instant & Frozen Foods', icon: '🍜', color: 'from-purple-500/20 to-indigo-500/20' },
 ];
 
 // Featured Stores Data
@@ -158,18 +158,126 @@ const featuredStores = [
       </div>
     </div>
 
-    <!-- 3. HERO PROMO CAROUSEL -->
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-700 text-white p-6 shadow-xl shadow-purple-900/10">
-      <div class="relative z-10 max-w-sm">
-        <span class="px-3 py-1 bg-amber-400 text-slate-900 text-[11px] font-black uppercase tracking-wider rounded-full inline-block mb-3">SUPER-APP EXCLUSIVE</span>
-        <h2 class="text-2xl font-black font-display leading-tight mb-2">Bhusawal Express Grocery & Food</h2>
-        <p class="text-xs text-purple-100 mb-4">Get groceries, fresh milk, hot food & medicines delivered in under 15 mins!</p>
-        <a href="/grocery" class="inline-flex items-center gap-2 bg-white text-purpleBrand font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md hover:bg-purple-50 active:scale-95 transition-all">
-          <span>Explore Grocery</span>
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </a>
+    <!-- 3. HERO PROMO CAROUSEL (5 ROTATING BANNERS) -->
+    <div id="hero-carousel" class="relative overflow-hidden rounded-3xl shadow-2xl bg-slate-900 group h-[220px] sm:h-[260px] md:h-[280px]">
+      
+      <!-- Slides Container -->
+      <div id="hero-slides-wrapper" class="w-full h-full relative">
+        
+        <!-- Slide 1: Grocery -->
+        <div class="hero-slide absolute inset-0 opacity-100 transition-opacity duration-700 ease-in-out flex items-center p-6 md:p-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1200&q=80');">
+          <div class="absolute inset-0 bg-gradient-to-r from-purple-950/95 via-purple-900/75 to-transparent"></div>
+          <div class="relative z-10 max-w-lg space-y-2 text-white">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 bg-amber-400 text-slate-900 text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm">⚡ 10-15 MIN DELIVERY</span>
+              <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">UP TO 50% OFF</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight text-white drop-shadow-sm">Fresh Fruits, Veggies & Daily Grocery</h2>
+            <p class="text-xs sm:text-sm text-purple-100 font-medium line-clamp-2 max-w-md">Over 25,500+ items delivered fresh to your doorstep in Bhusawal.</p>
+            <div class="pt-1">
+              <a href="/grocery" class="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all">
+                <span>Shop Grocery</span>
+                <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2: Food Delivery -->
+        <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out flex items-center p-6 md:p-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80');">
+          <div class="absolute inset-0 bg-gradient-to-r from-amber-950/95 via-orange-950/75 to-transparent"></div>
+          <div class="relative z-10 max-w-lg space-y-2 text-white">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm">🔥 HOT & FRESH</span>
+              <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">FREE DELIVERY</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight text-white drop-shadow-sm">Delicious Food from Top Restaurants</h2>
+            <p class="text-xs sm:text-sm text-orange-100 font-medium line-clamp-2 max-w-md">Craving Biryani, Pizza, or Thali? Order now & enjoy fast local delivery.</p>
+            <div class="pt-1">
+              <a href="/food" class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-400 text-white font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all">
+                <span>Order Food Now</span>
+                <span class="material-symbols-outlined text-sm font-bold">restaurant</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3: Medicine -->
+        <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out flex items-center p-6 md:p-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=80');">
+          <div class="absolute inset-0 bg-gradient-to-r from-teal-950/95 via-emerald-950/75 to-transparent"></div>
+          <div class="relative z-10 max-w-lg space-y-2 text-white">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm">💊 100% GENUINE</span>
+              <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">EXPRESS PHARMACY</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight text-white drop-shadow-sm">Medicines & Everyday Health Care</h2>
+            <p class="text-xs sm:text-sm text-teal-100 font-medium line-clamp-2 max-w-md">Upload prescription or search medicines for instant doorstep delivery.</p>
+            <div class="pt-1">
+              <a href="/medicines" class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all">
+                <span>Buy Medicines</span>
+                <span class="material-symbols-outlined text-sm font-bold">medical_services</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 4: Parcel Delivery -->
+        <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out flex items-center p-6 md:p-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80');">
+          <div class="absolute inset-0 bg-gradient-to-r from-blue-950/95 via-indigo-950/75 to-transparent"></div>
+          <div class="relative z-10 max-w-lg space-y-2 text-white">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 bg-blue-500 text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm">📦 INSTANT PICKUP & DROP</span>
+              <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">BHUSAWAL EXPRESS</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight text-white drop-shadow-sm">Send Packages & Documents Anywhere</h2>
+            <p class="text-xs sm:text-sm text-blue-100 font-medium line-clamp-2 max-w-md">Forgot keys, documents or gifts? Our riders pick up and drop across Bhusawal.</p>
+            <div class="pt-1">
+              <a href="/parcel" class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-400 text-white font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all">
+                <span>Book Parcel Rider</span>
+                <span class="material-symbols-outlined text-sm font-bold">local_shipping</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 5: Local Shops -->
+        <div class="hero-slide absolute inset-0 opacity-0 pointer-events-none transition-opacity duration-700 ease-in-out flex items-center p-6 md:p-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=1200&q=80');">
+          <div class="absolute inset-0 bg-gradient-to-r from-purple-950/95 via-indigo-950/75 to-transparent"></div>
+          <div class="relative z-10 max-w-lg space-y-2 text-white">
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-1 bg-purple-500 text-white text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm">🏪 LOCAL MARKETPLACE</span>
+              <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">SUPPORT BHUSAWAL</span>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight text-white drop-shadow-sm">Shop Your Favorite Local Stores</h2>
+            <p class="text-xs sm:text-sm text-purple-100 font-medium line-clamp-2 max-w-md">Order directly from trusted local Bhusawal merchants & specialty stores.</p>
+            <div class="pt-1">
+              <a href="/shops" class="inline-flex items-center gap-2 bg-purple-500 hover:bg-purple-400 text-white font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl shadow-lg hover:scale-105 active:scale-95 transition-all">
+                <span>Explore Local Shops</span>
+                <span class="material-symbols-outlined text-sm font-bold">storefront</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <div class="absolute -right-6 -bottom-8 opacity-20 text-9xl select-none">🛍️</div>
+
+      <!-- Navigation Arrows -->
+      <button id="hero-prev-btn" class="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/30 flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all opacity-80 hover:opacity-100 shadow-md" aria-label="Previous Slide">
+        <span class="material-symbols-outlined text-lg">chevron_left</span>
+      </button>
+      <button id="hero-next-btn" class="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/20 backdrop-blur-md text-white border border-white/30 flex items-center justify-center hover:bg-white hover:text-slate-900 transition-all opacity-80 hover:opacity-100 shadow-md" aria-label="Next Slide">
+        <span class="material-symbols-outlined text-lg">chevron_right</span>
+      </button>
+
+      <!-- Indicator Dots -->
+      <div class="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/30 backdrop-blur-md border border-white/10">
+        <button class="hero-dot w-2.5 h-2.5 rounded-full bg-white transition-all scale-125" data-index="0" aria-label="Slide 1"></button>
+        <button class="hero-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all" data-index="1" aria-label="Slide 2"></button>
+        <button class="hero-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all" data-index="2" aria-label="Slide 3"></button>
+        <button class="hero-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all" data-index="3" aria-label="Slide 4"></button>
+        <button class="hero-dot w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-all" data-index="4" aria-label="Slide 5"></button>
+      </div>
+
     </div>
 
         <!-- 4. SERVICES GRID (2 COL MOBILE, 2 COL TABLET, 3 COL DESKTOP) -->
@@ -731,6 +839,65 @@ const featuredStores = [
           }
         });
       }
+
+      // Hero Carousel Auto-Sliding Logic
+      const heroSlides = document.querySelectorAll('.hero-slide');
+      const heroDots = document.querySelectorAll('.hero-dot');
+      const heroPrevBtn = document.getElementById('hero-prev-btn');
+      const heroNextBtn = document.getElementById('hero-next-btn');
+      let currentHeroSlide = 0;
+      let heroSlideTimer = null;
+
+      function goToHeroSlide(index) {
+        if (!heroSlides.length) return;
+        heroSlides[currentHeroSlide].classList.add('opacity-0', 'pointer-events-none');
+        heroSlides[currentHeroSlide].classList.remove('opacity-100');
+
+        heroDots[currentHeroSlide]?.classList.remove('bg-white', 'scale-125');
+        heroDots[currentHeroSlide]?.classList.add('bg-white/50');
+
+        currentHeroSlide = (index + heroSlides.length) % heroSlides.length;
+
+        heroSlides[currentHeroSlide].classList.remove('opacity-0', 'pointer-events-none');
+        heroSlides[currentHeroSlide].classList.add('opacity-100');
+
+        heroDots[currentHeroSlide]?.classList.remove('bg-white/50');
+        heroDots[currentHeroSlide]?.classList.add('bg-white', 'scale-125');
+      }
+
+      function startHeroSlideTimer() {
+        stopHeroSlideTimer();
+        heroSlideTimer = setInterval(() => {
+          goToHeroSlide(currentHeroSlide + 1);
+        }, 4000);
+      }
+
+      function stopHeroSlideTimer() {
+        if (heroSlideTimer) clearInterval(heroSlideTimer);
+      }
+
+      heroPrevBtn?.addEventListener('click', () => {
+        goToHeroSlide(currentHeroSlide - 1);
+        startHeroSlideTimer();
+      });
+
+      heroNextBtn?.addEventListener('click', () => {
+        goToHeroSlide(currentHeroSlide + 1);
+        startHeroSlideTimer();
+      });
+
+      heroDots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          goToHeroSlide(idx);
+          startHeroSlideTimer();
+        });
+      });
+
+      const heroCarouselEl = document.getElementById('hero-carousel');
+      heroCarouselEl?.addEventListener('mouseenter', stopHeroSlideTimer);
+      heroCarouselEl?.addEventListener('mouseleave', startHeroSlideTimer);
+
+      startHeroSlideTimer();
 
       // Address Header Click
       document.getElementById('header-location-btn')?.addEventListener('click', () => {
