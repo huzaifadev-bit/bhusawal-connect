@@ -250,11 +250,46 @@ import Switcher from '../components/Switcher.astro';
   // Load current cart from localStorage based on type param
   const urlParams = new URLSearchParams(window.location.search);
   const cartType = urlParams.get('type') || 'grocery';
-  let cartKey = 'bhusawal_cart_grocery';
+  let cartKey = 'bhusawal_cart';
   if (cartType === 'food') cartKey = 'bhusawal_cart_food';
   else if (cartType === 'medicine') cartKey = 'bhusawal_cart_medicine';
 
-  let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
+  function getNormalizedCartObj() {
+    let raw = [];
+    try {
+      raw = JSON.parse(localStorage.getItem(cartKey) || localStorage.getItem('bhusawal_cart') || '[]');
+    } catch(e) {}
+
+    const obj = {};
+    if (Array.isArray(raw)) {
+      raw.forEach(item => {
+        const title = item.name || item.title || 'Grocery Item';
+        obj[title] = {
+          qty: item.quantity || item.qty || 1,
+          price: parseFloat(item.mrp || item.MRP || item.price || 0),
+          imgUrl: item.image || item.img || item.imgUrl || '/assets/d686bc969706f3bd6cf093f663be9579.jpg',
+          packSize: item.unit || item.pack || item.packSize || '1 Unit'
+        };
+      });
+    } else if (typeof raw === 'object' && raw !== null) {
+      Object.keys(raw).forEach(key => {
+        const val = raw[key];
+        if (typeof val === 'object') {
+          obj[key] = {
+            qty: val.qty || val.quantity || 1,
+            price: parseFloat(val.mrp || val.MRP || val.price || 0),
+            imgUrl: val.imgUrl || val.image || '/assets/d686bc969706f3bd6cf093f663be9579.jpg',
+            packSize: val.packSize || val.unit || '1 Unit'
+          };
+        } else if (typeof val === 'number') {
+          obj[key] = { qty: val, price: 60, imgUrl: '/assets/d686bc969706f3bd6cf093f663be9579.jpg', packSize: '1 Unit' };
+        }
+      });
+    }
+    return obj;
+  }
+
+  let cart = getNormalizedCartObj();
   let selectedTip = 0;
   let noBag = true;
 
@@ -532,7 +567,7 @@ import Switcher from '../components/Switcher.astro';
     itemTotal += item.price * item.qty;
    });
 
-   const deliveryFee = itemTotal === 0 ? 0 : 30;
+   const deliveryFee = itemTotal === 0 ? 0 : 25; // Standard Delivery Charge on EVERY order
 
    const bagFee = noBag ? 0 : 10;
    
@@ -553,7 +588,7 @@ import Switcher from '../components/Switcher.astro';
    const grandTotal = itemTotal > 0 ? (itemTotal + deliveryFee + bagFee + selectedTip + nightFee) : 0;
 
    document.getElementById('bill-item-total').textContent = '₹' + itemTotal;
-   document.getElementById('bill-delivery-fee').textContent = deliveryFee === 0 ? 'FREE' : '₹' + deliveryFee;
+   document.getElementById('bill-delivery-fee').textContent = '₹' + deliveryFee;
 
 
    const nightFeeRow = document.getElementById('night-fee-row');
