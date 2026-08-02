@@ -1,375 +1,648 @@
 ---
 import Switcher from '../components/Switcher.astro';
+import catalog from '../../public/grocery_catalog.json';
+
+const recommendations = catalog.slice(0, 4);
 ---
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8" />
-<meta content="width=device-width, initial-scale=1.0" name="viewport" />
-<title>Bhusawal Connect | Merchant Dashboard</title>
-<script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
-<link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
-<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
-<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout & Delivery Address | Bhusawal Connect</title>
+  
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- Leaflet Map CSS & JS for Interactive Map Location Picker -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script is:inline>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            purpleBrand: '#7c3aed',
+            purpleDark: '#6d28d9',
+            purpleLight: '#f3e8ff'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-        .pulse-orange {
-            box-shadow: 0 0 0 0 rgba(176, 47, 0, 0.4);
-            animation: pulse-orange 2s infinite;
-        }
-        @keyframes pulse-orange {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(176, 47, 0, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(176, 47, 0, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(176, 47, 0, 0); }
-        }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
-<style>
-    body {
-      min-height: 100dvh;
-    }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    #checkout-leaflet-map { height: 220px; width: 100%; border-radius: 1.5rem; z-index: 1; }
   </style>
-  </head>
-<body class="bg-background text-on-background min-h-screen pb-24 md:pb-0 md:pl-64">
-<!-- Tailwind Configuration -->
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "secondary-container": "#e5e2e1",
-                        "on-tertiary": "#ffffff",
-                        "tertiary": "#006e1c",
-                        "on-background": "#1a1c1c",
-                        "surface": "#f9f9f9",
-                        "primary-fixed": "#ffdbd1",
-                        "surface-container-lowest": "#ffffff",
-                        "on-tertiary-fixed": "#002204",
-                        "secondary-fixed-dim": "#c8c6c5",
-                        "on-error": "#ffffff",
-                        "inverse-surface": "#2f3131",
-                        "inverse-primary": "#ffb5a0",
-                        "primary": "#b02f00",
-                        "on-surface-variant": "#5b4039",
-                        "error-container": "#ffdad6",
-                        "surface-variant": "#e2e2e2",
-                        "tertiary-fixed": "#94f990",
-                        "inverse-on-surface": "#f1f1f1",
-                        "primary-fixed-dim": "#ffb5a0",
-                        "outline-variant": "#e4beb4",
-                        "secondary-fixed": "#e5e2e1",
-                        "on-primary-fixed": "#3b0900",
-                        "on-tertiary-fixed-variant": "#005313",
-                        "surface-dim": "#dadada",
-                        "on-error-container": "#93000a",
-                        "surface-container-highest": "#e2e2e2",
-                        "secondary": "#5f5e5e",
-                        "on-surface": "#1a1c1c",
-                        "surface-container-high": "#e8e8e8",
-                        "surface-container": "#eeeeee",
-                        "on-secondary-container": "#656464",
-                        "on-tertiary-container": "#003208",
-                        "tertiary-fixed-dim": "#78dc77",
-                        "tertiary-container": "#41a447",
-                        "primary-container": "#ff5722",
-                        "on-primary-container": "#541200",
-                        "on-secondary-fixed": "#1c1b1b",
-                        "error": "#ba1a1a",
-                        "surface-tint": "#b02f00",
-                        "on-primary-fixed-variant": "#862200",
-                        "surface-container-low": "#f3f3f3",
-                        "on-secondary-fixed-variant": "#474646",
-                        "outline": "#907067",
-                        "background": "#f9f9f9",
-                        "on-primary": "#ffffff",
-                        "surface-bright": "#f9f9f9",
-                        "on-secondary": "#ffffff"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "container-max": "1280px",
-                        "unit": "4px",
-                        "margin-mobile": "16px",
-                        "margin-desktop": "64px",
-                        "gutter": "16px"
-                    },
-                    "fontFamily": {
-                        "body-md": ["Plus Jakarta Sans"],
-                        "label-sm": ["Plus Jakarta Sans"],
-                        "headline-lg-mobile": ["Plus Jakarta Sans"],
-                        "label-md": ["Plus Jakarta Sans"],
-                        "headline-md": ["Plus Jakarta Sans"],
-                        "headline-lg": ["Plus Jakarta Sans"],
-                        "headline-xl": ["Plus Jakarta Sans"],
-                        "body-lg": ["Plus Jakarta Sans"]
-                    },
-                    "fontSize": {
-                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
-                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
-                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
-                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
-                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
-                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
-                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
-                    }
-                }
-            }
+</head>
+
+<body class="min-h-screen pb-32 text-slate-800 antialiased">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-8 py-3.5 shadow-xs flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a href="/cart" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+      </a>
+      <a href="/home" class="flex items-center gap-1.5">
+        <span class="text-lg font-black font-display text-purpleBrand tracking-tight">bhusawal<span class="text-slate-900">connect</span></span>
+      </a>
+    </div>
+
+    <!-- ETA Widget -->
+    <div class="flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3.5 py-1.5 rounded-full border border-emerald-200 shadow-xs">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+      <span class="text-xs font-black">⚡ Delivering in 10-15 Mins</span>
+    </div>
+  </header>
+
+  <!-- MAIN CHECKOUT GRID -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- PAGE TITLE -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/60 pb-4">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900">Checkout</h1>
+        <p class="text-xs font-bold text-slate-400 mt-0.5">Choose your delivery address & complete payment</p>
+      </div>
+
+      <!-- Step Indicator -->
+      <div class="flex items-center gap-2 text-xs font-extrabold">
+        <span class="text-slate-400">Cart</span>
+        <span class="text-slate-300">→</span>
+        <span class="px-3 py-1 rounded-full bg-purpleBrand text-white font-black">Address & Checkout</span>
+        <span class="text-slate-300">→</span>
+        <span class="text-slate-400">Confirmation</span>
+      </div>
+    </div>
+
+    <!-- CHECKOUT MAIN GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+      <!-- LEFT 7 COLS: ADDRESS SELECTION & FORM -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- 1. MANDATORY ADDRESS SELECTION CONTAINER -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-5">
+          
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-lg font-black font-display text-slate-900 flex items-center gap-2">
+                <span class="material-symbols-outlined text-purpleBrand text-2xl">location_on</span>
+                Select Delivery Address
+              </h2>
+              <p class="text-xs font-bold text-slate-400 mt-0.5">Mandatory before placing your order</p>
+            </div>
+            <button id="btn-open-address-modal" class="px-3.5 py-1.5 bg-purpleBrand hover:bg-purpleDark text-white text-xs font-black rounded-xl transition-all shadow-xs flex items-center gap-1 active:scale-95">
+              <span>+ Add New Address</span>
+            </button>
+          </div>
+
+          <!-- TWO LOCATION OPTIONS -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            
+            <!-- Option 1: Use Current Location -->
+            <button id="btn-use-current-gps" class="p-4 rounded-2xl border-2 border-purple-200 bg-purple-50/60 hover:bg-purple-100 text-left transition-all group flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purpleBrand text-white flex items-center justify-center font-black shrink-0 shadow-md group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-xl">my_location</span>
+              </div>
+              <div>
+                <h3 class="text-xs font-black text-slate-900">1. Use Current Location</h3>
+                <p class="text-[11px] font-bold text-slate-500 mt-0.5">Detect GPS coordinates automatically</p>
+              </div>
+            </button>
+
+            <!-- Option 2: Select Location on Google Maps -->
+            <button id="btn-select-google-maps" class="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 text-left transition-all group flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black shrink-0 shadow-md group-hover:scale-105 transition-transform">
+                <span class="material-symbols-outlined text-xl">map</span>
+              </div>
+              <div>
+                <h3 class="text-xs font-black text-slate-900">2. Select on Google Maps</h3>
+                <p class="text-[11px] font-bold text-slate-500 mt-0.5">Drag pin to set exact location</p>
+              </div>
+            </button>
+
+          </div>
+
+          <!-- SAVED ADDRESSES LIST -->
+          <div class="space-y-3 pt-2">
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider">Your Saved Addresses</h3>
+            <div id="saved-addresses-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Dynamically rendered -->
+            </div>
+          </div>
+
+          <!-- LIVE MAP DISPLAY FOR SELECTED LOCATION -->
+          <div class="space-y-2 pt-2 border-t border-slate-100">
+            <div class="flex items-center justify-between text-xs font-black text-slate-700">
+              <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-purpleBrand text-sm">map</span>
+                Selected Pin Location on Map
+              </span>
+              <span id="display-lat-lng" class="text-[10px] font-mono text-purpleBrand bg-purple-50 px-2 py-0.5 rounded-md">Lat: 21.0478, Lng: 75.7896</span>
+            </div>
+            <div id="checkout-leaflet-map" class="shadow-inner border border-slate-200"></div>
+          </div>
+
+        </div>
+
+        <!-- 2. PAYMENT METHODS -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
+          <h2 class="text-lg font-black font-display text-slate-900 flex items-center gap-2">
+            <span class="material-symbols-outlined text-purpleBrand text-2xl">payments</span>
+            Select Payment Method
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <label class="p-4 rounded-2xl border-2 border-purpleBrand bg-purple-50/50 flex items-center gap-3 cursor-pointer">
+              <input type="radio" name="payment-method" value="UPI" checked class="accent-purpleBrand w-4 h-4" />
+              <div>
+                <span class="text-xs font-black text-slate-900 block">Instant UPI QR</span>
+                <span class="text-[10px] font-bold text-slate-400">GPay, PhonePe, Paytm</span>
+              </div>
+            </label>
+
+            <label class="p-4 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 flex items-center gap-3 cursor-pointer">
+              <input type="radio" name="payment-method" value="COD" class="accent-purpleBrand w-4 h-4" />
+              <div>
+                <span class="text-xs font-black text-slate-900 block">Cash on Delivery</span>
+                <span class="text-[10px] font-bold text-slate-400">Pay at Doorstep</span>
+              </div>
+            </label>
+
+            <label class="p-4 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 flex items-center gap-3 cursor-pointer">
+              <input type="radio" name="payment-method" value="CARD" class="accent-purpleBrand w-4 h-4" />
+              <div>
+                <span class="text-xs font-black text-slate-900 block">Card / NetBanking</span>
+                <span class="text-[10px] font-bold text-slate-400">Visa, Mastercard</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT 5 COLS: ORDER SUMMARY & PLACE ORDER -->
+      <div class="lg:col-span-5 space-y-6">
+
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4 sticky top-24">
+          <h2 class="text-lg font-black font-display text-slate-900">Order Summary</h2>
+
+          <!-- Cart Items Preview -->
+          <div id="checkout-cart-items" class="divide-y divide-slate-100 max-h-56 overflow-y-auto no-scrollbar">
+            <!-- Items -->
+          </div>
+
+          <!-- Price Breakdown at MRP -->
+          <div class="border-t border-slate-200 pt-4 space-y-2 text-xs font-bold text-slate-600">
+            <div class="flex justify-between">
+              <span>Item Total (MRP):</span>
+              <span id="summary-mrp-subtotal" class="text-slate-900 font-extrabold">₹0</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Standard Delivery Fee:</span>
+              <span class="text-slate-900 font-extrabold">₹25</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Platform Fee:</span>
+              <span class="text-slate-900 font-extrabold">₹5</span>
+            </div>
+            <div class="flex justify-between text-sm font-black text-slate-900 pt-3 border-t border-slate-200">
+              <span>To Pay:</span>
+              <span id="summary-grand-total" class="text-purpleBrand text-base font-black">₹30</span>
+            </div>
+          </div>
+
+          <!-- Selected Address Summary Box -->
+          <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+            <span class="text-[10px] font-black text-purpleBrand uppercase tracking-wider block">Deliver To:</span>
+            <p id="summary-selected-address" class="text-xs font-extrabold text-slate-900 line-clamp-2">
+              Select or add an address above
+            </p>
+          </div>
+
+          <!-- PLACE ORDER BUTTON -->
+          <button id="btn-place-order" class="w-full py-4 bg-purpleBrand hover:bg-purpleDark text-white font-black text-sm rounded-2xl shadow-xl shadow-purple-900/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+            <span>Place Order & Pay</span>
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ADD / EDIT ADDRESS MODAL -->
+  <div id="address-form-modal" class="fixed inset-0 z-[10000] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden animate-in fade-in duration-300">
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-4 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      
+      <button id="close-address-modal" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+
+      <div>
+        <h2 class="text-xl font-black font-display text-slate-900">Add Complete Delivery Address</h2>
+        <p class="text-xs font-bold text-slate-400 mt-0.5">Provide detailed location information for fast delivery</p>
+      </div>
+
+      <!-- DETECTED LAT/LNG DISPLAY BADGE -->
+      <div class="p-2.5 bg-purple-50 rounded-xl border border-purple-100 flex items-center justify-between text-xs font-bold text-purpleBrand">
+        <span>📍 Detected Coordinates:</span>
+        <span id="modal-lat-lng-text" class="font-mono text-[11px]">Lat: 21.0478, Lng: 75.7896</span>
+      </div>
+
+      <!-- ADDRESS FORM FIELDS -->
+      <form id="address-details-form" class="space-y-3 text-left">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] font-black text-slate-700 block uppercase">Full Name *</label>
+            <input type="text" id="field-name" required placeholder="Sahil Patel" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand" />
+          </div>
+          <div>
+            <label class="text-[11px] font-black text-slate-700 block uppercase">Mobile Number *</label>
+            <input type="tel" id="field-phone" required maxlength="10" placeholder="9923456789" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] font-black text-slate-700 block uppercase">House / Flat No. *</label>
+            <input type="text" id="field-house" required placeholder="Plot 42 / Flat 3B" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand" />
+          </div>
+          <div>
+            <label class="text-[11px] font-black text-slate-700 block uppercase">Building Name</label>
+            <input type="text" id="field-building" placeholder="Gokul Heights" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand" />
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[11px] font-black text-slate-700 block uppercase">Street / Road Name *</label>
+          <input type="text" id="field-street" required placeholder="Station Road / Varangaon Road" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] font-black text-slate-700 block uppercase">Area / Colony *</label>
+            <input type="text" id="field-area" required placeholder="Shivaji Nagar" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand" />
+          </div>
+          <div>
+            <label class="text-[11px] font-black text-slate-700 block uppercase">Landmark</label>
+            <input type="text" id="field-landmark" placeholder="Near Railway Station" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-[11px] font-black text-slate-700 block uppercase">City *</label>
+            <input type="text" id="field-city" value="Bhusawal" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand" />
+          </div>
+          <div>
+            <label class="text-[11px] font-black text-slate-700 block uppercase">PIN Code *</label>
+            <input type="text" id="field-pincode" value="425201" required maxlength="6" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-purpleBrand" />
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center gap-2">
+          <input type="checkbox" id="field-save-profile" checked class="accent-purpleBrand w-4 h-4" />
+          <label for="field-save-profile" class="text-xs font-bold text-slate-700">Save this address to my profile for future orders</label>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-2xl shadow-md transition-all flex items-center justify-center gap-1.5 mt-2">
+          <span class="material-symbols-outlined text-base">check</span>
+          <span>Save & Use Address</span>
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <Switcher />
+
+  <!-- CLIENT-SIDE CHECKOUT & ADDRESS ENGINE -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+
+      let map, marker;
+      let currentLat = 21.0478;
+      let currentLng = 75.7896;
+      let selectedAddressObject = null;
+
+      // Sample saved addresses
+      const DEFAULT_ADDRESSES = [
+        {
+          id: 'A1',
+          name: 'Sahil Patel',
+          phone: '9923456789',
+          tag: 'Home',
+          full: 'Plot 42, Near Station Road, Shivaji Nagar, Bhusawal',
+          lat: 21.0478,
+          lng: 75.7896
+        },
+        {
+          id: 'A2',
+          name: 'Sahil Patel',
+          phone: '9923456789',
+          tag: 'Work',
+          full: 'Shop 12, Main Market, Jamner Road, Bhusawal',
+          lat: 21.0512,
+          lng: 75.7920
         }
-    </script>
-<!-- Navigation Drawer (Web) -->
-<aside class="hidden md:flex flex-col h-screen py-8 bg-surface-container-low border-r border-outline-variant fixed left-0 w-64 z-50">
-<div class="px-6 mb-10">
-<h1 class="font-headline-md text-headline-md text-primary">Bhusawal Admin</h1>
-</div>
-<nav class="flex-1 space-y-2">
-<a class="flex items-center gap-4 bg-primary text-on-primary rounded-r-full font-bold ml-0 mr-4 px-6 py-3 transition-all duration-200 translate-x-1" href="#">
-<span class="material-symbols-outlined" data-icon="insights">insights</span>
-<span class="font-body-md text-body-md">Analytics</span>
-</a>
-<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="group">group</span>
-<span class="font-body-md text-body-md">Users</span>
-</a>
-<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="storefront" style="font-variation-settings: 'FILL' 1;">storefront</span>
-<span class="font-body-md text-body-md">Merchants</span>
-</a>
-<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
-<span class="font-body-md text-body-md">Delivery</span>
-</a>
-<a class="flex items-center gap-4 text-on-surface-variant hover:bg-surface-container-highest rounded-r-full ml-0 mr-4 px-6 py-3 transition-all" href="#">
-<span class="material-symbols-outlined" data-icon="settings">settings</span>
-<span class="font-body-md text-body-md">Settings</span>
-</a>
-</nav>
-</aside>
-<!-- Top App Bar -->
-<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm fixed top-0 w-full z-40 h-16 flex items-center justify-between px-margin-mobile md:px-10">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary" data-icon="location_on">location_on</span>
-<span class="font-headline-lg-mobile text-headline-lg-mobile text-primary italic tracking-tighter md:hidden">Bhusawal Connect</span>
-<span class="hidden md:block font-label-md text-label-md text-on-surface-variant">Merchant: Shri Ram Electronics</span>
-</div>
-<div class="flex items-center gap-4">
-<button class="p-2 hover:bg-surface-container-high transition-colors rounded-full relative">
-<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full" />
-</button>
-<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-bold text-xs">SR</div>
-</div>
-</header>
-<!-- Main Content -->
-<main class="pt-24 px-margin-mobile md:px-10 pb-12 max-w-container-max mx-auto">
-<!-- Welcome Header -->
-<section class="mb-10">
-<h2 class="font-headline-lg text-headline-lg text-on-background mb-2">Good Morning, Merchant!</h2>
-<p class="font-body-md text-body-md text-secondary">Here is what's happening with your store in Bhusawal today.</p>
-</section>
-<!-- Stats Bento Grid -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-<!-- Revenue Card -->
-<div class="md:col-span-2 glass-card p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] flex flex-col justify-between border border-outline-variant/20 relative overflow-hidden">
-<div class="relative z-10">
-<p class="font-label-md text-label-md text-secondary mb-1">Today's Revenue</p>
-<h3 class="font-headline-xl text-headline-xl text-primary">₹24,500.00</h3>
-<div class="flex items-center gap-1 text-tertiary mt-2">
-<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
-<span class="font-label-sm text-label-sm">+12% from yesterday</span>
-</div>
-</div>
-<div class="absolute -right-4 -bottom-4 opacity-5">
-<span class="material-symbols-outlined text-9xl" data-icon="payments">payments</span>
-</div>
-</div>
-<!-- Orders Card -->
-<div class="glass-card p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/20">
-<div class="flex justify-between items-start mb-4">
-<div class="p-3 bg-primary-fixed/30 rounded-lg">
-<span class="material-symbols-outlined text-primary" data-icon="receipt_long">receipt_long</span>
-</div>
-</div>
-<p class="font-label-md text-label-md text-secondary mb-1">Orders Today</p>
-<h3 class="font-headline-md text-headline-md">42</h3>
-<p class="font-label-sm text-label-sm text-tertiary mt-1">5 pending pickup</p>
-</div>
-<!-- Active Products -->
-<div class="glass-card p-6 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] border border-outline-variant/20">
-<div class="flex justify-between items-start mb-4">
-<div class="p-3 bg-secondary-container rounded-lg">
-<span class="material-symbols-outlined text-on-secondary-container" data-icon="inventory_2">inventory_2</span>
-</div>
-</div>
-<p class="font-label-md text-label-md text-secondary mb-1">Active Products</p>
-<h3 class="font-headline-md text-headline-md">128</h3>
-<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">3 out of stock</p>
-</div>
-</div>
-<!-- Quick Actions Row -->
-<section class="mb-10">
-<h4 class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-4">Quick Actions</h4>
-<div class="flex flex-wrap gap-4">
-<button class="h-14 px-8 bg-primary text-on-primary rounded-xl font-bold flex items-center gap-2 hover:scale-95 transition-transform duration-150 shadow-[0_4px_12px_rgba(176,47,0,0.2)]">
-<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
-                    Add Product
-                </button>
-<button class="h-14 px-8 bg-on-background text-white rounded-xl font-bold flex items-center gap-2 hover:scale-95 transition-transform duration-150">
-<span class="material-symbols-outlined" data-icon="edit_square">edit_square</span>
-                    Update Inventory
-                </button>
-<button class="h-14 px-8 border-2 border-outline rounded-xl font-bold flex items-center gap-2 hover:bg-surface-container transition-colors">
-<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
-                    Create Promotion
-                </button>
-</div>
-</section>
-<!-- Main Workspace: Orders & Products -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-<!-- Recent Orders List -->
-<div class="lg:col-span-2 glass-card rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] overflow-hidden border border-outline-variant/20">
-<div class="p-6 border-b border-outline-variant/30 flex justify-between items-center">
-<h3 class="font-headline-md text-headline-md">Recent Orders</h3>
-<button class="text-primary font-label-md hover:underline">View All</button>
-</div>
-<div class="divide-y divide-outline-variant/30">
-<!-- Order Item -->
-<div class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container">
-<img class="w-full h-full object-cover" data-alt="A portrait of a young Indian man smiling, high-quality professional photography, studio lighting, warm skin tones, clean neutral background, modern corporate headshot style for a merchant application." src="/assets/8b40c56e80ef11aa0285733e78c313f7.jpg"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-</div>
-<div>
-<p class="font-label-md text-label-md text-on-surface">Rahul Sharma</p>
-<p class="font-label-sm text-label-sm text-secondary">#ORD-5529 • 10:45 AM</p>
-</div>
-</div>
-<div class="text-right">
-<p class="font-label-md text-label-md text-on-surface font-bold">₹1,250</p>
-<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-[10px] font-bold uppercase">Preparing</span>
-</div>
-</div>
-<!-- Order Item -->
-<div class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container">
-<img class="w-full h-full object-cover" data-alt="A portrait of a young Indian woman with professional attire, soft natural lighting, high resolution, minimalist aesthetic, warm color palette, clean background, suitable for a mobile app user profile." src="/assets/d270925ae8ee44f7629839d7a9574312.jpg"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-</div>
-<div>
-<p class="font-label-md text-label-md text-on-surface">Priya Patil</p>
-<p class="font-label-sm text-label-sm text-secondary">#ORD-5528 • 10:15 AM</p>
-</div>
-</div>
-<div class="text-right">
-<p class="font-label-md text-label-md text-on-surface font-bold">₹890</p>
-<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full text-[10px] font-bold uppercase">Ready</span>
-</div>
-</div>
-<!-- Order Item -->
-<div class="p-6 flex items-center justify-between hover:bg-surface-container-low transition-colors">
-<div class="flex items-center gap-4">
-<div class="w-12 h-12 rounded-full overflow-hidden bg-surface-container">
-<img class="w-full h-full object-cover" data-alt="A middle-aged Indian man with a kind expression, wearing a clean white shirt, professional lighting, urban indoor setting, high-end photography, cinematic quality, vibrant yet professional colors." src="/assets/5d873d95ca770d96586a69717e3ac4be.jpg"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-</div>
-<div>
-<p class="font-label-md text-label-md text-on-surface">Amit Deshmukh</p>
-<p class="font-label-sm text-label-sm text-secondary">#ORD-5527 • 09:30 AM</p>
-</div>
-</div>
-<div class="text-right">
-<p class="font-label-md text-label-md text-on-surface font-bold">₹4,200</p>
-<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed-variant rounded-full text-[10px] font-bold uppercase">New</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Inventory Insights Card -->
-<div class="glass-card rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.04)] p-6 border border-outline-variant/20">
-<h3 class="font-headline-md text-headline-md mb-6">Inventory Alerts</h3>
-<div class="space-y-6">
-<div class="flex gap-4 p-4 bg-error-container/20 rounded-xl border border-error/10">
-<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
-<div>
-<p class="font-label-md text-label-md text-on-error-container font-bold">Out of Stock</p>
-<p class="font-label-sm text-label-sm text-on-surface-variant">LED Monitor 24" - 0 units left</p>
-<button class="mt-2 text-primary font-bold text-xs">RESTOCK NOW</button>
-</div>
-</div>
-<div class="flex gap-4 p-4 bg-secondary-container/20 rounded-xl border border-outline-variant/30">
-<span class="material-symbols-outlined text-secondary" data-icon="inventory">inventory</span>
-<div>
-<p class="font-label-md text-label-md text-on-surface font-bold">Low Stock</p>
-<p class="font-label-sm text-label-sm text-on-surface-variant">Wireless Mouse - 3 units left</p>
-<button class="mt-2 text-secondary font-bold text-xs">REORDER</button>
-</div>
-</div>
-<div class="pt-4 border-t border-outline-variant/30">
-<p class="font-label-md text-label-md text-secondary mb-4">Top Selling (Bhusawal Region)</p>
-<div class="flex items-center gap-3 mb-3">
-<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center">
-<span class="material-symbols-outlined text-primary" data-icon="bolt">bolt</span>
-</div>
-<div class="flex-1">
-<div class="flex justify-between items-center mb-1">
-<span class="font-label-sm text-label-sm">High-Speed Chargers</span>
-<span class="font-label-sm text-label-sm font-bold">85%</span>
-</div>
-<div class="w-full bg-surface-container rounded-full h-1.5">
-<div class="bg-primary h-1.5 rounded-full" style="width: 85%" />
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</main>
-<!-- Bottom Navigation Bar (Mobile) -->
-<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-outline-variant/30 h-20 flex justify-around items-center px-4 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
-<a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 scale-90 duration-200" href="/checkout">
-<span class="material-symbols-outlined" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
-<span class="font-label-sm text-label-sm">Home</span>
-</a>
-<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/order_confirmation">
-<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
-<span class="font-label-sm text-label-sm">Orders</span>
-</a>
-<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/checkout">
-<span class="material-symbols-outlined" data-icon="search">search</span>
-<span class="font-label-sm text-label-sm">Search</span>
-</a>
-<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/home">
-<span class="material-symbols-outlined" data-icon="person">person</span>
-<span class="font-label-sm text-label-sm">Customer View</span>
-</a>
-</nav>
-<!-- Floating Action Button (Mobile Contextual) -->
-<button class="md:hidden fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-[0_8px_16px_rgba(176,47,0,0.3)] flex items-center justify-center pulse-orange z-50">
-<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
-</button>
-<script>
-        // Micro-interactions for dashboard cards
-        document.querySelectorAll('.glass-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-4px)';
-                card.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(0)';
-            });
+      ];
+
+      function getSavedAddresses() {
+        try {
+          const stored = JSON.parse(localStorage.getItem('bhusawal_user_addresses') || '[]');
+          if (Array.isArray(stored) && stored.length > 0) return stored;
+        } catch(e) {}
+        return DEFAULT_ADDRESSES;
+      }
+
+      function saveAddressToProfile(addr) {
+        let addresses = getSavedAddresses();
+        addresses.push(addr);
+        localStorage.setItem('bhusawal_user_addresses', JSON.stringify(addresses));
+        renderSavedAddresses();
+      }
+
+      // Initialize Leaflet Map
+      function initLeafletMap(lat, lng) {
+        currentLat = lat;
+        currentLng = lng;
+
+        const mapContainer = document.getElementById('checkout-leaflet-map');
+        if (!mapContainer) return;
+
+        if (!map) {
+          map = L.map('checkout-leaflet-map').setView([lat, lng], 15);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+          }).addTo(map);
+
+          marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+          // Update coordinates on drag end
+          marker.on('dragend', function (e) {
+            const position = marker.getLatLng();
+            updateLatLngDisplay(position.lat, position.lng);
+          });
+
+          map.on('click', function(e) {
+            marker.setLatLng(e.latlng);
+            updateLatLngDisplay(e.latlng.lat, e.latlng.lng);
+          });
+        } else {
+          map.setView([lat, lng], 15);
+          marker.setLatLng([lat, lng]);
+        }
+
+        updateLatLngDisplay(lat, lng);
+      }
+
+      function updateLatLngDisplay(lat, lng) {
+        currentLat = parseFloat(lat).toFixed(4);
+        currentLng = parseFloat(lng).toFixed(4);
+        document.getElementById('display-lat-lng').textContent = `Lat: ${currentLat}, Lng: ${currentLng}`;
+        document.getElementById('modal-lat-lng-text').textContent = `Lat: ${currentLat}, Lng: ${currentLng}`;
+      }
+
+      // Render Saved Addresses List
+      function renderSavedAddresses() {
+        const grid = document.getElementById('saved-addresses-grid');
+        const addresses = getSavedAddresses();
+        if (!grid) return;
+
+        let html = '';
+        addresses.forEach((addr, idx) => {
+          const isSelected = idx === 0;
+          if (isSelected && !selectedAddressObject) {
+            selectedAddressObject = addr;
+            updateSelectedAddressUI(addr);
+          }
+
+          html += `
+            <div class="saved-addr-card p-3.5 rounded-2xl border-2 ${isSelected ? 'border-purpleBrand bg-purple-50/60' : 'border-slate-200 bg-white'} cursor-pointer transition-all hover:border-purple-300" data-idx="${idx}">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-xs font-black text-purpleBrand flex items-center gap-1">📍 ${addr.tag || 'Address'}</span>
+                ${isSelected ? '<span class="w-4 h-4 rounded-full bg-purpleBrand flex items-center justify-center text-white text-[9px] font-black">✓</span>' : ''}
+              </div>
+              <p class="text-xs font-black text-slate-900">${addr.name || 'Customer'}</p>
+              <p class="text-[11px] font-bold text-slate-500 line-clamp-2 mt-0.5">${addr.full}</p>
+            </div>
+          `;
         });
-    </script>
-    <Switcher />
-</body></html>
+
+        grid.innerHTML = html;
+
+        grid.querySelectorAll('.saved-addr-card').forEach(card => {
+          card.onclick = () => {
+            const idx = parseInt(card.dataset.idx);
+            const addr = addresses[idx];
+            if (addr) {
+              selectedAddressObject = addr;
+              updateSelectedAddressUI(addr);
+              renderSavedAddresses();
+            }
+          };
+        });
+      }
+
+      function updateSelectedAddressUI(addr) {
+        document.getElementById('summary-selected-address').textContent = `${addr.name} (+91 ${addr.phone}) - ${addr.full}`;
+        if (addr.lat && addr.lng) {
+          initLeafletMap(addr.lat, addr.lng);
+        }
+      }
+
+      // 1. Current Location GPS Handler
+      document.getElementById('btn-use-current-gps')?.addEventListener('click', () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              const lat = pos.coords.latitude;
+              const lng = pos.coords.longitude;
+              initLeafletMap(lat, lng);
+              alert(`GPS location detected! Latitude: ${lat.toFixed(4)}, Longitude: ${lng.toFixed(4)}.`);
+              openAddressModal(lat, lng);
+            },
+            (err) => {
+              alert('Unable to retrieve GPS location. Using default Bhusawal coordinates (21.0478, 75.7896).');
+              initLeafletMap(21.0478, 75.7896);
+              openAddressModal(21.0478, 75.7896);
+            }
+          );
+        } else {
+          openAddressModal(21.0478, 75.7896);
+        }
+      });
+
+      // 2. Select Location on Google Maps Handler
+      document.getElementById('btn-select-google-maps')?.addEventListener('click', () => {
+        initLeafletMap(currentLat, currentLng);
+        openAddressModal(currentLat, currentLng);
+      });
+
+      function openAddressModal(lat, lng) {
+        updateLatLngDisplay(lat, lng);
+        document.getElementById('address-form-modal').classList.remove('hidden');
+      }
+
+      document.getElementById('btn-open-address-modal')?.addEventListener('click', () => {
+        openAddressModal(currentLat, currentLng);
+      });
+
+      document.getElementById('close-address-modal')?.addEventListener('click', () => {
+        document.getElementById('address-form-modal').classList.add('hidden');
+      });
+
+      // Save Address Form Submission
+      document.getElementById('address-details-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('field-name').value;
+        const phone = document.getElementById('field-phone').value;
+        const house = document.getElementById('field-house').value;
+        const building = document.getElementById('field-building').value;
+        const street = document.getElementById('field-street').value;
+        const area = document.getElementById('field-area').value;
+        const landmark = document.getElementById('field-landmark').value;
+        const city = document.getElementById('field-city').value;
+        const pincode = document.getElementById('field-pincode').value;
+
+        const fullAddr = `${house}, ${building ? building + ', ' : ''}${street}, ${area}, ${landmark ? 'Near ' + landmark + ', ' : ''}${city} - ${pincode}`;
+
+        const newAddrObj = {
+          id: 'A-' + Math.random(),
+          name,
+          phone,
+          tag: 'Saved',
+          full: fullAddr,
+          lat: currentLat,
+          lng: currentLng
+        };
+
+        selectedAddressObject = newAddrObj;
+        saveAddressToProfile(newAddrObj);
+        updateSelectedAddressUI(newAddrObj);
+
+        document.getElementById('address-form-modal').classList.add('hidden');
+        alert('Delivery address saved successfully!');
+      });
+
+      // Render Cart Items & Summary
+      function renderCartSummary() {
+        let cart = [];
+        try {
+          cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+        } catch(e) {}
+
+        const itemsBox = document.getElementById('checkout-cart-items');
+        if (!itemsBox) return;
+
+        if (cart.length === 0) {
+          itemsBox.innerHTML = '<p class="text-xs font-bold text-slate-400 py-3">Your cart is empty.</p>';
+          return;
+        }
+
+        let subtotal = 0;
+        let html = '';
+        cart.forEach(item => {
+          const qty = item.quantity || 1;
+          const price = parseFloat(item.price || item.mrp || 0);
+          const itemTotal = Math.round(price * qty);
+          subtotal += itemTotal;
+
+          html += `
+            <div class="py-2.5 flex items-center justify-between gap-3 text-xs">
+              <div class="flex items-center gap-2 min-w-0">
+                <img src="${item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'}" class="w-8 h-8 rounded-lg object-contain bg-slate-50 p-0.5 border" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                <div class="min-w-0">
+                  <h4 class="font-black text-slate-800 truncate max-w-[140px]">${item.name}</h4>
+                  <p class="text-[10px] font-bold text-slate-400">Qty: ${qty} × ₹${price}</p>
+                </div>
+              </div>
+              <span class="font-black text-slate-900 shrink-0">₹${itemTotal}</span>
+            </div>
+          `;
+        });
+
+        itemsBox.innerHTML = html;
+
+        const grandTotal = subtotal + 25 + 5;
+        document.getElementById('summary-mrp-subtotal').textContent = `₹${subtotal}`;
+        document.getElementById('summary-grand-total').textContent = `₹${grandTotal}`;
+      }
+
+      // Place Order Button Handler
+      document.getElementById('btn-place-order')?.addEventListener('click', () => {
+        if (!selectedAddressObject) {
+          alert('Please select or add a delivery address before placing your order!');
+          return;
+        }
+
+        let cart = [];
+        try {
+          cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+        } catch(e) {}
+
+        if (cart.length === 0) {
+          alert('Your cart is empty!');
+          return;
+        }
+
+        const selectedPayment = document.querySelector('input[name="payment-method"]:checked')?.value || 'UPI';
+
+        // Create Order Object
+        const orderId = 'BHU-' + Math.floor(100000 + Math.random() * 900000);
+        let subtotal = cart.reduce((acc, i) => acc + (parseFloat(i.price || 0) * (i.quantity || 1)), 0);
+        const grandTotal = Math.round(subtotal + 25 + 5);
+
+        const newOrder = {
+          id: orderId,
+          date: new Date().toISOString(),
+          status: 'Confirmed',
+          items: cart,
+          total: grandTotal,
+          address: selectedAddressObject.full,
+          payment: selectedPayment
+        };
+
+        // Save order to history
+        let orders = [];
+        try {
+          orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+        } catch(e) {}
+        orders.unshift(newOrder);
+        localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+
+        // Clear Cart
+        localStorage.removeItem('bhusawal_cart');
+
+        // Redirect to Confirmation
+        window.location.href = `/order_confirmation?orderId=${orderId}`;
+      });
+
+      // Initial Calls
+      renderSavedAddresses();
+      initLeafletMap(21.0478, 75.7896);
+      renderCartSummary();
+    });
+  </script>
+</body>
+</html>
