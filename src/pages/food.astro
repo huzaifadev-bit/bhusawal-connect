@@ -208,7 +208,7 @@ const allRestaurants = [
 
   </header>
 
-  <main class="px-4 sm:px-6 py-5 space-y-7">
+  <main class="px-4 sm:px-6 py-5 space-y-8">
 
     <!-- 2. STICKY SEARCH BAR -->
     <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2">
@@ -234,6 +234,7 @@ const allRestaurants = [
     </section>
 
     <!-- 4. ⭐ SPONSORED RESTAURANTS (ALWAYS FIRST) -->
+    <!-- DESKTOP: 3 per row, TABLET: 2 per row, MOBILE: 1 per row -->
     <section class="space-y-4">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -246,53 +247,65 @@ const allRestaurants = [
         <span class="px-2.5 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-black uppercase tracking-wider rounded-md">FEATURED</span>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
         {sponsoredRestaurants.map(rest => (
-          <div class="restaurant-card bg-white rounded-3xl border-2 border-amber-200 shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer flex flex-col relative" data-name={rest.name.toLowerCase()} data-cuisine={rest.cuisine.toLowerCase()}>
+          <div class="restaurant-card group bg-white rounded-3xl border-2 border-amber-200 shadow-sm hover:shadow-2xl hover:border-redBrand transition-all duration-300 overflow-hidden cursor-pointer flex flex-col relative" data-name={rest.name.toLowerCase()} data-cuisine={rest.cuisine.toLowerCase()} onclick="window.location.href='/shops';">
             
-            <div class="h-44 bg-slate-100 relative overflow-hidden">
+            <!-- Large Cover Image Container -->
+            <div class="h-48 bg-slate-100 relative overflow-hidden rounded-t-3xl">
               <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent"></div>
               
               <!-- Sponsored Badge -->
-              <div class="absolute top-3 left-3 bg-amber-500 text-white px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md">
+              <div class="absolute top-3 left-3 bg-amber-500 text-white px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md z-10">
                 <span>⭐ SPONSORED</span>
               </div>
 
-              <!-- Verified Badge -->
-              <div class="absolute top-3 right-3 bg-white/95 backdrop-blur-md text-emerald-700 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-xs">
-                <span>✓ Verified Partner</span>
-              </div>
+              <!-- Favourite Heart Button -->
+              <button class="fav-rest-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+                <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+              </button>
 
               <!-- ETA & Distance Badge -->
-              <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-2 shadow-xs">
+              <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-2 shadow-xs z-10">
                 <span class="flex items-center gap-1">⚡ {rest.deliveryTime}</span>
                 <span>•</span>
                 <span class="flex items-center gap-1">📍 {rest.distance}</span>
               </div>
             </div>
 
-            <!-- Card Details -->
-            <div class="p-4 space-y-2 flex-1 flex flex-col justify-between">
+            <!-- Card Details Container -->
+            <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
               <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-2xl shrink-0 border border-red-100 shadow-xs">
                   {rest.logo}
                 </div>
-                <div>
-                  <h3 class="text-lg font-black font-display text-slate-900 group-hover:text-redBrand transition-colors">{rest.name}</h3>
-                  <p class="text-xs font-bold text-slate-400 mt-0.5">{rest.cuisine}</p>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-1.5">
+                    <h3 class="text-base sm:text-lg font-black font-display text-slate-900 group-hover:text-redBrand transition-colors truncate">{rest.name}</h3>
+                    <span class="text-emerald-600 text-xs shrink-0" title="Verified Partner">✓</span>
+                  </div>
+                  <p class="text-xs font-bold text-slate-400 mt-0.5 truncate">{rest.cuisine}</p>
                 </div>
               </div>
 
               <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-                <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
+                <!-- Rating -->
+                <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-100">
                   <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
                   {rest.rating} <span class="text-[10px] text-slate-400 font-semibold">({rest.ratingsCount})</span>
                 </span>
                 
-                <span class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-extrabold border border-emerald-100">
-                  Open Now
-                </span>
+                <div class="flex items-center gap-2">
+                  <!-- Verified Badge -->
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-extrabold uppercase">
+                    Verified Partner
+                  </span>
+                  <!-- Open Now Badge -->
+                  <span class="px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-extrabold border border-emerald-100">
+                    Open Now
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -302,6 +315,7 @@ const allRestaurants = [
     </section>
 
     <!-- 5. 🔥 POPULAR RESTAURANTS -->
+    <!-- DESKTOP: 3 per row, TABLET: 2 per row, MOBILE: 1 per row -->
     <section class="space-y-4 pt-2">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -313,43 +327,54 @@ const allRestaurants = [
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
         {popularRestaurants.map(rest => (
-          <div class="restaurant-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-red-200 transition-all duration-300 overflow-hidden group cursor-pointer flex flex-col" data-name={rest.name.toLowerCase()} data-cuisine={rest.cuisine.toLowerCase()}>
+          <div class="restaurant-card group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl hover:border-redBrand transition-all duration-300 overflow-hidden cursor-pointer flex flex-col relative" data-name={rest.name.toLowerCase()} data-cuisine={rest.cuisine.toLowerCase()} onclick="window.location.href='/shops';">
             
-            <div class="h-40 bg-slate-100 relative overflow-hidden">
+            <div class="h-44 sm:h-48 bg-slate-100 relative overflow-hidden rounded-t-3xl">
               <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent"></div>
               
-              <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-emerald-700 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-xs">
-                <span>✓ Verified Partner</span>
-              </div>
+              <!-- Favourite Heart Button -->
+              <button class="fav-rest-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+                <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+              </button>
 
-              <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-2 shadow-xs">
+              <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-2 shadow-xs z-10">
                 <span>⚡ {rest.deliveryTime}</span>
                 <span>•</span>
                 <span>📍 {rest.distance}</span>
               </div>
             </div>
 
-            <div class="p-4 space-y-2 flex-1 flex flex-col justify-between">
+            <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-xl shrink-0 border border-red-100 shadow-xs">
+                <div class="w-11 h-11 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-2xl shrink-0 border border-red-100 shadow-xs">
                   {rest.logo}
                 </div>
-                <div>
-                  <h3 class="text-base font-black font-display text-slate-900 group-hover:text-redBrand transition-colors">{rest.name}</h3>
-                  <p class="text-xs font-bold text-slate-400 mt-0.5 line-clamp-1">{rest.cuisine}</p>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-1.5">
+                    <h3 class="text-base sm:text-lg font-black font-display text-slate-900 group-hover:text-redBrand transition-colors truncate">{rest.name}</h3>
+                    <span class="text-emerald-600 text-xs shrink-0" title="Verified Partner">✓</span>
+                  </div>
+                  <p class="text-xs font-bold text-slate-400 mt-0.5 truncate">{rest.cuisine}</p>
                 </div>
               </div>
 
               <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-                <span class="flex items-center gap-1 text-amber-600">
+                <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-100">
                   <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
                   {rest.rating} <span class="text-[10px] text-slate-400 font-semibold">({rest.ratingsCount})</span>
                 </span>
                 
-                <span class="text-emerald-600 font-extrabold">Open Now</span>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-extrabold uppercase">
+                    Verified Partner
+                  </span>
+                  <span class="px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-extrabold border border-emerald-100">
+                    Open Now
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -359,6 +384,7 @@ const allRestaurants = [
     </section>
 
     <!-- 6. 🍽️ ALL RESTAURANTS -->
+    <!-- DESKTOP: 3 per row, TABLET: 2 per row, MOBILE: 1 per row -->
     <section class="space-y-4 pt-2">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -370,49 +396,60 @@ const allRestaurants = [
         </div>
       </div>
 
-      <div id="all-restaurants-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div id="all-restaurants-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
         {allRestaurants.map(rest => (
-          <div class="restaurant-card bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-red-200 transition-all duration-300 overflow-hidden group cursor-pointer flex flex-col" data-name={rest.name.toLowerCase()} data-cuisine={rest.cuisine.toLowerCase()}>
+          <div class="restaurant-card group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl hover:border-redBrand transition-all duration-300 overflow-hidden cursor-pointer flex flex-col relative" data-name={rest.name.toLowerCase()} data-cuisine={rest.cuisine.toLowerCase()} onclick="window.location.href='/shops';">
             
-            <div class="h-40 bg-slate-100 relative overflow-hidden">
+            <div class="h-44 sm:h-48 bg-slate-100 relative overflow-hidden rounded-t-3xl">
               <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent"></div>
               
               {rest.isSponsored && (
-                <div class="absolute top-3 left-3 bg-amber-500 text-white px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider shadow-xs">
+                <div class="absolute top-3 left-3 bg-amber-500 text-white px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider shadow-xs z-10">
                   ⭐ SPONSORED
                 </div>
               )}
 
-              <div class="absolute top-3 right-3 bg-white/95 backdrop-blur-md text-emerald-700 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-xs">
-                <span>✓ Verified Partner</span>
-              </div>
+              <!-- Favourite Heart Button -->
+              <button class="fav-rest-btn absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+                <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+              </button>
 
-              <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-2 shadow-xs">
+              <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-2 shadow-xs z-10">
                 <span>⚡ {rest.deliveryTime}</span>
                 <span>•</span>
                 <span>📍 {rest.distance}</span>
               </div>
             </div>
 
-            <div class="p-4 space-y-2 flex-1 flex flex-col justify-between">
+            <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-xl shrink-0 border border-red-100 shadow-xs">
+                <div class="w-11 h-11 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-2xl shrink-0 border border-red-100 shadow-xs">
                   {rest.logo}
                 </div>
-                <div>
-                  <h3 class="text-base font-black font-display text-slate-900 group-hover:text-redBrand transition-colors">{rest.name}</h3>
-                  <p class="text-xs font-bold text-slate-400 mt-0.5 line-clamp-1">{rest.cuisine}</p>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-1.5">
+                    <h3 class="text-base sm:text-lg font-black font-display text-slate-900 group-hover:text-redBrand transition-colors truncate">{rest.name}</h3>
+                    <span class="text-emerald-600 text-xs shrink-0" title="Verified Partner">✓</span>
+                  </div>
+                  <p class="text-xs font-bold text-slate-400 mt-0.5 truncate">{rest.cuisine}</p>
                 </div>
               </div>
 
               <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-                <span class="flex items-center gap-1 text-amber-600">
+                <span class="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-100">
                   <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
                   {rest.rating} <span class="text-[10px] text-slate-400 font-semibold">({rest.ratingsCount})</span>
                 </span>
                 
-                <span class="text-emerald-600 font-extrabold">Open Now</span>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[10px] font-extrabold uppercase">
+                    Verified Partner
+                  </span>
+                  <span class="px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-extrabold border border-emerald-100">
+                    Open Now
+                  </span>
+                </div>
               </div>
             </div>
 
