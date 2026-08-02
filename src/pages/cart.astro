@@ -2,8 +2,8 @@
 import Switcher from '../components/Switcher.astro';
 import catalog from '../../public/grocery_catalog.json';
 
-// Get 8 recommendation items from catalog
-const cartRecommendations = catalog.slice(0, 8);
+// Recommendations for Impulse Additions
+const cartRecommendations = catalog.slice(0, 4);
 ---
 
 <!DOCTYPE html>
@@ -11,7 +11,7 @@ const cartRecommendations = catalog.slice(0, 8);
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Your Shopping Cart | Bhusawal Connect</title>
+  <title>Your Food Cart | Bhusawal Connect</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,14 +19,15 @@ const cartRecommendations = catalog.slice(0, 8);
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   
+  <!-- RED & WHITE BRANDING THEME TAILWIND CONFIGURATION -->
   <script is:inline>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            purpleBrand: '#7c3aed',
-            purpleDark: '#6d28d9',
-            purpleLight: '#f3e8ff'
+            redBrand: '#E53935',
+            redDark: '#C62828',
+            redLight: '#FFEBEE'
           },
           fontFamily: {
             sans: ['Plus Jakarta Sans', 'sans-serif'],
@@ -45,23 +46,23 @@ const cartRecommendations = catalog.slice(0, 8);
   </style>
 </head>
 
-<body class="min-h-screen pb-32 text-slate-800 antialiased">
+<body class="min-h-screen pb-32 text-slate-800 antialiased bg-slate-50">
 
-  <!-- TOP HEADER -->
+  <!-- TOP NAV HEADER -->
   <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-8 py-3.5 shadow-xs flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <a href="/grocery" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+      <a href="/food" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
         <span class="material-symbols-outlined text-xl">arrow_back</span>
       </a>
       <a href="/home" class="flex items-center gap-1.5">
-        <span class="text-lg font-black font-display text-purpleBrand tracking-tight">bhusawal<span class="text-slate-900">connect</span></span>
+        <span class="text-lg font-black font-display text-redBrand tracking-tight">bhusawal<span class="text-slate-900">connect</span></span>
       </a>
     </div>
 
     <div class="flex items-center gap-2">
-      <span class="px-3 py-1 rounded-full bg-purple-50 text-purpleBrand text-xs font-black uppercase tracking-wider flex items-center gap-1">
+      <span class="px-3.5 py-1 rounded-full bg-redLight text-redBrand text-xs font-black uppercase tracking-wider flex items-center gap-1">
         <span class="material-symbols-outlined text-sm">bolt</span>
-        10 MIN DELIVERY
+        20 MIN EXPRESS FOOD DELIVERY
       </span>
     </div>
   </header>
@@ -70,9 +71,9 @@ const cartRecommendations = catalog.slice(0, 8);
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
     <!-- BREADCRUMB & TITLE -->
-    <div class="flex items-center justify-between">
+    <div class="flex items-center justify-between border-b border-slate-200/60 pb-4">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900">Your Cart</h1>
+        <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900">Your Food Cart</h1>
         <p class="text-xs font-bold text-slate-400 mt-0.5" id="cart-header-subtitle">Loading your items...</p>
       </div>
 
@@ -83,82 +84,48 @@ const cartRecommendations = catalog.slice(0, 8);
     </div>
 
     <!-- EMPTY CART CONTAINER -->
-    <div id="empty-cart-container" class="hidden bg-white rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-sm text-center max-w-lg mx-auto space-y-5 animate-in fade-in duration-300">
-      <div class="w-24 h-24 rounded-full bg-purple-50 text-purpleBrand mx-auto flex items-center justify-center shadow-inner">
+    <div id="empty-cart-container" class="hidden bg-white rounded-3xl p-8 sm:p-12 border border-slate-100 shadow-sm text-center max-w-lg mx-auto space-y-5">
+      <div class="w-24 h-24 rounded-full bg-redLight text-redBrand mx-auto flex items-center justify-center shadow-inner">
         <span class="material-symbols-outlined text-5xl">shopping_cart</span>
       </div>
       <div>
-        <h2 class="text-xl font-black font-display text-slate-900">Your cart is empty!</h2>
-        <p class="text-xs font-bold text-slate-400 mt-1">Looks like you haven't added anything to your cart yet. Explore 5,000+ items in our Grocery Superstore.</p>
+        <h2 class="text-xl font-black font-display text-slate-900">Your Food Cart is empty!</h2>
+        <p class="text-xs font-bold text-slate-400 mt-1">Explore delicious Biryanis, Thalis, Pizzas & Desserts from top Bhusawal restaurants.</p>
       </div>
-      <a href="/grocery" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-purpleBrand hover:bg-purpleDark text-white font-black text-sm rounded-2xl shadow-lg shadow-purple-900/15 active:scale-95 transition-all">
-        <span class="material-symbols-outlined text-base">storefront</span>
-        <span>Start Shopping Now</span>
+      <a href="/food" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-redBrand hover:bg-redDark text-white font-black text-sm rounded-2xl shadow-lg shadow-red-900/15 active:scale-95 transition-all">
+        <span class="material-symbols-outlined text-base">restaurant</span>
+        <span>Explore Restaurants</span>
       </a>
     </div>
 
     <!-- MAIN CART CONTENT (GRID LAYOUT) -->
     <div id="active-cart-content" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
       
-      <!-- LEFT 7 COLS: GROUPED PRODUCTS & RECOMMENDED ITEMS -->
+      <!-- LEFT 7 COLS: RESTAURANT NAME & FOOD ITEMS -->
       <div class="lg:col-span-7 space-y-6">
         
-        <!-- STANDARD DELIVERY BANNER -->
-        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purpleBrand flex items-center justify-center font-black">
-              <span class="material-symbols-outlined text-xl">local_shipping</span>
+        <!-- DELIVERY ADDRESS CARD -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-redLight text-redBrand flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-2xl">location_on</span>
             </div>
             <div>
-              <p class="text-xs font-black text-slate-900">Standard Doorstep Delivery</p>
-              <p class="text-[11px] font-bold text-slate-500">₹30 Delivery charge applies on all orders in Bhusawal</p>
+              <span class="text-[10px] font-black text-redBrand uppercase tracking-wider block">DELIVERY ADDRESS</span>
+              <p class="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5 truncate max-w-xs sm:max-w-md" id="cart-delivery-address">
+                Home - Varangaon Road, Bhusawal
+              </p>
             </div>
           </div>
-          <span class="text-xs font-black text-purpleBrand bg-white px-3 py-1 rounded-lg border border-slate-200">₹30 Fee</span>
+          
+          <a href="/checkout" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black rounded-xl transition-all shrink-0">
+            Change
+          </a>
         </div>
 
-        <!-- GROUPED PRODUCTS CONTAINERS -->
-        <div id="grouped-cart-items-wrapper" class="space-y-4">
-          <!-- Dynamically populated by JS into Category groups -->
-        </div>
-
-        <!-- RECOMMENDED IMPULSE PRODUCTS CAROUSEL -->
-        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
-          <div class="flex items-center justify-between">
-            <div>
-              <span class="text-xs font-black text-purpleBrand uppercase tracking-wider">Before You Checkout</span>
-              <h3 class="text-base font-black font-display text-slate-900">Recommended Products</h3>
-            </div>
-            <span class="text-xs font-bold text-slate-400">⚡ MRP Price</span>
-          </div>
-
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {cartRecommendations.map(rec => {
-              const rId = rec["Product ID"] || rec.ProductID || rec.id || '';
-              const rName = rec["Product Name"] || rec.name || '';
-              const rMrp = parseFloat(rec.MRP || rec.mrp || rec["Selling Price"] || rec.sp || 50);
-              const rImg = rec["Product Image URL"] || rec.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-              const rPack = rec["Pack Size"] || rec.pack || '1 Unit';
-
-              return (
-                <div class="bg-slate-50/80 rounded-2xl p-2.5 border border-slate-100 flex flex-col justify-between group">
-                  <div class="w-full aspect-square bg-white rounded-xl p-1 mb-2 flex items-center justify-center overflow-hidden border border-slate-100">
-                    <img loading="lazy" src={rImg} alt={rName} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-                  </div>
-                  <div class="space-y-1">
-                    <h4 class="text-[11px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[1.8rem]">{rName}</h4>
-                    <p class="text-[10px] text-slate-400 font-semibold">{rPack}</p>
-                    <div class="flex items-center justify-between pt-1">
-                      <span class="text-xs font-black text-slate-900">MRP ₹{rMrp}</span>
-                      <button class="add-rec-btn px-2.5 py-1 bg-purpleBrand text-white text-[10px] font-black rounded-lg hover:bg-purpleDark active:scale-90 transition-all" data-id={rId} data-name={rName.replace(/"/g, '&quot;')} data-price={rMrp} data-img={rImg}>
-                        + ADD
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        <!-- GROUPED FOOD ITEMS CONTAINERS BY RESTAURANT -->
+        <div id="grouped-cart-items-wrapper" class="space-y-5">
+          <!-- Dynamically populated by JS into Restaurant & Food Item groups -->
         </div>
 
       </div>
@@ -167,40 +134,42 @@ const cartRecommendations = catalog.slice(0, 8);
       <div class="lg:col-span-5 space-y-6">
         
         <!-- PRICE SUMMARY BREAKDOWN CARD -->
-        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
-          <h3 class="text-sm font-black uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3">
-            Bill Details & Price Summary
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4 sticky top-24">
+          <h3 class="text-sm font-black uppercase tracking-wider text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-base text-redBrand">receipt_long</span>
+            <span>Bill Details & Summary</span>
           </h3>
 
-          <div class="space-y-3 text-xs font-bold text-slate-600">
+          <div class="space-y-3.5 text-xs font-bold text-slate-600">
+            <!-- Subtotal -->
             <div class="flex items-center justify-between">
-              <span>Item Subtotal (MRP) (<span id="summary-items-count">0 items</span>)</span>
+              <span>Item Subtotal (<span id="summary-items-count">0 items</span>)</span>
               <span class="text-slate-900 font-black" id="summary-subtotal">₹0</span>
             </div>
 
-            <div class="flex items-center justify-between">
-              <span>Delivery Charge (Fixed)</span>
+            <!-- Fixed Delivery Fee -->
+            <div class="flex items-center justify-between pt-1">
+              <span class="flex items-center gap-1">
+                <span>Delivery Fee</span>
+                <span class="text-[10px] font-extrabold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">Fixed</span>
+              </span>
               <span class="font-black text-slate-900" id="summary-delivery">₹30</span>
             </div>
 
-            <div class="flex items-center justify-between">
-              <span>Handling & Platform Fee</span>
-              <span class="font-black text-slate-900" id="summary-platform">₹5</span>
-            </div>
-
-            <div class="pt-3 border-t border-slate-100 flex items-baseline justify-between text-slate-900">
+            <!-- Grand Total -->
+            <div class="pt-4 border-t border-slate-100 flex items-baseline justify-between text-slate-900">
               <div>
-                <span class="text-sm font-black block font-display">To Pay (Grand Total)</span>
-                <span class="text-[10px] font-bold text-slate-400">All products at MRP + Standard Delivery Charge</span>
+                <span class="text-base font-black block font-display">Grand Total</span>
+                <span class="text-[10px] font-bold text-slate-400">Subtotal + ₹30 Delivery Fee</span>
               </div>
-              <span class="text-2xl font-black font-display text-purpleBrand" id="summary-grand-total">₹0</span>
+              <span class="text-2xl sm:text-3xl font-black font-display text-redBrand" id="summary-grand-total">₹0</span>
             </div>
           </div>
 
-          <!-- ANIMATED CHECKOUT BUTTON -->
-          <a href="/billing" id="checkout-animated-btn" class="w-full py-4 bg-gradient-to-r from-purpleBrand via-purpleDark to-indigo-700 hover:from-purpleDark hover:to-purpleBrand text-white font-black text-sm rounded-2xl shadow-xl shadow-purple-900/20 active:scale-95 transition-all duration-300 flex items-center justify-between px-6 group">
+          <!-- CHECKOUT BUTTON -->
+          <a href="/checkout" id="checkout-animated-btn" class="w-full py-4 bg-redBrand hover:bg-redDark text-white font-black text-sm rounded-2xl shadow-xl shadow-red-900/20 active:scale-95 transition-all duration-300 flex items-center justify-between px-6 group">
             <div class="text-left">
-              <span class="text-[10px] uppercase font-bold text-purple-200 block">Ready to Order</span>
+              <span class="text-[10px] uppercase font-bold text-red-100 block">Ready to Order</span>
               <span class="text-base font-black font-display" id="btn-grand-total">Proceed to Checkout • ₹0</span>
             </div>
             <div class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center group-hover:translate-x-1 transition-transform">
@@ -221,7 +190,7 @@ const cartRecommendations = catalog.slice(0, 8);
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CART ENGINE -->
+  <!-- CLIENT-SIDE CART ENGINE & EXACT CALCULATIONS -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -237,7 +206,7 @@ const cartRecommendations = catalog.slice(0, 8);
           Object.keys(raw).forEach((key, idx) => {
             const qty = raw[key];
             if (typeof qty === 'number' && qty > 0) {
-              arr.push({ id: 'BC-LEG-' + idx, name: key, price: 60, image: '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg', quantity: qty, cat: 'Grocery' });
+              arr.push({ id: 'BC-LEG-' + idx, name: key, price: 150, image: '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg', quantity: qty, restaurant: 'Bhusawal Connect Kitchen' });
             }
           });
           return arr;
@@ -274,64 +243,66 @@ const cartRecommendations = catalog.slice(0, 8);
         const totalQty = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
         if (subtitle) subtitle.textContent = `${totalQty} ${totalQty === 1 ? 'item' : 'items'} in your cart`;
 
-        // Group products by category
+        // Group products by Restaurant
         const groups = {};
         cart.forEach(item => {
-          const category = item.cat || item.Category || 'Grocery & Essentials';
-          if (!groups[category]) groups[category] = [];
-          groups[category].push(item);
+          const restaurantName = item.restaurant || item.cat || 'Bhusawal Verified Restaurant';
+          if (!groups[restaurantName]) groups[restaurantName] = [];
+          groups[restaurantName].push(item);
         });
 
         // Render Grouped Products HTML
         const wrapper = document.getElementById('grouped-cart-items-wrapper');
         if (wrapper) {
           let html = '';
-          Object.keys(groups).forEach(catName => {
-            const items = groups[catName];
+          Object.keys(groups).forEach(restName => {
+            const items = groups[restName];
             html += `
               <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
+                
+                <!-- Restaurant Name Header -->
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div class="flex items-center gap-2">
-                    <span class="w-3 h-3 rounded-full bg-purpleBrand"></span>
-                    <h3 class="text-sm font-black text-slate-900 font-display">${catName}</h3>
+                    <span class="w-8 h-8 rounded-xl bg-redLight text-redBrand flex items-center justify-center text-base font-bold">🏪</span>
+                    <h3 class="text-base font-black text-slate-900 font-display">${restName}</h3>
                   </div>
-                  <span class="text-xs font-bold text-slate-400">${items.length} ${items.length === 1 ? 'type' : 'types'}</span>
+                  <span class="text-xs font-bold text-slate-400">${items.length} ${items.length === 1 ? 'item' : 'items'}</span>
                 </div>
 
-                <div class="divide-y divide-slate-100/80 space-y-3">
+                <div class="divide-y divide-slate-100 space-y-3">
             `;
 
             items.forEach(item => {
               const id = item.id;
-              const name = item.name || 'Grocery Item';
-              const mrpPrice = parseFloat(item.mrp || item.MRP || item.price || 0);
+              const name = item.name || 'Food Item';
+              const price = parseFloat(item.mrp || item.MRP || item.price || 0);
               const qty = item.quantity || 1;
-              const itemTotal = Math.round(mrpPrice * qty);
+              const itemTotal = Math.round(price * qty);
               const img = item.image || item.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
 
               html += `
                 <div class="pt-3 flex items-center justify-between gap-3">
-                  <div class="flex items-center gap-3 min-w-0 flex-1">
-                    <div class="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 p-1.5 flex items-center justify-center flex-shrink-0">
-                      <img loading="lazy" src="${img}" alt="${name}" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                  <div class="flex items-center gap-3.5 min-w-0 flex-1">
+                    <div class="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 p-1 flex items-center justify-center shrink-0 overflow-hidden">
+                      <img loading="lazy" src="${img}" alt="${name}" class="w-full h-full object-cover rounded-xl" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                     </div>
                     <div class="min-w-0 flex-1">
-                      <h4 class="text-xs sm:text-sm font-extrabold text-slate-800 truncate">${name}</h4>
-                      <p class="text-[11px] font-bold text-slate-400 mt-0.5">MRP ₹${mrpPrice} / unit</p>
+                      <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 truncate">${name}</h4>
+                      <p class="text-[11px] font-bold text-slate-400 mt-0.5">MRP ₹${price} / unit</p>
                     </div>
                   </div>
 
                   <!-- Quantity Controls & Item Total -->
-                  <div class="flex items-center gap-4 flex-shrink-0">
-                    <div class="flex items-center justify-between bg-purple-50 text-purpleBrand font-black text-xs rounded-xl overflow-hidden border border-purple-200/60 shadow-xs">
-                      <button class="cart-minus-btn px-3 py-1.5 hover:bg-purpleBrand hover:text-white transition-all" data-id="${id}">-</button>
-                      <span class="px-2 text-xs font-black min-w-[1.2rem] text-center">${qty}</span>
-                      <button class="cart-plus-btn px-3 py-1.5 hover:bg-purpleBrand hover:text-white transition-all" data-id="${id}">+</button>
+                  <div class="flex items-center gap-4 shrink-0">
+                    <div class="flex items-center justify-between bg-redLight text-redBrand font-black text-xs rounded-2xl overflow-hidden border border-red-200/60 shadow-xs">
+                      <button class="cart-minus-btn w-8 h-8 flex items-center justify-center hover:bg-redBrand hover:text-white transition-all font-black text-sm" data-id="${id}">-</button>
+                      <span class="px-2.5 text-xs font-black min-w-[1.2rem] text-center">${qty}</span>
+                      <button class="cart-plus-btn w-8 h-8 flex items-center justify-center hover:bg-redBrand hover:text-white transition-all font-black text-sm" data-id="${id}">+</button>
                     </div>
 
                     <div class="text-right min-w-[3.5rem]">
                       <span class="text-sm font-black text-slate-900 block">₹${itemTotal}</span>
-                      <button class="cart-delete-btn text-[10px] font-bold text-slate-400 hover:text-rose-500 transition-colors" data-id="${id}">Remove</button>
+                      <button class="cart-delete-btn text-[10px] font-extrabold text-slate-400 hover:text-rose-500 transition-colors" data-id="${id}">Remove</button>
                     </div>
                   </div>
                 </div>
@@ -384,7 +355,7 @@ const cartRecommendations = catalog.slice(0, 8);
           });
         }
 
-        // 3. Perform Calculations (MRP Subtotal + Fixed Delivery ₹30 + Platform Fee ₹5)
+        // 3. Perform Calculations (Subtotal + Fixed Delivery ₹30)
         calculateSummary(cart);
       }
 
@@ -392,56 +363,26 @@ const cartRecommendations = catalog.slice(0, 8);
         const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.mrp || item.MRP || item.price || 0) * (item.quantity || 1)), 0);
         const totalItemsCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
-        const deliveryFee = 30; // Standard Delivery Charge on EVERY order
-        const platformFee = 5;  // Standard Platform Fee
-
-        const grandTotal = Math.round(subtotal + deliveryFee + platformFee);
+        const deliveryFee = 30; // Fixed Delivery Fee = ₹30
+        const grandTotal = Math.round(subtotal + deliveryFee);
 
         // Update DOM Price Summary Elements
         const countEl = document.getElementById('summary-items-count');
         const subtotalEl = document.getElementById('summary-subtotal');
         const deliveryEl = document.getElementById('summary-delivery');
-        const platformEl = document.getElementById('summary-platform');
         const grandEl = document.getElementById('summary-grand-total');
         const btnGrandEl = document.getElementById('btn-grand-total');
 
         if (countEl) countEl.textContent = `${totalItemsCount} ${totalItemsCount === 1 ? 'item' : 'items'}`;
         if (subtotalEl) subtotalEl.textContent = `₹${Math.round(subtotal)}`;
         if (deliveryEl) deliveryEl.textContent = `₹${deliveryFee}`;
-        if (platformEl) platformEl.textContent = `₹${platformFee}`;
         if (grandEl) grandEl.textContent = `₹${grandTotal}`;
         if (btnGrandEl) btnGrandEl.textContent = `Proceed to Checkout • ₹${grandTotal}`;
       }
 
-      // 4. Add Recommended Item to Cart at MRP
-      document.querySelectorAll('.add-rec-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const id = btn.dataset.id;
-          const name = btn.dataset.name;
-          const mrpPrice = parseFloat(btn.dataset.price);
-          const img = btn.dataset.img;
-
-          let cart = getNormalizedCart();
-          const existing = cart.find(i => i.id === id);
-          if (existing) {
-            existing.quantity = (existing.quantity || 1) + 1;
-          } else {
-            cart.push({ id, name, price: mrpPrice, mrp: mrpPrice, image: img, quantity: 1, cat: 'Grocery & Essentials' });
-          }
-          saveCart(cart);
-
-          btn.textContent = '✓ ADDED';
-          btn.classList.replace('bg-purpleBrand', 'bg-emerald-600');
-          setTimeout(() => {
-            btn.textContent = '+ ADD';
-            btn.classList.replace('bg-emerald-600', 'bg-purpleBrand');
-          }, 1200);
-        });
-      });
-
-      // 5. Clear Entire Cart Action
+      // 4. Clear Entire Cart Action
       document.getElementById('clear-entire-cart-btn')?.addEventListener('click', () => {
-        if (confirm('Are you sure you want to clear your entire cart?')) {
+        if (confirm('Are you sure you want to clear your food cart?')) {
           localStorage.removeItem('bhusawal_cart');
           renderCartUI();
         }
