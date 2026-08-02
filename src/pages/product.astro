@@ -175,7 +175,7 @@ const fbtBundlePrice = Math.round(fbtTotalPrice * 0.88);
           </div>
 
           <!-- Main Image -->
-          <img id="pdp-main-img" src={mainImg} alt={name} class="max-h-full max-w-full object-contain transition-transform duration-300 ease-out group-hover:scale-125 origin-center" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+          <img loading="lazy" id="pdp-main-img" src={mainImg} alt={name} class="max-h-full max-w-full object-contain transition-transform duration-300 ease-out group-hover:scale-125 origin-center" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
 
           <!-- Zoom Prompt Indicator -->
           <div class="absolute bottom-3 right-3 text-[10px] font-bold bg-slate-900/75 text-white px-2.5 py-1 rounded-full backdrop-blur-sm pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
@@ -187,7 +187,7 @@ const fbtBundlePrice = Math.round(fbtTotalPrice * 0.88);
         <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
           {galleryImages.map((gImg, idx) => (
             <button class={`gallery-thumb-btn w-16 h-16 rounded-xl border-2 p-1 bg-white flex items-center justify-center overflow-hidden transition-all ${idx === 0 ? 'border-purpleBrand ring-2 ring-purple-100' : 'border-slate-200 hover:border-purple-300'}`} data-img={gImg}>
-              <img src={gImg} alt="Thumbnail" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <img loading="lazy" src={gImg} alt="Thumbnail" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
             </button>
           ))}
         </div>
@@ -312,7 +312,7 @@ const fbtBundlePrice = Math.round(fbtTotalPrice * 0.88);
           <!-- Current Product Item -->
           <div class="flex flex-col items-center text-center w-28 flex-shrink-0">
             <div class="w-20 h-20 bg-white rounded-xl border border-slate-200 p-2 flex items-center justify-center mb-1">
-              <img src={mainImg} alt={name} class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <img loading="lazy" src={mainImg} alt={name} class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
             </div>
             <p class="text-[11px] font-bold text-slate-800 truncate w-full">{name}</p>
             <p class="text-xs font-black text-purpleBrand">₹{price}</p>
@@ -323,7 +323,7 @@ const fbtBundlePrice = Math.round(fbtTotalPrice * 0.88);
           <!-- Bundle Item 1 -->
           <div class="flex flex-col items-center text-center w-28 flex-shrink-0">
             <div class="w-20 h-20 bg-white rounded-xl border border-slate-200 p-2 flex items-center justify-center mb-1">
-              <img src={fbtItem1?.["Product Image URL"] || fbtItem1?.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'} alt="Bundle item 1" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <img loading="lazy" src={fbtItem1?.["Product Image URL"] || fbtItem1?.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'} alt="Bundle item 1" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
             </div>
             <p class="text-[11px] font-bold text-slate-800 truncate w-full">{fbtItem1?.["Product Name"] || fbtItem1?.name || 'Dairy Companion'}</p>
             <p class="text-xs font-black text-purpleBrand">₹{parseFloat(fbtItem1?.["Selling Price"] || fbtItem1?.sp || 40)}</p>
@@ -334,7 +334,7 @@ const fbtBundlePrice = Math.round(fbtTotalPrice * 0.88);
           <!-- Bundle Item 2 -->
           <div class="flex flex-col items-center text-center w-28 flex-shrink-0">
             <div class="w-20 h-20 bg-white rounded-xl border border-slate-200 p-2 flex items-center justify-center mb-1">
-              <img src={fbtItem2?.["Product Image URL"] || fbtItem2?.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'} alt="Bundle item 2" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <img loading="lazy" src={fbtItem2?.["Product Image URL"] || fbtItem2?.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'} alt="Bundle item 2" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
             </div>
             <p class="text-[11px] font-bold text-slate-800 truncate w-full">{fbtItem2?.["Product Name"] || fbtItem2?.name || 'Snack Companion'}</p>
             <p class="text-xs font-black text-purpleBrand">₹{parseFloat(fbtItem2?.["Selling Price"] || fbtItem2?.sp || 60)}</p>
@@ -501,7 +501,7 @@ const fbtBundlePrice = Math.round(fbtTotalPrice * 0.88);
           return (
             <div class="group bg-white rounded-2xl p-3 border border-slate-100 hover:border-purple-200 hover:shadow-lg transition-all duration-300 flex flex-col justify-between relative cursor-pointer" onclick={`window.location.href='/product?id=${rId}'`}>
               <div class="w-full aspect-square rounded-xl bg-slate-50 p-2 mb-2 flex items-center justify-center overflow-hidden">
-                <img src={rImg} alt={rName} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                <img loading="lazy" src={rImg} alt={rName} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
               </div>
               <div class="space-y-1">
                 <h4 class="text-xs font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2rem]">{rName}</h4>
@@ -544,7 +544,7 @@ const fbtBundlePrice = Math.round(fbtTotalPrice * 0.88);
       <button id="close-zoom-modal-btn" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
         <span class="material-symbols-outlined">close</span>
       </button>
-      <img id="zoom-modal-img" src={mainImg} alt={name} class="max-h-[65vh] max-w-full object-contain" />
+      <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" id="zoom-modal-img" src={mainImg} alt={name} class="max-h-[65vh] max-w-full object-contain" />
       <p class="text-xs font-extrabold text-slate-500 mt-4 text-center">{name}</p>
     </div>
   </div>

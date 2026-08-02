@@ -386,7 +386,7 @@ import Switcher from '../components/Switcher.astro';
                 <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
                   ${items.map(i => `
                     <div class="flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-100 shrink-0">
-                      <img src="${i.image || i.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'}" alt="${i.name}" class="w-10 h-10 object-contain rounded-lg bg-white p-0.5 border" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                      <img loading="lazy" src="${i.image || i.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'}" alt="${i.name}" class="w-10 h-10 object-contain rounded-lg bg-white p-0.5 border" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                       <div>
                         <h4 class="text-xs font-extrabold text-slate-800 max-w-[130px] truncate">${i.name}</h4>
                         <p class="text-[10px] font-bold text-slate-400">Qty: ${i.quantity || 1} × ₹${i.price}</p>

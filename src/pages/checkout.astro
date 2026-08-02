@@ -571,7 +571,7 @@ const recommendations = catalog.slice(0, 4);
           html += `
             <div class="py-2.5 flex items-center justify-between gap-3 text-xs">
               <div class="flex items-center gap-2 min-w-0">
-                <img src="${item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'}" class="w-8 h-8 rounded-lg object-contain bg-slate-50 p-0.5 border" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                <img loading="lazy" src="${item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'}" class="w-8 h-8 rounded-lg object-contain bg-slate-50 p-0.5 border" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                 <div class="min-w-0">
                   <h4 class="font-black text-slate-800 truncate max-w-[140px]">${item.name}</h4>
                   <p class="text-[10px] font-bold text-slate-400">Qty: ${qty} × ₹${price}</p>

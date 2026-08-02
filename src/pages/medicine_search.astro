@@ -147,7 +147,7 @@ const personal = catalog.filter(i => getActualCategory(i) === 'Personal Care').s
  <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
  <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
  
- <script id="tailwind-config">
+ <script is:inline id="tailwind-config">
   tailwind.config = {
    darkMode: "class",
    theme: {
@@ -292,7 +292,7 @@ const personal = catalog.filter(i => getActualCategory(i) === 'Personal Care').s
      veggies.map(p => (
       <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-emerald-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
        <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
            src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
         <div class="absolute top-2 left-2 bg-emerald-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Organic</div>
         <button class="absolute bottom-2 right-2 bg-white border border-[#0c831f] text-[#0c831f] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#0c831f]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
@@ -332,7 +332,7 @@ const personal = catalog.filter(i => getActualCategory(i) === 'Personal Care').s
      dairy.map(p => (
       <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-blue-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
        <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
            src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
         <div class="absolute top-2 left-2 bg-blue-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Fresh</div>
         <button class="absolute bottom-2 right-2 bg-white border border-[#2563eb] text-[#2563eb] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#2563eb]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
@@ -372,7 +372,7 @@ const personal = catalog.filter(i => getActualCategory(i) === 'Personal Care').s
      staples.map(p => (
       <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-amber-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
        <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
            src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
         <div class="absolute top-2 left-2 bg-amber-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Staples</div>
         <button class="absolute bottom-2 right-2 bg-white border border-[#d97706] text-[#d97706] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#d97706]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
@@ -412,7 +412,7 @@ const personal = catalog.filter(i => getActualCategory(i) === 'Personal Care').s
      snacks.map(p => (
       <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-purple-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
        <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
            src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
         <div class="absolute top-2 left-2 bg-purple-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Snacks</div>
         <button class="absolute bottom-2 right-2 bg-white border border-[#7c3aed] text-[#7c3aed] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#7c3aed]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
@@ -452,7 +452,7 @@ const personal = catalog.filter(i => getActualCategory(i) === 'Personal Care').s
      household.map(p => (
       <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-teal-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
        <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
            src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
         <div class="absolute top-2 left-2 bg-teal-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Home</div>
         <button class="absolute bottom-2 right-2 bg-white border border-[#0d9488] text-[#0d9488] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#0d9488]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
@@ -492,7 +492,7 @@ const personal = catalog.filter(i => getActualCategory(i) === 'Personal Care').s
      personal.map(p => (
       <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-pink-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
        <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
+        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
            src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
         <div class="absolute top-2 left-2 bg-pink-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Care</div>
         <button class="absolute bottom-2 right-2 bg-white border border-[#db2777] text-[#db2777] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#db2777]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
