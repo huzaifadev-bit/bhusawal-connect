@@ -275,7 +275,7 @@ const recommendations = catalog.slice(0, 4);
 
             <div class="flex items-center justify-between">
               <span>Delivery Charge (Standard)</span>
-              <span class="text-slate-900 font-black" id="summary-delivery">₹25</span>
+              <span class="text-slate-900 font-black" id="summary-delivery">₹30</span>
             </div>
 
             <div class="flex items-center justify-between">
@@ -517,7 +517,7 @@ const recommendations = catalog.slice(0, 4);
 
         if (wrapper) wrapper.innerHTML = html;
 
-        const deliveryFee = 25;
+        const deliveryFee = 30;
         const platformFee = 5;
         const grandTotal = Math.round(subtotal + deliveryFee + platformFee + selectedTipAmount);
 
@@ -558,7 +558,7 @@ const recommendations = catalog.slice(0, 4);
       function executeOrderPlacement() {
         const cart = getCartItems();
         const subtotal = cart.reduce((sum, i) => sum + (parseFloat(i.mrp || i.MRP || i.price || 0) * (i.quantity || 1)), 0);
-        const grandTotal = Math.round(subtotal + 25 + 5 + selectedTipAmount);
+        const grandTotal = Math.round(subtotal + 30 + 5 + selectedTipAmount);
         const orderId = 'BHU-' + Math.floor(100000 + Math.random() * 900000);
 
         const orderRecord = {

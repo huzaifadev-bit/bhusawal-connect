@@ -215,7 +215,7 @@ const recommendations = catalog.slice(0, 4);
             </div>
             <div class="flex justify-between">
               <span>Standard Delivery Fee:</span>
-              <span class="text-slate-900 font-extrabold">₹25</span>
+              <span class="text-slate-900 font-extrabold">₹30</span>
             </div>
             <div class="flex justify-between">
               <span>Platform Fee:</span>
@@ -584,7 +584,7 @@ const recommendations = catalog.slice(0, 4);
 
         itemsBox.innerHTML = html;
 
-        const grandTotal = subtotal + 25 + 5;
+        const grandTotal = subtotal + 30 + 5;
         document.getElementById('summary-mrp-subtotal').textContent = `₹${subtotal}`;
         document.getElementById('summary-grand-total').textContent = `₹${grandTotal}`;
       }
@@ -611,7 +611,7 @@ const recommendations = catalog.slice(0, 4);
         // Create Order Object
         const orderId = 'BHU-' + Math.floor(100000 + Math.random() * 900000);
         let subtotal = cart.reduce((acc, i) => acc + (parseFloat(i.price || 0) * (i.quantity || 1)), 0);
-        const grandTotal = Math.round(subtotal + 25 + 5);
+        const grandTotal = Math.round(subtotal + 30 + 5);
 
         const newOrder = {
           id: orderId,

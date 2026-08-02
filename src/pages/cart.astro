@@ -111,10 +111,10 @@ const cartRecommendations = catalog.slice(0, 8);
             </div>
             <div>
               <p class="text-xs font-black text-slate-900">Standard Doorstep Delivery</p>
-              <p class="text-[11px] font-bold text-slate-500">₹25 Delivery charge applies on all orders in Bhusawal</p>
+              <p class="text-[11px] font-bold text-slate-500">₹30 Delivery charge applies on all orders in Bhusawal</p>
             </div>
           </div>
-          <span class="text-xs font-black text-purpleBrand bg-white px-3 py-1 rounded-lg border border-slate-200">₹25 Fee</span>
+          <span class="text-xs font-black text-purpleBrand bg-white px-3 py-1 rounded-lg border border-slate-200">₹30 Fee</span>
         </div>
 
         <!-- GROUPED PRODUCTS CONTAINERS -->
@@ -179,8 +179,8 @@ const cartRecommendations = catalog.slice(0, 8);
             </div>
 
             <div class="flex items-center justify-between">
-              <span>Delivery Charge</span>
-              <span class="font-black text-slate-900" id="summary-delivery">₹25</span>
+              <span>Delivery Charge (Fixed)</span>
+              <span class="font-black text-slate-900" id="summary-delivery">₹30</span>
             </div>
 
             <div class="flex items-center justify-between">
@@ -384,7 +384,7 @@ const cartRecommendations = catalog.slice(0, 8);
           });
         }
 
-        // 3. Perform Calculations (MRP Subtotal + Fixed Delivery ₹25 + Platform Fee ₹5)
+        // 3. Perform Calculations (MRP Subtotal + Fixed Delivery ₹30 + Platform Fee ₹5)
         calculateSummary(cart);
       }
 
@@ -392,7 +392,7 @@ const cartRecommendations = catalog.slice(0, 8);
         const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.mrp || item.MRP || item.price || 0) * (item.quantity || 1)), 0);
         const totalItemsCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
-        const deliveryFee = 25; // Standard Delivery Charge on EVERY order
+        const deliveryFee = 30; // Standard Delivery Charge on EVERY order
         const platformFee = 5;  // Standard Platform Fee
 
         const grandTotal = Math.round(subtotal + deliveryFee + platformFee);
