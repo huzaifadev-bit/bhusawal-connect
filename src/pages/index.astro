@@ -44,7 +44,7 @@ for (const kw of trendingKws) {
 let popularProducts = dedupProducts(catalog.filter(p => p.Category === 'Snacks & Confectionery' || p.Category === 'Beverages')).slice(0, 12);
 
 // 3. Today's Offers
-let offerProducts = dedupProducts(catalog.filter(p => p["Offer Price"] && parseFloat(p["Offer Price"]) < parseFloat(p.MRP))).slice(0, 12);
+let offerProducts = dedupProducts(catalog.filter(p => p.Category === 'Snacks & Confectionery' || p.Category === 'Beverages' || p.Category === 'Dairy & Breakfast')).slice(0, 12);
 
 // 4. Buy Again (Daily Essentials)
 let buyAgainProducts = dedupProducts(catalog.filter(p => p.Category === 'Dairy & Breakfast' || p.Category === 'Fruits & Vegetables')).slice(0, 12);
@@ -448,26 +448,20 @@ const featuredStores = [
       <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
         {trendingProducts.map(p => (
           <div class="flex-shrink-0 w-36 sm:w-44 bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between">
-            {parseFloat(p.MRP) > parseFloat(p["Offer Price"]) && (
-              <span class="absolute top-2 left-2 bg-purpleBrand text-white text-[9px] font-black px-1.5 py-0.5 rounded-full z-10">
-                {Math.round(((parseFloat(p.MRP) - parseFloat(p["Offer Price"])) / parseFloat(p.MRP)) * 100)}% OFF
-              </span>
-            )}
+            
             <div class="h-28 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50">
-              <img src={p["Image URL"]} alt={p["Product Name"]} class="max-h-full max-w-full object-contain p-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <img src={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"} alt={p["Product Name"]} class="max-h-full max-w-full object-contain p-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
             </div>
             <div>
               <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider truncate">{p.Category}</p>
               <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">{p["Product Name"]}</h4>
-              <p class="text-[10px] text-slate-500 font-bold mb-2">{p.Unit || '1 Pack'}</p>
+              <p class="text-[10px] text-slate-500 font-bold mb-2">{p["Pack Size"] || p.pack || p.Unit || '1 Pack'}</p>
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-xs font-black text-slate-900">₹{p["Offer Price"]}</span>
-                  {parseFloat(p.MRP) > parseFloat(p["Offer Price"]) && (
-                    <span class="text-[10px] text-slate-400 line-through ml-1">₹{p.MRP}</span>
-                  )}
+                  <span class="text-xs font-black text-slate-900">₹{p.MRP || p.mrp || p["Selling Price"] || p.sp}</span>
+                  
                 </div>
-                <button class="add-to-cart-btn px-2.5 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={p.id} data-name={p["Product Name"]} data-price={p["Offer Price"]} data-img={p["Image URL"]}>
+                <button class="add-to-cart-btn px-2.5 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={p.id} data-name={p["Product Name"]} data-price={p.MRP || p.mrp || p["Selling Price"] || p.sp} data-img={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"}>
                   ADD
                 </button>
               </div>
@@ -490,19 +484,17 @@ const featuredStores = [
         {popularProducts.map(p => (
           <div class="flex-shrink-0 w-36 sm:w-44 bg-white rounded-2xl border border-slate-100 p-2.5 shadow-sm hover:shadow-md transition-shadow relative flex flex-col justify-between">
             <div class="h-28 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50">
-              <img src={p["Image URL"]} alt={p["Product Name"]} class="max-h-full max-w-full object-contain p-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <img src={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"} alt={p["Product Name"]} class="max-h-full max-w-full object-contain p-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
             </div>
             <div>
               <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">{p["Product Name"]}</h4>
-              <p class="text-[10px] text-slate-500 font-bold mb-2">{p.Unit || '1 Pack'}</p>
+              <p class="text-[10px] text-slate-500 font-bold mb-2">{p["Pack Size"] || p.pack || p.Unit || '1 Pack'}</p>
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-xs font-black text-slate-900">₹{p["Offer Price"]}</span>
-                  {parseFloat(p.MRP) > parseFloat(p["Offer Price"]) && (
-                    <span class="text-[10px] text-slate-400 line-through ml-1">₹{p.MRP}</span>
-                  )}
+                  <span class="text-xs font-black text-slate-900">₹{p.MRP || p.mrp || p["Selling Price"] || p.sp}</span>
+                  
                 </div>
-                <button class="add-to-cart-btn px-2.5 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={p.id} data-name={p["Product Name"]} data-price={p["Offer Price"]} data-img={p["Image URL"]}>
+                <button class="add-to-cart-btn px-2.5 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={p.id} data-name={p["Product Name"]} data-price={p.MRP || p.mrp || p["Selling Price"] || p.sp} data-img={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"}>
                   ADD
                 </button>
               </div>
@@ -528,17 +520,17 @@ const featuredStores = [
               DEAL
             </span>
             <div class="h-28 w-full flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50">
-              <img src={p["Image URL"]} alt={p["Product Name"]} class="max-h-full max-w-full object-contain p-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <img src={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"} alt={p["Product Name"]} class="max-h-full max-w-full object-contain p-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
             </div>
             <div>
               <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 h-8 leading-tight mb-1">{p["Product Name"]}</h4>
-              <p class="text-[10px] text-slate-500 font-bold mb-2">{p.Unit || '1 Pack'}</p>
+              <p class="text-[10px] text-slate-500 font-bold mb-2">{p["Pack Size"] || p.pack || p.Unit || '1 Pack'}</p>
               <div class="flex items-center justify-between">
                 <div>
-                  <span class="text-xs font-black text-slate-900">₹{p["Offer Price"]}</span>
-                  <span class="text-[10px] text-slate-400 line-through ml-1">₹{p.MRP}</span>
+                  <span class="text-xs font-black text-slate-900">₹{p.MRP || p.mrp || p["Selling Price"] || p.sp}</span>
+                  
                 </div>
-                <button class="add-to-cart-btn px-2.5 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={p.id} data-name={p["Product Name"]} data-price={p["Offer Price"]} data-img={p["Image URL"]}>
+                <button class="add-to-cart-btn px-2.5 py-1 bg-purpleBrand text-white text-xs font-black rounded-lg shadow-sm hover:bg-purpleDark active:scale-95 transition-all" data-id={p.id} data-name={p["Product Name"]} data-price={p.MRP || p.mrp || p["Selling Price"] || p.sp} data-img={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"}>
                   ADD
                 </button>
               </div>
@@ -563,11 +555,11 @@ const featuredStores = [
         <div class="grid grid-cols-3 gap-2">
           {buyAgainProducts.slice(0, 3).map(p => (
             <div class="bg-slate-50 rounded-xl p-2 flex flex-col justify-between">
-              <img src={p["Image URL"]} alt={p["Product Name"]} class="h-16 w-full object-contain mb-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <img src={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"} alt={p["Product Name"]} class="h-16 w-full object-contain mb-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
               <h5 class="text-[10px] font-bold text-slate-800 truncate">{p["Product Name"]}</h5>
               <div class="flex items-center justify-between mt-1">
-                <span class="text-[10px] font-black text-slate-900">₹{p["Offer Price"]}</span>
-                <button class="add-to-cart-btn w-5 h-5 bg-purpleBrand text-white rounded-md flex items-center justify-center text-xs font-bold" data-id={p.id} data-name={p["Product Name"]} data-price={p["Offer Price"]} data-img={p["Image URL"]}>+</button>
+                <span class="text-[10px] font-black text-slate-900">₹{p.MRP || p.mrp || p["Selling Price"] || p.sp}</span>
+                <button class="add-to-cart-btn w-5 h-5 bg-purpleBrand text-white rounded-md flex items-center justify-center text-xs font-bold" data-id={p.id} data-name={p["Product Name"]} data-price={p.MRP || p.mrp || p["Selling Price"] || p.sp} data-img={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"}>+</button>
               </div>
             </div>
           ))}
@@ -586,11 +578,11 @@ const featuredStores = [
         <div class="grid grid-cols-3 gap-2">
           {recentlyOrderedProducts.slice(0, 3).map(p => (
             <div class="bg-slate-50 rounded-xl p-2 flex flex-col justify-between">
-              <img src={p["Image URL"]} alt={p["Product Name"]} class="h-16 w-full object-contain mb-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <img src={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"} alt={p["Product Name"]} class="h-16 w-full object-contain mb-1" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
               <h5 class="text-[10px] font-bold text-slate-800 truncate">{p["Product Name"]}</h5>
               <div class="flex items-center justify-between mt-1">
-                <span class="text-[10px] font-black text-slate-900">₹{p["Offer Price"]}</span>
-                <button class="add-to-cart-btn w-5 h-5 bg-purpleBrand text-white rounded-md flex items-center justify-center text-xs font-bold" data-id={p.id} data-name={p["Product Name"]} data-price={p["Offer Price"]} data-img={p["Image URL"]}>+</button>
+                <span class="text-[10px] font-black text-slate-900">₹{p.MRP || p.mrp || p["Selling Price"] || p.sp}</span>
+                <button class="add-to-cart-btn w-5 h-5 bg-purpleBrand text-white rounded-md flex items-center justify-center text-xs font-bold" data-id={p.id} data-name={p["Product Name"]} data-price={p.MRP || p.mrp || p["Selling Price"] || p.sp} data-img={p["Product Image URL"] || p.img || "/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg"}>+</button>
               </div>
             </div>
           ))}
