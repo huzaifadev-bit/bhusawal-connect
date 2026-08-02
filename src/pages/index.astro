@@ -280,18 +280,103 @@ const featuredStores = [
 
     </div>
 
-    <!-- 4. OUR SERVICES SECTION (6 COLUMNS VERTICAL CARDS MATCHING REFERENCE DESIGN) -->
+    <!-- 4. OUR SERVICES SECTION -->
     <section class="space-y-4">
       <div class="flex items-center justify-between px-1">
         <div>
           <h3 class="text-xl font-black font-display text-slate-900 tracking-tight">Our Services</h3>
-  <path d="M 72 68 L 84 68 L 82 78 L 74 78 Z" fill="#10B981" />
-  <path d="M 75 68 C 75 64 81 64 81 68" stroke="#059669" stroke-width="1.5" fill="none" />
-</svg>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Everything you need, delivered instantly</p>
+        </div>
+        <a href="/shops" class="text-xs font-bold text-emerald-600 hover:underline flex items-center gap-0.5">
+          View All
+          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        </a>
+      </div>
+
+      <!-- 6-Card Scrollable Grid -->
+      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2 snap-x snap-mandatory">
+
+        <!-- Grocery -->
+        <a href="/grocery" class="service-card flex-shrink-0 w-[140px] sm:w-[155px] bg-white rounded-[20px] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+          <div class="h-[120px] sm:h-[140px] bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-3 overflow-hidden">
+            <img src="/assets/services/service_grocery.jpg" alt="Grocery" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
-          <div class="flex items-center gap-1 text-xs font-extrabold text-rose-700 mt-2">
-            <span>Explore Shops</span>
-            <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          <div class="p-2.5 pb-3">
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-green-100 to-emerald-200 flex items-center justify-center shadow-sm">
+              <span class="material-symbols-outlined text-emerald-700 text-lg">shopping_basket</span>
+            </div>
+            <h4 class="text-xs font-black text-slate-900">Grocery</h4>
+            <p class="text-[10px] font-semibold text-emerald-600 mt-0.5">25,000+ Products</p>
+          </div>
+        </a>
+
+        <!-- Medicine -->
+        <a href="/medicines" class="service-card flex-shrink-0 w-[140px] sm:w-[155px] bg-white rounded-[20px] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+          <div class="h-[120px] sm:h-[140px] bg-gradient-to-br from-blue-50 to-cyan-100 flex items-center justify-center p-3 overflow-hidden">
+            <img src="/assets/services/service_medicine.jpg" alt="Medicine" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+          </div>
+          <div class="p-2.5 pb-3">
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-blue-100 to-cyan-200 flex items-center justify-center shadow-sm">
+              <span class="material-symbols-outlined text-blue-700 text-lg">medication</span>
+            </div>
+            <h4 class="text-xs font-black text-slate-900">Medicine</h4>
+            <p class="text-[10px] font-semibold text-blue-600 mt-0.5">Medicines Delivered Fast</p>
+          </div>
+        </a>
+
+        <!-- Food Delivery -->
+        <a href="/food" class="service-card flex-shrink-0 w-[140px] sm:w-[155px] bg-white rounded-[20px] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+          <div class="h-[120px] sm:h-[140px] bg-gradient-to-br from-orange-50 to-red-100 flex items-center justify-center p-3 overflow-hidden">
+            <img src="/assets/services/service_food.jpg" alt="Food Delivery" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+          </div>
+          <div class="p-2.5 pb-3">
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-orange-100 to-red-200 flex items-center justify-center shadow-sm">
+              <span class="material-symbols-outlined text-orange-700 text-lg">fastfood</span>
+            </div>
+            <h4 class="text-xs font-black text-slate-900">Food Delivery</h4>
+            <p class="text-[10px] font-semibold text-orange-600 mt-0.5">Restaurants Near You</p>
+          </div>
+        </a>
+
+        <!-- Auto Booking -->
+        <a href="/auto" class="service-card flex-shrink-0 w-[140px] sm:w-[155px] bg-white rounded-[20px] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+          <div class="h-[120px] sm:h-[140px] bg-gradient-to-br from-yellow-50 to-amber-100 flex items-center justify-center p-3 overflow-hidden">
+            <img src="/assets/services/service_auto.jpg" alt="Auto Booking" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+          </div>
+          <div class="p-2.5 pb-3">
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-yellow-100 to-amber-200 flex items-center justify-center shadow-sm">
+              <span class="material-symbols-outlined text-amber-700 text-lg">local_taxi</span>
+            </div>
+            <h4 class="text-xs font-black text-slate-900">Auto Booking</h4>
+            <p class="text-[10px] font-semibold text-amber-600 mt-0.5">Book Auto in Minutes</p>
+          </div>
+        </a>
+
+        <!-- Parcel Delivery -->
+        <a href="/parcel" class="service-card flex-shrink-0 w-[140px] sm:w-[155px] bg-white rounded-[20px] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+          <div class="h-[120px] sm:h-[140px] bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center p-3 overflow-hidden">
+            <img src="/assets/services/service_parcel.jpg" alt="Parcel Delivery" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+          </div>
+          <div class="p-2.5 pb-3">
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-indigo-100 to-blue-200 flex items-center justify-center shadow-sm">
+              <span class="material-symbols-outlined text-indigo-700 text-lg">package_2</span>
+            </div>
+            <h4 class="text-xs font-black text-slate-900">Parcel Delivery</h4>
+            <p class="text-[10px] font-semibold text-indigo-600 mt-0.5">Send Anything Across Bhusawal</p>
+          </div>
+        </a>
+
+        <!-- Local Shops -->
+        <a href="/shops" class="service-card flex-shrink-0 w-[140px] sm:w-[155px] bg-white rounded-[20px] border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+          <div class="h-[120px] sm:h-[140px] bg-gradient-to-br from-purple-50 to-fuchsia-100 flex items-center justify-center p-3 overflow-hidden">
+            <img src="/assets/services/service_shops.jpg" alt="Local Shops" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+          </div>
+          <div class="p-2.5 pb-3">
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-purple-100 to-fuchsia-200 flex items-center justify-center shadow-sm">
+              <span class="material-symbols-outlined text-purple-700 text-lg">storefront</span>
+            </div>
+            <h4 class="text-xs font-black text-slate-900">Local Shops</h4>
+            <p class="text-[10px] font-semibold text-purple-600 mt-0.5">Shop from Local Stores</p>
           </div>
         </a>
 
