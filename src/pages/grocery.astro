@@ -12,7 +12,7 @@ try {
   console.error("Failed to read grocery catalog at build time", err);
 }
 
-// Extract distinct categories from master catalog
+// Master categories list from catalog
 const categoriesList = [
   { id: 'all', name: 'All Products', icon: '⚡' },
   { id: 'fruits', name: 'Fruits & Vegetables', icon: '🥬' },
@@ -26,10 +26,11 @@ const categoriesList = [
   { id: 'baby', name: 'Baby, Health & Specialty', icon: '👶' },
 ];
 
-// Initial 48 items for server-rendering
+// Server-render first 48 items
 const initialProducts = catalog.slice(0, 48);
 ---
 
+<!DOCTYPE html>
 <html lang="en" class="light">
 <head>
   <meta charset="utf-8" />
@@ -72,10 +73,10 @@ const initialProducts = catalog.slice(0, 48);
   </style>
 </head>
 
-<body class="pb-24 max-w-7xl mx-auto min-h-screen text-slate-800">
+<body class="pb-28 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased">
 
   <!-- TOP HEADER -->
-  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3 shadow-sm flex items-center justify-between">
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3.5 shadow-xs flex items-center justify-between">
     <div class="flex items-center gap-3">
       <a href="/home" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
         <span class="material-symbols-outlined text-xl">arrow_back</span>
@@ -85,7 +86,7 @@ const initialProducts = catalog.slice(0, 48);
           <span class="px-2 py-0.5 rounded-md bg-purple-100 text-purpleBrand text-[10px] font-black uppercase tracking-wider">⚡ 10 MINS</span>
           <h1 class="text-base font-black font-display text-slate-900 leading-tight">Grocery Superstore</h1>
         </div>
-        <p class="text-[11px] text-slate-500 font-bold truncate max-w-[200px] sm:max-w-xs" id="delivery-addr-header">
+        <p class="text-[11px] text-slate-500 font-bold truncate max-w-[200px] sm:max-w-xs">
           Delivering to Bhusawal
         </p>
       </div>
@@ -97,65 +98,69 @@ const initialProducts = catalog.slice(0, 48);
     </a>
   </header>
 
-  <!-- STICKY SEARCH & FILTER BAR -->
+  <!-- STICKY SEARCH, FILTERS & SORTING BAR -->
   <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md px-4 py-3 border-b border-slate-100 shadow-sm space-y-3">
     
+    <!-- Search Bar -->
     <div class="flex items-center gap-2 bg-slate-100 rounded-2xl px-4 py-2.5 border border-slate-200/80 focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
       <span class="material-symbols-outlined text-slate-400">search</span>
-      <input type="text" id="grocery-search-input" placeholder="Search 5,000+ items across all categories..." class="w-full bg-transparent outline-none text-sm font-medium text-slate-800 placeholder-slate-400" autocomplete="off" />
+      <input type="text" id="grocery-search-input" placeholder="Search 25,000+ items across all categories..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
       <button id="clear-search-btn" class="hidden text-slate-400 hover:text-slate-600">
         <span class="material-symbols-outlined text-lg">close</span>
       </button>
     </div>
 
-    <!-- Filter Pills & Sorting -->
+    <!-- Filter Pills & Sorting Dropdown -->
     <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-1">
       <div class="flex items-center gap-2">
-        <button class="diet-filter-btn px-3 py-1.5 rounded-xl bg-purpleBrand text-white text-xs font-black shadow-sm transition-all" data-filter="all">All</button>
-        <button class="diet-filter-btn px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold transition-all" data-filter="deals">⚡ Offers & Discounts</button>
+        <button class="diet-filter-btn px-3 py-1.5 rounded-xl bg-purpleBrand text-white text-xs font-black shadow-xs transition-all" data-filter="all">All Items</button>
+        <button class="diet-filter-btn px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold transition-all" data-filter="instock">In Stock Only</button>
       </div>
 
-      <select id="sort-select" class="bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl px-2.5 py-1.5 outline-none cursor-pointer">
-        <option value="popular">Popularity</option>
-        <option value="low-high">Price: Low to High</option>
-        <option value="high-low">Price: High to Low</option>
-        <option value="discount">Highest Discount</option>
-      </select>
+      <div class="flex items-center gap-2">
+        <label for="sort-select" class="text-xs font-bold text-slate-400 hidden sm:inline">Sort:</label>
+        <select id="sort-select" class="bg-slate-100 border border-slate-200 text-slate-800 text-xs font-extrabold rounded-xl px-3 py-1.5 outline-none cursor-pointer hover:bg-slate-200 transition-colors">
+          <option value="popular">Popularity</option>
+          <option value="low-high">Price: Low to High</option>
+          <option value="high-low">Price: High to Low</option>
+          <option value="name">Name: A to Z</option>
+        </select>
+      </div>
     </div>
 
   </div>
 
   <!-- FEATURED PROMO BANNER -->
   <div class="px-4 pt-4">
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-700 via-purple-600 to-indigo-700 text-white p-5 shadow-lg shadow-purple-900/10">
-      <div class="relative z-10">
-        <span class="px-2.5 py-0.5 bg-amber-400 text-slate-900 text-[10px] font-black uppercase tracking-wider rounded-full inline-block mb-2">BHUSAWAL EXPRESS</span>
-        <h2 class="text-xl font-black font-display leading-tight">5,050+ Original Products Live</h2>
-        <p class="text-xs text-purple-100 mt-1">Personal Care, Spices, Dairy, Snacks & Household Essentials</p>
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-800 via-purple-700 to-indigo-900 text-white p-5 shadow-lg shadow-purple-900/10">
+      <div class="relative z-10 max-w-xl space-y-1">
+        <span class="px-2.5 py-0.5 bg-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-wider rounded-full inline-block mb-1">BHUSAWAL EXPRESS</span>
+        <h2 class="text-xl sm:text-2xl font-black font-display leading-tight">25,500+ Original Products Delivered Fast</h2>
+        <p class="text-xs text-purple-100 font-semibold">Fresh Dairy, Spices, Snacks, Beverages & Household Essentials</p>
       </div>
     </div>
   </div>
 
-  <!-- MAIN LAYOUT -->
-  <div class="px-4 py-4 md:flex md:gap-6">
+  <!-- MAIN CONTAINER (CATEGORY SIDEBAR + PRODUCT GRID) -->
+  <div class="px-4 py-5 md:flex md:gap-6">
     
     <!-- Mobile Categories Horizontal Bar -->
-    <div class="md:hidden flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-2 border-b border-slate-100">
+    <div class="md:hidden flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-3 border-b border-slate-100">
       {categoriesList.map(cat => (
-        <button class="mobile-cat-btn flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white border border-slate-200 text-xs font-extrabold text-slate-700 hover:border-purpleBrand transition-all" data-category={cat.name}>
+        <button class="mobile-cat-btn flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-slate-200 text-xs font-extrabold text-slate-700 hover:border-purpleBrand transition-all" data-category={cat.name}>
           <span>{cat.icon}</span>
           <span>{cat.name}</span>
         </button>
       ))}
     </div>
 
-    <!-- Desktop Sidebar Categories -->
+    <!-- Desktop Category Sidebar -->
     <aside class="hidden md:block w-64 flex-shrink-0 space-y-2 sticky top-44 h-fit">
       <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider px-3 mb-2">Categories</h3>
-      <div class="bg-white rounded-3xl p-2 border border-slate-100 shadow-sm space-y-1">
+      <div class="bg-white rounded-3xl p-2.5 border border-slate-100 shadow-sm space-y-1">
         {categoriesList.map(cat => (
-          <button class="desktop-cat-btn w-full flex items-center justify-between px-3 py-2.5 rounded-2xl text-xs font-extrabold text-slate-700 hover:bg-purple-50 hover:text-purpleBrand transition-all" data-category={cat.name}>
-            <div class="flex items-center gap-2">
+          <button class="desktop-cat-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold text-slate-700 hover:bg-purple-50 hover:text-purpleBrand transition-all" data-category={cat.name}>
+            <div class="flex items-center gap-2.5">
               <span class="text-base">{cat.icon}</span>
               <span>{cat.name}</span>
             </div>
@@ -167,13 +172,13 @@ const initialProducts = catalog.slice(0, 48);
 
     <!-- Product Grid Section -->
     <main class="flex-1 space-y-4">
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">
         <h2 id="active-category-title" class="text-lg font-black font-display text-slate-900">All Products</h2>
-        <span id="product-count-label" class="text-xs font-bold text-slate-400">Loading Products...</span>
+        <span id="product-count-label" class="text-xs font-bold text-slate-400">Loading catalog...</span>
       </div>
 
       <!-- Products Grid -->
-      <div id="grocery-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4.5">
+      <div id="grocery-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4.5">
         {initialProducts.map(p => {
           const id = p["Product ID"] || p.ProductID || p.id || '';
           const name = p["Product Name"] || '';
@@ -181,87 +186,85 @@ const initialProducts = catalog.slice(0, 48);
           const cat = p.Category || 'Grocery';
           const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
           const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 0);
-          const price = mrp;
           const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
           const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
           const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
           const nameSafe = name.replace(/"/g, '&quot;');
 
           return (
-            <div class="product-card group bg-white rounded-[20px] border border-slate-100/90 shadow-sm hover:shadow-xl hover:border-purple-200/80 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-2.5 sm:p-3" data-id={id} data-name={nameSafe} data-price={mrp} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
+            <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-3" data-id={id} data-name={nameSafe} data-price={mrp} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
 
-              {/* IMAGE CONTAINER WITH GRADIENT BACKGROUND */}
-              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50/90 via-slate-50/40 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
-                
-                {/* Out of Stock Overlay */}
+              <!-- Image Frame -->
+              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
                 {isOutOfStock && (
                   <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
-                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md border border-slate-700">Out of Stock</span>
+                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
                   </div>
                 )}
 
-                {/* Favourite Heart */}
-                <button class="fav-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all duration-200 z-10 shadow-sm" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
-                  <span class="material-symbols-outlined text-[19px]" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+                <button class="fav-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+                  <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
                 </button>
 
-                {/* Large Product Image */}
-                <img src={img} alt={name} class="max-h-full max-w-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300 ease-out" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                <img src={img} alt={name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
 
-                {/* Fast Delivery Badge */}
                 <div class="absolute bottom-2 left-2 z-10">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400/95 backdrop-blur-sm text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
-                    <span class="material-symbols-outlined text-[11px]">bolt</span>
-                    10 MINS
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
+                    ⚡ 10 MINS
                   </span>
                 </div>
               </div>
 
-              {/* DETAILS */}
-              <div class="flex flex-col flex-1 px-1 pt-0.5 pb-1">
-                {/* Brand Name */}
+              <!-- Product Details -->
+              <div class="flex flex-col flex-1 px-0.5">
                 <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">{brand}</span>
+                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">{name}</h3>
+                <p class="text-[11px] font-semibold text-slate-400 mb-2">{pack}</p>
 
-                {/* Product Name */}
-                <h3 class="text-xs sm:text-[13px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">{name}</h3>
-
-                {/* Pack Size / Variant */}
-                <p class="text-[11px] font-semibold text-slate-500 mb-2">{pack}</p>
-
-                {/* Price + Action */}
-                <div class="flex items-center justify-between gap-2 mt-auto pt-1.5 border-t border-slate-100">
-                  <div class="flex flex-col">
-                    <span class="text-sm sm:text-base font-black text-slate-900 leading-none">MRP ₹{mrp}</span>
-                  </div>
+                <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
+                  <span class="text-sm font-black text-slate-900">MRP ₹{mrp}</span>
 
                   {isOutOfStock ? (
-                    <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[11px] font-extrabold rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
+                    <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[10px] font-extrabold rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
                   ) : (
                     <div class="cart-action-container" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
-                      <button class="add-to-cart-btn px-4 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 hover:border-purpleBrand text-[11px] font-black rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all duration-200" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
-                        ADD
+                      <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
+                        + ADD
                       </button>
                     </div>
                   )}
                 </div>
               </div>
+
             </div>
           );
         })}
       </div>
 
-      <!-- LOAD MORE & PAGINATION CONTAINER -->
-      <div id="load-more-container" class="py-8 text-center space-y-3">
-        <button id="load-more-btn" class="px-8 py-3 bg-purpleBrand text-white font-extrabold text-xs rounded-2xl shadow-lg hover:bg-purpleDark active:scale-95 transition-all">
+      <!-- LOAD MORE & INFINITE SCROLL OBSERVER -->
+      <div id="load-more-container" class="py-8 text-center space-y-2">
+        <button id="load-more-btn" class="px-8 py-3 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all">
           Load More Products
         </button>
         <p id="pagination-status-text" class="text-xs font-bold text-slate-400"></p>
       </div>
+
+      <!-- RECENTLY VIEWED PRODUCTS SECTION -->
+      <section id="recently-viewed-section" class="hidden pt-6 border-t border-slate-200/80 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-black font-display text-slate-900">Recently Viewed Items</h3>
+          <span class="text-xs font-bold text-slate-400">History</span>
+        </div>
+        <div id="recently-viewed-grid" class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
     </main>
   </div>
 
   <!-- FLOATING CART BAR -->
-  <div id="floating-cart-bar" class="hidden fixed bottom-6 left-4 right-4 max-w-xl mx-auto bg-purpleBrand text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between z-50">
+  <div id="floating-cart-bar" class="hidden fixed bottom-6 left-4 right-4 max-w-xl mx-auto bg-purpleBrand text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between z-50 animate-in fade-in slide-in-from-bottom-2">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-black text-sm" id="cart-count-badge">
         0
@@ -271,7 +274,7 @@ const initialProducts = catalog.slice(0, 48);
         <p class="text-[10px] text-purple-200">View items in cart</p>
       </div>
     </div>
-    <a href="/billing" class="bg-white text-purpleBrand font-extrabold text-xs px-5 py-2.5 rounded-xl flex items-center gap-1.5 shadow-md hover:bg-purple-50 active:scale-95 transition-all">
+    <a href="/billing" class="bg-white text-purpleBrand font-black text-xs px-5 py-2.5 rounded-xl flex items-center gap-1.5 shadow-md hover:bg-purple-50 active:scale-95 transition-all">
       <span>Proceed to Checkout</span>
       <span class="material-symbols-outlined text-sm">arrow_forward</span>
     </a>
@@ -284,24 +287,23 @@ const initialProducts = catalog.slice(0, 48);
         <span class="material-symbols-outlined">close</span>
       </button>
 
-      <div class="h-56 w-full bg-slate-50 rounded-2xl flex items-center justify-center p-4">
+      <div class="h-56 w-full bg-slate-50 rounded-2xl flex items-center justify-center p-4 border border-slate-100">
         <img id="modal-img" src="" alt="" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
       </div>
 
-      <div>
+      <div class="space-y-1">
         <span id="modal-cat" class="text-xs font-black text-purpleBrand uppercase tracking-wider">Category</span>
-        <h3 id="modal-title" class="text-lg font-black font-display text-slate-900 mt-1">Product Title</h3>
-        <p id="modal-unit" class="text-xs font-bold text-slate-500 mt-0.5">Unit Size</p>
-        <p id="modal-desc" class="text-xs text-slate-600 mt-2 leading-relaxed">Description</p>
+        <h3 id="modal-title" class="text-lg font-black font-display text-slate-900">Product Title</h3>
+        <p id="modal-unit" class="text-xs font-bold text-slate-500">Unit Size</p>
+        <p id="modal-desc" class="text-xs text-slate-600 pt-2 leading-relaxed border-t border-slate-100 mt-2">Description</p>
       </div>
 
-      <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100">
         <div>
           <span class="text-xl font-black text-slate-900" id="modal-price">₹0</span>
-          <span class="text-sm text-slate-400 line-through ml-2" id="modal-mrp">₹0</span>
         </div>
-        <button id="modal-add-btn" class="px-6 py-2.5 bg-purpleBrand text-white font-extrabold text-sm rounded-xl shadow-md hover:bg-purpleDark active:scale-95 transition-all">
-          ADD TO CART
+        <button id="modal-add-btn" class="px-6 py-2.5 bg-purpleBrand text-white font-black text-sm rounded-xl shadow-md hover:bg-purpleDark active:scale-95 transition-all">
+          + ADD TO CART
         </button>
       </div>
     </div>
@@ -309,16 +311,15 @@ const initialProducts = catalog.slice(0, 48);
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CATALOG ENGINE FOR 5050 ORIGINAL ITEMS -->
+  <!-- CLIENT-SIDE CATALOG ENGINE -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', async () => {
       let catalogData = [];
       try {
         const res = await fetch('/grocery_catalog.json');
         catalogData = await res.json();
-        console.log("Loaded original catalog items count:", catalogData.length);
       } catch(e) {
-        console.error("Failed to load original grocery catalog", e);
+        console.error("Failed to load grocery catalog", e);
       }
 
       // 1. Cart Bar State
@@ -347,7 +348,7 @@ const initialProducts = catalog.slice(0, 48);
 
       updateCartBar();
 
-      // 2. Interactive Quantity & Cart Action Controller
+      // 2. Quantity & Cart Controller
       function syncCartActionButtons() {
         let cart = [];
         try { cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); } catch(e) {}
@@ -364,7 +365,7 @@ const initialProducts = catalog.slice(0, 48);
 
           if (qty > 0) {
             container.innerHTML = `
-              <div class="flex items-center justify-between bg-purpleBrand text-white font-extrabold text-xs rounded-xl overflow-hidden shadow-md shadow-purple-900/20">
+              <div class="flex items-center justify-between bg-purpleBrand text-white font-extrabold text-xs rounded-xl overflow-hidden shadow-xs">
                 <button class="qty-minus-btn px-2.5 py-1.5 hover:bg-purpleDark active:scale-90 transition-all" data-id="${id}">-</button>
                 <span class="px-1.5 text-[11px] font-black min-w-[1.2rem] text-center">${qty}</span>
                 <button class="qty-plus-btn px-2.5 py-1.5 hover:bg-purpleDark active:scale-90 transition-all" data-id="${id}" data-name="${name ? name.replace(/"/g, '&quot;') : ''}" data-price="${price}" data-img="${img}">+</button>
@@ -372,14 +373,14 @@ const initialProducts = catalog.slice(0, 48);
             `;
           } else {
             container.innerHTML = `
-              <button class="add-to-cart-btn px-4 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 hover:border-purpleBrand text-[11px] font-black rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all duration-200" data-id="${id}" data-name="${name ? name.replace(/"/g, '&quot;') : ''}" data-price="${price}" data-img="${img}">
-                ADD
+              <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id="${id}" data-name="${name ? name.replace(/"/g, '&quot;') : ''}" data-price="${price}" data-img="${img}">
+                + ADD
               </button>
             `;
           }
         });
 
-        // Attach ADD click handlers
+        // Add Handlers
         document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
@@ -392,7 +393,7 @@ const initialProducts = catalog.slice(0, 48);
             if (existing) {
               existing.quantity = (existing.quantity || 1) + 1;
             } else {
-              cart.push({ id, name, price, image: img, quantity: 1 });
+              cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Grocery' });
             }
             localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
             updateCartBar();
@@ -400,7 +401,7 @@ const initialProducts = catalog.slice(0, 48);
           };
         });
 
-        // Attach Plus click handlers
+        // Plus Handlers
         document.querySelectorAll('.qty-plus-btn').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
@@ -410,7 +411,7 @@ const initialProducts = catalog.slice(0, 48);
             if (existing) {
               existing.quantity = (existing.quantity || 1) + 1;
             } else {
-              cart.push({ id, name: btn.dataset.name, price: btn.dataset.price, image: btn.dataset.img, quantity: 1 });
+              cart.push({ id, name: btn.dataset.name, price: btn.dataset.price, mrp: btn.dataset.price, image: btn.dataset.img, quantity: 1, cat: 'Grocery' });
             }
             localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
             updateCartBar();
@@ -418,7 +419,7 @@ const initialProducts = catalog.slice(0, 48);
           };
         });
 
-        // Attach Minus click handlers
+        // Minus Handlers
         document.querySelectorAll('.qty-minus-btn').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
@@ -444,7 +445,43 @@ const initialProducts = catalog.slice(0, 48);
       }
       attachAddToCartListeners();
 
-      // 3. Product Detail Modal
+      // 3. Recently Viewed System
+      function trackRecentlyViewed(item) {
+        let history = [];
+        try { history = JSON.parse(localStorage.getItem('bhusawal_recently_viewed') || '[]'); } catch(e) {}
+        history = history.filter(i => i.id !== item.id);
+        history.unshift(item);
+        if (history.length > 10) history = history.slice(0, 10);
+        localStorage.setItem('bhusawal_recently_viewed', JSON.stringify(history));
+        renderRecentlyViewed();
+      }
+
+      function renderRecentlyViewed() {
+        let history = [];
+        try { history = JSON.parse(localStorage.getItem('bhusawal_recently_viewed') || '[]'); } catch(e) {}
+        const section = document.getElementById('recently-viewed-section');
+        const grid = document.getElementById('recently-viewed-grid');
+
+        if (!history || history.length === 0) {
+          section?.classList.add('hidden');
+          return;
+        }
+
+        section?.classList.remove('hidden');
+        grid.innerHTML = history.map(item => `
+          <div class="flex-shrink-0 w-36 bg-white rounded-2xl p-2.5 border border-slate-100 shadow-xs hover:border-purple-200 transition-all cursor-pointer" onclick="window.openModalById('${item.id}')">
+            <div class="w-full h-24 bg-slate-50 rounded-xl p-1 flex items-center justify-center overflow-hidden mb-1.5">
+              <img src="${item.img}" alt="${item.name}" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+            </div>
+            <h4 class="text-xs font-bold text-slate-800 truncate">${item.name}</h4>
+            <p class="text-xs font-black text-slate-900 mt-0.5">MRP ₹${item.mrp}</p>
+          </div>
+        `).join('');
+      }
+
+      renderRecentlyViewed();
+
+      // 4. Product Detail Modal
       const modal = document.getElementById('product-modal');
       const modalImg = document.getElementById('modal-img');
       const modalTitle = document.getElementById('modal-title');
@@ -452,35 +489,65 @@ const initialProducts = catalog.slice(0, 48);
       const modalUnit = document.getElementById('modal-unit');
       const modalDesc = document.getElementById('modal-desc');
       const modalPrice = document.getElementById('modal-price');
-      const modalMrp = document.getElementById('modal-mrp');
       const modalAddBtn = document.getElementById('modal-add-btn');
+
+      window.openModalById = function(id) {
+        const p = catalogData.find(i => (i["Product ID"] || i.ProductID || i.id) === id);
+        if (p) {
+          openProductModal({
+            id: id,
+            name: (p["Product Name"] || p.name).split(" (Batch")[0],
+            mrp: parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50),
+            img: p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg',
+            pack: p["Pack Size"] || p.pack || '1 Unit',
+            cat: p.Category || 'Grocery',
+            desc: p.desc || p.Description || 'Fresh high-quality item sourced directly from trusted Bhusawal suppliers.'
+          });
+        }
+      };
+
+      function openProductModal(item) {
+        trackRecentlyViewed(item);
+
+        modalImg.src = item.img;
+        modalTitle.textContent = item.name;
+        modalCat.textContent = item.cat;
+        modalUnit.textContent = item.pack;
+        modalDesc.textContent = item.desc;
+        modalPrice.textContent = 'MRP ₹' + item.mrp;
+
+        modalAddBtn.onclick = () => {
+          let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+          const existing = cart.find(i => i.id === item.id);
+          if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+          } else {
+            cart.push({ id: item.id, name: item.name, price: item.mrp, mrp: item.mrp, image: item.img, quantity: 1, cat: 'Grocery' });
+          }
+          localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+          updateCartBar();
+          syncCartActionButtons();
+          modal.classList.add('hidden');
+        };
+
+        modal.classList.remove('hidden');
+      }
 
       function attachModalClickListeners() {
         document.querySelectorAll('.product-card').forEach(card => {
-          card.onclick = () => {
-            modalImg.src = card.dataset.img;
-            modalTitle.textContent = card.dataset.name;
-            modalCat.textContent = card.dataset.cat || 'Grocery';
-            modalUnit.textContent = card.dataset.unit || '1 Pack';
-            modalDesc.textContent = card.dataset.desc || '';
-            modalPrice.textContent = '₹' + card.dataset.price;
-            modalMrp.textContent = parseFloat(card.dataset.mrp) > parseFloat(card.dataset.price) ? '₹' + card.dataset.mrp : '';
-
-            modalAddBtn.onclick = () => {
-              let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-              const id = card.dataset.id;
-              const existing = cart.find(i => i.id === id);
-              if (existing) {
-                existing.quantity = (existing.quantity || 1) + 1;
-              } else {
-                cart.push({ id, name: card.dataset.name, price: card.dataset.price, image: card.dataset.img, quantity: 1 });
-              }
-              localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-              updateCartBar();
-              modal.classList.add('hidden');
-            };
-
-            modal.classList.remove('hidden');
+          card.onclick = (e) => {
+            if (e.target.closest('.add-to-cart-btn') || e.target.closest('.qty-minus-btn') || e.target.closest('.qty-plus-btn') || e.target.closest('.fav-btn')) {
+              return;
+            }
+            openProductModal({
+              id: card.dataset.id,
+              name: card.dataset.name,
+              mrp: card.dataset.price,
+              img: card.dataset.img,
+              pack: card.dataset.unit,
+              cat: card.dataset.cat,
+              desc: card.dataset.desc || 'Fresh high-quality item sourced directly from trusted Bhusawal suppliers.'
+            });
           };
         });
       }
@@ -490,7 +557,7 @@ const initialProducts = catalog.slice(0, 48);
         modal.classList.add('hidden');
       });
 
-      // 4. Client Search & Filtering over 25,500 Items with Infinite Scroll
+      // 5. Client Search, Category, Filter, Sorting & Infinite Scroll Engine
       const searchInput = document.getElementById('grocery-search-input');
       const clearBtn = document.getElementById('clear-search-btn');
       const grid = document.getElementById('grocery-products-grid');
@@ -498,10 +565,12 @@ const initialProducts = catalog.slice(0, 48);
       const titleLabel = document.getElementById('active-category-title');
       const loadMoreBtn = document.getElementById('load-more-btn');
       const paginationStatusText = document.getElementById('pagination-status-text');
+      const sortSelect = document.getElementById('sort-select');
 
       let currentQuery = '';
-      let currentCategory = 'All Products'; // matches data-category="All Products"
+      let currentCategory = 'All Products';
       let currentFilter = 'all';
+      let currentSort = 'popular';
 
       let currentFiltered = [];
       let currentLimit = 48;
@@ -509,7 +578,7 @@ const initialProducts = catalog.slice(0, 48);
 
       function renderProducts() {
         if (!currentFiltered || currentFiltered.length === 0) {
-          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No products found matching your search.</div>`;
+          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No products found matching your search criteria.</div>`;
           if (countLabel) countLabel.textContent = '0 Products';
           if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
           if (paginationStatusText) paginationStatusText.textContent = '';
@@ -524,63 +593,59 @@ const initialProducts = catalog.slice(0, 48);
 
         grid.innerHTML = visibleItems.map(p => {
           const id = p["Product ID"] || p.ProductID || p.id || '';
-          const name = p["Product Name"] || '';
+          const name = (p["Product Name"] || p.name || '').split(" (Batch")[0];
           const brand = p["Brand Name"] || p.brand || 'Bhusawal Fresh';
           const cat = p.Category || 'Grocery';
           const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
-          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 0);
-          const price = mrp;
+          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50);
           const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
           const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
           const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
           const nameSafe = name.replace(/"/g, '&quot;');
 
           return `
-            <div class="product-card group bg-white rounded-[20px] border border-slate-100/90 shadow-sm hover:shadow-xl hover:border-purple-200/80 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-2.5 sm:p-3" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-brand="${brand}" data-desc="${descSafe}">
+            <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-3" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-brand="${brand}" data-desc="${descSafe}">
 
-              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50/90 via-slate-50/40 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
-
+              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
                 ${isOutOfStock ? `
                   <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
-                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md border border-slate-700">Out of Stock</span>
+                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
                   </div>
                 ` : ''}
 
-                <button class="fav-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all duration-200 z-10 shadow-sm" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
-                  <span class="material-symbols-outlined text-[19px]" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+                <button class="fav-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+                  <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
                 </button>
 
-                <img src="${img}" alt="${nameSafe}" class="max-h-full max-w-full object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300 ease-out" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                <img src="${img}" alt="${nameSafe}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
 
                 <div class="absolute bottom-2 left-2 z-10">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400/95 backdrop-blur-sm text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
-                    <span class="material-symbols-outlined text-[11px]">bolt</span>
-                    10 MINS
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
+                    ⚡ 10 MINS
                   </span>
                 </div>
               </div>
 
-              <div class="flex flex-col flex-1 px-1 pt-0.5 pb-1">
+              <div class="flex flex-col flex-1 px-0.5">
                 <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">${brand}</span>
-                <h3 class="text-xs sm:text-[13px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">${name}</h3>
-                <p class="text-[11px] font-semibold text-slate-500 mb-2">${pack}</p>
+                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">${name}</h3>
+                <p class="text-[11px] font-semibold text-slate-400 mb-2">${pack}</p>
 
-                <div class="flex items-center justify-between gap-2 mt-auto pt-1.5 border-t border-slate-100">
-                  <div class="flex flex-col">
-                    <span class="text-sm sm:text-base font-black text-slate-900 leading-none">MRP ₹${mrp}</span>
-                  </div>
+                <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
+                  <span class="text-sm font-black text-slate-900">MRP ₹${mrp}</span>
 
                   ${isOutOfStock ? `
-                    <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[11px] font-extrabold rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
+                    <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[10px] font-extrabold rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
                   ` : `
                     <div class="cart-action-container" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
-                      <button class="add-to-cart-btn px-4 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 hover:border-purpleBrand text-[11px] font-black rounded-xl shadow-xs hover:shadow-md active:scale-95 transition-all duration-200" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
-                        ADD
+                      <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
+                        + ADD
                       </button>
                     </div>
                   `}
                 </div>
               </div>
+
             </div>
           `;
         }).join('');
@@ -612,7 +677,7 @@ const initialProducts = catalog.slice(0, 48);
 
         let res = catalogData;
 
-        // Search Query over Product Name, Category, Brand Name, Search Keywords
+        // Search Query
         if (currentQuery) {
           const q = currentQuery;
           res = res.filter(p => {
@@ -624,19 +689,24 @@ const initialProducts = catalog.slice(0, 48);
           });
         }
 
-        // Category Filter — "All Products" means no category filter
+        // Category Filter
         if (currentCategory && currentCategory !== 'All Products') {
           const target = currentCategory.toLowerCase();
-          res = res.filter(p => {
-            const cat = (p.Category || '').toLowerCase();
-            // Exact match on category name (case-insensitive)
-            return cat === target;
-          });
+          res = res.filter(p => (p.Category || '').toLowerCase() === target);
         }
 
-        // Offers Filter
-        if (currentFilter === 'deals') {
-          res = res.filter(p => parseFloat(p.MRP || 0) > parseFloat(p["Selling Price"] || p.MRP || p.mrp || p["Selling Price"] || p.sp || p.MRP || 0));
+        // In Stock Filter
+        if (currentFilter === 'instock') {
+          res = res.filter(p => !(p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock'));
+        }
+
+        // Sorting
+        if (currentSort === 'low-high') {
+          res.sort((a, b) => parseFloat(a.MRP || a.mrp || 50) - parseFloat(b.MRP || b.mrp || 50));
+        } else if (currentSort === 'high-low') {
+          res.sort((a, b) => parseFloat(b.MRP || b.mrp || 50) - parseFloat(a.MRP || a.mrp || 50));
+        } else if (currentSort === 'name') {
+          res.sort((a, b) => (a["Product Name"] || '').localeCompare(b["Product Name"] || ''));
         }
 
         currentFiltered = res;
@@ -650,7 +720,7 @@ const initialProducts = catalog.slice(0, 48);
         renderProducts();
       });
 
-      // Infinite Scroll via IntersectionObserver
+      // Infinite Scroll Observer
       if (loadMoreBtn) {
         const observer = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting && currentLimit < currentFiltered.length) {
@@ -661,6 +731,7 @@ const initialProducts = catalog.slice(0, 48);
         observer.observe(loadMoreBtn);
       }
 
+      // Search Inputs
       searchInput?.addEventListener('input', (e) => {
         currentQuery = e.target.value.trim().toLowerCase();
         if (currentQuery) {
@@ -675,6 +746,12 @@ const initialProducts = catalog.slice(0, 48);
         searchInput.value = '';
         currentQuery = '';
         clearBtn.classList.add('hidden');
+        filterCatalog();
+      });
+
+      // Sorting Listener
+      sortSelect?.addEventListener('change', (e) => {
+        currentSort = e.target.value;
         filterCatalog();
       });
 
@@ -708,7 +785,7 @@ const initialProducts = catalog.slice(0, 48);
         });
       });
 
-      // Filter Buttons
+      // Diet Filter Buttons
       document.querySelectorAll('.diet-filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.diet-filter-btn').forEach(b => {
@@ -738,7 +815,6 @@ const initialProducts = catalog.slice(0, 48);
         setActiveCategoryBtn(catParam);
       }
 
-      // Initial render — always call filterCatalog
       filterCatalog();
       setActiveCategoryBtn(currentCategory);
     });
