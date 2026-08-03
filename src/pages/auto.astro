@@ -20,17 +20,18 @@ import Switcher from '../components/Switcher.astro';
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-  <!-- SKY BLUE & WHITE THEME TAILWIND CONFIGURATION -->
+  <!-- ENERGETIC YELLOW & WHITE THEME TAILWIND CONFIGURATION -->
   <script is:inline>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            skyBrand: '#0284C7',
-            skyDark: '#0369A1',
-            skyLight: '#F0F9FF',
-            skyBorder: '#BAE6FD',
-            skyAccent: '#38BDF8'
+            yellowBrand: '#FACC15',
+            yellowDark: '#CA8A04',
+            yellowLight: '#FEF9C3',
+            yellowBorder: '#FEF08A',
+            yellowAccent: '#EAB308',
+            yellowDeep: '#854D0E'
           },
           fontFamily: {
             sans: ['Plus Jakarta Sans', 'sans-serif'],
@@ -51,7 +52,7 @@ import Switcher from '../components/Switcher.astro';
     /* Custom Leaflet Pin Styling */
     .leaflet-popup-content-wrapper {
       border-radius: 1rem;
-      box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.15);
+      box-shadow: 0 10px 25px -5px rgba(202, 138, 4, 0.2);
     }
   </style>
 </head>
@@ -66,17 +67,17 @@ import Switcher from '../components/Switcher.astro';
       </a>
       <div>
         <h1 class="text-base sm:text-lg font-black font-display text-slate-900 leading-tight flex items-center gap-2">
-          <span>🛵 Bike Ride Pickup & Drop</span>
-          <span class="bg-skyLight text-skyBrand text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-skyBorder">PASSENGER RIDE</span>
+          <span>⚡ Pickup & Drop Bike Taxi</span>
+          <span class="bg-yellowLight text-yellowDeep text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-yellowBorder">PASSENGER RIDE</span>
         </h1>
-        <p class="text-xs text-slate-500 font-medium">Fast, Affordable & Safe Scooter Transport across Bhusawal</p>
+        <p class="text-xs text-slate-500 font-medium">Fast, Energetic & Safe Scooter Transport across Bhusawal</p>
       </div>
     </div>
 
     <!-- Help & Support -->
-    <a href="tel:+919876543210" class="flex items-center gap-1.5 px-3 py-1.5 bg-skyLight text-skyBrand text-xs font-black rounded-full border border-skyBorder hover:bg-skyBrand hover:text-white transition-all shadow-xs">
+    <a href="tel:+919876543210" class="flex items-center gap-1.5 px-3 py-1.5 bg-yellowLight text-yellowDeep text-xs font-black rounded-full border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all shadow-xs">
       <span class="material-symbols-outlined text-sm">headset_mic</span>
-      <span class="hidden sm:inline">24x7 Ride Support</span>
+      <span class="hidden sm:inline">24x7 Support</span>
     </a>
   </header>
 
@@ -92,52 +93,52 @@ import Switcher from '../components/Switcher.astro';
     </div>
 
 
-    <!-- ==================== LARGE HERO ILLUSTRATION (TWO PEOPLE RIDING A SCOOTER/BIKE) ==================== -->
-    <section class="bg-gradient-to-r from-skyBrand via-sky-600 to-skyDark text-white rounded-3xl p-6 shadow-md overflow-hidden relative group">
+    <!-- ==================== ENERGETIC HERO BANNER (YELLOW & WHITE) ==================== -->
+    <section class="bg-gradient-to-r from-yellowBrand via-amber-400 to-yellowDark text-slate-950 rounded-3xl p-6 shadow-md overflow-hidden relative group">
       <!-- Background subtle glow -->
-      <div class="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -top-12 -right-12 w-48 h-48 bg-white/20 rounded-full blur-2xl pointer-events-none"></div>
 
       <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center relative z-10">
         
         <!-- LEFT 7 COLS: RIDE PROMO CONTENT -->
         <div class="sm:col-span-7 space-y-3 text-center sm:text-left">
           
-          <!-- Live Nearby Riders Indicator -->
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-[11px] font-black tracking-wide border border-white/30">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-            <span>⚡ <strong class="text-emerald-300">4 Captains Active</strong> near Station Chowk (~2 min pickup)</span>
+          <!-- Live Nearby Riders Indicator Badge -->
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-950/90 text-yellowBrand text-[11px] font-black tracking-wide shadow-md border border-slate-800">
+            <span class="w-2.5 h-2.5 rounded-full bg-yellowBrand animate-ping"></span>
+            <span>⚡ <strong>4 Bike Taxi Captains Active</strong> near Station Chowk (~2 min pickup)</span>
           </div>
 
-          <h2 class="text-2xl sm:text-3xl font-black font-display leading-tight">
-            Book a Quick Bike Ride in Bhusawal!
+          <h2 class="text-2xl sm:text-3xl font-black font-display text-slate-950 leading-tight">
+            Fastest Bike Taxi in Bhusawal!
           </h2>
 
-          <p class="text-xs sm:text-sm text-sky-100 font-medium leading-relaxed">
-            Skip the traffic jams! Get picked up directly from your doorstep and ride comfortably with our verified, helmet-equipped local captains.
+          <p class="text-xs sm:text-sm text-slate-900 font-bold leading-relaxed">
+            Beat the traffic with Bhusawal's fastest two-wheeler ride. Get picked up from your doorstep in 2 minutes!
           </p>
 
-          <div class="pt-1 flex flex-wrap items-center justify-center sm:justify-start gap-3 text-[11px] font-bold text-sky-50">
-            <div class="flex items-center gap-1">
-              <span class="material-symbols-outlined text-sm text-emerald-300">verified</span>
+          <div class="pt-1 flex flex-wrap items-center justify-center sm:justify-start gap-3 text-[11px] font-black text-slate-900">
+            <div class="flex items-center gap-1 bg-white/40 px-2.5 py-1 rounded-full border border-slate-900/10">
+              <span class="material-symbols-outlined text-sm text-slate-900">verified</span>
               <span>Sanitized Helmet Included</span>
             </div>
-            <div class="flex items-center gap-1">
-              <span class="material-symbols-outlined text-sm text-amber-300">speed</span>
-              <span>2-Min Quick Pickup</span>
+            <div class="flex items-center gap-1 bg-white/40 px-2.5 py-1 rounded-full border border-slate-900/10">
+              <span class="material-symbols-outlined text-sm text-slate-900">bolt</span>
+              <span>2-Min Express Pickup</span>
             </div>
-            <div class="flex items-center gap-1">
-              <span class="material-symbols-outlined text-sm text-sky-200">security</span>
+            <div class="flex items-center gap-1 bg-white/40 px-2.5 py-1 rounded-full border border-slate-900/10">
+              <span class="material-symbols-outlined text-sm text-slate-900">security</span>
               <span>Live GPS Tracking</span>
             </div>
           </div>
         </div>
 
-        <!-- RIGHT 5 COLS: LARGE HERO ILLUSTRATION (TWO PEOPLE RIDING A SCOOTER/BIKE) -->
+        <!-- RIGHT 5 COLS: LARGE HERO ILLUSTRATION -->
         <div class="sm:col-span-5 flex items-center justify-center">
-          <div class="w-full max-w-[260px] aspect-video sm:aspect-square bg-white/10 rounded-2xl p-2 border border-white/20 shadow-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
+          <div class="w-full max-w-[260px] aspect-video sm:aspect-square bg-white rounded-2xl p-2 border-2 border-slate-900/10 shadow-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
             <img 
               src="/assets/bike_ride_hero.jpg" 
-              alt="Two people riding together on a scooter bike ride" 
+              alt="Two people riding together on a yellow scooter bike ride" 
               class="w-full h-full object-cover rounded-xl"
               onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&q=80';" 
             />
@@ -152,16 +153,16 @@ import Switcher from '../components/Switcher.astro';
     <div class="space-y-4">
       
       <!-- ==================== 1. PICKUP LOCATION ==================== -->
-      <section class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-slate-200/80 shadow-sm space-y-4 relative overflow-hidden group hover:border-skyBrand transition-all" id="pickup-section-card">
+      <section class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-slate-200/80 shadow-sm space-y-4 relative overflow-hidden group hover:border-yellowBrand transition-all" id="pickup-section-card">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-black shadow-md shrink-0">
+            <div class="w-10 h-10 rounded-2xl bg-yellowBrand text-slate-950 flex items-center justify-center font-black shadow-md shrink-0">
               <span class="material-symbols-outlined text-xl">my_location</span>
             </div>
             <div>
               <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
                 <span>1. Passenger Pickup Location</span>
-                <span class="text-[10px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Where to Board</span>
+                <span class="text-[10px] font-extrabold text-yellowDeep bg-yellowLight px-2 py-0.5 rounded-full border border-yellowBorder">Where to Board</span>
               </h2>
               <p class="text-xs text-slate-500 font-medium">Select your current location for captain pickup</p>
             </div>
@@ -170,13 +171,13 @@ import Switcher from '../components/Switcher.astro';
           <!-- ADDRESS METHOD ACTION BUTTONS -->
           <div class="flex items-center gap-1.5 flex-wrap">
             <!-- Current GPS -->
-            <button id="btn-pickup-gps" type="button" class="flex items-center gap-1 text-[11px] font-bold text-skyBrand bg-skyLight hover:bg-skyBrand hover:text-white px-2.5 py-1.5 rounded-xl border border-skyBorder transition-all shadow-xs active:scale-95">
+            <button id="btn-pickup-gps" type="button" class="flex items-center gap-1 text-[11px] font-black text-slate-950 bg-yellowBrand hover:bg-yellowDark hover:text-white px-3 py-1.5 rounded-xl border border-yellowBorder transition-all shadow-xs active:scale-95">
               <span class="material-symbols-outlined text-sm">gps_fixed</span>
               <span>GPS Location</span>
             </button>
 
             <!-- Select on Map -->
-            <button id="btn-pickup-select-map" type="button" class="flex items-center gap-1 text-[11px] font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-600 hover:text-white px-2.5 py-1.5 rounded-xl border border-indigo-200 transition-all shadow-xs active:scale-95">
+            <button id="btn-pickup-select-map" type="button" class="flex items-center gap-1 text-[11px] font-black text-slate-900 bg-yellowLight hover:bg-yellowBrand px-3 py-1.5 rounded-xl border border-yellowBorder transition-all shadow-xs active:scale-95">
               <span class="material-symbols-outlined text-sm">map</span>
               <span>Select on Map</span>
             </button>
@@ -187,13 +188,13 @@ import Switcher from '../components/Switcher.astro';
         <div class="relative">
           <label for="pickup-address-input" class="text-[11px] font-bold text-slate-600 block mb-1">Search Pickup Location (Google Maps Autocomplete)</label>
           <div class="relative flex items-center">
-            <span class="material-symbols-outlined absolute left-3.5 text-slate-400 text-lg">search</span>
+            <span class="material-symbols-outlined absolute left-3.5 text-yellowDark text-lg">search</span>
             <input 
               type="text" 
               id="pickup-address-input" 
               value="Varangaon Road, Near Station Square, Bhusawal" 
               placeholder="Search pickup landmark, colony or street in Bhusawal..." 
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-yellowBrand transition-all" 
               autocomplete="off"
             />
             <button id="clear-pickup-input" type="button" class="absolute right-3 text-slate-400 hover:text-slate-600 hidden text-xs font-bold">✕</button>
@@ -214,7 +215,7 @@ import Switcher from '../components/Switcher.astro';
               id="passenger-name" 
               value="Rahul Patil" 
               placeholder="Your Name" 
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-yellowBrand transition-all" 
             />
           </div>
 
@@ -225,7 +226,7 @@ import Switcher from '../components/Switcher.astro';
               id="passenger-phone" 
               value="9876543210" 
               placeholder="10-digit mobile number" 
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-yellowBrand transition-all" 
             />
           </div>
         </div>
@@ -237,16 +238,16 @@ import Switcher from '../components/Switcher.astro';
           </div>
 
           <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-[11px] font-bold" id="pickup-quick-chips">
-            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-skyLight text-skyBrand border border-skyBorder hover:bg-skyBrand hover:text-white transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Home - Varangaon Road, Bhusawal">
+            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-yellowLight text-yellowDeep border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Home - Varangaon Road, Bhusawal">
               🏠 Home (Varangaon Rd)
             </button>
-            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-skyLight text-skyBrand border border-skyBorder hover:bg-skyBrand hover:text-white transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Office - Railway Divisional Office, Bhusawal">
+            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-yellowLight text-yellowDeep border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Office - Railway Divisional Office, Bhusawal">
               🏢 Work (Railway Div Office)
             </button>
-            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-skyLight hover:text-skyBrand transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Jamner Road Market, Bhusawal">
+            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-yellowLight hover:text-yellowDeep transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Jamner Road Market, Bhusawal">
               🕒 Jamner Rd Market
             </button>
-            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-skyLight hover:text-skyBrand transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Bhusawal Station Platform Gate 1">
+            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-yellowLight hover:text-yellowDeep transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Bhusawal Station Platform Gate 1">
               🚉 Railway Station
             </button>
           </div>
@@ -259,7 +260,7 @@ import Switcher from '../components/Switcher.astro';
         <button 
           id="btn-swap-addresses" 
           type="button" 
-          class="flex items-center gap-2 bg-gradient-to-r from-skyBrand to-skyDark text-white px-5 py-2.5 rounded-full font-black text-xs shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white cursor-pointer group"
+          class="flex items-center gap-2 bg-gradient-to-r from-yellowBrand to-yellowDark text-slate-950 px-5 py-2.5 rounded-full font-black text-xs shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white cursor-pointer group"
           title="Swap Pickup and Drop Locations with 1 Click"
         >
           <span class="material-symbols-outlined text-base group-hover:rotate-180 transition-transform duration-500">swap_vert</span>
@@ -269,16 +270,16 @@ import Switcher from '../components/Switcher.astro';
 
 
       <!-- ==================== 2. DROP LOCATION ==================== -->
-      <section class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-slate-200/80 shadow-sm space-y-4 relative overflow-hidden group hover:border-skyBrand transition-all" id="drop-section-card">
+      <section class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-slate-200/80 shadow-sm space-y-4 relative overflow-hidden group hover:border-yellowBrand transition-all" id="drop-section-card">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-rose-500 text-white flex items-center justify-center font-black shadow-md shrink-0">
+            <div class="w-10 h-10 rounded-2xl bg-slate-900 text-yellowBrand flex items-center justify-center font-black shadow-md shrink-0">
               <span class="material-symbols-outlined text-xl">location_on</span>
             </div>
             <div>
               <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
                 <span>2. Drop Destination</span>
-                <span class="text-[10px] font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">Destination</span>
+                <span class="text-[10px] font-extrabold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">Destination</span>
               </h2>
               <p class="text-xs text-slate-500 font-medium">Select your ride destination in Bhusawal</p>
             </div>
@@ -286,12 +287,12 @@ import Switcher from '../components/Switcher.astro';
 
           <!-- ADDRESS METHOD ACTION BUTTONS -->
           <div class="flex items-center gap-1.5 flex-wrap">
-            <button id="btn-drop-gps" type="button" class="flex items-center gap-1 text-[11px] font-bold text-skyBrand bg-skyLight hover:bg-skyBrand hover:text-white px-2.5 py-1.5 rounded-xl border border-skyBorder transition-all shadow-xs active:scale-95">
+            <button id="btn-drop-gps" type="button" class="flex items-center gap-1 text-[11px] font-black text-slate-950 bg-yellowBrand hover:bg-yellowDark hover:text-white px-3 py-1.5 rounded-xl border border-yellowBorder transition-all shadow-xs active:scale-95">
               <span class="material-symbols-outlined text-sm">gps_fixed</span>
               <span>GPS Location</span>
             </button>
 
-            <button id="btn-drop-select-map" type="button" class="flex items-center gap-1 text-[11px] font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-600 hover:text-white px-2.5 py-1.5 rounded-xl border border-indigo-200 transition-all shadow-xs active:scale-95">
+            <button id="btn-drop-select-map" type="button" class="flex items-center gap-1 text-[11px] font-black text-slate-900 bg-yellowLight hover:bg-yellowBrand px-3 py-1.5 rounded-xl border border-yellowBorder transition-all shadow-xs active:scale-95">
               <span class="material-symbols-outlined text-sm">map</span>
               <span>Select on Map</span>
             </button>
@@ -302,13 +303,13 @@ import Switcher from '../components/Switcher.astro';
         <div class="relative">
           <label for="drop-address-input" class="text-[11px] font-bold text-slate-600 block mb-1">Search Drop Destination (Google Maps Autocomplete)</label>
           <div class="relative flex items-center">
-            <span class="material-symbols-outlined absolute left-3.5 text-slate-400 text-lg">flag</span>
+            <span class="material-symbols-outlined absolute left-3.5 text-slate-900 text-lg">flag</span>
             <input 
               type="text" 
               id="drop-address-input" 
               value="Jamner Road, Near Ordnance Factory Gate, Bhusawal" 
               placeholder="Search destination landmark, area or street in Bhusawal..." 
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-yellowBrand transition-all" 
               autocomplete="off"
             />
             <button id="clear-drop-input" type="button" class="absolute right-3 text-slate-400 hover:text-slate-600 hidden text-xs font-bold">✕</button>
@@ -327,16 +328,16 @@ import Switcher from '../components/Switcher.astro';
           </div>
 
           <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-[11px] font-bold" id="drop-quick-chips">
-            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-skyLight text-skyBrand border border-skyBorder hover:bg-skyBrand hover:text-white transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Ordnance Factory Estate, Jamner Road, Bhusawal">
+            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-yellowLight text-yellowDeep border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Ordnance Factory Estate, Jamner Road, Bhusawal">
               🏢 Ordnance Factory
             </button>
-            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-skyLight text-skyBrand border border-skyBorder hover:bg-skyBrand hover:text-white transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Deepnagar Thermal Power Station Colony, Bhusawal">
+            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-yellowLight text-yellowDeep border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Deepnagar Thermal Power Station Colony, Bhusawal">
               ⚡ Deepnagar Township
             </button>
-            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-skyLight hover:text-skyBrand transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Nahata Arts & Science College Chowk, Bhusawal">
+            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-yellowLight hover:text-yellowDeep transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Nahata Arts & Science College Chowk, Bhusawal">
               🎓 Nahata Chowk
             </button>
-            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-skyLight hover:text-skyBrand transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Khedi Road, Tapi River Bridge End, Bhusawal">
+            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-yellowLight hover:text-yellowDeep transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Khedi Road, Tapi River Bridge End, Bhusawal">
               🕒 Khedi Road
             </button>
           </div>
@@ -351,15 +352,15 @@ import Switcher from '../components/Switcher.astro';
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
-            <span class="text-skyBrand">🗺️</span>
+            <span class="text-yellowDark">🗺️</span>
             <span>Google Maps Route Preview</span>
           </h2>
           <p class="text-xs text-slate-500 font-medium">Real-time distance and rider route calculation in Bhusawal</p>
         </div>
 
-        <div class="flex items-center gap-2 bg-skyLight border border-skyBorder px-3 py-1 rounded-xl text-xs font-black text-skyBrand shadow-xs">
+        <div class="flex items-center gap-2 bg-yellowLight border border-yellowBorder px-3 py-1 rounded-xl text-xs font-black text-yellowDeep shadow-xs">
           <span>⚡ <span id="route-distance-text">3.2 km</span></span>
-          <span class="text-slate-300">•</span>
+          <span class="text-yellowDark/40">•</span>
           <span>⏱️ <span id="route-time-text">10 mins ETA</span></span>
         </div>
       </div>
@@ -375,7 +376,7 @@ import Switcher from '../components/Switcher.astro';
     <section class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
       <div>
         <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
-          <span class="text-skyBrand text-lg">🛵</span>
+          <span class="text-yellowDark text-lg">🛵</span>
           <span>Choose Your Ride Type</span>
         </h2>
         <p class="text-xs text-slate-500 font-medium">Select your preferred passenger ride option</p>
@@ -384,23 +385,23 @@ import Switcher from '../components/Switcher.astro';
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="ride-type-grid">
         
         <!-- Standard Scooter Ride -->
-        <button type="button" class="ride-type-btn active p-4 rounded-2xl border-2 border-skyBrand bg-skyLight text-left space-y-2 cursor-pointer transition-all shadow-xs active:scale-95" data-type="Standard Scooter" data-base="20" data-perkm="7">
+        <button type="button" class="ride-type-btn active p-4 rounded-2xl border-2 border-yellowBrand bg-yellowLight text-left space-y-2 cursor-pointer transition-all shadow-xs active:scale-95" data-type="Standard Scooter" data-base="20" data-perkm="7">
           <div class="flex items-center justify-between">
             <span class="text-2xl">🛵</span>
-            <span class="bg-skyBrand text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">FASTEST</span>
+            <span class="bg-yellowBrand text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase border border-yellowDark/20">FASTEST</span>
           </div>
           <div>
             <h3 class="text-xs font-black text-slate-900">Standard Scooter Ride</h3>
-            <p class="text-[11px] font-semibold text-slate-500 mt-0.5">Quick single-passenger ride</p>
+            <p class="text-[11px] font-semibold text-slate-600 mt-0.5">Quick single-passenger ride</p>
           </div>
-          <div class="pt-1 flex items-baseline justify-between border-t border-skyBorder">
+          <div class="pt-1 flex items-baseline justify-between border-t border-yellowBorder">
             <span class="text-xs font-bold text-slate-600">Fare: ₹20 base + ₹7/km</span>
-            <span class="text-sm font-black text-skyBrand ride-option-fare">₹42</span>
+            <span class="text-sm font-black text-yellowDeep ride-option-fare">₹42</span>
           </div>
         </button>
 
         <!-- Electric EV Scooter Ride -->
-        <button type="button" class="ride-type-btn p-4 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-left space-y-2 cursor-pointer transition-all shadow-xs hover:border-skyBrand active:scale-95" data-type="Electric EV Ride" data-base="15" data-perkm="6">
+        <button type="button" class="ride-type-btn p-4 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-left space-y-2 cursor-pointer transition-all shadow-xs hover:border-yellowBrand active:scale-95" data-type="Electric EV Ride" data-base="15" data-perkm="6">
           <div class="flex items-center justify-between">
             <span class="text-2xl">⚡</span>
             <span class="bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">ECO FRIENDLY</span>
@@ -411,15 +412,15 @@ import Switcher from '../components/Switcher.astro';
           </div>
           <div class="pt-1 flex items-baseline justify-between border-t border-slate-200">
             <span class="text-xs font-bold text-slate-600">Fare: ₹15 base + ₹6/km</span>
-            <span class="text-sm font-black text-skyBrand ride-option-fare">₹34</span>
+            <span class="text-sm font-black text-yellowDeep ride-option-fare">₹34</span>
           </div>
         </button>
 
         <!-- Premium Helmet Extra Comfort -->
-        <button type="button" class="ride-type-btn p-4 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-left space-y-2 cursor-pointer transition-all shadow-xs hover:border-skyBrand active:scale-95" data-type="Comfort Plus Ride" data-base="25" data-perkm="8">
+        <button type="button" class="ride-type-btn p-4 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-left space-y-2 cursor-pointer transition-all shadow-xs hover:border-yellowBrand active:scale-95" data-type="Comfort Plus Ride" data-base="25" data-perkm="8">
           <div class="flex items-center justify-between">
             <span class="text-2xl">🪖</span>
-            <span class="bg-indigo-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">COMFORT PLUS</span>
+            <span class="bg-slate-900 text-yellowBrand text-[9px] font-black px-2 py-0.5 rounded-full uppercase">COMFORT PLUS</span>
           </div>
           <div>
             <h3 class="text-xs font-black text-slate-900">Comfort Plus Ride</h3>
@@ -427,7 +428,7 @@ import Switcher from '../components/Switcher.astro';
           </div>
           <div class="pt-1 flex items-baseline justify-between border-t border-slate-200">
             <span class="text-xs font-bold text-slate-600">Fare: ₹25 base + ₹8/km</span>
-            <span class="text-sm font-black text-skyBrand ride-option-fare">₹50</span>
+            <span class="text-sm font-black text-yellowDeep ride-option-fare">₹50</span>
           </div>
         </button>
 
@@ -436,10 +437,10 @@ import Switcher from '../components/Switcher.astro';
 
 
     <!-- ==================== ESTIMATED FARE & TIME SUMMARY ==================== -->
-    <section class="bg-gradient-to-br from-skyLight via-white to-blue-50/50 rounded-3xl p-5 sm:p-6 border border-skyBorder shadow-sm space-y-4">
+    <section class="bg-gradient-to-br from-yellowLight via-white to-amber-50/50 rounded-3xl p-5 sm:p-6 border border-yellowBorder shadow-sm space-y-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-skyBrand text-white flex items-center justify-center font-black shadow-xs">
+          <div class="w-9 h-9 rounded-xl bg-yellowBrand text-slate-950 flex items-center justify-center font-black shadow-xs">
             <span class="material-symbols-outlined text-lg">receipt_long</span>
           </div>
           <div>
@@ -472,7 +473,7 @@ import Switcher from '../components/Switcher.astro';
 
         <div class="flex items-center justify-between text-base font-black font-display text-slate-900 pt-2 border-t border-slate-200">
           <span>Total Fare Payable</span>
-          <span class="text-xl text-skyBrand" id="total-fare-display">₹32</span>
+          <span class="text-xl text-yellowDeep font-black" id="total-fare-display">₹32</span>
         </div>
       </div>
     </section>
@@ -481,13 +482,13 @@ import Switcher from '../components/Switcher.astro';
     <!-- ==================== PASSENGER SAFETY INFORMATION ==================== -->
     <section class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-4">
       <div class="flex items-center gap-2">
-        <span class="text-skyBrand text-lg">🛡️</span>
+        <span class="text-yellowDark text-lg">🛡️</span>
         <h2 class="text-sm font-black font-display text-slate-900 uppercase tracking-wider">Passenger Safety & Comfort Assurance</h2>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-100 space-y-1">
-          <div class="flex items-center gap-1.5 text-skyBrand text-xs font-black">
+          <div class="flex items-center gap-1.5 text-yellowDeep text-xs font-black">
             <span class="material-symbols-outlined text-base">verified_user</span>
             <span>Clean Helmet Provided</span>
           </div>
@@ -522,7 +523,7 @@ import Switcher from '../components/Switcher.astro';
       <!-- MODAL HEADER -->
       <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-skyBrand text-xl">pin_drop</span>
+          <span class="material-symbols-outlined text-yellowBrand text-xl">pin_drop</span>
           <div>
             <h3 class="text-sm font-black font-display" id="modal-map-title">Select Location on Map</h3>
             <p class="text-[10px] text-slate-400 font-medium">Drag map to pin exact spot in Bhusawal</p>
@@ -544,11 +545,11 @@ import Switcher from '../components/Switcher.astro';
       <!-- SELECTED LOCATION FOOTER -->
       <div class="p-4 bg-white border-t border-slate-100 space-y-3">
         <div>
-          <span class="text-[10px] font-black text-skyBrand uppercase tracking-wider block">Selected Location</span>
+          <span class="text-[10px] font-black text-yellowDeep uppercase tracking-wider block">Selected Location</span>
           <p class="text-xs font-bold text-slate-800 truncate" id="picker-address-text">Varangaon Road, Bhusawal</p>
         </div>
 
-        <button id="btn-confirm-map-picker" type="button" class="w-full py-3 bg-skyBrand hover:bg-skyDark text-white text-xs font-black rounded-xl shadow-md transition-all active:scale-95">
+        <button id="btn-confirm-map-picker" type="button" class="w-full py-3 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white text-xs font-black rounded-xl shadow-md transition-all active:scale-95">
           Confirm Selected Location
         </button>
       </div>
@@ -557,23 +558,23 @@ import Switcher from '../components/Switcher.astro';
   </div>
 
 
-  <!-- ==================== BOOK BIKE RIDE BUTTON (FIXED BOTTOM ACTION BAR) ==================== -->
+  <!-- ==================== BOOK BIKE RIDE BUTTON (YELLOW BOTTOM ACTION BAR) ==================== -->
   <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3.5 shadow-2xl">
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
       
       <div>
         <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Estimated Fare</span>
         <div class="flex items-baseline gap-1.5">
-          <span class="text-xl sm:text-2xl font-black font-display text-skyBrand" id="bar-fare-total">₹32</span>
+          <span class="text-xl sm:text-2xl font-black font-display text-yellowDeep" id="bar-fare-total">₹32</span>
           <span class="text-xs text-slate-400 line-through font-bold">₹42</span>
         </div>
       </div>
 
-      <!-- BOOK BIKE RIDE BUTTON -->
+      <!-- BOOK BIKE RIDE BUTTON (YELLOW & BLACK) -->
       <button 
         id="btn-book-bike-ride" 
         type="button" 
-        class="flex-1 sm:flex-none px-6 sm:px-10 py-3.5 bg-skyBrand hover:bg-skyDark text-white text-sm font-black rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+        class="flex-1 sm:flex-none px-6 sm:px-10 py-3.5 bg-gradient-to-r from-yellowBrand to-amber-400 text-slate-950 hover:bg-yellowDark text-sm font-black rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer border border-yellowDark/20"
       >
         <span>Book Bike Ride</span>
         <span class="material-symbols-outlined text-lg">arrow_forward</span>
@@ -630,13 +631,13 @@ import Switcher from '../components/Switcher.astro';
 
         var pickupIcon = L.divIcon({
           className: 'custom-pin-icon',
-          html: '<div style="background:#10B981;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #fff;">📍</div>',
+          html: '<div style="background:#FACC15;color:#000;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #000;">📍</div>',
           iconSize: [32, 32]
         });
 
         var dropIcon = L.divIcon({
           className: 'custom-pin-icon',
-          html: '<div style="background:#EF4444;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #fff;">🏁</div>',
+          html: '<div style="background:#0F172A;color:#FACC15;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #FACC15;">🏁</div>',
           iconSize: [32, 32]
         });
 
@@ -650,10 +651,9 @@ import Switcher from '../components/Switcher.astro';
         if (!map) return;
         if (routePolyline) map.removeLayer(routePolyline);
 
-        // Recalculate straight distance
         var lat1 = pickupCoords[0], lon1 = pickupCoords[1];
         var lat2 = dropCoords[0], lon2 = dropCoords[1];
-        var R = 6371; // km
+        var R = 6371;
         var dLat = (lat2 - lat1) * Math.PI / 180;
         var dLon = (lon2 - lon1) * Math.PI / 180;
         var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -667,7 +667,7 @@ import Switcher from '../components/Switcher.astro';
         if (dropMarker) dropMarker.setLatLng(dropCoords);
 
         var latlngs = [pickupCoords, [(pickupCoords[0]+dropCoords[0])/2, (pickupCoords[1]+dropCoords[1])/2], dropCoords];
-        routePolyline = L.polyline(latlngs, { color: '#0284C7', weight: 4, dashArray: '8, 8' }).addTo(map);
+        routePolyline = L.polyline(latlngs, { color: '#CA8A04', weight: 4, dashArray: '8, 8' }).addTo(map);
         map.fitBounds(routePolyline.getBounds(), { padding: [35, 35] });
 
         var estMins = Math.max(5, Math.round(distanceKm * 3));
@@ -680,7 +680,6 @@ import Switcher from '../components/Switcher.astro';
         validateAddresses();
       }
 
-      // Run map init after DOM loads
       if (document.readyState === 'complete' || document.readyState === 'interactive') {
         setTimeout(initRouteMap, 300);
       } else {
@@ -706,7 +705,6 @@ import Switcher from '../components/Switcher.astro';
         if (fareDisplayEl) fareDisplayEl.textContent = '₹' + finalTotal;
         if (barFareTotalEl) barFareTotalEl.textContent = '₹' + finalTotal;
 
-        // Update Option Fares
         var optionBtns = document.querySelectorAll('.ride-type-btn');
         optionBtns.forEach(function(btn) {
           var bFare = parseInt(btn.getAttribute('data-base') || '20');
@@ -801,8 +799,8 @@ import Switcher from '../components/Switcher.astro';
             dropdown.innerHTML = '<div class="p-3 text-xs text-slate-400 font-semibold">No landmark match. Enter full street address.</div>';
           } else {
             dropdown.innerHTML = matches.map(function(loc) {
-              return '<div class="p-3 hover:bg-skyLight cursor-pointer text-xs font-bold text-slate-800 border-b border-slate-100 flex items-center gap-2 suggestion-item" data-name="' + loc.name + '" data-lat="' + loc.lat + '" data-lng="' + loc.lng + '">' +
-                '<span class="material-symbols-outlined text-skyBrand text-sm">location_on</span>' +
+              return '<div class="p-3 hover:bg-yellowLight cursor-pointer text-xs font-bold text-slate-800 border-b border-slate-100 flex items-center gap-2 suggestion-item" data-name="' + loc.name + '" data-lat="' + loc.lat + '" data-lng="' + loc.lng + '">' +
+                '<span class="material-symbols-outlined text-yellowDark text-sm">location_on</span>' +
                 '<span>' + loc.name + '</span>' +
               '</div>';
             }).join('');
@@ -919,7 +917,7 @@ import Switcher from '../components/Switcher.astro';
 
               updateRoutePolyline();
 
-              btn.innerHTML = '<span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span> Located!';
+              btn.innerHTML = '<span class="material-symbols-outlined text-sm text-slate-950">check_circle</span> Located!';
               setTimeout(function() {
                 btn.innerHTML = '<span class="material-symbols-outlined text-sm">gps_fixed</span> <span>GPS Location</span>';
               }, 2000);
@@ -960,10 +958,10 @@ import Switcher from '../components/Switcher.astro';
       rideTypeBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
           rideTypeBtns.forEach(function(b) {
-            b.classList.remove('active', 'border-skyBrand', 'bg-skyLight');
+            b.classList.remove('active', 'border-yellowBrand', 'bg-yellowLight');
             b.classList.add('border-slate-200/80', 'bg-slate-50');
           });
-          btn.classList.add('active', 'border-skyBrand', 'bg-skyLight');
+          btn.classList.add('active', 'border-yellowBrand', 'bg-yellowLight');
           btn.classList.remove('border-slate-200/80', 'bg-slate-50');
 
           selectedRideType = btn.getAttribute('data-type');
@@ -1013,7 +1011,7 @@ import Switcher from '../components/Switcher.astro';
             total: finalFare,
             status: 'Captain Assigned',
             captain: 'Karan Sharma (Fleet Captain)',
-            bikeNumber: 'MH 19 BJ 4820 (Sky Blue Scooter)',
+            bikeNumber: 'MH 19 BJ 4820 (Yellow Scooter)',
             timestamp: new Date().toISOString()
           };
 
@@ -1024,12 +1022,11 @@ import Switcher from '../components/Switcher.astro';
             localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
           } catch(e) {}
 
-          alert('🛵 Bike ride booked! Captain Karan Sharma is assigned and reaching pickup location in 2 minutes. Redirecting to live tracking...');
+          alert('⚡ Bike taxi ride booked! Captain Karan Sharma is assigned and reaching pickup location in 2 minutes. Redirecting to live tracking...');
           window.location.href = '/track_order';
         });
       }
 
-      // Input change triggers validation
       var pIn = document.getElementById('pickup-address-input');
       var dIn = document.getElementById('drop-address-input');
       if (pIn) pIn.addEventListener('input', validateAddresses);
