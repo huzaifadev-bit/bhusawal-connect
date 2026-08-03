@@ -162,14 +162,14 @@ const featuredPartnerRestaurants = [
       </div>
     </div>
 
-    <!-- Notification Button & Cart Button -->
+    <!-- Notification Button & Global Cart Button -->
     <div class="flex items-center gap-2">
       <a href="/notifications" class="relative w-10 h-10 rounded-full bg-redLight text-redBrand flex items-center justify-center font-bold hover:bg-red-100 transition-colors" title="Notifications">
         <span class="material-symbols-outlined text-xl">notifications</span>
         <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-redBrand rounded-full border-2 border-white animate-ping"></span>
       </a>
 
-      <a href="/cart" class="relative w-10 h-10 rounded-full bg-redBrand text-white flex items-center justify-center font-bold hover:bg-redDark transition-colors shadow-md">
+      <a href="/cart" class="relative w-10 h-10 rounded-full bg-redBrand text-white flex items-center justify-center font-bold hover:bg-redDark transition-colors shadow-md group">
         <span class="material-symbols-outlined text-xl">shopping_bag</span>
         <span id="food-cart-badge" class="absolute -top-1 -right-1 bg-slate-900 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
       </a>
@@ -362,6 +362,7 @@ const featuredPartnerRestaurants = [
                       data-name={item.name} 
                       data-price={item.price} 
                       data-img={item.image}
+                      data-category={item.category}
                     >
                       <!-- 7. ADD TO CART BUTTON -->
                       <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs flex items-center gap-1">
@@ -404,7 +405,7 @@ const featuredPartnerRestaurants = [
           <span class="text-xs text-slate-400 font-bold">•</span>
           <span id="float-cart-total" class="text-sm font-black text-white">₹0</span>
         </div>
-        <p class="text-[10px] text-slate-400 font-semibold mt-0.5">Delivery fee ₹30 added at checkout</p>
+        <p class="text-[10px] text-slate-400 font-semibold mt-0.5">Fixed delivery fee ₹30 added at checkout</p>
       </div>
     </div>
 
@@ -416,39 +417,47 @@ const featuredPartnerRestaurants = [
 
   <Switcher />
 
-  <!-- Dynamic Client Script for Cart Sync, Search & Diet Filter -->
+  <!-- Dynamic Client Script for Global Cart Integration & Real-time Updates -->
   <script is:inline>
     (function() {
       var currentDietFilter = 'all';
 
-      function getCart() {
+      // 1. READ FROM EXISTING GLOBAL CART (localStorage 'bhusawal_cart')
+      function getGlobalCart() {
+        let raw = [];
         try {
-          return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-        } catch(e) {
-          return [];
-        }
+          raw = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+        } catch(e) {}
+        if (!Array.isArray(raw)) return [];
+        return raw;
       }
 
-      function saveCart(cart) {
+      // 2. SAVE TO EXISTING GLOBAL CART & TRIGGER BROADCAST EVENTS
+      function saveGlobalCart(cart) {
         localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-        updateCartBadges();
+        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new Event('cartUpdated'));
+        updateAllCartUI();
       }
 
-      function updateCartBadges() {
-        var cart = getCart();
+      // 3. SYNCHRONIZE BADGES, FLOATING CART BAR & CARD STEPPERS
+      function updateAllCartUI() {
+        var cart = getGlobalCart();
         var totalCount = 0;
-        var totalPrice = 0;
+        var subtotalPrice = 0;
 
         cart.forEach(function(item) {
-          totalCount += item.quantity || 1;
-          totalPrice += (item.price || 0) * (item.quantity || 1);
+          var qty = item.quantity || 1;
+          var p = parseFloat(item.price || item.mrp || item.MRP || 0);
+          totalCount += qty;
+          subtotalPrice += p * qty;
         });
 
-        // Update header badge
+        // Update Header Cart Badge
         var badge = document.getElementById('food-cart-badge');
         if (badge) badge.textContent = totalCount;
 
-        // Update floating bar
+        // Update Bottom Floating Cart Bar
         var floatBar = document.getElementById('food-floating-cart-bar');
         var floatCount = document.getElementById('float-cart-count');
         var floatTotal = document.getElementById('float-cart-total');
@@ -457,13 +466,13 @@ const featuredPartnerRestaurants = [
           if (totalCount > 0) {
             floatBar.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
             if (floatCount) floatCount.textContent = totalCount + (totalCount === 1 ? ' ITEM' : ' ITEMS');
-            if (floatTotal) floatTotal.textContent = '₹' + totalPrice;
+            if (floatTotal) floatTotal.textContent = '₹' + subtotalPrice;
           } else {
             floatBar.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
           }
         }
 
-        // Sync card quantity controls
+        // Sync Product Card Quantity Selectors (- 1 +)
         document.querySelectorAll('.food-direct-action-box').forEach(function(box) {
           var itemId = box.getAttribute('data-id');
           var addBtn = box.querySelector('.btn-add-direct-food');
@@ -473,18 +482,22 @@ const featuredPartnerRestaurants = [
           var existing = cart.find(function(c) { return c.id === itemId; });
           if (existing && existing.quantity > 0) {
             if (addBtn) addBtn.classList.add('hidden');
-            if (qtyWrapper) qtyWrapper.classList.remove('hidden');
-            if (qtyWrapper) qtyWrapper.classList.add('flex');
+            if (qtyWrapper) {
+              qtyWrapper.classList.remove('hidden');
+              qtyWrapper.classList.add('flex');
+            }
             if (qtyNum) qtyNum.textContent = existing.quantity;
           } else {
             if (addBtn) addBtn.classList.remove('hidden');
-            if (qtyWrapper) qtyWrapper.classList.add('hidden');
-            if (qtyWrapper) qtyWrapper.classList.remove('flex');
+            if (qtyWrapper) {
+              qtyWrapper.classList.add('hidden');
+              qtyWrapper.classList.remove('flex');
+            }
           }
         });
       }
 
-      // Add to cart click handler
+      // 4. LISTEN FOR ADD TO CART & STEPPER BUTTON CLICKS
       document.addEventListener('click', function(e) {
         var addBtn = e.target.closest('.btn-add-direct-food');
         if (addBtn) {
@@ -495,8 +508,9 @@ const featuredPartnerRestaurants = [
           var name = box.getAttribute('data-name');
           var price = parseFloat(box.getAttribute('data-price')) || 0;
           var img = box.getAttribute('data-img');
+          var category = box.getAttribute('data-category') || 'Food';
 
-          var cart = getCart();
+          var cart = getGlobalCart();
           var existing = cart.find(function(c) { return c.id === id; });
           if (existing) {
             existing.quantity = (existing.quantity || 1) + 1;
@@ -505,12 +519,14 @@ const featuredPartnerRestaurants = [
               id: id,
               name: name,
               price: price,
+              mrp: price,
               image: img,
               quantity: 1,
-              vendor: 'Bhusawal Food Express'
+              restaurant: 'Bhusawal Food Express',
+              cat: category
             });
           }
-          saveCart(cart);
+          saveGlobalCart(cart);
           return;
         }
 
@@ -519,11 +535,11 @@ const featuredPartnerRestaurants = [
           var box = plusBtn.closest('.food-direct-action-box');
           if (!box) return;
           var id = box.getAttribute('data-id');
-          var cart = getCart();
+          var cart = getGlobalCart();
           var existing = cart.find(function(c) { return c.id === id; });
           if (existing) {
             existing.quantity = (existing.quantity || 1) + 1;
-            saveCart(cart);
+            saveGlobalCart(cart);
           }
           return;
         }
@@ -533,7 +549,7 @@ const featuredPartnerRestaurants = [
           var box = minusBtn.closest('.food-direct-action-box');
           if (!box) return;
           var id = box.getAttribute('data-id');
-          var cart = getCart();
+          var cart = getGlobalCart();
           var existingIndex = cart.findIndex(function(c) { return c.id === id; });
           if (existingIndex > -1) {
             if (cart[existingIndex].quantity > 1) {
@@ -541,13 +557,13 @@ const featuredPartnerRestaurants = [
             } else {
               cart.splice(existingIndex, 1);
             }
-            saveCart(cart);
+            saveGlobalCart(cart);
           }
           return;
         }
       });
 
-      // Filter & Search Engine
+      // 5. SEARCH & DIET FILTER ENGINE
       function filterProducts() {
         var query = (document.getElementById('food-search-input')?.value || '').toLowerCase().trim();
 
@@ -570,7 +586,6 @@ const featuredPartnerRestaurants = [
         });
       }
 
-      // Search listeners
       var searchInput = document.getElementById('food-search-input');
       var clearSearchBtn = document.getElementById('clear-food-search');
 
@@ -592,7 +607,6 @@ const featuredPartnerRestaurants = [
         });
       }
 
-      // Diet Filter Buttons Listener
       document.querySelectorAll('.diet-filter-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
           document.querySelectorAll('.diet-filter-btn').forEach(function(b) {
@@ -607,9 +621,13 @@ const featuredPartnerRestaurants = [
         });
       });
 
+      // Listen to window storage events from other tabs
+      window.addEventListener('storage', updateAllCartUI);
+      window.addEventListener('cartUpdated', updateAllCartUI);
+
       // Initial Badges Sync
-      document.addEventListener('DOMContentLoaded', updateCartBadges);
-      updateCartBadges();
+      document.addEventListener('DOMContentLoaded', updateAllCartUI);
+      updateAllCartUI();
     })();
   </script>
 
