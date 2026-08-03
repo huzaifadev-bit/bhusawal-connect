@@ -238,14 +238,7 @@ import Switcher from '../components/Switcher.astro';
         document.getElementById('header-order-id').textContent = 'Order ID: #' + activeOrder.id;
       }
 
-      // EXACT 6-STEP MEDICINE ORDER TIMELINE AS REQUESTED:
-      // 1. Order Received
-      // 2. Prescription Verified (if required)
-      // 3. Medicines Packed
-      // 4. Picked Up
-      // 5. Out For Delivery
-      // 6. Delivered
-
+      // 6-STEP MEDICINE/GROCERY TIMELINE
       const MED_TIMELINE_STEPS = [
         { step: 1, label: 'Order Received', icon: '📥' },
         { step: 2, label: 'Prescription Verified', icon: '✅' },
@@ -255,18 +248,40 @@ import Switcher from '../components/Switcher.astro';
         { step: 6, label: 'Delivered', icon: '🎉' }
       ];
 
+      // EXACT 7-STEP PARCEL & BIKE RIDE TIMELINE AS REQUESTED:
+      // 1. Request Accepted
+      // 2. Partner Travelling to Pickup
+      // 3. Partner Reached Pickup
+      // 4. Item Collected
+      // 5. Travelling to Drop Location
+      // 6. Arriving
+      // 7. Delivered
+      const PARCEL_TIMELINE_STEPS = [
+        { step: 1, label: 'Request Accepted', icon: '✅' },
+        { step: 2, label: 'Travelling to Pickup', icon: '🛵' },
+        { step: 3, label: 'Reached Pickup', icon: '📍' },
+        { step: 4, label: 'Item Collected', icon: '📦' },
+        { step: 5, label: 'Travelling to Drop', icon: '🚚' },
+        { step: 6, label: 'Arriving', icon: '⚡' },
+        { step: 7, label: 'Delivered', icon: '🎉' }
+      ];
+
+      const isParcelOrRide = activeOrder.type === 'PARCEL' || activeOrder.type === 'BIKE_RIDE';
+      const currentStepsList = isParcelOrRide ? PARCEL_TIMELINE_STEPS : MED_TIMELINE_STEPS;
+      const totalStepsCount = currentStepsList.length;
+
       const stepsBar = document.getElementById('tracking-steps-bar');
       const stepNumLabel = document.getElementById('progress-bar-step-num');
       const barLabel = document.getElementById('progress-bar-label');
 
-      if (barLabel) barLabel.textContent = "ORDER TIMELINE";
+      if (barLabel) barLabel.textContent = isParcelOrRide ? "LIVE RIDER TRACKING" : "ORDER TIMELINE";
 
       function renderStepBar(currentStep) {
         if (!stepsBar) return;
-        if (stepNumLabel) stepNumLabel.textContent = `Step ${currentStep} of 6`;
+        if (stepNumLabel) stepNumLabel.textContent = `Step ${currentStep} of ${totalStepsCount}`;
 
         let sHtml = '';
-        MED_TIMELINE_STEPS.forEach(s => {
+        currentStepsList.forEach(s => {
           const isDone = currentStep >= s.step;
           const isCurrent = currentStep === s.step;
           sHtml += `
@@ -274,28 +289,45 @@ import Switcher from '../components/Switcher.astro';
               <div class="w-7 h-7 rounded-full ${isCurrent ? 'bg-blueBrand text-white font-black animate-pulse ring-2 ring-blue-200' : (isDone ? 'bg-emerald-500 text-white font-black' : 'bg-slate-200 text-slate-500')} flex items-center justify-center text-xs shadow-xs">
                 ${isDone && !isCurrent ? '✓' : s.icon}
               </div>
-              <span class="text-[8px] sm:text-[9px] ${isCurrent ? 'font-black text-blueBrand' : (isDone ? 'font-black text-slate-900' : 'font-bold text-slate-400')} leading-tight">
+              <span class="text-[7.5px] sm:text-[8.5px] ${isCurrent ? 'font-black text-blueBrand' : (isDone ? 'font-black text-slate-900' : 'font-bold text-slate-400')} leading-tight">
                 ${s.label}
               </span>
             </div>
           `;
         });
-        stepsBar.className = "grid grid-cols-6 gap-1 text-center";
+        stepsBar.className = isParcelOrRide ? "grid grid-cols-7 gap-1 text-center" : "grid grid-cols-6 gap-1 text-center";
         stepsBar.innerHTML = sHtml;
       }
 
-      function getMedicineStepNum(status) {
-        if (!status || status === 'Order Received' || status === 'Confirmed' || status === 'Prescription Uploaded') return 1;
-        if (status === 'Under Verification' || status === 'Verified' || status === 'Prescription Verified') return 2;
-        if (status === 'Medicines Packed' || status === 'Packed') return 3;
-        if (status === 'Picked Up') return 4;
-        if (status === 'Out For Delivery' || status === 'Out for Delivery') return 5;
-        if (status === 'Delivered') return 6;
-        return 2;
+      function getStepNum(status) {
+        if (isParcelOrRide) {
+          if (!status || status === 'Request Accepted' || status === 'ACCEPTED' || status === 'Rider Assigned' || status === 'Captain Assigned') return 1;
+          if (status === 'Travelling to Pickup' || status === 'EN_ROUTE_PICKUP') return 2;
+          if (status === 'Reached Pickup' || status === 'AT_PICKUP') return 3;
+          if (status === 'Item Collected' || status === 'PICKED_UP' || status === 'Collected') return 4;
+          if (status === 'Travelling to Drop Location' || status === 'EN_ROUTE_DROP' || status === 'OUT_FOR_DELIVERY') return 5;
+          if (status === 'Arriving' || status === 'NEARBY') return 6;
+          if (status === 'Delivered' || status === 'DELIVERED') return 7;
+          return 2;
+        } else {
+          if (!status || status === 'Order Received' || status === 'Confirmed' || status === 'Prescription Uploaded') return 1;
+          if (status === 'Under Verification' || status === 'Verified' || status === 'Prescription Verified') return 2;
+          if (status === 'Medicines Packed' || status === 'Packed') return 3;
+          if (status === 'Picked Up') return 4;
+          if (status === 'Out For Delivery' || status === 'Out for Delivery') return 5;
+          if (status === 'Delivered') return 6;
+          return 2;
+        }
       }
 
-      const initialStep = getMedicineStepNum(activeOrder.status);
+      const initialStep = getStepNum(activeOrder.status);
       renderStepBar(initialStep);
+
+      // Populate Rider Details if provided
+      if (activeOrder.rider || activeOrder.captain) {
+        const rName = document.getElementById('rider-name');
+        if (rName) rName.textContent = activeOrder.rider || activeOrder.captain;
+      }
 
       // Render Order Summary
       if (activeOrder.items && Array.isArray(activeOrder.items) && activeOrder.items.length > 0) {
@@ -318,9 +350,13 @@ import Switcher from '../components/Switcher.astro';
         const listEl = document.getElementById('order-summary-items-list');
         if (listEl) {
           listEl.innerHTML = `
-            <div class="text-xs font-bold text-slate-600 bg-blue-50 p-2.5 rounded-xl border border-blue-100">
-              📄 Prescription Document Attached (${activeOrder.fileName || 'Doctor_Prescription.pdf'})
-              ${activeOrder.notes ? '<p class="text-[11px] text-slate-500 font-normal mt-0.5">Note: ' + activeOrder.notes + '</p>' : ''}
+            <div class="text-xs font-bold text-slate-700 bg-blue-50/80 p-3 rounded-xl border border-blue-100 space-y-1">
+              <div class="flex justify-between font-black text-slate-900">
+                <span>📦 ${activeOrder.category || 'Express Delivery Package'}</span>
+                <span class="text-blueBrand">${activeOrder.weight || 'Standard Weight'}</span>
+              </div>
+              <p class="text-[11px] text-slate-500 font-medium">📍 Pickup: ${activeOrder.pickupAddress || 'Bhusawal'}</p>
+              <p class="text-[11px] text-slate-500 font-medium">🏁 Drop: ${activeOrder.dropAddress || 'Bhusawal'}</p>
             </div>
           `;
         }
@@ -331,10 +367,10 @@ import Switcher from '../components/Switcher.astro';
         if (totalEl) totalEl.textContent = '₹' + activeOrder.total;
       }
 
-      const storeLat = 21.0455;
-      const storeLng = 75.7858;
-      const custLat = parseFloat(activeOrder.lat) || 21.0520;
-      const custLng = parseFloat(activeOrder.lng) || 75.7980;
+      const storeLat = (activeOrder.pickupCoords && activeOrder.pickupCoords[0]) ? activeOrder.pickupCoords[0] : 21.0455;
+      const storeLng = (activeOrder.pickupCoords && activeOrder.pickupCoords[1]) ? activeOrder.pickupCoords[1] : 75.7893;
+      const custLat = (activeOrder.dropCoords && activeOrder.dropCoords[0]) ? activeOrder.dropCoords[0] : 21.0385;
+      const custLng = (activeOrder.dropCoords && activeOrder.dropCoords[1]) ? activeOrder.dropCoords[1] : 75.8050;
 
       function showToast(msg) {
         const toast = document.getElementById('toast-notification');
@@ -346,7 +382,7 @@ import Switcher from '../components/Switcher.astro';
         }
       }
 
-      // Initialize Google Live Tracker Engine (Shared across Food, Grocery & Medicine)
+      // Initialize Google Live Tracker Engine
       const tracker = new window.GoogleLiveTracker('bhusawal-map', {
         storePos: { lat: storeLat, lng: storeLng },
         custPos: { lat: custLat, lng: custLng },
@@ -362,46 +398,76 @@ import Switcher from '../components/Switcher.astro';
           }
         },
         onEtaUpdate: (etaText, distText) => {
-          document.getElementById('top-eta-mins').textContent = etaText;
-          document.getElementById('banner-eta-text').textContent = etaText + ' (' + distText + ')';
+          const topEta = document.getElementById('top-eta-mins');
+          const bannerEta = document.getElementById('banner-eta-text');
+          if (topEta) topEta.textContent = etaText;
+          if (bannerEta) bannerEta.textContent = etaText + ' (' + distText + ')';
         },
         onStatusChange: (status) => {
           const titleEl = document.getElementById('top-status-title');
           const subEl = document.getElementById('top-status-sub');
           
-          if (status === 'ACCEPTED' || status === 'Order Received') {
-            if (titleEl) titleEl.textContent = "Order Received";
-            if (subEl) subEl.textContent = "Partner pharmacy accepted your order";
-            renderStepBar(1);
-          } else if (status === 'PREPARING_FOOD' || status === 'Under Verification' || status === 'Verified' || status === 'Prescription Verified') {
-            if (titleEl) titleEl.textContent = "Prescription Verified";
-            if (subEl) subEl.textContent = "Certified pharmacist verified your prescription";
-            renderStepBar(2);
-          } else if (status === 'FOOD_READY' || status === 'Medicines Packed') {
-            if (titleEl) titleEl.textContent = "Medicines Packed";
-            if (subEl) subEl.textContent = "Sealed at pharmacy & ready for pickup";
-            renderStepBar(3);
-          } else if (status === 'PICKED_UP') {
-            if (titleEl) titleEl.textContent = "Picked Up";
-            if (subEl) subEl.textContent = "Rider collected your medicine parcel";
-            renderStepBar(4);
-          } else if (status === 'OUT_FOR_DELIVERY') {
-            if (titleEl) titleEl.textContent = "Out For Delivery";
-            if (subEl) subEl.textContent = "Rider is delivering to your doorstep";
-            renderStepBar(5);
-          } else if (status === 'DELIVERED') {
-            onDeliveryComplete();
+          if (isParcelOrRide) {
+            if (status === 'ACCEPTED' || status === 'Request Accepted' || status === 'Order Received') {
+              if (titleEl) titleEl.textContent = "Request Accepted";
+              if (subEl) subEl.textContent = "Delivery partner accepted your booking";
+              renderStepBar(1);
+            } else if (status === 'TRAVELLING_TO_PICKUP' || status === 'PREPARING_FOOD') {
+              if (titleEl) titleEl.textContent = "Partner Travelling to Pickup";
+              if (subEl) subEl.textContent = "Rider is en route to pickup location";
+              renderStepBar(2);
+            } else if (status === 'REACHED_PICKUP' || status === 'FOOD_READY') {
+              if (titleEl) titleEl.textContent = "Partner Reached Pickup";
+              if (subEl) subEl.textContent = "Rider arrived at pickup spot";
+              renderStepBar(3);
+            } else if (status === 'ITEM_COLLECTED' || status === 'PICKED_UP') {
+              if (titleEl) titleEl.textContent = "Item Collected";
+              if (subEl) subEl.textContent = "Partner collected & verified package";
+              renderStepBar(4);
+            } else if (status === 'TRAVELLING_TO_DROP' || status === 'OUT_FOR_DELIVERY') {
+              if (titleEl) titleEl.textContent = "Travelling to Drop Location";
+              if (subEl) subEl.textContent = "Partner is driving to drop destination";
+              renderStepBar(5);
+            } else if (status === 'ARRIVING' || status === '300M_NEARBY') {
+              if (titleEl) titleEl.textContent = "Arriving Soon";
+              if (subEl) subEl.textContent = "Rider is less than 300 meters away";
+              renderStepBar(6);
+            } else if (status === 'DELIVERED') {
+              onDeliveryComplete();
+            }
+          } else {
+            if (status === 'ACCEPTED' || status === 'Order Received') {
+              if (titleEl) titleEl.textContent = "Order Received";
+              if (subEl) subEl.textContent = "Partner store accepted your order";
+              renderStepBar(1);
+            } else if (status === 'PREPARING_FOOD' || status === 'Under Verification') {
+              if (titleEl) titleEl.textContent = "Order Prepared";
+              if (subEl) subEl.textContent = "Items packed & ready for pickup";
+              renderStepBar(2);
+            } else if (status === 'PICKED_UP') {
+              if (titleEl) titleEl.textContent = "Picked Up";
+              if (subEl) subEl.textContent = "Rider collected your order";
+              renderStepBar(4);
+            } else if (status === 'OUT_FOR_DELIVERY') {
+              if (titleEl) titleEl.textContent = "Out For Delivery";
+              if (subEl) subEl.textContent = "Rider is delivering to your doorstep";
+              renderStepBar(5);
+            } else if (status === 'DELIVERED') {
+              onDeliveryComplete();
+            }
           }
         }
       });
 
       function onDeliveryComplete() {
-        renderStepBar(6);
-        document.getElementById('top-status-title').textContent = "Order Delivered!";
-        document.getElementById('top-status-sub').textContent = "Rider safely delivered your order to your doorstep";
+        renderStepBar(isParcelOrRide ? 7 : 6);
+        const titleEl = document.getElementById('top-status-title');
+        const subEl = document.getElementById('top-status-sub');
+        if (titleEl) titleEl.textContent = isParcelOrRide ? "Delivered!" : "Order Delivered!";
+        if (subEl) subEl.textContent = isParcelOrRide ? "Delivery partner completed parcel drop" : "Rider safely delivered your order";
         document.getElementById('bottom-eta-banner')?.classList.add('hidden');
         document.getElementById('delivery-completed-banner')?.classList.remove('hidden');
-        showToast("🎉 Order Delivered Successfully!");
+        showToast("🎉 Delivered Successfully!");
       }
     });
   </script>
