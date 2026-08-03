@@ -2,15 +2,19 @@
 import Switcher from '../components/Switcher.astro';
 ---
 
+<!DOCTYPE html>
 <html class="light" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Live Delivery Tracking - Bhusawal Connect</title>
-  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
-  <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
-  <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
   
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
   <!-- Leaflet & Google Maps JS SDK -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" is:inline></script>
@@ -18,58 +22,59 @@ import Switcher from '../components/Switcher.astro';
   <script src="/assets/google_live_tracker.js" is:inline></script>
   <script src="/assets/realtime_sync.js" is:inline></script>
 
+  <!-- RED & WHITE THEME TAILWIND CONFIGURATION -->
+  <script is:inline>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            redBrand: '#E53935',
+            redDark: '#C62828',
+            redLight: '#FFEBEE'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
   <style>
-    * { -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f4f6f8; color: #1a1c1c; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    
-    .pulse-ring-purple {
-      position: relative;
-    }
-    .pulse-ring-purple::before {
-      content: '';
-      position: absolute;
-      inset: -10px;
-      border-radius: 50%;
-      background: rgba(124, 58, 237, 0.2);
-      animation: pulse-ring-anim 2s infinite ease-out;
-    }
-    @keyframes pulse-ring-anim {
-      0% { transform: scale(0.5); opacity: 1; }
-      100% { transform: scale(1.5); opacity: 0; }
-    }
-    .custom-rider-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-[#f4f6f8] min-h-screen text-slate-900 pb-20">
 
-  <!-- Header -->
-  <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-neutral-200/80 px-4 py-3">
+<body class="bg-slate-50 min-h-screen text-slate-900 pb-20 antialiased">
+
+  <!-- TOP HEADER -->
+  <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100 px-4 py-3 shadow-xs">
     <div class="max-w-md mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <a href="/orders" class="p-2 hover:bg-neutral-100 rounded-full transition-all">
-          <span class="material-symbols-outlined text-neutral-800">arrow_back</span>
+        <a href="/orders" class="p-2 hover:bg-slate-100 rounded-full transition-all">
+          <span class="material-symbols-outlined text-slate-800">arrow_back</span>
         </a>
         <div>
-          <h1 class="text-sm font-black text-neutral-900 leading-tight">Live Delivery Tracking</h1>
-          <p class="text-[10px] font-bold text-neutral-500" id="header-order-id">Order ID: #ORD-784920</p>
+          <h1 class="text-sm font-black text-slate-900 leading-tight">Live Delivery Tracking</h1>
+          <p class="text-[10px] font-bold text-slate-500" id="header-order-id">Order ID: #BHU-849201</p>
         </div>
       </div>
-      <a href="tel:7498071274" class="border border-purple-200 text-purple-700 bg-purple-50 hover:bg-purple-100 font-extrabold text-xs px-3 py-1.5 rounded-full flex items-center gap-1 transition-all active:scale-95">
+
+      <a href="tel:7498071274" class="border border-red-200 text-redBrand bg-redLight hover:bg-red-100 font-extrabold text-xs px-3 py-1.5 rounded-full flex items-center gap-1 transition-all active:scale-95">
         <span class="material-symbols-outlined text-sm">headset_mic</span> Support
       </a>
     </div>
   </header>
 
   <!-- Realtime Toast Banner -->
-  <div id="toast-notification" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-neutral-900 text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-3 hidden animate-in slide-in-from-top duration-300">
+  <div id="toast-notification" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-slate-900 text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-3 hidden animate-in slide-in-from-top duration-300">
     <div class="flex items-center gap-2.5 min-w-0">
-      <span class="material-symbols-outlined text-emerald-400 text-xl" id="toast-icon">local_shipping</span>
-      <p class="text-xs font-extrabold truncate" id="toast-msg">Rider is assigned to your order</p>
+      <span class="material-symbols-outlined text-redBrand text-xl" id="toast-icon">local_shipping</span>
+      <p class="text-xs font-extrabold truncate" id="toast-msg">Chef is preparing your food order</p>
     </div>
     <span class="text-[10px] font-black bg-white/20 px-2 py-0.5 rounded-full uppercase">LIVE</span>
   </div>
@@ -81,53 +86,90 @@ import Switcher from '../components/Switcher.astro';
       <!-- 300m / 100m Proximity Alert Banner -->
       <div id="rider-nearby-alert" class="hidden bg-amber-500 text-slate-950 font-black text-xs px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce border border-amber-300">
         <span class="material-symbols-outlined text-lg">notifications_active</span>
-        <span id="nearby-alert-text">Your Bhusawal Connect rider is nearby (&lt;300m). Please be ready to receive your order!</span>
+        <span id="nearby-alert-text">Your Bhusawal Connect rider is nearby (&lt;300m). Please be ready to receive your hot food!</span>
       </div>
 
-      <div class="bg-white rounded-3xl p-4 shadow-xl border border-neutral-100 flex items-center justify-between gap-3 animate-in slide-in-from-top-4 duration-300">
+      <div class="bg-white rounded-3xl p-4 shadow-xl border border-slate-100 flex items-center justify-between gap-3 animate-in slide-in-from-top-4 duration-300">
         <div class="flex items-center gap-3 flex-1 min-w-0">
-          <div class="w-12 h-12 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl shrink-0 border border-purple-200/60 shadow-sm">
+          <div class="w-12 h-12 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-2xl shrink-0 border border-red-200/60 shadow-xs">
             🛵
           </div>
           <div class="min-w-0 flex-1">
-            <h2 id="top-status-title" class="text-sm font-black text-neutral-900 truncate">Huzaifa is on the way</h2>
-            <p id="top-status-sub" class="text-[11px] font-bold text-neutral-500 truncate mt-0.5">Rider is moving towards your doorstep</p>
+            <h2 id="top-status-title" class="text-sm font-black text-slate-900 truncate">Preparing Food</h2>
+            <p id="top-status-sub" class="text-[11px] font-bold text-slate-500 truncate mt-0.5">Chef is cooking your order at the kitchen</p>
           </div>
         </div>
-        <div id="top-eta-container" class="bg-purple-100/80 border border-purple-200 text-purple-800 px-3 py-2 rounded-2xl text-center shrink-0">
-          <span id="top-eta-mins" class="text-sm font-black block leading-none">8 mins</span>
-          <span class="text-[9px] font-black uppercase tracking-wider block mt-0.5 text-purple-600">away</span>
+        <div id="top-eta-container" class="bg-redLight border border-red-200 text-redBrand px-3 py-2 rounded-2xl text-center shrink-0">
+          <span id="top-eta-mins" class="text-sm font-black block leading-none">18 mins</span>
+          <span class="text-[9px] font-black uppercase tracking-wider block mt-0.5 text-redDark">ETA</span>
         </div>
       </div>
     </div>
 
     <!-- Live Map Container of Bhusawal -->
-    <div class="h-[55vh] w-full bg-[#e5e9ec] relative mt-3 z-10 overflow-hidden" id="bhusawal-map">
+    <div class="h-[48vh] w-full bg-slate-200 relative mt-3 z-10 overflow-hidden" id="bhusawal-map">
       <!-- Floating Right Controls -->
       <div class="absolute right-4 bottom-10 z-20 flex flex-col gap-2.5">
-        <button id="btn-recenter-map" class="w-10 h-10 bg-white rounded-full shadow-xl border border-neutral-200/80 flex items-center justify-center text-neutral-700 hover:bg-neutral-50 active:scale-95 transition-all" title="Recenter Map">
+        <button id="btn-recenter-map" class="w-10 h-10 bg-white rounded-full shadow-xl border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-50 active:scale-95 transition-all" title="Recenter Map">
           <span class="material-symbols-outlined text-lg font-bold">my_location</span>
         </button>
       </div>
     </div>
 
     <!-- Bottom Sheet Drawer -->
-    <div class="bg-white rounded-t-3xl -mt-6 relative z-30 px-4 pt-4 pb-12 shadow-[0_-10px_30px_rgba(0,0,0,0.08)] border-t border-neutral-100 space-y-4">
+    <div class="bg-white rounded-t-3xl -mt-6 relative z-30 px-4 pt-4 pb-12 shadow-2xl border-t border-slate-100 space-y-4">
       
-      <div class="w-12 h-1 bg-neutral-200 rounded-full mx-auto mb-2"></div>
+      <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-2"></div>
 
-      <!-- Rider Profile Card -->
-      <div class="flex items-center justify-between bg-neutral-50 p-3.5 rounded-2xl border border-neutral-200/80">
+      <!-- 6 STEP-BY-STEP LIVE STATUS BAR -->
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+        <span class="text-[10px] font-black text-redBrand uppercase tracking-wider block">LIVE ORDER PROGRESS</span>
+        
+        <div class="grid grid-cols-6 gap-1 text-center" id="tracking-steps-bar">
+          <div class="step-box flex flex-col items-center gap-1" data-step="1">
+            <div class="w-7 h-7 rounded-full bg-redBrand text-white flex items-center justify-center text-xs font-black shadow-xs">✓</div>
+            <span class="text-[9px] font-black text-slate-900">Accepted</span>
+          </div>
+
+          <div class="step-box flex flex-col items-center gap-1" data-step="2">
+            <div class="w-7 h-7 rounded-full bg-redBrand text-white flex items-center justify-center text-xs font-black shadow-xs animate-pulse">🍳</div>
+            <span class="text-[9px] font-black text-redBrand">Preparing</span>
+          </div>
+
+          <div class="step-box flex flex-col items-center gap-1 opacity-40" data-step="3">
+            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-black">📦</div>
+            <span class="text-[9px] font-bold text-slate-500">Ready</span>
+          </div>
+
+          <div class="step-box flex flex-col items-center gap-1 opacity-40" data-step="4">
+            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-black">🛵</div>
+            <span class="text-[9px] font-bold text-slate-500">Picked Up</span>
+          </div>
+
+          <div class="step-box flex flex-col items-center gap-1 opacity-40" data-step="5">
+            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-black">⚡</div>
+            <span class="text-[9px] font-bold text-slate-500">On Way</span>
+          </div>
+
+          <div class="step-box flex flex-col items-center gap-1 opacity-40" data-step="6">
+            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-black">🎉</div>
+            <span class="text-[9px] font-bold text-slate-500">Delivered</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Partner Card -->
+      <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-purple-900 text-white flex items-center justify-center font-black text-xl shadow-md border-2 border-purple-400 shrink-0">
+          <div class="w-12 h-12 rounded-full bg-redBrand text-white flex items-center justify-center font-black text-xl shadow-md border-2 border-white shrink-0">
             👨‍✈️
           </div>
           <div>
-            <h3 id="rider-name" class="text-sm font-black text-neutral-900">Huzaifa Shaikh</h3>
-            <p class="text-[10px] text-neutral-500 font-bold mt-0.5">Vehicle: MH-19-BS-2026 (EV Bike)</p>
+            <h3 id="rider-name" class="text-sm font-black text-slate-900">Rahul Patil (Fleet Captain)</h3>
+            <p class="text-[10px] text-slate-500 font-bold mt-0.5">Vehicle: MH-19-AX-4892 (EV Bike)</p>
             <div class="flex items-center gap-1 text-[10px] text-amber-500 font-black mt-0.5">
-              <span>★ 4.9</span>
-              <span class="text-neutral-400 font-normal">(320+ deliveries)</span>
+              <span>★ 4.9 Rating</span>
+              <span class="text-slate-400 font-normal">(420+ deliveries)</span>
             </div>
           </div>
         </div>
@@ -136,19 +178,19 @@ import Switcher from '../components/Switcher.astro';
           <a id="btn-call-rider" href="tel:7498071274" class="w-10 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center justify-center active:scale-95 transition-all shadow-md" title="Call Rider">
             <span class="material-symbols-outlined text-lg">call</span>
           </a>
-          <a id="btn-chat-rider" href="https://wa.me/917498071274?text=Hi%20Huzaifa,%20regarding%20my%20Bhusawal%20Connect%20order" target="_blank" class="w-10 h-10 bg-purple-600 hover:bg-purple-700 text-white rounded-xl flex items-center justify-center active:scale-95 transition-all shadow-md" title="Chat on WhatsApp">
+          <a id="btn-chat-rider" href="https://wa.me/917498071274?text=Hi%20Rahul,%20regarding%20my%20Bhusawal%20Connect%20food%20order" target="_blank" class="w-10 h-10 bg-redBrand hover:bg-redDark text-white rounded-xl flex items-center justify-center active:scale-95 transition-all shadow-md" title="Chat on WhatsApp">
             <span class="material-symbols-outlined text-lg">chat</span>
           </a>
         </div>
       </div>
 
       <!-- Live ETA Banner -->
-      <div id="bottom-eta-banner" class="bg-purple-50 border border-purple-200/80 rounded-2xl p-3.5 flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center text-sm font-black shrink-0">
+      <div id="bottom-eta-banner" class="bg-redLight border border-red-200/80 rounded-2xl p-3.5 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-redBrand text-white flex items-center justify-center text-sm font-black shrink-0">
           ⚡
         </div>
-        <p class="text-xs font-bold text-neutral-800 leading-snug">
-          Your order is on the way and will reach you in <span id="banner-eta-text" class="font-black text-purple-700">8 mins</span>
+        <p class="text-xs font-bold text-slate-800 leading-snug">
+          Your food order is being prepared and will reach you in <span id="banner-eta-text" class="font-black text-redBrand">18 mins</span>
         </p>
       </div>
 
@@ -158,23 +200,39 @@ import Switcher from '../components/Switcher.astro';
           🎉
         </div>
         <div>
-          <h2 class="text-base font-black">Order Delivered Successfully!</h2>
+          <h2 class="text-base font-black">Food Order Delivered Successfully!</h2>
           <p class="text-xs text-emerald-100 font-bold mt-1">
-            Thank you for using Bhusawal Connect! Your delivery partner Huzaifa has delivered your order.
+            Thank you for ordering with Bhusawal Connect! Enjoy your hot meal.
           </p>
         </div>
-        <a href="/home" class="block w-full bg-white text-emerald-800 font-black text-xs py-3 rounded-2xl shadow-lg hover:bg-emerald-50 active:scale-95 transition-all mt-2">
-          Back to Home Page 🛒
+        <a href="/food" class="block w-full bg-white text-emerald-800 font-black text-xs py-3 rounded-2xl shadow-lg hover:bg-emerald-50 active:scale-95 transition-all mt-2">
+          Order More Food 🍔
         </a>
+      </div>
+
+      <!-- ORDER SUMMARY & DISH BREAKDOWN CARD -->
+      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3" id="order-summary-card">
+        <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-2">Order Items Summary</h4>
+        <div id="order-summary-items-list" class="space-y-2 text-xs font-bold text-slate-700">
+          <!-- Dynamically populated -->
+          <div class="flex items-center justify-between">
+            <span>Bhusawal Special Tarri Poha × 2</span>
+            <span class="font-black">₹80</span>
+          </div>
+        </div>
+        <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs font-black text-slate-900">
+          <span>Total Paid (incl. ₹30 Delivery)</span>
+          <span id="order-summary-total" class="text-redBrand">₹110</span>
+        </div>
       </div>
 
       <!-- Action Buttons -->
       <div class="grid grid-cols-2 gap-3 pt-1">
-        <a href="/home" class="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all">
+        <a href="/home" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all">
           Back to Home
         </a>
-        <a href="/grocery" class="w-full bg-[#0c831f] hover:bg-emerald-700 text-white font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all shadow-md">
-          Shop More 🛒
+        <a href="/food" class="w-full bg-redBrand hover:bg-redDark text-white font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all shadow-md">
+          Explore Food 🍲
         </a>
       </div>
 
@@ -183,7 +241,6 @@ import Switcher from '../components/Switcher.astro';
 
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
-      // Read order info
       let activeOrder = {};
       try {
         activeOrder = JSON.parse(localStorage.getItem('bhusawal_active_order') || localStorage.getItem('last_active_order') || '{}');
@@ -193,13 +250,35 @@ import Switcher from '../components/Switcher.astro';
         document.getElementById('header-order-id').textContent = 'Order ID: #' + activeOrder.id;
       }
 
-      // Store Coords & Destination Coords
+      // Render Order Items Summary
+      if (activeOrder.items && Array.isArray(activeOrder.items)) {
+        const listEl = document.getElementById('order-summary-items-list');
+        if (listEl) {
+          let sHtml = '';
+          activeOrder.items.forEach(item => {
+            const qty = item.quantity || 1;
+            const price = parseFloat(item.price || item.mrp || 0);
+            sHtml += `
+              <div class="flex items-center justify-between text-xs">
+                <span>${item.name} × ${qty}</span>
+                <span class="font-black">₹${Math.round(price * qty)}</span>
+              </div>
+            `;
+          });
+          listEl.innerHTML = sHtml;
+        }
+      }
+
+      if (activeOrder.total) {
+        const totalEl = document.getElementById('order-summary-total');
+        if (totalEl) totalEl.textContent = '₹' + activeOrder.total;
+      }
+
       const storeLat = 21.0455;
       const storeLng = 75.7858;
       const custLat = parseFloat(activeOrder.lat) || 21.0520;
       const custLng = parseFloat(activeOrder.lng) || 75.7980;
 
-      // Toast Notification Helper
       function showToast(msg) {
         const toast = document.getElementById('toast-notification');
         const text = document.getElementById('toast-msg');
@@ -208,6 +287,17 @@ import Switcher from '../components/Switcher.astro';
           toast.classList.remove('hidden');
           setTimeout(() => toast.classList.add('hidden'), 4000);
         }
+      }
+
+      function updateStepBar(stepNum) {
+        document.querySelectorAll('#tracking-steps-bar .step-box').forEach(box => {
+          const s = parseInt(box.getAttribute('data-step') || '1');
+          if (s <= stepNum) {
+            box.classList.remove('opacity-40');
+          } else {
+            box.classList.add('opacity-40');
+          }
+        });
       }
 
       // Initialize Google Live Tracker Engine
@@ -233,21 +323,30 @@ import Switcher from '../components/Switcher.astro';
           const titleEl = document.getElementById('top-status-title');
           const subEl = document.getElementById('top-status-sub');
           
-          if (status === 'RIDER_ASSIGNED' || status === 'ACCEPTED') {
-            if (titleEl) titleEl.textContent = "Huzaifa accepted your order";
-            if (subEl) subEl.textContent = "Rider is heading to Bhusawal Express store";
-            showToast("Rider accepted your order!");
-          } else if (status === 'REACHED_STORE') {
-            if (titleEl) titleEl.textContent = "Rider reached the store";
-            if (subEl) subEl.textContent = "Items being packed at store";
-            showToast("Rider reached the store!");
+          if (status === 'ACCEPTED') {
+            if (titleEl) titleEl.textContent = "Order Accepted";
+            if (subEl) subEl.textContent = "Restaurant accepted your food order";
+            updateStepBar(1);
+            showToast("Restaurant accepted your food order!");
+          } else if (status === 'PREPARING_FOOD' || status === 'REACHED_STORE') {
+            if (titleEl) titleEl.textContent = "Preparing Food";
+            if (subEl) subEl.textContent = "Chef is cooking your order at the kitchen";
+            updateStepBar(2);
+            showToast("Chef is preparing your food order!");
+          } else if (status === 'FOOD_READY') {
+            if (titleEl) titleEl.textContent = "Food Ready!";
+            if (subEl) subEl.textContent = "Packed and waiting for delivery partner pickup";
+            updateStepBar(3);
+            showToast("Food is hot & ready for pickup!");
           } else if (status === 'PICKED_UP') {
             if (titleEl) titleEl.textContent = "Order Picked Up!";
-            if (subEl) subEl.textContent = "Huzaifa has picked up your order";
-            showToast("Order picked up from store!");
+            if (subEl) subEl.textContent = "Rahul has picked up your food parcel";
+            updateStepBar(4);
+            showToast("Delivery partner picked up your order!");
           } else if (status === 'OUT_FOR_DELIVERY') {
             if (titleEl) titleEl.textContent = "Out For Delivery";
-            if (subEl) subEl.textContent = "Rider is moving towards your doorstep";
+            if (subEl) subEl.textContent = "Rahul is riding towards your doorstep";
+            updateStepBar(5);
             showToast("Order is out for delivery!");
           } else if (status === 'DELIVERED') {
             onDeliveryComplete();
@@ -256,16 +355,12 @@ import Switcher from '../components/Switcher.astro';
       });
 
       function onDeliveryComplete() {
-        document.getElementById('top-status-title').textContent = "Order Delivered!";
-        document.getElementById('top-status-sub').textContent = "Huzaifa delivered your order to your doorstep";
+        updateStepBar(6);
+        document.getElementById('top-status-title').textContent = "Food Delivered!";
+        document.getElementById('top-status-sub').textContent = "Rahul delivered your hot meal to your doorstep";
         document.getElementById('bottom-eta-banner')?.classList.add('hidden');
         document.getElementById('delivery-completed-banner')?.classList.remove('hidden');
-        showToast("🎉 Order Delivered Successfully!");
-      }
-
-      // Check Google Maps API Key setup error UI if missing key
-      if (window.GoogleMapsLoader && !window.GoogleMapsLoader.getApiKey()) {
-        console.log("No Google Maps API Key found, using Google Roadmap Tile fallback.");
+        showToast("🎉 Food Order Delivered Successfully!");
       }
     });
   </script>
