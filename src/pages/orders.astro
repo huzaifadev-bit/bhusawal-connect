@@ -217,43 +217,48 @@ import Switcher from '../components/Switcher.astro';
       let currentFilter = 'all';
       let searchQuery = '';
 
-      // Sample fallback order dataset
+      // Sample fallback order dataset (including Prescription order)
       const SAMPLE_ORDERS = [
         {
+          id: 'RX-BHU-784920',
+          type: 'PRESCRIPTION',
+          patientName: 'Rahul Patil',
+          mobile: '9876543210',
+          date: new Date().toISOString(),
+          status: 'Under Verification',
+          step: 2,
+          address: 'Plot 42, Station Road, Shivaji Nagar, Bhusawal',
+          landmark: 'Near Bus Stand',
+          notes: 'Deliver before 8 PM. Please check dosage.',
+          storeName: 'Apollo Pharmacy - Station Road',
+          storeArea: 'Bhusawal Local Area',
+          fileName: 'Doctor_Prescription_Aug2026.pdf',
+          total: 345,
+          payment: 'Cash on Delivery',
+          alternativeSuggested: {
+            original: 'Dolo 650mg Tablet',
+            suggested: 'Crocin Advance 500mg Tablet',
+            price: 28,
+            pharmacistNote: 'Dolo 650mg is temporarily out of stock. Crocin Advance contains same active Paracetamol formulation.',
+            customerDecision: 'PENDING'
+          },
+          items: [
+            { id: 'm1', name: 'Dolo 650mg Tablet (Strip of 15)', price: 32, quantity: 2 },
+            { id: 'm2', name: 'Revital H Multivitamin (60 Capsules)', price: 281, quantity: 1 }
+          ]
+        },
+        {
           id: 'BHU-98214',
+          type: 'GROCERY',
           date: '2026-08-02T19:30:00Z',
           status: 'Confirmed',
+          step: 2,
           total: 320,
           address: 'Plot 42, Station Road, Shivaji Nagar, Bhusawal',
           payment: 'UPI (GPay)',
           items: [
             { id: '1', name: 'Amul Taaza Toned Milk', price: 27, quantity: 2, image: 'https://www.bbassets.com/media/uploads/p/l/306926_4-amul-taaza-toned-milk.jpg' },
-            { id: '2', name: 'Maggi 2-Minute Noodles', price: 14, quantity: 4, image: 'https://www.bbassets.com/media/uploads/p/l/266109_15-nestle-maggi-2-minute-instant-noodles-masala.jpg' },
-            { id: '3', name: 'Fortune Sunlite Sunflower Oil', price: 135, quantity: 1, image: 'https://www.bbassets.com/media/uploads/p/l/274262_14-fortune-sunlite-refined-sunflower-oil.jpg' }
-          ]
-        },
-        {
-          id: 'BHU-98200',
-          date: '2026-07-30T14:15:00Z',
-          status: 'Delivered',
-          total: 185,
-          address: 'Shop 12, Main Market, Jamner Road, Bhusawal',
-          payment: 'Cash on Delivery',
-          items: [
-            { id: '4', name: 'Bhusawal Golden Bananas', price: 50, quantity: 2, image: '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg' },
-            { id: '5', name: 'Lay's Magic Masala Chips', price: 20, quantity: 3, image: 'https://www.bbassets.com/media/uploads/p/l/102739_10-lays-potato-chips-indias-magic-masala.jpg' }
-          ]
-        },
-        {
-          id: 'BHU-98188',
-          date: '2026-07-25T11:00:00Z',
-          status: 'Delivered',
-          total: 450,
-          address: 'Flat 3B, Ordnance Factory Colony, Bhusawal',
-          payment: 'UPI (PhonePe)',
-          items: [
-            { id: '6', name: 'Brooke Bond Red Label Tea (250g)', price: 140, quantity: 2, image: 'https://www.bbassets.com/media/uploads/p/l/266542_9-brooke-bond-red-label-tea.jpg' },
-            { id: '7', name: 'Amul Pasteurised Butter (100g)', price: 58, quantity: 2, image: 'https://www.bbassets.com/media/uploads/p/l/100001_19-amul-butter-pasteurised.jpg' }
+            { id: '2', name: 'Maggi 2-Minute Noodles', price: 14, quantity: 4, image: 'https://www.bbassets.com/media/uploads/p/l/266109_15-nestle-maggi-2-minute-instant-noodles-masala.jpg' }
           ]
         }
       ];
@@ -271,13 +276,34 @@ import Switcher from '../components/Switcher.astro';
         renderOrdersList();
       }
 
+      // 7 PRESCRIPTION STEPS DEFINITION
+      const RX_STEPS = [
+        { step: 1, label: 'Prescription Uploaded', icon: '📄' },
+        { step: 2, label: 'Under Verification', icon: '🔍' },
+        { step: 3, label: 'Verified', icon: '✅' },
+        { step: 4, label: 'Medicines Packed', icon: '📦' },
+        { step: 5, label: 'Picked Up', icon: '🛵' },
+        { step: 6, label: 'Out For Delivery', icon: '⚡' },
+        { step: 7, label: 'Delivered', icon: '🎉' }
+      ];
+
+      function getRxStepNum(status) {
+        if (status === 'Prescription Uploaded') return 1;
+        if (status === 'Under Verification') return 2;
+        if (status === 'Verified') return 3;
+        if (status === 'Medicines Packed') return 4;
+        if (status === 'Picked Up') return 5;
+        if (status === 'Out For Delivery' || status === 'Out for Delivery') return 6;
+        if (status === 'Delivered') return 7;
+        return 2;
+      }
+
       // Render Orders List
       function renderOrdersList() {
         const allOrders = getAllOrders();
         const container = document.getElementById('orders-cards-container');
 
-        // Filter categories counts
-        const activeOrders = allOrders.filter(o => o.status === 'Confirmed' || o.status === 'Processing' || o.status === 'Out for Delivery');
+        const activeOrders = allOrders.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled');
         const pastOrders = allOrders.filter(o => o.status === 'Delivered');
         const cancelledOrders = allOrders.filter(o => o.status === 'Cancelled');
 
@@ -286,9 +312,8 @@ import Switcher from '../components/Switcher.astro';
         document.getElementById('count-past').textContent = pastOrders.length;
         document.getElementById('count-cancelled').textContent = cancelledOrders.length;
 
-        // Apply Tab Filter & Search
         let filtered = allOrders.filter(o => {
-          if (currentFilter === 'active') return o.status === 'Confirmed' || o.status === 'Processing' || o.status === 'Out for Delivery';
+          if (currentFilter === 'active') return o.status !== 'Delivered' && o.status !== 'Cancelled';
           if (currentFilter === 'past') return o.status === 'Delivered';
           if (currentFilter === 'cancelled') return o.status === 'Cancelled';
           return true;
@@ -299,7 +324,8 @@ import Switcher from '../components/Switcher.astro';
           filtered = filtered.filter(o => {
             const matchesId = (o.id || '').toLowerCase().includes(q);
             const matchesItem = (o.items || []).some(i => (i.name || '').toLowerCase().includes(q));
-            return matchesId || matchesItem;
+            const matchesName = (o.patientName || '').toLowerCase().includes(q);
+            return matchesId || matchesItem || matchesName;
           });
         }
 
@@ -317,128 +343,162 @@ import Switcher from '../components/Switcher.astro';
         let html = '';
         filtered.forEach(order => {
           const id = order.id || 'BHU-99000';
-          const status = order.status || 'Delivered';
+          const isRx = order.type === 'PRESCRIPTION' || id.startsWith('RX-');
+          const status = order.status || 'Under Verification';
+          const currentStep = getRxStepNum(status);
           const total = order.total || 0;
           const address = order.address || 'Bhusawal';
-          const payment = order.payment || 'UPI';
           const dateStr = order.date ? new Date(order.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recent';
-          const items = order.items || [];
-          const itemCount = items.length;
+          const isCompleted = status === 'Delivered';
+          const isCancelled = status === 'Cancelled';
 
-          const isActive = status === 'Confirmed' || status === 'Processing' || status === 'Out for Delivery';
-          
-          let statusBadgeHtml = '<span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black flex items-center gap-1">✓ Delivered</span>';
-          if (isActive) {
-            statusBadgeHtml = '<span class="px-3 py-1 rounded-full bg-purple-100 text-purpleBrand text-xs font-black flex items-center gap-1 animate-pulse"><span class="w-2 h-2 rounded-full bg-purpleBrand"></span> In Progress</span>';
-          } else if (status === 'Cancelled') {
-            statusBadgeHtml = '<span class="px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-black">× Cancelled</span>';
+          // Alternative Suggestion State
+          const alt = order.alternativeSuggested;
+          const hasPendingAlt = alt && alt.customerDecision === 'PENDING';
+
+          // Status Badge
+          let statusBadge = `<span class="px-3 py-1 rounded-full bg-blueLight text-blueBrand text-xs font-black flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blueBrand animate-ping"></span> ${status}</span>`;
+          if (isCompleted) {
+            statusBadge = `<span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black">✓ Delivered</span>`;
+          } else if (isCancelled) {
+            statusBadge = `<span class="px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-black">× Cancelled</span>`;
+          } else if (hasPendingAlt) {
+            statusBadge = `<span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-black animate-bounce">⚠️ Action Needed: Alternative Suggested</span>`;
           }
 
           html += `
-            <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-5 hover:border-purple-200 transition-all">
+            <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-5 hover:border-blue-300 transition-all relative">
               
-              <!-- Card Header: ID, Date, Status, Total -->
+              <!-- Header -->
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
                 <div>
-                  <div class="flex items-center gap-2">
-                    <h3 class="text-base font-black font-display text-slate-900">Order #${id}</h3>
-                    ${statusBadgeHtml}
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs font-black ${isRx ? 'bg-blue-600 text-white' : 'bg-purpleBrand text-white'} px-2 py-0.5 rounded-md uppercase tracking-wider">
+                      ${isRx ? '💊 Prescription Order' : '🛒 Shop Order'}
+                    </span>
+                    <h3 class="text-base font-black font-display text-slate-900">#${id}</h3>
+                    ${statusBadge}
                   </div>
-                  <p class="text-xs font-bold text-slate-400 mt-0.5">Placed on ${dateStr} • ${itemCount} ${itemCount === 1 ? 'item' : 'items'} • Payment: ${payment}</p>
+                  <p class="text-xs font-bold text-slate-400 mt-1">
+                    Placed on ${dateStr} ${order.patientName ? '• Patient: ' + order.patientName : ''} ${order.storeName ? '• Pharmacy: ' + order.storeName : ''}
+                  </p>
                 </div>
                 <div class="text-left sm:text-right">
-                  <span class="text-base font-black font-display text-purpleBrand block">Total: ₹${total}</span>
-                  <span class="text-[10px] font-bold text-slate-400">Includes ₹30 Fixed Delivery</span>
+                  <span class="text-base font-black font-display text-blueBrand block">₹${total}</span>
+                  <span class="text-[10px] font-bold text-slate-400">Includes Free Express Delivery</span>
                 </div>
               </div>
 
-              <!-- ORDER TIMELINE STAGES (ORDER PLACED -> PREPARING -> DISPATCHED -> DELIVERED) -->
-              <div class="p-3.5 bg-slate-50/80 rounded-2xl border border-slate-100/90 space-y-2">
-                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Order Timeline Status:</span>
-                <div class="grid grid-cols-4 gap-1 text-center text-[10px] font-extrabold">
-                  
-                  <div class="space-y-1">
-                    <div class="w-7 h-7 rounded-full bg-purpleBrand text-white mx-auto flex items-center justify-center text-xs shadow-xs">✓</div>
-                    <span class="text-slate-900 block leading-tight">Order Placed</span>
+              <!-- 7-STEP PRESCRIPTION TIMELINE -->
+              ${isRx ? `
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] font-black text-blueBrand uppercase tracking-wider">PRESCRIPTION VERIFICATION TIMELINE</span>
+                    <span class="text-[10px] font-extrabold text-slate-500">Step ${currentStep} of 7</span>
                   </div>
 
-                  <div class="space-y-1">
-                    <div class="w-7 h-7 rounded-full ${isActive ? 'bg-purpleBrand text-white animate-bounce' : 'bg-emerald-500 text-white'} mx-auto flex items-center justify-center text-xs shadow-xs">👨‍🍳</div>
-                    <span class="text-slate-900 block leading-tight">Store Packing</span>
+                  <div class="grid grid-cols-7 gap-1 text-center" id="rx-timeline-${id}">
+                    ${RX_STEPS.map(s => {
+                      const isDone = currentStep >= s.step;
+                      const isCurrent = currentStep === s.step;
+                      return `
+                        <div class="flex flex-col items-center gap-1 ${isDone ? 'opacity-100' : 'opacity-40'}">
+                          <div class="w-7 h-7 rounded-full ${isCurrent ? 'bg-blueBrand text-white ring-4 ring-blue-100 animate-pulse font-black' : (isDone ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-500')} flex items-center justify-center text-xs shadow-xs">
+                            ${isDone && !isCurrent ? '✓' : s.icon}
+                          </div>
+                          <span class="text-[8px] sm:text-[9px] font-black ${isCurrent ? 'text-blueBrand font-black' : (isDone ? 'text-slate-900' : 'text-slate-400')} leading-tight">
+                            ${s.label}
+                          </span>
+                        </div>
+                      `;
+                    }).join('')}
                   </div>
-
-                  <div class="space-y-1">
-                    <div class="w-7 h-7 rounded-full ${status === 'Delivered' ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400'} mx-auto flex items-center justify-center text-xs">🛵</div>
-                    <span class="${status === 'Delivered' ? 'text-slate-900' : 'text-slate-400'} block leading-tight">Out for Delivery</span>
-                  </div>
-
-                  <div class="space-y-1">
-                    <div class="w-7 h-7 rounded-full ${status === 'Delivered' ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400'} mx-auto flex items-center justify-center text-xs">🏡</div>
-                    <span class="${status === 'Delivered' ? 'text-slate-900' : 'text-slate-400'} block leading-tight">Delivered</span>
-                  </div>
-
                 </div>
-              </div>
+              ` : ''}
 
-              <!-- Item Thumbnails Preview Grid -->
-              <div class="space-y-2">
-                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block">Order Items:</span>
-                <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
-                  ${items.map(i => `
-                    <div class="flex items-center gap-2 p-2 bg-slate-50 rounded-xl border border-slate-100 shrink-0">
-                      <img loading="lazy" src="${i.image || i.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'}" alt="${i.name}" class="w-10 h-10 object-contain rounded-lg bg-white p-0.5 border" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-                      <div>
-                        <h4 class="text-xs font-extrabold text-slate-800 max-w-[130px] truncate">${i.name}</h4>
-                        <p class="text-[10px] font-bold text-slate-400">Qty: ${i.quantity || 1} × ₹${i.price}</p>
-                      </div>
+              <!-- UNAVAILABLE MEDICINE & ALTERNATIVE APPROVAL CARD -->
+              ${hasPendingAlt ? `
+                <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 space-y-3 animate-in fade-in duration-300">
+                  <div class="flex items-start gap-2.5">
+                    <span class="text-xl">⚠️</span>
+                    <div>
+                      <h4 class="text-xs font-black text-amber-900 uppercase tracking-wider">Pharmacist Suggestion Required for Order</h4>
+                      <p class="text-xs font-bold text-amber-800 mt-0.5 leading-relaxed">
+                        Item <span class="line-through text-rose-600 font-black">${alt.original}</span> is out of stock at ${order.storeName || 'Pharmacy'}.
+                      </p>
                     </div>
-                  `).join('')}
+                  </div>
+
+                  <div class="bg-white p-3 rounded-xl border border-amber-200 space-y-1.5 text-xs font-semibold text-slate-700">
+                    <div class="flex items-center justify-between">
+                      <span class="font-black text-slate-900">Suggested Alternative:</span>
+                      <span class="font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">${alt.suggested} (₹${alt.price})</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 italic">"Pharmacist Note: ${alt.pharmacistNote}"</p>
+                  </div>
+
+                  <div class="flex items-center gap-2 pt-1">
+                    <button class="btn-accept-alt flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md active:scale-95 transition-all" data-id="${id}">
+                      ✓ Accept Replacement
+                    </button>
+                    <button class="btn-decline-alt flex-1 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs rounded-xl active:scale-95 transition-all" data-id="${id}">
+                      ✕ Decline & Remove Item
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ` : ''}
+
+              <!-- Attached Prescription File / Notes -->
+              ${isRx ? `
+                <div class="flex flex-wrap items-center justify-between bg-blue-50/60 p-3 rounded-xl border border-blue-100 text-xs font-bold text-slate-700 gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="text-base">📎</span>
+                    <span>Attached Document: <span class="text-blueBrand font-black">${order.fileName || 'Prescription.pdf'}</span></span>
+                  </div>
+                  ${order.notes ? `<p class="text-[11px] text-slate-500">Note: ${order.notes}</p>` : ''}
+                </div>
+              ` : ''}
 
               <!-- Address Line -->
-              <div class="text-xs font-bold text-slate-600 flex items-center gap-1.5 pt-1">
-                <span class="material-symbols-outlined text-sm text-purpleBrand shrink-0">location_on</span>
-                <span class="truncate">${address}</span>
+              <div class="text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-blueBrand shrink-0">location_on</span>
+                <span class="truncate">${address} ${order.landmark ? '(' + order.landmark + ')' : ''}</span>
               </div>
 
-              <!-- ACTION BUTTONS BAR (TRACK ORDER, REPEAT ORDER, CALL STORE, SUPPORT, INVOICE) -->
+              <!-- ACTION BUTTONS BAR -->
               <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100">
-                
-                <div class="flex flex-wrap items-center gap-2">
-                  <!-- Track Order Button (Prepared for future tracking) -->
-                  <button class="btn-track-order px-3.5 py-2 bg-purpleBrand hover:bg-purpleDark text-white text-xs font-black rounded-xl shadow-xs transition-all flex items-center gap-1.5 active:scale-95" data-id="${id}">
+                <div class="flex items-center gap-2">
+                  <a href="/track_order?id=${id}" class="px-3.5 py-2 bg-blueBrand hover:bg-blueDark text-white text-xs font-black rounded-xl shadow-xs transition-all flex items-center gap-1.5 active:scale-95">
                     <span class="material-symbols-outlined text-sm">near_me</span>
-                    <span>Track Order</span>
-                  </button>
-
-                  <!-- Repeat Order Button -->
-                  <button class="btn-repeat-order px-3.5 py-2 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-xs font-black rounded-xl transition-all flex items-center gap-1.5 active:scale-95" data-id="${id}">
-                    <span class="material-symbols-outlined text-sm">replay</span>
-                    <span>Repeat Order</span>
-                  </button>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-2">
-                  <!-- Call Store -->
-                  <a href="tel:+919923456789" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black rounded-xl border border-slate-200 transition-all flex items-center gap-1">
+                    <span>Track Status</span>
+                  </a>
+                  <a href="tel:7498071274" class="px-3 py-2 bg-slate-100 text-slate-700 text-xs font-black rounded-xl border border-slate-200 flex items-center gap-1">
                     <span class="material-symbols-outlined text-sm">call</span>
-                    <span>Call Store</span>
+                    <span>Pharmacy Support</span>
                   </a>
-
-                  <!-- Support -->
-                  <a href="https://wa.me/919923456789?text=Help%20with%20Order%20${id}" target="_blank" class="px-3 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-black rounded-xl border border-emerald-200 transition-all flex items-center gap-1">
-                    <span class="material-symbols-outlined text-sm">support_agent</span>
-                    <span>Support</span>
-                  </a>
-
-                  <!-- Tax Invoice Modal -->
-                  <button class="btn-view-invoice px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black rounded-xl transition-all flex items-center gap-1" data-id="${id}">
-                    <span class="material-symbols-outlined text-sm">receipt_long</span>
-                    <span>Invoice</span>
-                  </button>
                 </div>
 
+                <!-- Admin Testing Panel Toggle -->
+                <button class="btn-toggle-admin-panel text-[10px] font-black text-slate-400 hover:text-slate-600 underline" data-id="${id}">
+                  ⚙️ Admin Simulator
+                </button>
+              </div>
+
+              <!-- HIDDEN SIMULATED ADMIN/PHARMACIST CONTROLS (FOR TESTING STATUS FLOW) -->
+              <div class="admin-panel-${id} hidden bg-slate-900 text-white p-3.5 rounded-2xl space-y-2 text-xs">
+                <div class="flex items-center justify-between">
+                  <span class="font-black text-[10px] uppercase text-blue-400">⚡ Pharmacist / Admin Status Override</span>
+                  <span class="text-[10px] text-slate-400">Current: ${status}</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <button class="btn-admin-set-status px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-[10px] font-bold text-white" data-id="${id}" data-status="Prescription Uploaded">1. Uploaded</button>
+                  <button class="btn-admin-set-status px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-[10px] font-bold text-white" data-id="${id}" data-status="Under Verification">2. Under Verification</button>
+                  <button class="btn-admin-suggest-alt px-2.5 py-1 bg-amber-600 hover:bg-amber-700 rounded-lg text-[10px] font-bold text-white" data-id="${id}">3. Suggest Alt</button>
+                  <button class="btn-admin-set-status px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-[10px] font-bold text-white" data-id="${id}" data-status="Verified">4. Verified</button>
+                  <button class="btn-admin-set-status px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-[10px] font-bold text-white" data-id="${id}" data-status="Medicines Packed">5. Packed</button>
+                  <button class="btn-admin-set-status px-2.5 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-[10px] font-bold text-white" data-id="${id}" data-status="Out For Delivery">6. Out For Delivery</button>
+                  <button class="btn-admin-set-status px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 rounded-lg text-[10px] font-bold text-white" data-id="${id}" data-status="Delivered">7. Delivered</button>
+                </div>
               </div>
 
             </div>
@@ -446,107 +506,86 @@ import Switcher from '../components/Switcher.astro';
         });
 
         container.innerHTML = html;
-
-        // Bind Action Handlers
         bindOrderActions();
       }
 
       function bindOrderActions() {
-        // Track Order Modal (Prepared for Future Tracking)
-        document.querySelectorAll('.btn-track-order').forEach(btn => {
-          btn.onclick = () => {
-            const id = btn.dataset.id;
-            document.getElementById('track-modal-order-id').textContent = 'Order #' + id;
-            document.getElementById('tracking-prep-modal').classList.remove('hidden');
-          };
-        });
-
-        // Repeat Order Handler
-        document.querySelectorAll('.btn-repeat-order').forEach(btn => {
+        // ACCEPT ALTERNATIVE MEDICINE
+        document.querySelectorAll('.btn-accept-alt').forEach(btn => {
           btn.onclick = () => {
             const id = btn.dataset.id;
             const orders = getAllOrders();
             const target = orders.find(o => o.id === id);
-            if (target && target.items) {
-              let cart = [];
-              try {
-                cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-              } catch(e) {}
-
-              target.items.forEach(i => {
-                cart.push({ id: i.id || ('BC-REP-' + Math.random()), name: i.name, price: i.price, mrp: i.price, image: i.image || i.img, quantity: i.quantity || 1, cat: 'Grocery' });
-              });
-
-              localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-              alert(`Items from Order #${id} re-added to cart! Redirecting...`);
-              window.location.href = '/cart';
+            if (target && target.alternativeSuggested) {
+              target.alternativeSuggested.customerDecision = 'ACCEPTED';
+              target.status = 'Verified';
+              target.step = 3;
+              saveOrders(orders);
+              alert(`Alternative medicine (${target.alternativeSuggested.suggested}) accepted! Prescription verified.`);
             }
           };
         });
 
-        // View Invoice Modal Handler
-        document.querySelectorAll('.btn-view-invoice').forEach(btn => {
+        // DECLINE ALTERNATIVE MEDICINE
+        document.querySelectorAll('.btn-decline-alt').forEach(btn => {
+          btn.onclick = () => {
+            const id = btn.dataset.id;
+            const orders = getAllOrders();
+            const target = orders.find(o => o.id === id);
+            if (target && target.alternativeSuggested) {
+              target.alternativeSuggested.customerDecision = 'DECLINED';
+              target.status = 'Verified';
+              target.step = 3;
+              saveOrders(orders);
+              alert(`Unavailable item declined and removed. Proceeding with remaining verified medicines.`);
+            }
+          };
+        });
+
+        // TOGGLE ADMIN SIMULATOR
+        document.querySelectorAll('.btn-toggle-admin-panel').forEach(btn => {
+          btn.onclick = () => {
+            const id = btn.dataset.id;
+            const panel = document.querySelector(`.admin-panel-${id}`);
+            if (panel) panel.classList.toggle('hidden');
+          };
+        });
+
+        // ADMIN SET STATUS
+        document.querySelectorAll('.btn-admin-set-status').forEach(btn => {
+          btn.onclick = () => {
+            const id = btn.dataset.id;
+            const newStatus = btn.dataset.status;
+            const orders = getAllOrders();
+            const target = orders.find(o => o.id === id);
+            if (target) {
+              target.status = newStatus;
+              saveOrders(orders);
+            }
+          };
+        });
+
+        // ADMIN SUGGEST ALTERNATIVE
+        document.querySelectorAll('.btn-admin-suggest-alt').forEach(btn => {
           btn.onclick = () => {
             const id = btn.dataset.id;
             const orders = getAllOrders();
             const target = orders.find(o => o.id === id);
             if (target) {
-              openInvoiceModal(target);
+              target.status = 'Under Verification';
+              target.alternativeSuggested = {
+                original: 'Dolo 650mg Tablet',
+                suggested: 'Crocin Advance 500mg Tablet',
+                price: 28,
+                pharmacistNote: 'Dolo 650 is out of stock. Pharmacist recommends Crocin Advance (same formulation).',
+                customerDecision: 'PENDING'
+              };
+              saveOrders(orders);
+              alert('Alternative medicine suggestion dispatched to customer!');
             }
           };
         });
       }
-
-      function openInvoiceModal(order) {
-        document.getElementById('inv-order-id').textContent = '#' + order.id;
-        document.getElementById('inv-date').textContent = 'Date: ' + (order.date ? new Date(order.date).toLocaleDateString() : 'Today');
-        document.getElementById('inv-address').textContent = order.address || 'Bhusawal';
-
-        const tbody = document.getElementById('inv-items-table');
-        let subtotal = 0;
-        let html = '';
-
-        (order.items || []).forEach(item => {
-          const qty = item.quantity || 1;
-          const price = parseFloat(item.price || 0);
-          const itemTotal = Math.round(price * qty);
-          subtotal += itemTotal;
-
-          html += `
-            <tr>
-              <td class="py-2.5">${item.name}</td>
-              <td class="py-2.5 text-center">${qty}</td>
-              <td class="py-2.5 text-right">₹${price}</td>
-              <td class="py-2.5 text-right">₹${itemTotal}</td>
-            </tr>
-          `;
-        });
-
-        if (tbody) tbody.innerHTML = html;
-
-        const delivery = 30;
-        const platform = 5;
-        const grandTotal = subtotal + delivery + platform;
-
-        document.getElementById('inv-subtotal').textContent = `₹${subtotal}`;
-        document.getElementById('inv-delivery').textContent = `₹${delivery}`;
-        document.getElementById('inv-platform').textContent = `₹${platform}`;
-        document.getElementById('inv-grand-total').textContent = `₹${grandTotal}`;
-
-        document.getElementById('invoice-modal').classList.remove('hidden');
-      }
-
-      document.getElementById('close-invoice-modal')?.addEventListener('click', () => {
-        document.getElementById('invoice-modal').classList.add('hidden');
-      });
-
-      document.getElementById('close-tracking-modal')?.addEventListener('click', () => {
-        document.getElementById('tracking-prep-modal').classList.add('hidden');
-      });
-
-      document.getElementById('close-tracking-modal-btn')?.addEventListener('click', () => {
-        document.getElementById('tracking-prep-modal').classList.add('hidden');
-      });
 
       // Filter Tabs Handler
       document.querySelectorAll('.order-filter-tab').forEach(tab => {
