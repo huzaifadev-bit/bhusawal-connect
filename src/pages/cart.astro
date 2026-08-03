@@ -1,8 +1,7 @@
 ---
 import Switcher from '../components/Switcher.astro';
-import catalog from '../../public/grocery_catalog.json';
+import catalog from '../../public/food_catalog.json';
 
-// Recommendations for Impulse Additions
 const cartRecommendations = catalog.slice(0, 4);
 ---
 
@@ -59,10 +58,11 @@ const cartRecommendations = catalog.slice(0, 4);
       </a>
     </div>
 
+    <!-- ESTIMATED DELIVERY TIME BADGE -->
     <div class="flex items-center gap-2">
-      <span class="px-3.5 py-1 rounded-full bg-redLight text-redBrand text-xs font-black uppercase tracking-wider flex items-center gap-1">
-        <span class="material-symbols-outlined text-sm">bolt</span>
-        20 MIN EXPRESS FOOD DELIVERY
+      <span class="px-3.5 py-1.5 rounded-full bg-redLight text-redBrand text-xs font-black uppercase tracking-wider flex items-center gap-1.5 border border-red-200/80 shadow-xs">
+        <span class="w-2 h-2 rounded-full bg-redBrand animate-ping"></span>
+        <span>⚡ Estimated Delivery: 20-25 Mins</span>
       </span>
     </div>
   </header>
@@ -94,24 +94,27 @@ const cartRecommendations = catalog.slice(0, 4);
       </div>
       <a href="/food" class="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-redBrand hover:bg-redDark text-white font-black text-sm rounded-2xl shadow-lg shadow-red-900/15 active:scale-95 transition-all">
         <span class="material-symbols-outlined text-base">restaurant</span>
-        <span>Explore Restaurants</span>
+        <span>Explore Food Dishes</span>
       </a>
     </div>
 
     <!-- MAIN CART CONTENT (GRID LAYOUT) -->
     <div id="active-cart-content" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
       
-      <!-- LEFT 7 COLS: RESTAURANT NAME & FOOD ITEMS -->
+      <!-- LEFT 7 COLS: RESTAURANT NAME, FOOD ITEMS & COOKING INSTRUCTIONS -->
       <div class="lg:col-span-7 space-y-6">
         
-        <!-- DELIVERY ADDRESS CARD -->
+        <!-- DELIVERY ADDRESS & ESTIMATED TIME CARD -->
         <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm flex items-center justify-between gap-4">
           <div class="flex items-center gap-3.5">
             <div class="w-11 h-11 rounded-2xl bg-redLight text-redBrand flex items-center justify-center shrink-0">
               <span class="material-symbols-outlined text-2xl">location_on</span>
             </div>
             <div>
-              <span class="text-[10px] font-black text-redBrand uppercase tracking-wider block">DELIVERY ADDRESS</span>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-black text-redBrand uppercase tracking-wider block">DELIVERING TO</span>
+                <span class="text-[10px] font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">⚡ 20 MIN EXPRESS</span>
+              </div>
               <p class="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5 truncate max-w-xs sm:max-w-md" id="cart-delivery-address">
                 Home - Varangaon Road, Bhusawal
               </p>
@@ -123,9 +126,42 @@ const cartRecommendations = catalog.slice(0, 4);
           </a>
         </div>
 
-        <!-- GROUPED FOOD ITEMS CONTAINERS BY RESTAURANT -->
+        <!-- GROUPED FOOD ITEMS CONTAINERS -->
         <div id="grouped-cart-items-wrapper" class="space-y-5">
-          <!-- Dynamically populated by JS into Restaurant & Food Item groups -->
+          <!-- Dynamically populated by JS into Food Item cards -->
+        </div>
+
+        <!-- SPECIAL COOKING INSTRUCTIONS CARD -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-redBrand text-xl">cooking</span>
+            <h3 class="text-sm font-black font-display text-slate-900">Special Cooking & Preparation Instructions (Optional)</h3>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Have specific preferences? Let the chef know how you want your food prepared.</p>
+          
+          <div class="relative">
+            <textarea 
+              id="special-instructions-input"
+              rows="2"
+              placeholder="e.g. Make extra spicy, less oil & salt, no onions in salad, extra cutlery please..."
+              class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-redBrand/40 focus:bg-white transition-all placeholder-slate-400"
+            ></textarea>
+          </div>
+
+          <div class="flex flex-wrap gap-2 pt-1 text-[11px] font-extrabold text-slate-600">
+            <button class="quick-instruction-chip px-3 py-1 rounded-full bg-slate-100 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all cursor-pointer" data-val="🌶️ Extra Spicy">
+              🌶️ Extra Spicy
+            </button>
+            <button class="quick-instruction-chip px-3 py-1 rounded-full bg-slate-100 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all cursor-pointer" data-val="🫓 Less Oil & Salt">
+              🫓 Less Oil & Salt
+            </button>
+            <button class="quick-instruction-chip px-3 py-1 rounded-full bg-slate-100 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all cursor-pointer" data-val="🧅 No Onions in Salad">
+              🧅 No Onions
+            </button>
+            <button class="quick-instruction-chip px-3 py-1 rounded-full bg-slate-100 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all cursor-pointer" data-val="🍴 Include Extra Cutlery">
+              🍴 Extra Cutlery
+            </button>
+          </div>
         </div>
 
       </div>
@@ -190,11 +226,10 @@ const cartRecommendations = catalog.slice(0, 4);
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CART ENGINE & EXACT CALCULATIONS -->
+  <!-- CLIENT-SIDE CART ENGINE & CALCULATIONS -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // 1. Get Normalized Cart Array
       function getNormalizedCart() {
         let raw = [];
         try {
@@ -220,7 +255,6 @@ const cartRecommendations = catalog.slice(0, 4);
         renderCartUI();
       }
 
-      // 2. Main Render Cart Logic
       function renderCartUI() {
         const cart = getNormalizedCart();
         const emptyBox = document.getElementById('empty-cart-container');
@@ -246,7 +280,7 @@ const cartRecommendations = catalog.slice(0, 4);
         // Group products by Restaurant
         const groups = {};
         cart.forEach(item => {
-          const restaurantName = item.restaurant || item.cat || 'Bhusawal Verified Restaurant';
+          const restaurantName = item.restaurant || item.cat || 'Bhusawal Express Kitchen';
           if (!groups[restaurantName]) groups[restaurantName] = [];
           groups[restaurantName].push(item);
         });
@@ -260,10 +294,10 @@ const cartRecommendations = catalog.slice(0, 4);
             html += `
               <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
                 
-                <!-- Restaurant Name Header -->
+                <!-- Restaurant Header -->
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div class="flex items-center gap-2">
-                    <span class="w-8 h-8 rounded-xl bg-redLight text-redBrand flex items-center justify-center text-base font-bold">🏪</span>
+                    <span class="w-8 h-8 rounded-xl bg-redLight text-redBrand flex items-center justify-center text-base font-bold">🍳</span>
                     <h3 class="text-base font-black text-slate-900 font-display">${restName}</h3>
                   </div>
                   <span class="text-xs font-bold text-slate-400">${items.length} ${items.length === 1 ? 'item' : 'items'}</span>
@@ -288,7 +322,7 @@ const cartRecommendations = catalog.slice(0, 4);
                     </div>
                     <div class="min-w-0 flex-1">
                       <h4 class="text-xs sm:text-sm font-extrabold text-slate-900 truncate">${name}</h4>
-                      <p class="text-[11px] font-bold text-slate-400 mt-0.5">MRP ₹${price} / unit</p>
+                      <p class="text-[11px] font-bold text-slate-400 mt-0.5">Price ₹${price} / item</p>
                     </div>
                   </div>
 
@@ -302,7 +336,10 @@ const cartRecommendations = catalog.slice(0, 4);
 
                     <div class="text-right min-w-[3.5rem]">
                       <span class="text-sm font-black text-slate-900 block">₹${itemTotal}</span>
-                      <button class="cart-delete-btn text-[10px] font-extrabold text-slate-400 hover:text-rose-500 transition-colors" data-id="${id}">Remove</button>
+                      <button class="cart-delete-btn text-[10px] font-extrabold text-slate-400 hover:text-rose-500 transition-colors flex items-center gap-0.5 ml-auto" data-id="${id}">
+                        <span class="material-symbols-outlined text-[12px]">delete</span>
+                        <span>Remove</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -355,7 +392,6 @@ const cartRecommendations = catalog.slice(0, 4);
           });
         }
 
-        // 3. Perform Calculations (Subtotal + Fixed Delivery ₹30)
         calculateSummary(cart);
       }
 
@@ -366,7 +402,6 @@ const cartRecommendations = catalog.slice(0, 4);
         const deliveryFee = 30; // Fixed Delivery Fee = ₹30
         const grandTotal = Math.round(subtotal + deliveryFee);
 
-        // Update DOM Price Summary Elements
         const countEl = document.getElementById('summary-items-count');
         const subtotalEl = document.getElementById('summary-subtotal');
         const deliveryEl = document.getElementById('summary-delivery');
@@ -380,7 +415,28 @@ const cartRecommendations = catalog.slice(0, 4);
         if (btnGrandEl) btnGrandEl.textContent = `Proceed to Checkout • ₹${grandTotal}`;
       }
 
-      // 4. Clear Entire Cart Action
+      // Quick instruction chips
+      document.querySelectorAll('.quick-instruction-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const val = chip.getAttribute('data-val');
+          const input = document.getElementById('special-instructions-input');
+          if (input) {
+            if (input.value) input.value += ', ' + val;
+            else input.value = val;
+            localStorage.setItem('bhusawal_food_cooking_notes', input.value);
+          }
+        });
+      });
+
+      const input = document.getElementById('special-instructions-input');
+      if (input) {
+        input.value = localStorage.getItem('bhusawal_food_cooking_notes') || '';
+        input.addEventListener('input', () => {
+          localStorage.setItem('bhusawal_food_cooking_notes', input.value);
+        });
+      }
+
+      // Clear Entire Cart Action
       document.getElementById('clear-entire-cart-btn')?.addEventListener('click', () => {
         if (confirm('Are you sure you want to clear your food cart?')) {
           localStorage.removeItem('bhusawal_cart');
@@ -388,7 +444,6 @@ const cartRecommendations = catalog.slice(0, 4);
         }
       });
 
-      // Initial Call
       renderCartUI();
     });
   </script>
