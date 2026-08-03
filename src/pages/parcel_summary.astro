@@ -330,6 +330,152 @@ import Switcher from '../components/Switcher.astro';
   </main>
 
 
+  <!-- ==================== DELIVERY PARTNER SEARCHING & ASSIGNED OVERLAY MODAL ==================== -->
+  <div id="partner-search-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300">
+    <div class="bg-white w-full max-w-lg rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl space-y-0 border border-slate-100 flex flex-col animate-in fade-in slide-in-from-bottom-6 duration-300">
+      
+      <!-- PHASE 1: SEARCHING FOR DELIVERY PARTNER -->
+      <div id="partner-search-phase" class="p-6 sm:p-8 text-center space-y-6">
+        
+        <!-- RADAR RIPPLE ANIMATION WITH PACKAGE BIKE ICON -->
+        <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+          <div class="absolute inset-0 rounded-full bg-yellowBrand/30 animate-ping"></div>
+          <div class="absolute inset-2 rounded-full bg-yellowBrand/40 animate-pulse"></div>
+          <div class="relative z-10 w-20 h-20 rounded-full bg-yellowBrand text-slate-950 flex items-center justify-center text-4xl shadow-xl border-2 border-white">
+            📦
+          </div>
+        </div>
+
+        <!-- TEXT STATUS -->
+        <div class="space-y-1.5">
+          <h3 class="text-xl font-black font-display text-slate-900 animate-pulse">Searching for Delivery Partner...</h3>
+          <p class="text-xs font-extrabold text-slate-500">Connecting with active Bhusawal express parcel riders nearby</p>
+        </div>
+
+        <!-- METRICS INFO PILLS -->
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <div class="bg-yellowLight rounded-2xl p-3 border border-yellowBorder text-center">
+            <span class="text-[10px] font-black text-yellowDeep uppercase tracking-wider block">Available Partners</span>
+            <span class="text-sm font-black text-slate-900">⚡ 5 Active Riders</span>
+          </div>
+          <div class="bg-yellowLight rounded-2xl p-3 border border-yellowBorder text-center">
+            <span class="text-[10px] font-black text-yellowDeep uppercase tracking-wider block">Estimated Arrival</span>
+            <span class="text-sm font-black text-slate-900">⏱️ ~5 Mins Pickup</span>
+          </div>
+        </div>
+
+        <!-- CANCEL SEARCH BUTTON -->
+        <button id="btn-cancel-partner-search" type="button" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black rounded-xl transition-all active:scale-95">
+          Cancel Search
+        </button>
+      </div>
+
+
+      <!-- PHASE 2: PARTNER ACCEPTS & ASSIGNED (Revealed after 3.5s animation) -->
+      <div id="partner-match-phase" class="hidden p-6 sm:p-8 space-y-5 animate-in fade-in zoom-in-95 duration-500">
+        
+        <!-- SUCCESS BANNER -->
+        <div class="bg-emerald-50 text-emerald-800 p-3.5 rounded-2xl border border-emerald-200 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-emerald-600 text-xl animate-bounce">check_circle</span>
+            <div>
+              <h4 class="text-xs font-black">Delivery Partner Accepted!</h4>
+              <p class="text-[10px] font-bold text-emerald-600">Rider is arriving at pickup location in 5 mins</p>
+            </div>
+          </div>
+          <span class="bg-emerald-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase">ASSIGNED</span>
+        </div>
+
+        <!-- PARTNER DETAILS CARD -->
+        <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+          <div class="flex items-center gap-3">
+            <!-- Partner Photo Avatar -->
+            <div class="relative">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80" alt="Delivery Partner Vikram Patil" class="w-14 h-14 rounded-2xl object-cover border-2 border-yellowBrand shadow-md" />
+              <span class="absolute -bottom-1 -right-1 bg-yellowBrand text-slate-950 w-5 h-5 rounded-full flex items-center justify-center text-[10px] shadow-xs">⚡</span>
+            </div>
+
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h3 class="text-base font-black text-slate-900">Vikram Patil</h3>
+                <span class="inline-flex items-center gap-0.5 bg-yellowLight text-yellowDeep text-[9px] font-black px-1.5 py-0.5 rounded border border-yellowBorder" title="Verified Delivery Captain">
+                  <span class="material-symbols-outlined text-[11px]">verified</span> Verified Partner
+                </span>
+              </div>
+
+              <!-- Rating & Deliveries -->
+              <div class="flex items-center gap-2 text-xs font-bold text-slate-600 mt-0.5">
+                <span class="flex items-center gap-0.5 text-amber-500">
+                  ⭐ <span>4.9</span>
+                </span>
+                <span class="text-slate-300">•</span>
+                <span>850+ completed deliveries</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vehicle Details Badge -->
+          <div class="text-right">
+            <span class="bg-yellowBrand text-slate-950 text-xs font-black px-2.5 py-1 rounded-lg border border-yellowDark/20 shadow-2xs block font-mono">
+              MH 19 BJ 5921
+            </span>
+            <span class="text-[10px] text-slate-500 font-bold block mt-0.5">Express Delivery Bike</span>
+          </div>
+        </div>
+
+        <!-- SAFETY & HANDOVER BADGES -->
+        <div class="flex items-center justify-between text-xs font-bold bg-yellowLight/60 p-3 rounded-xl border border-yellowBorder">
+          <div class="flex items-center gap-1.5 text-yellowDeep">
+            <span class="material-symbols-outlined text-base">verified_user</span>
+            <span>Tamper-Proof Box & Live OTP Verification</span>
+          </div>
+          <span class="bg-white text-emerald-700 text-[10px] font-black px-2 py-0.5 rounded-md border border-emerald-200">
+            ✓ Verified Rider
+          </span>
+        </div>
+
+        <!-- PARCEL SUMMARY DETAILS -->
+        <div class="bg-slate-50 rounded-xl p-3 space-y-1.5 text-xs border border-slate-200/80">
+          <div class="flex justify-between font-semibold text-slate-600">
+            <span>Pickup Spot:</span>
+            <span class="font-bold text-slate-900 truncate max-w-[200px]" id="modal-pickup-text">Varangaon Road</span>
+          </div>
+          <div class="flex justify-between font-semibold text-slate-600">
+            <span>Drop Destination:</span>
+            <span class="font-bold text-slate-900 truncate max-w-[200px]" id="modal-drop-text">Jamner Road</span>
+          </div>
+          <div class="flex justify-between font-black text-slate-900 pt-1 border-t border-slate-200">
+            <span>Total Delivery Fee:</span>
+            <span class="text-yellowDeep text-sm font-black" id="modal-fare-text">₹40</span>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS: CALL, MESSAGE, CANCEL REQUEST -->
+        <div class="grid grid-cols-3 gap-2.5 pt-1">
+          <!-- Call -->
+          <a href="tel:+919876543210" class="py-3 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white text-xs font-black rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95">
+            <span class="material-symbols-outlined text-base">call</span>
+            <span>Call Rider</span>
+          </a>
+
+          <!-- Message -->
+          <button id="btn-message-partner" type="button" class="py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95">
+            <span class="material-symbols-outlined text-base">chat</span>
+            <span>Message</span>
+          </button>
+
+          <!-- Cancel Request -->
+          <button id="btn-cancel-assigned-partner" type="button" class="py-3 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-black rounded-xl transition-all active:scale-95">
+            Cancel Request
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
   <!-- ==================== LARGE YELLOW "CONFIRM PICKUP REQUEST" BUTTON (FIXED BOTTOM BAR) ==================== -->
   <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-4 shadow-2xl">
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
@@ -363,6 +509,8 @@ import Switcher from '../components/Switcher.astro';
     (function() {
       // 1. READ PARCEL DRAFT FROM LOCALSTORAGE
       var parcelDraft = null;
+      var searchTimer = null;
+
       try {
         parcelDraft = JSON.parse(localStorage.getItem('bhusawal_parcel_draft') || 'null');
       } catch(e) {}
@@ -486,8 +634,15 @@ import Switcher from '../components/Switcher.astro';
         });
       });
 
-      // 5. CONFIRM PICKUP REQUEST BUTTON ACTION
+      // 5. SEARCH & PARTNER MATCH OVERLAY SYSTEM
+      var partnerModal = document.getElementById('partner-search-modal');
+      var searchPhase = document.getElementById('partner-search-phase');
+      var matchPhase = document.getElementById('partner-match-phase');
       var confirmBtn = document.getElementById('btn-confirm-pickup-request');
+      var cancelSearchBtn = document.getElementById('btn-cancel-partner-search');
+      var cancelPartnerBtn = document.getElementById('btn-cancel-assigned-partner');
+      var messageBtn = document.getElementById('btn-message-partner');
+
       if (confirmBtn) {
         confirmBtn.addEventListener('click', function() {
           var orderId = 'PARCEL-BHU-' + Math.floor(100000 + Math.random() * 900000);
@@ -505,6 +660,9 @@ import Switcher from '../components/Switcher.astro';
             paymentMethod: selectedPayment,
             status: 'Rider Assigned',
             rider: 'Vikram Patil (Express Rider)',
+            rating: '4.9 ⭐',
+            deliveries: '850+ completed deliveries',
+            vehicle: 'Express Delivery Bike (MH 19 BJ 5921)',
             timestamp: new Date().toISOString()
           };
 
@@ -516,8 +674,52 @@ import Switcher from '../components/Switcher.astro';
             localStorage.removeItem('bhusawal_parcel_draft');
           } catch(e) {}
 
-          alert('🎉 Pickup Request Confirmed! Express Rider Vikram Patil is assigned and reaching pickup location in 5 minutes. Redirecting to live tracking...');
-          window.location.href = '/track_order';
+          // Update Modal Details
+          var pTxt = document.getElementById('modal-pickup-text');
+          var dTxt = document.getElementById('modal-drop-text');
+          var fTxt = document.getElementById('modal-fare-text');
+          if (pTxt) pTxt.textContent = parcelDraft.pickupAddress || 'Varangaon Road';
+          if (dTxt) dTxt.textContent = parcelDraft.dropAddress || 'Jamner Road';
+          if (fTxt) fTxt.textContent = '₹' + totalFee;
+
+          // Open Searching Modal
+          if (partnerModal) {
+            partnerModal.classList.remove('hidden');
+            if (searchPhase) searchPhase.classList.remove('hidden');
+            if (matchPhase) matchPhase.classList.add('hidden');
+          }
+
+          // Trigger 3.5s Simulated Match Transition Animation
+          if (searchTimer) clearTimeout(searchTimer);
+          searchTimer = setTimeout(function() {
+            if (searchPhase) searchPhase.classList.add('hidden');
+            if (matchPhase) {
+              matchPhase.classList.remove('hidden');
+              matchPhase.classList.add('animate-in', 'fade-in', 'zoom-in-95');
+            }
+          }, 3500);
+        });
+      }
+
+      if (cancelSearchBtn) {
+        cancelSearchBtn.addEventListener('click', function() {
+          if (searchTimer) clearTimeout(searchTimer);
+          if (partnerModal) partnerModal.classList.add('hidden');
+        });
+      }
+
+      if (cancelPartnerBtn) {
+        cancelPartnerBtn.addEventListener('click', function() {
+          if (confirm('Are you sure you want to cancel this pickup request?')) {
+            if (partnerModal) partnerModal.classList.add('hidden');
+            alert('Pickup request cancelled.');
+          }
+        });
+      }
+
+      if (messageBtn) {
+        messageBtn.addEventListener('click', function() {
+          alert('💬 Delivery Partner Vikram Patil: "Hello! I am assigned to collect your parcel. Reaching pickup spot in 5 minutes."');
         });
       }
 
