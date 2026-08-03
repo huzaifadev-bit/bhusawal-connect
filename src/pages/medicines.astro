@@ -1,433 +1,708 @@
 ---
 import Switcher from '../components/Switcher.astro';
+
+// Sponsored Pharmacies in Bhusawal
+const sponsoredMedicalStores = [
+  {
+    id: 'apollo_bhusawal',
+    name: 'Apollo Pharmacy - Station Road',
+    cover: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&w=800&q=80',
+    rating: '4.9',
+    deliveryTime: '10-15 min',
+    isVerified: true,
+    discount: 'Flat 15% OFF on Prescription'
+  },
+  {
+    id: 'wellness_forever',
+    name: 'Wellness Forever 24x7',
+    cover: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=800&q=80',
+    rating: '4.8',
+    deliveryTime: '12-18 min',
+    isVerified: true,
+    discount: '24x7 Emergency Delivery'
+  },
+  {
+    id: 'samarth_medical',
+    name: 'Shree Samarth Medical & Surgicals',
+    cover: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=800&q=80',
+    rating: '4.9',
+    deliveryTime: '10-15 min',
+    isVerified: true,
+    discount: 'Free Delivery above ₹299'
+  },
+  {
+    id: 'maharashtra_medical',
+    name: 'New Maharashtra Medical',
+    cover: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80',
+    rating: '4.7',
+    deliveryTime: '15-20 min',
+    isVerified: true,
+    discount: '100% Genuine Medicines'
+  }
+];
+
+// Shop By Category Grid
+const shopCategories = [
+  { id: 'cat_rx', name: 'Prescription Medicines', icon: '💊', color: 'bg-blue-50 border-blue-200 text-blue-700' },
+  { id: 'cat_wellness', name: 'Health & Wellness', icon: '💪', color: 'bg-indigo-50 border-indigo-200 text-indigo-700' },
+  { id: 'cat_personal', name: 'Personal Care', icon: '🧴', color: 'bg-teal-50 border-teal-200 text-teal-700' },
+  { id: 'cat_baby', name: 'Baby Care', icon: '👶', color: 'bg-sky-50 border-sky-200 text-sky-700' },
+  { id: 'cat_devices', name: 'Medical Devices', icon: '🩺', color: 'bg-cyan-50 border-cyan-200 text-cyan-700' },
+  { id: 'cat_ayurveda', name: 'Ayurveda & Herbal', icon: '🌱', color: 'bg-emerald-50 border-emerald-200 text-emerald-700' }
+];
+
+// 7. Popular Medicines
+const popularMedicines = [
+  { id: 'med_101', name: 'Dolo 650mg Tablet (Strip of 15)', price: 32, mrp: 34, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.9', rxRequired: false, pack: '15 Tablets' },
+  { id: 'med_102', name: 'Crocin Advance 500mg (Strip of 20)', price: 28, mrp: 30, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.8', rxRequired: false, pack: '20 Tablets' },
+  { id: 'med_103', name: 'Volini Pain Relief Spray (100g)', price: 215, mrp: 245, image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.9', rxRequired: false, pack: '100g Can' },
+  { id: 'med_104', name: 'Electral ORS Powder (21.8g Sachet)', price: 22, mrp: 22, image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.9', rxRequired: false, pack: '1 Sachet' },
+  { id: 'med_105', name: 'Combiflam Pain Relief Tablet (Strip of 20)', price: 45, mrp: 48, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.8', rxRequired: false, pack: '20 Tablets' },
+  { id: 'med_106', name: 'Vicks Vaporub Relief Balm (50g)', price: 145, mrp: 160, image: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.9', rxRequired: false, pack: '50g Jar' }
+];
+
+// 8. Health & Wellness
+const healthWellnessItems = [
+  { id: 'med_201', name: 'Revital H Daily Multivitamin (60 Capsules)', price: 495, mrp: 550, image: 'https://images.unsplash.com/photo-1550572017-edf79289989a?auto=format&fit=crop&w=800&q=80', category: 'Health & Wellness', rating: '4.9', rxRequired: false, pack: '60 Capsules' },
+  { id: 'med_202', name: 'Shelcal 500 Calcium & D3 (Strip of 15)', price: 118, mrp: 131, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Health & Wellness', rating: '4.8', rxRequired: false, pack: '15 Tablets' },
+  { id: 'med_203', name: 'Becosules Z Multivitamin Capsules (20s)', price: 48, mrp: 52, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Health & Wellness', rating: '4.9', rxRequired: false, pack: '20 Capsules' },
+  { id: 'med_204', name: 'Limcee 500mg Vitamin C Chewable (15s)', price: 24, mrp: 26, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Health & Wellness', rating: '4.8', rxRequired: false, pack: '15 Tablets' },
+  { id: 'med_205', name: 'Dabur Chyawanprash Special 1kg Jar', price: 345, mrp: 395, image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=800&q=80', category: 'Health & Wellness', rating: '4.9', rxRequired: false, pack: '1kg Jar' }
+];
+
+// 9. Personal Care
+const personalCareItems = [
+  { id: 'med_301', name: 'Dettol Antiseptic Liquid (500ml)', price: 212, mrp: 235, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.9', rxRequired: false, pack: '500ml Bottle' },
+  { id: 'med_302', name: 'Savlon Antiseptic Cream (60g)', price: 72, mrp: 80, image: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.8', rxRequired: false, pack: '60g Tube' },
+  { id: 'med_303', name: 'Sensodyne Rapid Relief Toothpaste (100g)', price: 210, mrp: 230, image: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.9', rxRequired: false, pack: '100g Tube' },
+  { id: 'med_304', name: 'Nivea Soft Light Moisturizing Cream (200ml)', price: 299, mrp: 340, image: 'https://images.unsplash.com/photo-1608248597379-e07543926b11?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.9', rxRequired: false, pack: '200ml Tub' }
+];
+
+// 10. Baby Care
+const babyCareItems = [
+  { id: 'med_401', name: 'Pampers All-Round Protection Diapers (M, 48s)', price: 799, mrp: 899, image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.9', rxRequired: false, pack: '48 Diapers' },
+  { id: 'med_402', name: 'Himalaya Gentle Baby Wipes (72 Wipes)', price: 175, mrp: 195, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.8', rxRequired: false, pack: '72 Pack' },
+  { id: 'med_403', name: "Johnson's Baby Powder (400g)", price: 285, mrp: 310, image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.9', rxRequired: false, pack: '400g Pack' },
+  { id: 'med_404', name: 'Nestle Cerelac Wheat Apple Baby Cereal (300g)', price: 260, mrp: 275, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.9', rxRequired: false, pack: '300g Box' }
+];
+
+// 11. Medical Devices
+const medicalDevicesItems = [
+  { id: 'med_501', name: 'Omron HEM-7120 Fully Automatic BP Monitor', price: 1990, mrp: 2480, image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.9', rxRequired: false, pack: '1 Unit' },
+  { id: 'med_502', name: 'Dr. Morepen BG-03 Blood Glucose Monitor (50 Strips)', price: 799, mrp: 1099, image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.8', rxRequired: false, pack: '1 Kit + 50 Strips' },
+  { id: 'med_503', name: 'Dr. Trust Infrared Digital Thermometer', price: 1199, mrp: 1599, image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.9', rxRequired: false, pack: '1 Unit' },
+  { id: 'med_504', name: 'HealthSense Facial Steamer & Vaporizer', price: 499, mrp: 799, image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.7', rxRequired: false, pack: '1 Device' }
+];
 ---
 
-<html class="light" lang="en">
+<!DOCTYPE html>
+<html lang="en" class="light">
 <head>
   <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Medicines Store - Bhusawal Connect</title>
-  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
-  <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
-  <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medicines & Pharmacy Express Delivery | Bhusawal Connect</title>
   
-  <script is:inline id="tailwind-config">
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- CLEAN LIGHT BLUE (#3B82F6) & WHITE THEME TAILWIND CONFIGURATION -->
+  <script is:inline>
     tailwind.config = {
-      darkMode: "class",
       theme: {
         extend: {
-          "colors": {
-            "secondary-container": "#e5e2e1",
-            "on-primary": "#ffffff",
-            "on-surface-variant": "#5b4039",
-            "outline": "#907067",
-            "on-primary-container": "#ffffff",
-            "surface-tint": "#7c3aed",
-            "secondary": "#5f5e5e",
-            "inverse-primary": "#ffb5a0",
-            "outline-variant": "#e4beb4",
-            "on-secondary-fixed": "#1c1b1b",
-            "background": "#f9f9f9",
-            "error-container": "#ffdad6",
-            "tertiary": "#006e1c",
-            "surface-container-lowest": "#ffffff",
-            "on-error": "#ffffff",
-            "inverse-surface": "#2f3131",
-            "on-tertiary": "#ffffff",
-            "surface-container-highest": "#e2e2e2",
-            "secondary-fixed": "#e5e2e1",
-            "tertiary-fixed": "#94f990",
-            "surface-container": "#eeeeee",
-            "on-surface": "#1a1c1c",
-            "primary": "#0d9488",
-            "primary-container": "#14b8a6",
-            "on-secondary-container": "#656464",
-            "surface-container-low": "#f3f3f3",
-            "surface-dim": "#dadada",
-            "primary-fixed": "#ccfbf1",
-            "on-primary-fixed-variant": "#862200",
-            "error": "#ba1a1a",
-            "on-error-container": "#93000a",
-            "surface-container-high": "#e8e8e8",
-            "surface-bright": "#f9f9f9",
-            "on-secondary": "#ffffff",
-            "surface": "#f9f9f9"
+          colors: {
+            blueBrand: '#3B82F6',
+            blueDark: '#2563EB',
+            blueLight: '#EFF6FF'
           },
-          "fontFamily": {
-            "label-sm": ["Plus Jakarta Sans"],
-            "label-md": ["Plus Jakarta Sans"],
-            "body-md": ["Plus Jakarta Sans"],
-            "headline-md": ["Plus Jakarta Sans"],
-            "headline-lg-mobile": ["Plus Jakarta Sans"]
-          },
-          "spacing": {
-            "margin-mobile": "16px",
-            "gutter": "16px"
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
           }
         }
       }
-    }
+    };
   </script>
-  
+
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f9f9f9; min-height: 100dvh; }
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    html { scroll-behavior: smooth; }
   </style>
 </head>
-<body class="text-on-surface bg-background pb-32">
-  <!-- Top App Bar -->
-  <header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
-    <div class="flex items-center gap-2 min-w-0">
-        
-        <a href="/home" class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-150 flex-shrink-0 flex items-center justify-center mr-1">
-            <span class="material-symbols-outlined text-primary">arrow_back</span>
-        </a>
-  
-        <!-- Delivery Time & Location Info -->
-        <div class="flex flex-col min-w-0">
-            <div class="flex items-center gap-1">
-                <span class="material-symbols-outlined text-primary text-sm font-black animate-pulse" style="font-variation-settings: 'FILL' 1;">bolt</span>
-                <span class="font-extrabold text-[13px] tracking-tight text-on-surface" id="header-eta">10 minutes</span>
-            </div>
-            <div class="flex items-center gap-0.5 text-[10px] text-on-surface-variant font-extrabold cursor-pointer hover:text-primary transition-colors min-w-0 uppercase tracking-wide">
-                <span class="truncate" id="header-address">Home - Varangaon Road, Bhusawal</span>
-                <span class="material-symbols-outlined text-xs flex-shrink-0">keyboard_arrow_down</span>
-            </div>
-        </div>
-    </div>
-    <!-- Profile Avatar on Top Right -->
-    <a href="/profile" class="w-9 h-9 rounded-full overflow-hidden border border-outline-variant/30 flex-shrink-0 hover:ring-2 hover:ring-primary/20 active:scale-90 transition-all flex items-center justify-center">
-        <img loading="lazy" class="w-full h-full object-cover" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Profile"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-    </a>
-</header>
-<script is:inline>
-  (function() {
-    const cachedAddr = localStorage.getItem('bhusawal_user_address') || 'Home - Varangaon Rd, Bhusawal';
-    const cachedLat = localStorage.getItem('bhusawal_user_lat');
-    const cachedLng = localStorage.getItem('bhusawal_user_lng');
+
+<body class="pb-32 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased bg-white">
+
+  <!-- ==================== 1. DELIVERY ADDRESS TOP BAR ==================== -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-6 py-3.5 shadow-xs flex items-center justify-between">
     
-    document.addEventListener('DOMContentLoaded', () => {
-      const addrEl = document.getElementById('header-address');
-      if (addrEl) {
-        // Shorten the address to make it look clean (max 30 chars) and append "..." if longer
-        let shortAddr = cachedAddr;
-        if (shortAddr.length > 30) {
-          shortAddr = shortAddr.substring(0, 27) + '...';
-        }
-        addrEl.textContent = shortAddr;
-      }
-      
-      const etaEl = document.getElementById('header-eta');
-      if (etaEl) {
-        if (cachedLat && cachedLng) {
-          const lat1 = parseFloat(cachedLat);
-          const lng1 = parseFloat(cachedLng);
-          const lat2 = 21.0478;
-          const lng2 = 75.7896;
-          const R = 6371;
-          const dLat = (lat2 - lat1) * Math.PI / 180;
-          const dLon = (lng2 - lng1) * Math.PI / 180;
-          const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
-          const dist = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-          const minutes = Math.max(7, Math.round(dist * 2.5 + 4));
-          etaEl.textContent = minutes + ' minutes';
-        } else {
-          etaEl.textContent = '10 minutes';
-        }
-      }
-    });
-  })();
-</script>
+    <div class="flex items-center gap-3">
+      <a href="/home" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+      </a>
 
-  <main class="max-w-md mx-auto px-margin-mobile pt-6 space-y-6">
-    <!-- Prescription Banner -->
-    <a href="/upload_prescription" class="block bg-tertiary/10 border border-tertiary/20 rounded-2xl p-5 hover:bg-tertiary/15 transition-all">
-      <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl bg-tertiary text-white flex items-center justify-center">
-          <span class="material-symbols-outlined text-2xl">description</span>
-        </div>
-        <div class="flex-1">
-          <h3 class="font-bold text-label-md text-tertiary">Have a Prescription?</h3>
-          <p class="text-xs text-on-surface-variant mt-1">Upload your doctor's receipt to order regulated prescription medicines directly.</p>
-        </div>
-        <span class="material-symbols-outlined text-tertiary self-center">chevron_right</span>
-      </div>
-    </a>
-
-    <!-- Search Section -->
-    <div class="relative">
-      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-      <input type="text" class="w-full h-14 pl-12 pr-4 bg-white border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-body-md" placeholder="Search medicines (e.g. Paracetamol, Dolo)" />
-    </div>
-
-    <!-- Medicine List -->
-    <section class="space-y-4">
-      <h2 class="font-bold text-headline-md text-on-surface">Common Medicines</h2>
-      <div class="grid grid-cols-2 gap-4">
-        <!-- Item 1 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
-          <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Eno</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Eno Eno Fruit Salt - Lemon Fresh</h3>
-            <p class="text-xs text-on-surface-variant mt-1">5 g</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹10</span>
-            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
-          </div>
-        </div>
-        <!-- Item 2 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
-          <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Eno</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Eno Eno Fruit Salt - Lemon Fresh</h3>
-            <p class="text-xs text-on-surface-variant mt-1">100 g</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹160</span>
-            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
-          </div>
-        </div>
-        <!-- Item 3 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
-          <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Eno</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Eno Eno Fruit Salt - Cola fizz</h3>
-            <p class="text-xs text-on-surface-variant mt-1">5 g</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹10</span>
-            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
-          </div>
-        </div>
-        <!-- Item 4 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
-          <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Eno</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Eno Eno Fruit Salt - Cola fizz</h3>
-            <p class="text-xs text-on-surface-variant mt-1">100 g</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹160</span>
-            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
-          </div>
-        </div>
-        <!-- Item 5 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
-          <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Dettol</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Dettol Dettol Antiseptic Liquid - Original Formula</h3>
-            <p class="text-xs text-on-surface-variant mt-1">250 ml</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹145</span>
-            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
-          </div>
-        </div>
-        <!-- Item 6 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
-          <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Dettol</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Dettol Dettol Antiseptic Liquid - Original Formula</h3>
-            <p class="text-xs text-on-surface-variant mt-1">500 ml</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹260</span>
-            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
-          </div>
-        </div>
-        <!-- Item 7 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
-          <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Dettol</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Dettol Dettol Antiseptic Liquid - Original Formula</h3>
-            <p class="text-xs text-on-surface-variant mt-1">1 L</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹420</span>
-            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
-          </div>
-        </div>
-        <!-- Item 8 -->
-        <div class="bg-white rounded-2xl p-4 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex flex-col justify-between">
-          <div>
-            <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Savlon</span>
-            <h3 class="font-bold text-label-md text-on-surface mt-2">Savlon Dettol Antiseptic Liquid - Original Formula</h3>
-            <p class="text-xs text-on-surface-variant mt-1">250 ml</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between">
-            <span class="font-bold text-on-surface">₹145</span>
-            <button class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold hover:brightness-110 active:scale-90 transition-all">Add</button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Cart Floating Bar -->
-  <div class="fixed bottom-24 left-4 right-4 z-50">
-    <div class="bg-primary text-on-primary h-16 rounded-2xl flex items-center justify-between px-6 shadow-xl cursor-pointer hover:brightness-110 transition-all">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-          <span class="material-symbols-outlined">shopping_basket</span>
+      <!-- Delivery Address -->
+      <div class="flex items-center gap-2 cursor-pointer hover:opacity-95 transition-opacity" id="medicine-address-btn">
+        <div class="w-9 h-9 rounded-full bg-blueLight text-blueBrand flex items-center justify-center font-bold">
+          <span class="material-symbols-outlined text-xl">location_on</span>
         </div>
         <div>
-          <p class="font-bold text-label-md leading-none">0 Items</p>
-          <p class="text-[10px] text-white/80">₹0 • Pharmacy Delivery</p>
+          <div class="flex items-center gap-1">
+            <span class="text-xs font-black text-blueBrand uppercase tracking-wider">DELIVERING TO</span>
+            <span class="material-symbols-outlined text-sm text-blueBrand">expand_more</span>
+          </div>
+          <p class="text-xs font-bold text-slate-800 truncate max-w-[200px] sm:max-w-xs" id="medicine-delivery-address-text">
+            Home - Varangaon Road, Bhusawal
+          </p>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <span class="font-bold uppercase tracking-widest text-sm">Order Now</span>
-        <span class="material-symbols-outlined">arrow_forward</span>
+    </div>
+
+    <!-- Notification Button & Global Cart Button -->
+    <div class="flex items-center gap-2">
+      <a href="/upload_prescription" class="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full bg-blueLight text-blueBrand text-xs font-black border border-blue-200 hover:bg-blueBrand hover:text-white transition-all shadow-xs">
+        <span class="material-symbols-outlined text-sm">upload_file</span>
+        <span>Upload Rx</span>
+      </a>
+
+      <a href="/cart" class="relative w-10 h-10 rounded-full bg-blueBrand text-white flex items-center justify-center font-bold hover:bg-blueDark transition-colors shadow-md group">
+        <span class="material-symbols-outlined text-xl">shopping_bag</span>
+        <span id="med-cart-badge" class="absolute -top-1 -right-1 bg-slate-900 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
+      </a>
+    </div>
+
+  </header>
+
+  <main class="px-4 sm:px-6 py-5 space-y-7">
+
+    <!-- ==================== 2. SEARCH MEDICINES ==================== -->
+    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2 space-y-2.5 relative" id="med-search-box">
+      <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-blueBrand/40 focus-within:bg-white transition-all">
+        <span class="material-symbols-outlined text-slate-400">search</span>
+        <input 
+          type="text" 
+          id="med-search-input" 
+          placeholder="Search 1,000+ medicines, BP monitors, diapers & health supplements..." 
+          class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" 
+          autocomplete="off" 
+        />
+        <button id="clear-med-search" class="hidden text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
       </div>
     </div>
-  </div>
 
-  <!-- Bottom Navigation -->
-  <nav class="fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4 bg-surface/80 backdrop-blur-xl z-50 border-t border-outline-variant/30 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
-    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all" href="/home">
-      <span class="material-symbols-outlined">home</span>
-      <span class="font-label-sm text-label-sm">Home</span>
-    </a>
-    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all" href="/orders">
-      <span class="material-symbols-outlined">receipt_long</span>
-      <span class="font-label-sm text-label-sm">Orders</span>
-    </a>
-    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all" href="/grocery">
-      <span class="material-symbols-outlined">search</span>
-      <span class="font-label-sm text-label-sm">Search</span>
-    </a>
-    <a class="flex flex-col items-center justify-center text-secondary hover:text-primary transition-all" href="/profile">
-      <span class="material-symbols-outlined">person</span>
-      <span class="font-label-sm text-label-sm">Account</span>
-    </a>
-  </nav>
+    <!-- ==================== 3. HEALTH CATEGORY CHIPS ==================== -->
+    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs font-black">
+      <button class="med-chip-btn px-3.5 py-1.5 rounded-full bg-blueBrand text-white border border-blueBrand shadow-sm shrink-0 active:scale-95">
+        💊 All Medicines
+      </button>
 
-  <script is:inline>
-    let cart = JSON.parse(localStorage.getItem('bhusawal_cart_medicine') || '{}');
-    let cartCount = 0;
-    let cartTotal = 0;
+      <button class="med-chip-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-blueLight hover:text-blueBrand border border-slate-200/80 transition-all shrink-0 active:scale-95">
+        🔥 Popular
+      </button>
 
-    const cartBar = document.querySelector('.fixed.bottom-24');
-    const cartTextCount = cartBar.querySelector('p.font-bold');
-    const cartTextDetails = cartBar.querySelector('p.text-white\\/80');
+      <button class="med-chip-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-blueLight hover:text-blueBrand border border-slate-200/80 transition-all shrink-0 active:scale-95">
+        🩺 Medical Devices
+      </button>
 
-    function updateCartBar() {
-      localStorage.setItem('bhusawal_cart_medicine', JSON.stringify(cart));
-      cartCount = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
-      cartTotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
-      if (cartCount > 0) {
-        cartBar.classList.remove('hidden');
-        cartTextCount.textContent = cartCount + ' Item' + (cartCount > 1 ? 's' : '');
-        cartTextDetails.textContent = `₹${cartTotal} • Pharmacy Delivery`;
-      } else {
-        cartBar.classList.add('hidden');
-      }
-    }
+      <button class="med-chip-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-blueLight hover:text-blueBrand border border-slate-200/80 transition-all shrink-0 active:scale-95">
+        👶 Baby Care
+      </button>
 
-    function replaceWithStepper(btn, title, price, themeColor = '#10b981', imgUrl = '', packSize = '', category = '') {
-      const btnClass = btn.className;
-      const stepper = document.createElement('div');
-      // Relative positioning parent is the right column flex container
-      stepper.className = 'flex items-center rounded-lg shadow-sm overflow-hidden z-10';
-      stepper.style.backgroundColor = themeColor;
-      stepper.innerHTML = `
-        <button class="qty-minus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">−</button>
-        <span class="qty-value w-6 h-7 flex items-center justify-center text-white text-[11px] font-extrabold">1</span>
-        <button class="qty-plus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">+</button>
-      `;
-      btn.replaceWith(stepper);
+      <button class="med-chip-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-blueLight hover:text-blueBrand border border-slate-200/80 transition-all shrink-0 active:scale-95">
+        🧴 Personal Care
+      </button>
 
-      if (!cart[title]) {
-        cart[title] = { price, qty: 1, themeColor, btnClass, imgUrl, packSize, category };
-      }
-      updateCartBar();
+      <button class="med-chip-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-blueLight hover:text-blueBrand border border-slate-200/80 transition-all shrink-0 active:scale-95">
+        🌱 Ayush & Herbal
+      </button>
 
-      const qtyDisplay = stepper.querySelector('.qty-value');
-      qtyDisplay.textContent = cart[title].qty;
+      <button class="med-chip-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-blueLight hover:text-blueBrand border border-slate-200/80 transition-all shrink-0 active:scale-95">
+        💪 Vitamins & Supplements
+      </button>
+    </div>
 
-      stepper.querySelector('.qty-plus').addEventListener('click', (e) => {
-        e.stopPropagation();
-        cart[title].qty++;
-        qtyDisplay.textContent = cart[title].qty;
-        updateCartBar();
-      });
+    <!-- ==================== 4. SPONSORED MEDICAL STORES (HORIZONTAL CAROUSEL) ==================== -->
+    <section class="space-y-3 pt-1 border-b border-slate-100 pb-5">
+      <div class="flex items-center justify-between px-1">
+        <h2 class="text-base sm:text-lg font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+          <span class="text-blueBrand">🏥</span>
+          <span>Sponsored Medical Stores</span>
+        </h2>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Scroll →</span>
+      </div>
 
-      stepper.querySelector('.qty-minus').addEventListener('click', (e) => {
-        e.stopPropagation();
-        cart[title].qty--;
-        if (cart[title].qty <= 0) {
-          delete cart[title];
-          const addBtn = document.createElement('button');
-          addBtn.className = btnClass;
-          addBtn.textContent = 'Add';
-          stepper.replaceWith(addBtn);
-          bindAddButton(addBtn);
-        } else {
-          qtyDisplay.textContent = cart[title].qty;
-        }
-        updateCartBar();
-      });
-    }
+      <div class="flex items-center gap-4 overflow-x-auto no-scrollbar py-1.5 px-0.5">
+        {sponsoredMedicalStores.map(store => (
+          <div 
+            class="w-64 sm:w-72 shrink-0 bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-lg hover:border-blueBrand transition-all cursor-pointer overflow-hidden flex flex-col justify-between group"
+            onclick={`window.location.href='/shops?id=${store.id}';`}
+          >
+            <div class="h-28 sm:h-32 bg-slate-100 relative overflow-hidden">
+              <img src={store.cover} alt={store.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+              
+              <span class="absolute top-2 left-2 px-2.5 py-0.5 bg-white/95 backdrop-blur-md text-blueBrand text-[9px] font-black rounded-full uppercase tracking-wider shadow-xs border border-slate-200">
+                ✓ Verified Pharmacy
+              </span>
 
-    function bindAddButton(btn) {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const card = btn.closest('.bg-white');
-        const title = card.querySelector('h3').textContent.trim();
-        const priceText = card.querySelector('.font-bold.text-on-surface').textContent.trim();
-        const price = parseInt(priceText.replace(/[^\d]/g, ''));
-        
-        const packEl = card.querySelector('p.text-xs.text-on-surface-variant');
-        const packSize = packEl ? packEl.textContent.trim() : '1 Unit';
+              <span class="absolute bottom-2 right-2 px-2.5 py-0.5 bg-blueBrand text-white text-[9px] font-black rounded-full shadow-xs">
+                ⚡ {store.deliveryTime}
+              </span>
+            </div>
 
-        replaceWithStepper(btn, title, price, '#10b981', '', packSize, 'Medicines');
-      });
-    }
+            <div class="p-3.5 space-y-1">
+              <h3 class="text-xs font-black font-display text-slate-900 group-hover:text-blueBrand transition-colors truncate">
+                {store.name}
+              </h3>
+              <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">{store.discount}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
 
-    function syncUIWithCart() {
-      document.querySelectorAll('.bg-white').forEach(card => {
-        const titleEl = card.querySelector('h3');
-        if (!titleEl) return;
-        const title = titleEl.textContent.trim();
-        if (cart[title]) {
-          const btn = Array.from(card.querySelectorAll('button')).find(b => b.textContent.trim() === 'Add' || b.textContent.trim() === 'Added');
-          if (btn) {
-            const priceText = card.querySelector('.font-bold.text-on-surface').textContent.trim();
-            const price = parseInt(priceText.replace(/[^\d]/g, ''));
-            const packEl = card.querySelector('p.text-xs.text-on-surface-variant');
-            const packSize = packEl ? packEl.textContent.trim() : '1 Unit';
+    <!-- ==================== 5. UPLOAD DOCTOR PRESCRIPTION BANNER ==================== -->
+    <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden border border-blue-400/30">
+      <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="space-y-1.5 max-w-lg">
+          <span class="bg-white/20 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">⚡ 10 Min Rx Processing</span>
+          <h2 class="text-xl sm:text-2xl font-black font-display leading-tight">Have a Doctor's Prescription?</h2>
+          <p class="text-xs text-blue-100 font-medium">Upload photo of your prescription & our licensed Bhusawal pharmacist will fulfill & deliver medicines to your doorstep.</p>
+        </div>
 
-            replaceWithStepper(btn, title, price, '#10b981', '', packSize, 'Medicines');
-          }
-        }
-      });
-      updateCartBar();
-    }
+        <a 
+          href="/upload_prescription" 
+          class="px-6 py-3 bg-white text-blueBrand hover:bg-blue-50 font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all shrink-0 flex items-center gap-2"
+        >
+          <span class="material-symbols-outlined text-lg">cloud_upload</span>
+          <span>Upload Doctor Prescription</span>
+        </a>
+      </div>
+    </section>
 
-    // Bind and sync initial cart state
-    document.querySelectorAll('button').forEach(btn => {
-      if (btn.textContent.trim() === 'Add') {
-        bindAddButton(btn);
-      }
-    });
-    syncUIWithCart();
+    <!-- ==================== 6. SHOP BY CATEGORY ==================== -->
+    <section class="space-y-3.5 pt-2">
+      <div class="flex items-center justify-between px-1">
+        <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 flex items-center gap-2">
+          <span>🏷️ Shop by Category</span>
+        </h2>
+      </div>
 
-    cartBar.addEventListener('click', () => {
-      if (cartCount > 0) {
-        window.location.href = '/billing?type=medicine';
-      }
-    });
-  </script>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+        {shopCategories.map(cat => (
+          <div 
+            class={`p-4 rounded-3xl border flex flex-col items-center justify-center text-center gap-2 cursor-pointer hover:shadow-lg transition-all ${cat.color} group`}
+            onclick={`window.location.href='/medicine_search?cat=${encodeURIComponent(cat.name)}';`}
+          >
+            <span class="text-3xl group-hover:scale-110 transition-transform">{cat.icon}</span>
+            <span class="text-xs font-black">{cat.name}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ==================== 7. POPULAR MEDICINES ==================== -->
+    <section class="space-y-3.5 pt-2" id="sec-popular-medicines">
+      <div class="flex items-end justify-between px-1">
+        <div>
+          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+            <span>💊 Popular Medicines</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Top-selling OTC & daily health medicines ({popularMedicines.length} items)</p>
+        </div>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
+      </div>
+
+      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
+        {popularMedicines.map(item => (
+          <div 
+            class="med-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer group"
+            data-id={item.id}
+            data-name={item.name}
+            data-price={item.price}
+            data-img={item.image}
+            onclick={`window.location.href='/medicine_details?id=${item.id}';`}
+          >
+            <div>
+              <div class="w-full aspect-square bg-slate-50 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative">
+                <span class="absolute top-2 left-2 bg-blueLight text-blueBrand text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-200 uppercase">
+                  {item.pack}
+                </span>
+
+                <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
+              </div>
+
+              <span class="text-[10px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
+                {item.category}
+              </span>
+              <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem]">
+                {item.name}
+              </h3>
+            </div>
+
+            <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
+              <div>
+                <span class="text-[9px] text-slate-400 line-through font-bold">MRP ₹{item.mrp}</span>
+                <span class="text-sm sm:text-base font-black font-display text-slate-900 block">₹{item.price}</span>
+              </div>
+
+              <button 
+                class="btn-add-med px-3.5 py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs"
+                onclick="event.stopPropagation();"
+              >
+                + ADD
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ==================== 8. HEALTH & WELLNESS ==================== -->
+    <section class="space-y-3.5 pt-2" id="sec-health-wellness">
+      <div class="flex items-end justify-between px-1">
+        <div>
+          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+            <span>💪 Health & Wellness</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Vitamins, daily supplements & immunity boosters ({healthWellnessItems.length} items)</p>
+        </div>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
+      </div>
+
+      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
+        {healthWellnessItems.map(item => (
+          <div 
+            class="med-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer group"
+            data-id={item.id}
+            data-name={item.name}
+            data-price={item.price}
+            data-img={item.image}
+            onclick={`window.location.href='/medicine_details?id=${item.id}';`}
+          >
+            <div>
+              <div class="w-full aspect-square bg-slate-50 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative">
+                <span class="absolute top-2 left-2 bg-blueLight text-blueBrand text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-200 uppercase">
+                  {item.pack}
+                </span>
+
+                <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
+              </div>
+
+              <span class="text-[10px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
+                {item.category}
+              </span>
+              <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem]">
+                {item.name}
+              </h3>
+            </div>
+
+            <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
+              <div>
+                <span class="text-[9px] text-slate-400 line-through font-bold">MRP ₹{item.mrp}</span>
+                <span class="text-sm sm:text-base font-black font-display text-slate-900 block">₹{item.price}</span>
+              </div>
+
+              <button 
+                class="btn-add-med px-3.5 py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs"
+                onclick="event.stopPropagation();"
+              >
+                + ADD
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ==================== 9. PERSONAL CARE ==================== -->
+    <section class="space-y-3.5 pt-2" id="sec-personal-care">
+      <div class="flex items-end justify-between px-1">
+        <div>
+          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+            <span>🧴 Personal Care</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Antiseptics, oral hygiene & skincare ({personalCareItems.length} items)</p>
+        </div>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
+      </div>
+
+      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
+        {personalCareItems.map(item => (
+          <div 
+            class="med-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer group"
+            data-id={item.id}
+            data-name={item.name}
+            data-price={item.price}
+            data-img={item.image}
+            onclick={`window.location.href='/medicine_details?id=${item.id}';`}
+          >
+            <div>
+              <div class="w-full aspect-square bg-slate-50 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative">
+                <span class="absolute top-2 left-2 bg-blueLight text-blueBrand text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-200 uppercase">
+                  {item.pack}
+                </span>
+
+                <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
+              </div>
+
+              <span class="text-[10px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
+                {item.category}
+              </span>
+              <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem]">
+                {item.name}
+              </h3>
+            </div>
+
+            <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
+              <div>
+                <span class="text-[9px] text-slate-400 line-through font-bold">MRP ₹{item.mrp}</span>
+                <span class="text-sm sm:text-base font-black font-display text-slate-900 block">₹{item.price}</span>
+              </div>
+
+              <button 
+                class="btn-add-med px-3.5 py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs"
+                onclick="event.stopPropagation();"
+              >
+                + ADD
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ==================== 10. BABY CARE ==================== -->
+    <section class="space-y-3.5 pt-2" id="sec-baby-care">
+      <div class="flex items-end justify-between px-1">
+        <div>
+          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+            <span>👶 Baby Care</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Baby diapers, wipes, baby cereal & skincare ({babyCareItems.length} items)</p>
+        </div>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
+      </div>
+
+      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
+        {babyCareItems.map(item => (
+          <div 
+            class="med-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer group"
+            data-id={item.id}
+            data-name={item.name}
+            data-price={item.price}
+            data-img={item.image}
+            onclick={`window.location.href='/medicine_details?id=${item.id}';`}
+          >
+            <div>
+              <div class="w-full aspect-square bg-slate-50 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative">
+                <span class="absolute top-2 left-2 bg-blueLight text-blueBrand text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-200 uppercase">
+                  {item.pack}
+                </span>
+
+                <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
+              </div>
+
+              <span class="text-[10px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
+                {item.category}
+              </span>
+              <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem]">
+                {item.name}
+              </h3>
+            </div>
+
+            <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
+              <div>
+                <span class="text-[9px] text-slate-400 line-through font-bold">MRP ₹{item.mrp}</span>
+                <span class="text-sm sm:text-base font-black font-display text-slate-900 block">₹{item.price}</span>
+              </div>
+
+              <button 
+                class="btn-add-med px-3.5 py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs"
+                onclick="event.stopPropagation();"
+              >
+                + ADD
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ==================== 11. MEDICAL DEVICES ==================== -->
+    <section class="space-y-3.5 pt-2" id="sec-medical-devices">
+      <div class="flex items-end justify-between px-1">
+        <div>
+          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+            <span>🩺 Medical Devices</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">BP monitors, glucometers, thermometers & steamers ({medicalDevicesItems.length} items)</p>
+        </div>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
+      </div>
+
+      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
+        {medicalDevicesItems.map(item => (
+          <div 
+            class="med-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer group"
+            data-id={item.id}
+            data-name={item.name}
+            data-price={item.price}
+            data-img={item.image}
+            onclick={`window.location.href='/medicine_details?id=${item.id}';`}
+          >
+            <div>
+              <div class="w-full aspect-square bg-slate-50 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative">
+                <span class="absolute top-2 left-2 bg-blueLight text-blueBrand text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-200 uppercase">
+                  {item.pack}
+                </span>
+
+                <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
+              </div>
+
+              <span class="text-[10px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
+                {item.category}
+              </span>
+              <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem]">
+                {item.name}
+              </h3>
+            </div>
+
+            <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
+              <div>
+                <span class="text-[9px] text-slate-400 line-through font-bold">MRP ₹{item.mrp}</span>
+                <span class="text-sm sm:text-base font-black font-display text-slate-900 block">₹{item.price}</span>
+              </div>
+
+              <button 
+                class="btn-add-med px-3.5 py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs"
+                onclick="event.stopPropagation();"
+              >
+                + ADD
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ==================== 12. CONTINUE SHOPPING FLOATING BAR ==================== -->
+    <div id="med-floating-cart-bar" class="fixed bottom-4 left-4 right-4 max-w-xl mx-auto bg-slate-900 text-white rounded-2xl p-3.5 shadow-2xl z-50 flex items-center justify-between transition-all transform translate-y-32 opacity-0 pointer-events-none border border-slate-800">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-blueBrand text-white flex items-center justify-center font-black shadow-md">
+          <span class="material-symbols-outlined text-xl">shopping_bag</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="med-float-count" class="text-xs font-black bg-white/20 px-2 py-0.5 rounded-md">0 ITEMS</span>
+            <span class="text-xs text-slate-400 font-bold">•</span>
+            <span id="med-float-total" class="text-sm font-black text-white">₹0</span>
+          </div>
+          <p class="text-[10px] text-slate-400 font-semibold mt-0.5">10 Min Express Pharmacy Delivery</p>
+        </div>
+      </div>
+
+      <a href="/cart" class="px-5 py-2.5 bg-blueBrand hover:bg-blueDark text-white text-xs font-black rounded-xl active:scale-95 transition-all shadow-md flex items-center gap-1">
+        <span>Continue to Cart</span>
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </a>
+    </div>
+
+  </main>
 
   <Switcher />
-<script>
-        if (!localStorage.getItem('bhusawal_user_token')) {
-            window.location.href = '/';
+
+  <!-- DYNAMIC CLIENT SCRIPT FOR MEDICINE CART & SEARCH -->
+  <script is:inline>
+    (function() {
+      function getGlobalCart() {
+        try {
+          return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+        } catch(e) { return []; }
+      }
+
+      function saveGlobalCart(cart) {
+        localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new Event('cartUpdated'));
+        updateAllCartUI();
+      }
+
+      function updateAllCartUI() {
+        var cart = getGlobalCart();
+        var totalCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        var totalPrice = cart.reduce((sum, item) => sum + (parseFloat(item.price || item.mrp || 0) * (item.quantity || 1)), 0);
+
+        var badge = document.getElementById('med-cart-badge');
+        if (badge) badge.textContent = totalCount;
+
+        var floatBar = document.getElementById('med-floating-cart-bar');
+        var floatCount = document.getElementById('med-float-count');
+        var floatTotal = document.getElementById('med-float-total');
+
+        if (floatBar) {
+          if (totalCount > 0) {
+            floatBar.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+            if (floatCount) floatCount.textContent = totalCount + (totalCount === 1 ? ' ITEM' : ' ITEMS');
+            if (floatTotal) floatTotal.textContent = '₹' + Math.round(totalPrice);
+          } else {
+            floatBar.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+          }
         }
-</script>
-  <script src="/assets/zepto_search.js" defer></script>
+      }
+
+      document.addEventListener('click', function(e) {
+        var addBtn = e.target.closest('.btn-add-med');
+        if (addBtn) {
+          e.stopPropagation();
+          var card = addBtn.closest('.med-card');
+          if (!card) return;
+
+          var id = card.getAttribute('data-id');
+          var name = card.getAttribute('data-name');
+          var price = parseFloat(card.getAttribute('data-price')) || 0;
+          var img = card.getAttribute('data-img');
+
+          var cart = getGlobalCart();
+          var existing = cart.find(function(c) { return c.id === id; });
+          if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+          } else {
+            cart.push({
+              id: id,
+              name: name,
+              price: price,
+              mrp: price,
+              image: img,
+              quantity: 1,
+              restaurant: 'Bhusawal Express Pharmacy',
+              cat: 'Medicines'
+            });
+          }
+          saveGlobalCart(cart);
+          alert(name + ' added to your cart!');
+        }
+      });
+
+      var searchInput = document.getElementById('med-search-input');
+      if (searchInput) {
+        searchInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            window.location.href = '/medicine_search?q=' + encodeURIComponent(searchInput.value.trim());
+          }
+        });
+      }
+
+      updateAllCartUI();
+    })();
+  </script>
+
 </body>
 </html>
