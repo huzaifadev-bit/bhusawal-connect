@@ -2,35 +2,28 @@
 import Switcher from '../components/Switcher.astro';
 import foodCatalog from '../../public/food_catalog.json';
 
-// Food Categories
+// Standardized Food Categories
 const foodCategories = [
   { id: 'all', name: 'All Foods', icon: '🍽️', kw: '' },
   { id: 'breakfast', name: 'Breakfast', icon: '🍳', kw: 'breakfast' },
-  { id: 'snacks', name: 'Snacks', icon: '🍿', kw: 'snacks' },
+  { id: 'burgers', name: 'Burgers', icon: '🍔', kw: 'burgers' },
   { id: 'pizza', name: 'Pizza', icon: '🍕', kw: 'pizza' },
-  { id: 'burger', name: 'Burger', icon: '🍔', kw: 'burger' },
-  { id: 'sandwich', name: 'Sandwich', icon: '🥪', kw: 'sandwich' },
+  { id: 'sandwiches', name: 'Sandwiches', icon: '🥪', kw: 'sandwiches' },
   { id: 'rolls', name: 'Rolls', icon: '🌯', kw: 'rolls' },
   { id: 'chinese', name: 'Chinese', icon: '🍜', kw: 'chinese' },
   { id: 'biryani', name: 'Biryani', icon: '🍲', kw: 'biryani' },
-  { id: 'veg', name: 'Veg', icon: '🟢', kw: 'veg' },
+  { id: 'veg_main', name: 'Veg Main Course', icon: '🥘', kw: 'veg main course' },
   { id: 'chicken', name: 'Chicken', icon: '🍗', kw: 'chicken' },
   { id: 'mutton', name: 'Mutton', icon: '🍖', kw: 'mutton' },
-  { id: 'seafood', name: 'Seafood', icon: '🦐', kw: 'seafood' },
+  { id: 'fish', name: 'Fish', icon: '🐟', kw: 'fish' },
   { id: 'egg', name: 'Egg', icon: '🥚', kw: 'egg' },
-  { id: 'roti', name: 'Roti', icon: '🫓', kw: 'roti' },
   { id: 'rice', name: 'Rice', icon: '🍚', kw: 'rice' },
-  { id: 'desserts', name: 'Desserts', icon: '🍨', kw: 'desserts' },
-  { id: 'ice_cream', name: 'Ice Cream', icon: '🍦', kw: 'ice cream' },
-  { id: 'milkshake', name: 'Milkshake', icon: '🥤', kw: 'milkshake' },
-  { id: 'tea', name: 'Tea', icon: '🫖', kw: 'tea' },
-  { id: 'coffee', name: 'Coffee', icon: '☕', kw: 'coffee' },
-  { id: 'juices', name: 'Juices', icon: '🧃', kw: 'juices' },
-  { id: 'street_food', name: 'Street Food', icon: '🧆', kw: 'street food' },
-  { id: 'bakery', name: 'Bakery', icon: '🥐', kw: 'bakery' }
+  { id: 'roti_naan', name: 'Roti & Naan', icon: '🫓', kw: 'roti & naan' },
+  { id: 'desserts', name: 'Desserts', icon: '🍰', kw: 'desserts' },
+  { id: 'beverages', name: 'Beverages', icon: '🥤', kw: 'beverages' }
 ];
 
-// Featured Partner Restaurants (1 Horizontal Row)
+// Featured Partner Restaurants (1 Compact Horizontal Row Only)
 const featuredPartnerRestaurants = [
   {
     id: 'royal_biryani',
@@ -159,11 +152,11 @@ const featuredPartnerRestaurants = [
 
   <main class="px-4 sm:px-6 py-5 space-y-6">
 
-    <!-- Search Bar (Searches Name, Category, Restaurant & Keywords) -->
+    <!-- Search Bar (Searches Food Name, Category, Restaurant & Keywords) -->
     <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2">
       <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-redBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
-        <input type="text" id="food-search-input" placeholder="Search 1,600+ food items, categories, restaurants, keywords..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
+        <input type="text" id="food-search-input" placeholder="Search food items, biryani, thalis, pizza, burger..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
         <button id="clear-food-search" class="hidden text-slate-400 hover:text-slate-600">
           <span class="material-symbols-outlined text-lg">close</span>
         </button>
@@ -203,7 +196,7 @@ const featuredPartnerRestaurants = [
               </span>
             </div>
 
-            <!-- Compact Details -->
+            <!-- Compact Content -->
             <div class="p-3 flex items-center gap-2.5">
               <div class="w-8 h-8 rounded-xl bg-redLight text-redBrand flex items-center justify-center text-lg shrink-0 border border-red-100">
                 {rest.logo}
@@ -251,7 +244,7 @@ const featuredPartnerRestaurants = [
       </div>
     </section>
 
-    <!-- ==================== ALL FOOD PRODUCTS (MAIN PRODUCT GRID & FILTERS) ==================== -->
+    <!-- ==================== ALL FOOD PRODUCTS (STANDARDIZED PRODUCT GRID) ==================== -->
     <section id="all-food-products" class="space-y-4 pt-4 border-t border-slate-100">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
         <div>
@@ -259,7 +252,7 @@ const featuredPartnerRestaurants = [
             <span>🍽️</span>
             <span>All Food Products</span>
           </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5" id="catalog-count-subtitle">Order directly from standardized Bhusawal Connect catalog</p>
+          <p class="text-xs text-slate-500 font-medium mt-0.5" id="catalog-count-subtitle">Order directly from standardized Bhusawal Connect food menu</p>
         </div>
 
         <!-- FILTERS & SORTING BAR -->
@@ -278,8 +271,7 @@ const featuredPartnerRestaurants = [
 
           <!-- Sort Select Dropdown -->
           <select id="food-sort-select" class="bg-slate-100 border border-slate-200/80 text-slate-800 text-xs font-extrabold rounded-xl px-3 py-2 outline-none focus:border-redBrand cursor-pointer">
-            <option value="popular">Sort: Popular</option>
-            <option value="newest">Sort: Newest</option>
+            <option value="default">Sort: Default</option>
             <option value="low-high">Price: Low to High</option>
             <option value="high-low">Price: High to Low</option>
           </select>
@@ -289,7 +281,7 @@ const featuredPartnerRestaurants = [
 
       <!-- PRODUCT GRID EXACTLY LIKE GROCERY (2 cols mobile, 3 tablet, 4 lg, 5 xl) -->
       <div id="direct-food-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
-        <!-- Dynamically rendered food products from food_catalog.json -->
+        <!-- Dynamically rendered food products from standardized catalog -->
       </div>
     </section>
 
@@ -297,18 +289,16 @@ const featuredPartnerRestaurants = [
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CATALOG, SEARCH, FILTER & SORT ENGINE -->
+  <!-- CLIENT-SIDE CATALOG, SEARCH, FILTER & CART ENGINE -->
   <script is:inline define:vars={{ initialCatalog: foodCatalog }}>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // Restaurant Partner ID to Name Map for Search Engine
       const RESTAURANT_NAMES = {
         royal_biryani: 'Royal Biryani & Caterers',
         sagar_grand: 'Hotel Sagar Grand',
         shiv_dairy: 'Shiv Dairy & Sweets',
         kwality_hub: "Kwality Wall's Ice Cream Hub",
         tandoor_hut: 'Tandoor Hut Chinese & Grill',
-        thali_house: 'Bhusawal Thali House',
         south_corner: 'South Corner Dosa Point',
         burger_station: 'Burger & Fries Station'
       };
@@ -348,9 +338,9 @@ const featuredPartnerRestaurants = [
       let activeCatalog = getActiveCatalog();
       let activeCategoryKw = '';
       let activeDiet = 'all';
-      let activeSortMode = 'popular';
+      let activeSortMode = 'default';
 
-      // Render Food Products Grid (Grocery Style, Zero Restaurant Names on Cards)
+      // Render Food Products Grid
       function renderFoodGrid() {
         const grid = document.getElementById('direct-food-grid');
         const countSubtitle = document.getElementById('catalog-count-subtitle');
@@ -362,22 +352,19 @@ const featuredPartnerRestaurants = [
         let filtered = activeCatalog.filter(item => {
           const name = (item.name || '').toLowerCase();
           const category = (item.category || '').toLowerCase();
-          const subcategory = (item.subcategory || '').toLowerCase();
           const keywords = (item.searchKeywords || []).join(' ').toLowerCase();
           const restName = (RESTAURANT_NAMES[item.restaurantId] || '').toLowerCase();
 
-          // Comprehensive Search (Food Name, Category, Restaurant Name, Keywords)
+          // Search matching Name, Category, Restaurant Name, or Keywords
           const matchesSearch = !query || 
             name.includes(query) || 
             category.includes(query) || 
-            subcategory.includes(query) || 
             keywords.includes(query) ||
             restName.includes(query);
 
           // Category Filter
           const matchesCategory = !activeCategoryKw || 
             category.includes(activeCategoryKw) || 
-            subcategory.includes(activeCategoryKw) || 
             keywords.includes(activeCategoryKw);
 
           // Diet Filter (Veg / Non-Veg)
@@ -393,12 +380,10 @@ const featuredPartnerRestaurants = [
           filtered.sort((a, b) => parseFloat(a.price || 0) - parseFloat(b.price || 0));
         } else if (activeSortMode === 'high-low') {
           filtered.sort((a, b) => parseFloat(b.price || 0) - parseFloat(a.price || 0));
-        } else if (activeSortMode === 'newest') {
-          filtered.sort((a, b) => parseInt(b.id.replace(/\D/g,'') || 0) - parseInt(a.id.replace(/\D/g,'') || 0));
         }
 
         if (countSubtitle) {
-          countSubtitle.textContent = `Showing ${filtered.length} products in Bhusawal Connect food catalog`;
+          countSubtitle.textContent = `Showing ${filtered.length} products in Bhusawal Connect food menu`;
         }
 
         if (filtered.length === 0) {
@@ -406,22 +391,20 @@ const featuredPartnerRestaurants = [
             <div class="col-span-full bg-white rounded-3xl p-8 text-center space-y-2 border border-slate-100">
               <span class="material-symbols-outlined text-4xl text-slate-300">search_off</span>
               <h3 class="text-sm font-black text-slate-800">No food items found matching your filters</h3>
-              <p class="text-xs font-bold text-slate-400">Try clearing your search query or selecting a different category filter.</p>
+              <p class="text-xs font-bold text-slate-400">Try clearing your search query or selecting another category.</p>
             </div>
           `;
           return;
         }
 
-        // Render top 120 items for fast performance
-        const displayItems = filtered.slice(0, 120);
-
         let html = '';
-        displayItems.forEach(item => {
+        filtered.forEach(item => {
           const id = item.id;
           const name = item.name;
           const category = item.category || 'Food';
           const isVeg = item.isVeg !== false;
           const price = parseFloat(item.price || 0);
+          const prepTime = item.prepTime || '15 mins';
           const image = item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
 
           html += `
@@ -439,6 +422,11 @@ const featuredPartnerRestaurants = [
                     <span class="${isVeg ? 'text-emerald-700' : 'text-rose-700'}">${isVeg ? 'VEG' : 'NON-VEG'}</span>
                   </div>
 
+                  <!-- Prep Time Badge -->
+                  <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-0.5 shadow-xs z-10">
+                    <span>⏱️ ${prepTime}</span>
+                  </div>
+
                   <!-- Favourite Heart Button -->
                   <button class="fav-food-btn absolute top-2 right-2 w-7 h-7 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
                     <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
@@ -447,7 +435,7 @@ const featuredPartnerRestaurants = [
                   <img loading="lazy" src="${image}" alt="${name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                 </div>
 
-                <!-- Category Tag (NO RESTAURANT NAME ON CARDS) -->
+                <!-- Category Tag (NO RESTAURANT NAME DISPLAYED ON CARDS) -->
                 <span class="text-[10px] font-bold text-redBrand uppercase tracking-wider block mb-0.5">
                   ${category}
                 </span>
@@ -460,7 +448,7 @@ const featuredPartnerRestaurants = [
 
               <!-- Price & Add / Quantity Selector -->
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
-                <span class="text-xs sm:text-sm font-black text-slate-900">MRP ₹${price}</span>
+                <span class="text-xs sm:text-sm font-black text-slate-900">₹${price}</span>
 
                 <div class="food-direct-action-box" data-id="${id}" data-name="${name.replace(/"/g, '&quot;')}" data-price="${price}" data-img="${image}">
                   <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-[10px] font-black rounded-xl active:scale-90 transition-all shadow-xs">
@@ -578,7 +566,7 @@ const featuredPartnerRestaurants = [
         renderFoodGrid();
       });
 
-      // Sort Select Listener (Popular, Newest, Low-High, High-Low)
+      // Sort Select Listener
       document.getElementById('food-sort-select')?.addEventListener('change', (e) => {
         activeSortMode = e.target.value;
         renderFoodGrid();
