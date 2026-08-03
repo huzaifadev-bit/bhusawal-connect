@@ -502,14 +502,12 @@ const medicalDevicesItems = [
           <div id="rx-preferred-store-fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4 bg-blueLight/50 p-4 rounded-xl border border-blue-200">
             <div class="space-y-1">
               <label class="text-xs font-extrabold text-slate-800 block">Medical Store Name *</label>
-              <select id="rx-store-name-select" class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blueBrand/40">
-                <option value="Apollo Pharmacy - Station Road">Apollo Pharmacy - Station Road</option>
-                <option value="Wellness Forever Chemists 24x7">Wellness Forever Chemists 24x7</option>
-                <option value="Shree Samarth Medical & Surgicals">Shree Samarth Medical & Surgicals</option>
-                <option value="New Maharashtra Medical Store">New Maharashtra Medical Store</option>
-                <option value="Shri Ram Medico & Healthcare">Shri Ram Medico & Healthcare</option>
-                <option value="Other Pharmacy">Other Pharmacy (Type in Area)</option>
-              </select>
+              <input 
+                type="text" 
+                id="rx-store-name-input"
+                placeholder="Enter pharmacy name, e.g. Apollo Pharmacy"
+                class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blueBrand/40"
+              />
             </div>
 
             <div class="space-y-1">
@@ -517,7 +515,7 @@ const medicalDevicesItems = [
               <input 
                 type="text" 
                 id="rx-store-area-input"
-                value="Station Road, Bhusawal" 
+                
                 placeholder="e.g. Station Road, Jamner Road, Khadaka Road"
                 class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blueBrand/40"
               />
@@ -941,7 +939,7 @@ const medicalDevicesItems = [
           var address = (document.getElementById('rx-input-address') || {}).value || '';
           var notes = (document.getElementById('rx-input-notes') || {}).value || '';
           var isParticularStore = choiceYes && choiceYes.checked;
-          var storeName = isParticularStore ? ((document.getElementById('rx-store-name-select') || {}).value || '') : 'Nearest Verified Pharmacy';
+          var storeName = isParticularStore ? ((document.getElementById('rx-store-name-input') || {}).value || '') : 'Nearest Verified Pharmacy';
           var storeArea = isParticularStore ? ((document.getElementById('rx-store-area-input') || {}).value || '') : 'Bhusawal Local Area';
 
           if (!patientName.trim()) {
