@@ -167,6 +167,36 @@ import Switcher from '../components/Switcher.astro';
         </div>
       </div>
 
+      <!-- 4-DIGIT HANDOVER OTP CARD FOR CUSTOMER -->
+      <div id="otp-display-card" class="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-slate-950 p-4 rounded-2xl shadow-lg border border-amber-300 flex items-center justify-between gap-3">
+        <div class="space-y-0.5">
+          <div class="flex items-center gap-1.5 font-black text-xs uppercase tracking-wider text-slate-950">
+            <span class="material-symbols-outlined text-base">lock</span>
+            <span>Handover Delivery OTP</span>
+          </div>
+          <p class="text-[11px] font-extrabold text-slate-800">Share this 4-digit code with Delivery Partner upon arrival</p>
+        </div>
+
+        <div class="bg-white px-3.5 py-1.5 rounded-xl border-2 border-slate-900 shadow-xs text-center shrink-0">
+          <span id="cust-otp-code" class="text-xl font-black font-mono tracking-widest text-slate-900">4892</span>
+        </div>
+      </div>
+
+      <!-- SUCCESS VERIFIED BANNER (Hidden until OTP is verified) -->
+      <div id="otp-verified-banner" class="hidden bg-emerald-50 text-emerald-900 p-4 rounded-2xl border-2 border-emerald-400 shadow-md space-y-1 animate-in fade-in duration-300">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-emerald-600 text-2xl">verified</span>
+          <h3 class="text-sm font-black text-emerald-950">Delivery Verified Successfully</h3>
+        </div>
+        <p class="text-xs font-bold text-emerald-700">4-digit OTP verified by delivery partner. Order marked as Delivered.</p>
+      </div>
+
+      <!-- PARTNER OTP VERIFICATION TRIGGER BUTTON -->
+      <button id="btn-open-otp-modal" type="button" class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs rounded-2xl flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer">
+        <span class="material-symbols-outlined text-base text-yellow-400">pin</span>
+        <span>Delivery Partner: Enter 4-Digit OTP</span>
+      </button>
+
       <!-- Live ETA Banner -->
       <div id="bottom-eta-banner" class="bg-blueLight border border-blue-200/80 rounded-2xl p-3.5 flex items-center gap-3">
         <div class="w-8 h-8 rounded-full bg-blueBrand text-white flex items-center justify-center text-sm font-black shrink-0">
@@ -189,7 +219,7 @@ import Switcher from '../components/Switcher.astro';
           </p>
         </div>
         <a href="/medicines" class="block w-full bg-white text-emerald-800 font-black text-xs py-3 rounded-2xl shadow-lg hover:bg-emerald-50 active:scale-95 transition-all mt-2">
-          Order More Medicines 💊
+          Order More Services 🛵
         </a>
       </div>
 
@@ -210,13 +240,55 @@ import Switcher from '../components/Switcher.astro';
         <a href="/home" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all">
           Back to Home
         </a>
-        <a href="/medicines" class="w-full bg-blueBrand hover:bg-blueDark text-white font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all shadow-md">
-          Shop Medicines 💊
+        <a href="/parcel" class="w-full bg-blueBrand hover:bg-blueDark text-white font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all shadow-md">
+          Book Parcel Courier 📦
         </a>
       </div>
 
     </div>
   </main>
+
+  <!-- ==================== PARTNER OTP VERIFICATION MODAL ==================== -->
+  <div id="otp-verification-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4 animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="text-center space-y-1">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl mx-auto shadow-xs">
+          🔐
+        </div>
+        <h3 class="text-lg font-black font-display text-slate-900">Enter Delivery OTP</h3>
+        <p class="text-xs font-bold text-slate-500">Enter the 4-digit code provided by customer to complete handover</p>
+      </div>
+
+      <!-- OTP INPUT -->
+      <div class="space-y-2">
+        <input 
+          type="text" 
+          id="partner-otp-input" 
+          maxlength="4" 
+          placeholder="e.g. 4892" 
+          class="w-full text-center text-2xl font-black font-mono tracking-widest bg-slate-50 border-2 border-slate-300 rounded-2xl py-3 text-slate-900 focus:bg-white focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all" 
+        />
+        
+        <!-- ERROR MESSAGE -->
+        <p id="otp-error-msg" class="hidden text-xs font-black text-rose-600 text-center animate-bounce">
+          ❌ Incorrect OTP! Delivery cannot be completed without valid OTP verification.
+        </p>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="space-y-2 pt-1">
+        <button id="btn-submit-otp-verification" type="button" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
+          Verify OTP & Complete Delivery
+        </button>
+
+        <button id="btn-close-otp-modal" type="button" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all">
+          Cancel
+        </button>
+      </div>
+
+    </div>
+  </div>
 
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
@@ -236,6 +308,78 @@ import Switcher from '../components/Switcher.astro';
 
       if (activeOrder.id) {
         document.getElementById('header-order-id').textContent = 'Order ID: #' + activeOrder.id;
+      }
+
+      // 4-DIGIT OTP DISPLAY & PARTNER VERIFICATION ENGINE
+      const custOtp = activeOrder.otp || '4892';
+      const custOtpEl = document.getElementById('cust-otp-code');
+      if (custOtpEl) custOtpEl.textContent = custOtp;
+
+      const otpModal = document.getElementById('otp-verification-modal');
+      const btnOpenOtpModal = document.getElementById('btn-open-otp-modal');
+      const btnCloseOtpModal = document.getElementById('btn-close-otp-modal');
+      const btnSubmitOtp = document.getElementById('btn-submit-otp-verification');
+      const otpInput = document.getElementById('partner-otp-input');
+      const otpErrorMsg = document.getElementById('otp-error-msg');
+      const otpVerifiedBanner = document.getElementById('otp-verified-banner');
+
+      if (activeOrder.otpVerified) {
+        if (otpVerifiedBanner) otpVerifiedBanner.classList.remove('hidden');
+        if (btnOpenOtpModal) btnOpenOtpModal.classList.add('hidden');
+      }
+
+      if (btnOpenOtpModal) {
+        btnOpenOtpModal.addEventListener('click', () => {
+          if (otpModal) otpModal.classList.remove('hidden');
+          if (otpInput) {
+            otpInput.value = '';
+            otpInput.focus();
+          }
+          if (otpErrorMsg) otpErrorMsg.classList.add('hidden');
+        });
+      }
+
+      if (btnCloseOtpModal) {
+        btnCloseOtpModal.addEventListener('click', () => {
+          if (otpModal) otpModal.classList.add('hidden');
+        });
+      }
+
+      if (btnSubmitOtp) {
+        btnSubmitOtp.addEventListener('click', () => {
+          const val = (otpInput?.value || '').trim();
+          if (val === custOtp) {
+            // SUCCESSFUL OTP VERIFICATION
+            activeOrder.status = 'Delivered';
+            activeOrder.otpVerified = true;
+            activeOrder.otpVerifiedAt = new Date().toISOString();
+
+            try {
+              localStorage.setItem('bhusawal_active_order', JSON.stringify(activeOrder));
+              const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+              const idx = orders.findIndex(o => o.id === activeOrder.id);
+              if (idx !== -1) {
+                orders[idx] = activeOrder;
+              } else {
+                orders.unshift(activeOrder);
+              }
+              localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+            } catch(e) {}
+
+            if (otpModal) otpModal.classList.add('hidden');
+            if (otpVerifiedBanner) otpVerifiedBanner.classList.remove('hidden');
+            if (btnOpenOtpModal) btnOpenOtpModal.classList.add('hidden');
+
+            showToast("✅ Delivery Verified Successfully!");
+            onDeliveryComplete();
+          } else {
+            // INCORRECT OTP - BLOCK DELIVERY COMPLETION
+            if (otpErrorMsg) {
+              otpErrorMsg.textContent = "❌ Incorrect OTP! Delivery cannot be completed without valid OTP verification.";
+              otpErrorMsg.classList.remove('hidden');
+            }
+          }
+        });
       }
 
       // 6-STEP MEDICINE/GROCERY TIMELINE
