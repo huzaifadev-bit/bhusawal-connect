@@ -504,6 +504,152 @@ import Switcher from '../components/Switcher.astro';
   </main>
 
 
+  <!-- ==================== RIDER SEARCHING & ASSIGNED OVERLAY MODAL ==================== -->
+  <div id="rider-search-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300">
+    <div class="bg-white w-full max-w-lg rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl space-y-0 border border-slate-100 flex flex-col animate-in fade-in slide-in-from-bottom-6 duration-300">
+      
+      <!-- PHASE 1: SEARCHING FOR NEARBY RIDERS -->
+      <div id="search-phase-view" class="p-6 sm:p-8 text-center space-y-6">
+        
+        <!-- RADAR RIPPLE ANIMATION WITH BIKE ICON -->
+        <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+          <div class="absolute inset-0 rounded-full bg-yellowBrand/30 animate-ping"></div>
+          <div class="absolute inset-2 rounded-full bg-yellowBrand/40 animate-pulse"></div>
+          <div class="relative z-10 w-20 h-20 rounded-full bg-yellowBrand text-slate-950 flex items-center justify-center text-4xl shadow-xl border-2 border-white">
+            🛵
+          </div>
+        </div>
+
+        <!-- TEXT STATUS -->
+        <div class="space-y-1.5">
+          <h3 class="text-xl font-black font-display text-slate-900 animate-pulse">Searching Nearby Riders...</h3>
+          <p class="text-xs font-extrabold text-slate-500">Contacting 4 active Bike Taxi Captains near Station Square</p>
+        </div>
+
+        <!-- METRICS INFO PILLS -->
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <div class="bg-yellowLight rounded-2xl p-3 border border-yellowBorder text-center">
+            <span class="text-[10px] font-black text-yellowDeep uppercase tracking-wider block">Active Captains</span>
+            <span class="text-sm font-black text-slate-900">⚡ 4 Available</span>
+          </div>
+          <div class="bg-yellowLight rounded-2xl p-3 border border-yellowBorder text-center">
+            <span class="text-[10px] font-black text-yellowDeep uppercase tracking-wider block">Estimated Pickup</span>
+            <span class="text-sm font-black text-slate-900">⏱️ ~2 Mins</span>
+          </div>
+        </div>
+
+        <!-- CANCEL SEARCH BUTTON -->
+        <button id="btn-cancel-search" type="button" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black rounded-xl transition-all active:scale-95">
+          Cancel Search
+        </button>
+      </div>
+
+
+      <!-- PHASE 2: RIDER MATCHED & ACCEPTED (Revealed after 3.5s animation) -->
+      <div id="match-phase-view" class="hidden p-6 sm:p-8 space-y-5 animate-in fade-in zoom-in-95 duration-500">
+        
+        <!-- SUCCESS BANNER -->
+        <div class="bg-emerald-50 text-emerald-800 p-3.5 rounded-2xl border border-emerald-200 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-emerald-600 text-xl animate-bounce">check_circle</span>
+            <div>
+              <h4 class="text-xs font-black">Rider Accepted Your Request!</h4>
+              <p class="text-[10px] font-bold text-emerald-600">Captain is arriving in 2 minutes</p>
+            </div>
+          </div>
+          <span class="bg-emerald-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase">ON THE WAY</span>
+        </div>
+
+        <!-- RIDER CARD HEADER -->
+        <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
+          <div class="flex items-center gap-3">
+            <!-- Rider Photo Avatar -->
+            <div class="relative">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80" alt="Captain Karan Sharma" class="w-14 h-14 rounded-2xl object-cover border-2 border-yellowBrand shadow-md" />
+              <span class="absolute -bottom-1 -right-1 bg-yellowBrand text-slate-950 w-5 h-5 rounded-full flex items-center justify-center text-[10px] shadow-xs">⚡</span>
+            </div>
+
+            <div>
+              <div class="flex items-center gap-1.5">
+                <h3 class="text-base font-black text-slate-900">Karan Sharma</h3>
+                <span class="inline-flex items-center gap-0.5 bg-yellowLight text-yellowDeep text-[9px] font-black px-1.5 py-0.5 rounded border border-yellowBorder" title="Verified Driver">
+                  <span class="material-symbols-outlined text-[11px]">verified</span> Verified Rider
+                </span>
+              </div>
+
+              <!-- Rating & Rides -->
+              <div class="flex items-center gap-2 text-xs font-bold text-slate-600 mt-0.5">
+                <span class="flex items-center gap-0.5 text-amber-500">
+                  ⭐ <span>4.9</span>
+                </span>
+                <span class="text-slate-300">•</span>
+                <span>1,240+ completed rides</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scooter Plate Badge -->
+          <div class="text-right">
+            <span class="bg-yellowBrand text-slate-950 text-xs font-black px-2.5 py-1 rounded-lg border border-yellowDark/20 shadow-2xs block font-mono">
+              MH 19 BJ 4820
+            </span>
+            <span class="text-[10px] text-slate-500 font-bold block mt-0.5">Yellow Scooter</span>
+          </div>
+        </div>
+
+        <!-- SAFETY & HELMET BADGES -->
+        <div class="flex items-center justify-between text-xs font-bold bg-yellowLight/60 p-3 rounded-xl border border-yellowBorder">
+          <div class="flex items-center gap-1.5 text-yellowDeep">
+            <span class="material-symbols-outlined text-base">verified_user</span>
+            <span>Sanitized Helmet Provided</span>
+          </div>
+          <span class="bg-white text-emerald-700 text-[10px] font-black px-2 py-0.5 rounded-md border border-emerald-200">
+            ✓ Mask & Sanitizer Ready
+          </span>
+        </div>
+
+        <!-- RIDE SUMMARY DETAILS -->
+        <div class="bg-slate-50 rounded-xl p-3 space-y-1.5 text-xs border border-slate-200/80">
+          <div class="flex justify-between font-semibold text-slate-600">
+            <span>Pickup Location:</span>
+            <span class="font-bold text-slate-900 truncate max-w-[200px]" id="matched-pickup-text">Station Square</span>
+          </div>
+          <div class="flex justify-between font-semibold text-slate-600">
+            <span>Destination:</span>
+            <span class="font-bold text-slate-900 truncate max-w-[200px]" id="matched-drop-text">Jamner Road</span>
+          </div>
+          <div class="flex justify-between font-black text-slate-900 pt-1 border-t border-slate-200">
+            <span>Total Payable Fare:</span>
+            <span class="text-yellowDeep text-sm font-black" id="matched-fare-text">₹32</span>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS: CALL, CHAT, CANCEL RIDE -->
+        <div class="grid grid-cols-3 gap-2.5 pt-1">
+          <!-- Call -->
+          <a href="tel:+919876543210" class="py-3 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white text-xs font-black rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95">
+            <span class="material-symbols-outlined text-base">call</span>
+            <span>Call Rider</span>
+          </a>
+
+          <!-- Chat -->
+          <button id="btn-chat-rider" type="button" class="py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95">
+            <span class="material-symbols-outlined text-base">chat</span>
+            <span>Chat</span>
+          </button>
+
+          <!-- Cancel Ride -->
+          <button id="btn-cancel-assigned-ride" type="button" class="py-3 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-black rounded-xl transition-all active:scale-95">
+            Cancel Ride
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
   <!-- ==================== SELECT ON MAP PICKER MODAL ==================== -->
   <div id="map-picker-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl space-y-0 flex flex-col max-h-[90vh]">
@@ -582,6 +728,7 @@ import Switcher from '../components/Switcher.astro';
       var baseFare = 20;
       var perKmFare = 7;
       var distanceKm = 3.2;
+      var matchTimer = null;
 
       // Coordinate state
       var pickupCoords = [21.0455, 75.7893];
@@ -960,8 +1107,15 @@ import Switcher from '../components/Switcher.astro';
         });
       });
 
-      // 11. BOOK RIDE BUTTON ACTION
+      // 11. ENHANCED RIDER SEARCH & MATCH ANIMATION ENGINE
+      var searchModal = document.getElementById('rider-search-modal');
+      var searchPhaseView = document.getElementById('search-phase-view');
+      var matchPhaseView = document.getElementById('match-phase-view');
       var bookBtn = document.getElementById('btn-book-bike-ride');
+      var cancelSearchBtn = document.getElementById('btn-cancel-search');
+      var cancelAssignedBtn = document.getElementById('btn-cancel-assigned-ride');
+      var chatBtn = document.getElementById('btn-chat-rider');
+
       if (bookBtn) {
         bookBtn.addEventListener('click', function() {
           var valRes = validateAddresses();
@@ -999,6 +1153,7 @@ import Switcher from '../components/Switcher.astro';
             total: finalFare,
             status: 'Captain Assigned',
             captain: 'Karan Sharma (Fleet Captain)',
+            rating: '4.9 ⭐',
             bikeNumber: 'MH 19 BJ 4820 (Yellow Scooter)',
             timestamp: new Date().toISOString()
           };
@@ -1010,8 +1165,58 @@ import Switcher from '../components/Switcher.astro';
             localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
           } catch(e) {}
 
-          alert('⚡ Bike taxi ride booked! Captain Karan Sharma is assigned and reaching pickup location in 2 minutes. Redirecting to live tracking...');
-          window.location.href = '/track_order';
+          // Update Matched View Text Elements
+          var pTxt = document.getElementById('matched-pickup-text');
+          var dTxt = document.getElementById('matched-drop-text');
+          var fTxt = document.getElementById('matched-fare-text');
+          if (pTxt) pTxt.textContent = pickupAddr;
+          if (dTxt) dTxt.textContent = dropAddr;
+          if (fTxt) fTxt.textContent = '₹' + finalTotalFare();
+
+          // Open Searching Modal Overlay
+          if (searchModal) {
+            searchModal.classList.remove('hidden');
+            if (searchPhaseView) searchPhaseView.classList.remove('hidden');
+            if (matchPhaseView) matchPhaseView.classList.add('hidden');
+          }
+
+          // Trigger 3.5 Second Simulated Rider Match Animation
+          if (matchTimer) clearTimeout(matchTimer);
+          matchTimer = setTimeout(function() {
+            if (searchPhaseView) searchPhaseView.classList.add('hidden');
+            if (matchPhaseView) {
+              matchPhaseView.classList.remove('hidden');
+              matchPhaseView.classList.add('animate-in', 'fade-in', 'zoom-in-95');
+            }
+          }, 3500);
+        });
+      }
+
+      function finalTotalFare() {
+        var distanceCost = Math.round(distanceKm * perKmFare);
+        var totalBeforeDiscount = baseFare + distanceCost;
+        return Math.max(15, totalBeforeDiscount - 10);
+      }
+
+      if (cancelSearchBtn) {
+        cancelSearchBtn.addEventListener('click', function() {
+          if (matchTimer) clearTimeout(matchTimer);
+          if (searchModal) searchModal.classList.add('hidden');
+        });
+      }
+
+      if (cancelAssignedBtn) {
+        cancelAssignedBtn.addEventListener('click', function() {
+          if (confirm('Are you sure you want to cancel this ride request?')) {
+            if (searchModal) searchModal.classList.add('hidden');
+            alert('Ride request cancelled.');
+          }
+        });
+      }
+
+      if (chatBtn) {
+        chatBtn.addEventListener('click', function() {
+          alert('💬 Captain Karan Sharma: "Hello! I am on my way to your pickup location. Reaching in 2 minutes."');
         });
       }
 
