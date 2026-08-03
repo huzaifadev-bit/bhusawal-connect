@@ -361,13 +361,14 @@ const featuredPartnerRestaurants = [
             <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
               {items.map(item => (
                 <div 
-                  class="food-product-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative"
+                  class="food-product-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative cursor-pointer"
                   data-id={item.id}
                   data-name={item.name}
                   data-category={item.category}
                   data-price={item.price}
                   data-isveg={item.isVeg ? 'true' : 'false'}
                   data-kw={item.searchKeywords ? item.searchKeywords.join(' ') : ''}
+                  onclick={`window.location.href='/product?id=${item.id}';`}
                 >
                   <div>
                     <!-- 1. LARGE FOOD IMAGE CONTAINER -->
@@ -425,6 +426,7 @@ const featuredPartnerRestaurants = [
                       data-price={item.price} 
                       data-img={item.image}
                       data-category={item.category}
+                      onclick="event.stopPropagation();"
                     >
                       <!-- 7. ADD TO CART BUTTON -->
                       <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs flex items-center gap-1">
@@ -489,15 +491,14 @@ const featuredPartnerRestaurants = [
     (function() {
       var foodCatalog = window.BHUSAWAL_FOOD_CATALOG || [];
 
-      // ACTIVE FILTERS STATE OBJECT
       var activeFilters = {
-        diet: null,      // 'veg' | 'nonveg'
-        meal: null,      // 'breakfast' | 'lunch' | 'dinner'
-        cuisine: null,   // 'fastfood' | 'chinese' | 'northindian' | 'southindian' | 'desserts' | 'beverages'
-        price: null      // 'under100' | '100-200' | 'above200'
+        diet: null,
+        meal: null,
+        cuisine: null,
+        price: null
       };
 
-      // 1. GLOBAL CART MANAGEMENT
+      // GLOBAL CART MANAGEMENT
       function getGlobalCart() {
         let raw = [];
         try {
@@ -567,10 +568,11 @@ const featuredPartnerRestaurants = [
         });
       }
 
-      // Add to Cart & Stepper Click Handler
+      // Add to Cart Click Handler
       document.addEventListener('click', function(e) {
         var addBtn = e.target.closest('.btn-add-direct-food');
         if (addBtn) {
+          e.stopPropagation();
           var box = addBtn.closest('.food-direct-action-box');
           if (!box) return;
 
@@ -602,6 +604,7 @@ const featuredPartnerRestaurants = [
 
         var plusBtn = e.target.closest('.btn-qty-plus');
         if (plusBtn) {
+          e.stopPropagation();
           var box = plusBtn.closest('.food-direct-action-box');
           if (!box) return;
           var id = box.getAttribute('data-id');
@@ -616,6 +619,7 @@ const featuredPartnerRestaurants = [
 
         var minusBtn = e.target.closest('.btn-qty-minus');
         if (minusBtn) {
+          e.stopPropagation();
           var box = minusBtn.closest('.food-direct-action-box');
           if (!box) return;
           var id = box.getAttribute('data-id');
@@ -633,7 +637,7 @@ const featuredPartnerRestaurants = [
         }
       });
 
-      // 2. COMPREHENSIVE FILTER ENGINE (INSTANT REAL-TIME UPDATES WITHOUT RELOAD)
+      // FILTER ENGINE
       var searchInput = document.getElementById('food-search-input');
       var clearSearchBtn = document.getElementById('clear-food-search');
       var suggestionsBox = document.getElementById('food-search-suggestions');
@@ -647,14 +651,12 @@ const featuredPartnerRestaurants = [
           else clearSearchBtn.classList.add('hidden');
         }
 
-        // Has active filters indicator
         var hasActiveFilter = activeFilters.diet || activeFilters.meal || activeFilters.cuisine || activeFilters.price || q;
         if (resetFiltersBtn) {
           if (hasActiveFilter) resetFiltersBtn.classList.remove('hidden');
           else resetFiltersBtn.classList.add('hidden');
         }
 
-        // Loop over product cards
         document.querySelectorAll('.food-product-card').forEach(function(card) {
           var name = (card.getAttribute('data-name') || '').toLowerCase();
           var category = (card.getAttribute('data-category') || '').toLowerCase();
@@ -662,17 +664,14 @@ const featuredPartnerRestaurants = [
           var isVeg = card.getAttribute('data-isveg') === 'true';
           var price = parseFloat(card.getAttribute('data-price')) || 0;
 
-          // Search Query match
           var matchesSearch = !q || name.includes(q) || category.includes(q) || kw.includes(q);
           if (q === 'veg' || q === 'vegetarian') matchesSearch = isVeg;
           if (q === 'nonveg' || q === 'non-veg') matchesSearch = !isVeg;
 
-          // Diet Filter match
           var matchesDiet = true;
           if (activeFilters.diet === 'veg') matchesDiet = isVeg;
           if (activeFilters.diet === 'nonveg') matchesDiet = !isVeg;
 
-          // Meal Time Filter match
           var matchesMeal = true;
           if (activeFilters.meal === 'breakfast') {
             matchesMeal = category === 'breakfast' || kw.includes('breakfast') || kw.includes('poha') || kw.includes('dosa') || kw.includes('idli') || kw.includes('upma');
@@ -682,7 +681,6 @@ const featuredPartnerRestaurants = [
             matchesMeal = category === 'biryani' || category === 'veg main course' || category === 'chicken' || category === 'mutton' || category === 'roti & naan' || category === 'chinese';
           }
 
-          // Cuisine & Category Filter match
           var matchesCuisine = true;
           if (activeFilters.cuisine === 'fastfood') {
             matchesCuisine = category === 'burgers' || category === 'sandwiches' || category === 'rolls' || category === 'pizza' || category === 'snacks';
@@ -698,7 +696,6 @@ const featuredPartnerRestaurants = [
             matchesCuisine = category === 'beverages' || kw.includes('chai') || kw.includes('coffee') || kw.includes('shake');
           }
 
-          // Price Range Filter match
           var matchesPrice = true;
           if (activeFilters.price === 'under100') {
             matchesPrice = price <= 100;
@@ -708,7 +705,6 @@ const featuredPartnerRestaurants = [
             matchesPrice = price > 200;
           }
 
-          // FINAL COMBINED DECISION
           if (matchesSearch && matchesDiet && matchesMeal && matchesCuisine && matchesPrice) {
             card.classList.remove('hidden');
           } else {
@@ -716,14 +712,12 @@ const featuredPartnerRestaurants = [
           }
         });
 
-        // Hide empty sections
         document.querySelectorAll('.food-scroll-section').forEach(function(sec) {
           var visibleCards = sec.querySelectorAll('.food-product-card:not(.hidden)');
           if (visibleCards.length > 0) sec.classList.remove('hidden');
           else sec.classList.add('hidden');
         });
 
-        // Update Dropdown Suggestions if searching
         renderSuggestionsDropdown(q);
       }
 
@@ -794,25 +788,21 @@ const featuredPartnerRestaurants = [
         suggestionsBox.classList.remove('hidden');
       }
 
-      // Filter Pill Buttons Click Handler (Toggle & Active Styling)
       document.querySelectorAll('.filter-pill-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
           var fType = btn.getAttribute('data-filter-type');
           var fVal = btn.getAttribute('data-filter-val');
 
           if (activeFilters[fType] === fVal) {
-            // Toggle off
             activeFilters[fType] = null;
             btn.classList.remove('bg-redBrand', 'text-white', 'border-redBrand', 'shadow-sm');
             btn.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200/80');
           } else {
-            // Clear other active pills of same type
             document.querySelectorAll('.filter-pill-btn[data-filter-type="' + fType + '"]').forEach(function(b) {
               b.classList.remove('bg-redBrand', 'text-white', 'border-redBrand', 'shadow-sm');
               b.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200/80');
             });
 
-            // Set active
             activeFilters[fType] = fVal;
             btn.classList.add('bg-redBrand', 'text-white', 'border-redBrand', 'shadow-sm');
             btn.classList.remove('bg-slate-100', 'text-slate-700', 'border-slate-200/80');
@@ -822,7 +812,6 @@ const featuredPartnerRestaurants = [
         });
       });
 
-      // Clear All Filters Button
       if (resetFiltersBtn) {
         resetFiltersBtn.addEventListener('click', function() {
           activeFilters.diet = null;
@@ -847,17 +836,7 @@ const featuredPartnerRestaurants = [
           if (!row) return;
 
           var itemId = row.getAttribute('data-id');
-          var card = document.querySelector('.food-product-card[data-id="' + itemId + '"]');
-          
-          suggestionsBox.classList.add('hidden');
-
-          if (card) {
-            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            card.classList.add('ring-4', 'ring-redBrand', 'ring-offset-2');
-            setTimeout(function() {
-              card.classList.remove('ring-4', 'ring-redBrand', 'ring-offset-2');
-            }, 2500);
-          }
+          window.location.href = '/product?id=' + itemId;
         });
       }
 
@@ -888,7 +867,6 @@ const featuredPartnerRestaurants = [
         }
       });
 
-      // Window storage sync
       window.addEventListener('storage', updateAllCartUI);
       window.addEventListener('cartUpdated', updateAllCartUI);
 
