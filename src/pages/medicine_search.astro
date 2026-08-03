@@ -1,987 +1,807 @@
 ---
-import fs from 'fs';
-import path from 'path';
 import Switcher from '../components/Switcher.astro';
-
-// Read the database at build-time for static rendering
-const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
-let catalog = [];
-try {
- catalog = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
-} catch (err) {
- console.error("Failed to read grocery catalog at build time", err);
-}
-
-function isPersonalCareProduct(p) {
-  const name = (p["Product Name"] || "").toLowerCase();
-  const dbCat = p.Category || "";
-  
-  if (dbCat === 'Personal Care' || dbCat === 'Baby Care' || dbCat === 'Women\'s Hygiene' || dbCat === 'Sexual Wellness' || dbCat === 'OTC Medical Products') {
-    return true;
-  }
-
-  // Definite personal care indicators (never food)
-  const definitePersonalCare = [
-    'shampoo', 'shamp', 'lotion', 'body wash', 'bodywash', 'deodorant', 'perfume', 'toothbrush', 
-    'toothpaste', 'toothpowder', 'mouthwash', 'conditioner', 'cleanser', 'serum', 'moisturiser', 
-    'moisturizer', 'scrub', 'spray', 'hair water', 'attar', 'sandalwood', 'eau de', 'toilette', 
-    'cologne', 'body mist', 'buds', 'sunscreen', 'sun block', 'sunblock', 'lip balm', 'lip therapy', 
-    'facewash', 'face wash', 'handwash', 'hand wash', 'hair care', 'skin care', 'body care', 'face care', 
-    'hygiene', 'sheet mask', 'skin mask', 'bathing bar', 'bath bar', 'body milk'
-  ];
-  if (definitePersonalCare.some(kw => name.includes(kw))) {
-    return true;
-  }
-
-  // Soap (avoid dishwash/laundry)
-  if (name.includes('soap') && !name.includes('dish') && !name.includes('laund')) {
-    return true;
-  }
-
-  // Cream (avoid ice cream, sour cream, cooking creams, biscuits, cheese, chocolate)
-  if (name.includes('cream')) {
-    const foodCreams = ['ice cream', 'biscuit', 'toast', 'sour', 'whipped', 'onion', 'garlic', 'culinary', 'cheese', 'salad', 'soup', 'cookie', 'chocolate'];
-    if (!foodCreams.some(fc => name.includes(fc))) {
-      return true;
-    }
-  }
-
-  // Oil (avoid cooking oils, ghee)
-  if (name.includes('oil')) {
-    const cookingOils = ['cooking', 'mustard', 'refined', 'soyabean', 'sunflower', 'groundnut', 'olive', 'rice bran', 'ghee', 'sesame', 'castor oil for cooking', 'spices'];
-    if (!cookingOils.some(co => name.includes(co))) {
-      return true;
-    }
-  }
-
-  // Powder (avoid baking, cooking powders)
-  if (name.includes('powder')) {
-    const foodPowders = ['baking', 'custard', 'cocoa', 'sugar', 'chili', 'chilly', 'turmeric', 'coriander', 'jeera', 'masala', 'pepper', 'detergent', 'washing', 'soap powder', 'chutney'];
-    if (!foodPowders.some(fp => name.includes(fp))) {
-      return true;
-    }
-  }
-
-  // Gel (avoid food gels)
-  if (name.includes('gel') && !name.includes('food') && !name.includes('jelly') && !name.includes('flavor')) {
-    return true;
-  }
-
-  // Brush (avoid paint brushes, etc.)
-  if (name.includes('brush') && !name.includes('paint') && !name.includes('wire')) {
-    return true;
-  }
-
-  // Check personal care brands
-  const brands = [
-    'pears', 'nivea', 'dove', 'himalaya', 'tresemme', 'colgate', 'oral-b', 'pantene', 'sunsilk', 
-    'parachute', 'vaseline', 'sensodyne', 'dettol', 'fiama', 'liril', 'cinthol', 'santoor', 
-    'biotique', 'lux', 'mamaearth', 'ponds', 'pond\'s', 'loreal', 'l\'oreal', 'garnier', 'gillette', 
-    'lakme', 'yardley', 'clinique', 'vlcc', 'neutrogena', 'cetaphil', 'body shop', 'forest essentials', 
-    'mama earth', 'soulflower', 'head & shoulders', 'head and shoulders', 'johnson\'s', 'johnson baby', 
-    'guggal', 'guggul', 'attar'
-  ];
-  if (brands.some(b => name.includes(b))) {
-    return true;
-  }
-
-  return false;
-}
-
-function getActualCategory(p) {
-  const name = (p["Product Name"] || "").toLowerCase();
-  const dbCat = p.Category || "";
-  
-  // Check laundry / cleaning items placed in wrong categories (like Spices & Masalas)
-  const isHouseholdName = (
-    name.includes('detergent') || name.includes('washing powder') || name.includes('cleaner') || 
-    name.includes('disinfectant') || name.includes('scrubber') || name.includes('foil') || 
-    name.includes('garbage bag') || name.includes('pooja') || name.includes('camphor') ||
-    name.includes('wick') || name.includes('batti') || name.includes('kapoor') ||
-    (name.includes('dish') && name.includes('wash'))
-  );
-
-  if (isPersonalCareProduct(p)) {
-    return 'Personal Care';
-  }
-  
-  if (isHouseholdName || dbCat === 'Home Cleaning' || dbCat === 'Laundry' || dbCat === 'Bathroom Cleaning' || dbCat === 'Kitchen Cleaning' || dbCat === 'Pooja Items' || dbCat === 'Disposable Products' || dbCat === 'Kitchen Essentials') {
-    return 'Home';
-  }
-
-  if (dbCat === 'Fruits & Vegetables') {
-    return 'Fruits & Vegetables';
-  }
-  
-  if (dbCat === 'Dairy' || dbCat === 'Bakery') {
-    return 'Dairy';
-  }
-  
-  if (dbCat === 'Rice, Atta & Flour' || dbCat === 'Dal & Pulses' || dbCat === 'Cooking Oil & Ghee' || dbCat === 'Spices & Masalas' || dbCat === 'Salt, Sugar & Jaggery') {
-    return 'Staples';
-  }
-  
-  if (dbCat === 'Snacks' || dbCat === 'Biscuits & Cookies' || dbCat === 'Chocolates' || dbCat === 'Noodles & Pasta' || dbCat === 'Beverages' || dbCat === 'Tea & Coffee' || dbCat === 'Ice Cream' || dbCat === 'Frozen Foods') {
-    return 'Snacks';
-  }
-  
-  return 'Staples';
-}
-
-
-// Filter popular items per category for initial static load using re-classification engine
-const veggies = catalog.filter(i => getActualCategory(i) === 'Fruits & Vegetables').slice(0, 8);
-const dairy = catalog.filter(i => getActualCategory(i) === 'Dairy').slice(0, 8);
-const staples = catalog.filter(i => getActualCategory(i) === 'Staples').slice(0, 8);
-const snacks = catalog.filter(i => getActualCategory(i) === 'Snacks').slice(0, 8);
-const household = catalog.filter(i => getActualCategory(i) === 'Home').slice(0, 8);
-const personal = catalog.filter(i => getActualCategory(i) === 'Personal Care').slice(0, 8);
 ---
 
-<html class="light" lang="en">
+<!DOCTYPE html>
+<html lang="en" class="light">
 <head>
- <meta charset="utf-8" />
- <meta content="width=device-width, initial-scale=1.0" name="viewport" />
- <title>Daily Essentials Hypermarket - Bhusawal Connect</title>
- <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
- <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
- <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
- 
- <script is:inline id="tailwind-config">
-  tailwind.config = {
-   darkMode: "class",
-   theme: {
-    extend: {
-     "colors": {
-      "secondary-container": "#e5e2e1",
-      "on-primary": "#ffffff",
-      "on-surface-variant": "#5b4039",
-      "outline": "#907067",
-      "on-primary-container": "#541200",
-      "surface-tint": "#b02f00",
-      "secondary": "#5f5e5e",
-      "inverse-primary": "#ffb5a0",
-      "outline-variant": "#e4beb4",
-      "on-secondary-fixed": "#1c1b1b",
-      "background": "#f8f9fa",
-      "error-container": "#ffdad6",
-      "tertiary": "#006e1c",
-      "surface-container-lowest": "#ffffff",
-      "on-error": "#ffffff",
-      "inverse-surface": "#2f3131",
-      "on-tertiary": "#ffffff",
-      "surface-container-highest": "#e2e2e2",
-      "secondary-fixed": "#e5e2e1",
-      "tertiary-fixed": "#94f990",
-      "surface-container": "#eeeeee",
-      "on-surface": "#1a1c1c",
-      "primary": "#b02f00",
-      "primary-container": "#ff5722",
-      "on-secondary-container": "#656464",
-      "surface-container-low": "#f3f3f3",
-      "surface-dim": "#dadada",
-      "primary-fixed": "#ffdbd1",
-      "on-primary-fixed-variant": "#862200",
-      "error": "#ba1a1a",
-      "on-error-container": "#93000a",
-      "surface-container-high": "#e8e8e8",
-      "surface-bright": "#f9f9f9",
-      "on-secondary": "#ffffff",
-      "surface": "#f9f9f9"
-     },
-     "fontFamily": {
-      "label-sm": ["Plus Jakarta Sans"],
-      "label-md": ["Plus Jakarta Sans"],
-      "body-md": ["Plus Jakarta Sans"],
-      "headline-md": ["Plus Jakarta Sans"],
-      "headline-lg-mobile": ["Plus Jakarta Sans"]
-     },
-     "spacing": {
-      "margin-mobile": "16px",
-      "gutter": "16px"
-     }
-    }
-   }
-  }
- </script>
- 
- <style>
-  body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8f9fa; min-height: 100dvh; }
-  .material-symbols-outlined {
-   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  }
-  .hide-scrollbar::-webkit-scrollbar { display: none; }
-  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
- </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Medicines & Health Products | Bhusawal Connect</title>
+  
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <script is:inline>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blueBrand: '#3B82F6',
+            blueDark: '#2563EB',
+            blueLight: '#EFF6FF'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    html { scroll-behavior: smooth; }
+  </style>
 </head>
-<body class="text-on-surface bg-background pb-32">
- <!-- Sticky Header -->
- <header class="bg-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
-  <div class="flex items-center gap-3">
-   <a href="/home" class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-150">
-    <span class="material-symbols-outlined text-primary">arrow_back</span>
-   </a>
-   <h1 class="font-headline-lg-mobile text-headline-md text-on-surface">Bhusawal Hypermarket</h1>
-  </div>
- </header>
 
- <!-- Search Bar -->
- <section class="px-margin-mobile mt-4">
-  <div class="relative">
-   <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-   <input type="text" class="w-full h-14 pl-12 pr-4 bg-white border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-body-md" placeholder="Search 5,000+ Indian grocery items..." />
-  </div>
- </section>
+<body class="pb-36 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased bg-slate-50">
 
- <!-- Category Nav Bar -->
- <nav class="sticky top-16 z-40 bg-background/95 backdrop-blur-md py-4 border-b border-outline-variant/10">
-  <div class="flex flex-col gap-4 overflow-x-auto hide-scrollbar px-margin-mobile">
-   <div class="flex gap-4 min-w-max">
-    <button data-target="section-dairy" class="flex flex-col items-center gap-2 min-w-[72px] group">
-     <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center group-active:scale-90 transition-transform">
-      <span class="material-symbols-outlined text-blue-600 text-2xl" data-icon="water_drop">water_drop</span>
-     </div>
-     <span class="text-[10px] font-bold text-center text-on-surface line-clamp-1 uppercase tracking-tighter">Dairy</span>
-    </button>
-    <button data-target="section-veggies" class="flex flex-col items-center gap-2 min-w-[72px] group">
-     <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center group-active:scale-90 transition-transform">
-      <span class="material-symbols-outlined text-emerald-600 text-2xl" data-icon="eco">eco</span>
-     </div>
-     <span class="text-[10px] font-bold text-center text-on-surface line-clamp-1 uppercase tracking-tighter">Veggies</span>
-    </button>
-    <button data-target="section-staples" class="flex flex-col items-center gap-2 min-w-[72px] group">
-     <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center group-active:scale-90 transition-transform">
-      <span class="material-symbols-outlined text-amber-600 text-2xl" data-icon="inventory_2">inventory_2</span>
-     </div>
-     <span class="text-[10px] font-bold text-center text-on-surface line-clamp-1 uppercase tracking-tighter">Staples</span>
-    </button>
-    <button data-target="section-snacks" class="flex flex-col items-center gap-2 min-w-[72px] group">
-     <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center group-active:scale-90 transition-transform">
-      <span class="material-symbols-outlined text-purple-600 text-2xl" data-icon="cookie">cookie</span>
-     </div>
-     <span class="text-[10px] font-bold text-center text-on-surface line-clamp-1 uppercase tracking-tighter">Snacks</span>
-    </button>
-    <button data-target="section-personal" class="flex flex-col items-center gap-2 min-w-[72px] group">
-     <div class="w-12 h-12 rounded-xl bg-pink-50 flex items-center justify-center group-active:scale-90 transition-transform">
-      <span class="material-symbols-outlined text-pink-600 text-2xl" data-icon="soap">soap</span>
-     </div>
-     <span class="text-[10px] font-bold text-center text-on-surface line-clamp-1 uppercase tracking-tighter">Care</span>
-    </button>
-    <button data-target="section-household" class="flex flex-col items-center gap-2 min-w-[72px] group">
-     <div class="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center group-active:scale-90 transition-transform">
-      <span class="material-symbols-outlined text-teal-600 text-2xl" data-icon="cleaning_services">cleaning_services</span>
-     </div>
-     <span class="text-[10px] font-bold text-center text-on-surface line-clamp-1 uppercase tracking-tighter">Home</span>
-    </button>
-   </div>
-  </div>
- </nav>
-
- <!-- Main Content -->
- <main class="px-margin-mobile mt-8 space-y-12">
-  <!-- Veggies Section -->
-  <section>
-   <div class="flex items-center justify-between mb-6">
-    <h2 id="section-veggies" class="font-headline-md text-headline-md text-on-surface scroll-mt-36">Fresh Vegetables & Fruits</h2>
-    <button class="text-primary font-label-md text-label-md flex items-center gap-1">
-     View All <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
-    </button>
-   </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-    {
-     veggies.map(p => (
-      <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-emerald-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
-       <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
-           src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-        <div class="absolute top-2 left-2 bg-emerald-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Organic</div>
-        <button class="absolute bottom-2 right-2 bg-white border border-[#0c831f] text-[#0c831f] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#0c831f]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
-       </div>
-       <div class="flex-grow flex flex-col justify-between">
+  <!-- ==================== HEADER & TOP NAV ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs px-4 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <a href="/medicines" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors active:scale-95">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
         <div>
-         <div class="flex items-center flex-wrap gap-1">
-          <span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹{p.MRP}</span>
-         </div>
-         <h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">{p["Product Name"]}</h3>
+          <h1 class="text-base sm:text-lg font-black font-display text-slate-900 leading-none">Medicine Search</h1>
+          <p class="text-[10px] text-slate-500 font-semibold mt-0.5">Search by Name, Brand, Salt Name or Disease</p>
         </div>
-        <div class="mt-1">
-         <p class="text-[9px] text-neutral-500 font-bold">{p["Pack Size"] || '1 Unit'}</p>
-         <div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">
-          <span class="text-[#0c831f]">★</span>
-          <span>4.7</span>
-          <span class="text-neutral-400 font-normal">({p.StockQuantity || '3.5k'})</span>
-         </div>
-        </div>
-       </div>
       </div>
-     ))
-    }
-   </div>
-  </section>
 
-  <!-- Bakery & Dairy Section -->
-  <section>
-   <div class="flex items-center justify-between mb-6">
-    <h2 id="section-dairy" class="font-headline-md text-headline-md text-on-surface scroll-mt-36">Bakery &amp; Dairy</h2>
-    <button class="text-primary font-label-md text-label-md flex items-center gap-1">
-     View All <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
-    </button>
-   </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-    {
-     dairy.map(p => (
-      <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-blue-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
-       <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
-           src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-        <div class="absolute top-2 left-2 bg-blue-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Fresh</div>
-        <button class="absolute bottom-2 right-2 bg-white border border-[#2563eb] text-[#2563eb] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#2563eb]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
-       </div>
-       <div class="flex-grow flex flex-col justify-between">
-        <div>
-         <div class="flex items-center flex-wrap gap-1">
-          <span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹{p.MRP}</span>
-         </div>
-         <h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">{p["Product Name"]}</h3>
-        </div>
-        <div class="mt-1">
-         <p class="text-[9px] text-neutral-500 font-bold">{p["Pack Size"] || '1 Unit'}</p>
-         <div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">
-          <span class="text-[#0c831f]">★</span>
-          <span>4.7</span>
-          <span class="text-neutral-400 font-normal">({p.StockQuantity || '3.5k'})</span>
-         </div>
-        </div>
-       </div>
-      </div>
-     ))
-    }
-   </div>
-  </section>
-
-  <!-- Staples & Spices Section -->
-  <section>
-   <div class="flex items-center justify-between mb-6">
-    <h2 id="section-staples" class="font-headline-md text-headline-md text-on-surface scroll-mt-36">Staples &amp; Spices</h2>
-    <button class="text-primary font-label-md text-label-md flex items-center gap-1">
-     View All <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
-    </button>
-   </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-    {
-     staples.map(p => (
-      <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-amber-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
-       <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
-           src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-        <div class="absolute top-2 left-2 bg-amber-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Staples</div>
-        <button class="absolute bottom-2 right-2 bg-white border border-[#d97706] text-[#d97706] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#d97706]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
-       </div>
-       <div class="flex-grow flex flex-col justify-between">
-        <div>
-         <div class="flex items-center flex-wrap gap-1">
-          <span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹{p.MRP}</span>
-         </div>
-         <h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">{p["Product Name"]}</h3>
-        </div>
-        <div class="mt-1">
-         <p class="text-[9px] text-neutral-500 font-bold">{p["Pack Size"] || '1 Unit'}</p>
-         <div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">
-          <span class="text-[#0c831f]">★</span>
-          <span>4.7</span>
-          <span class="text-neutral-400 font-normal">({p.StockQuantity || '3.5k'})</span>
-         </div>
-        </div>
-       </div>
-      </div>
-     ))
-    }
-   </div>
-  </section>
-
-  <!-- Snacks & Drinks Section -->
-  <section>
-   <div class="flex items-center justify-between mb-6">
-    <h2 id="section-snacks" class="font-headline-md text-headline-md text-on-surface scroll-mt-36">Snacks &amp; Drinks</h2>
-    <button class="text-primary font-label-md text-label-md flex items-center gap-1">
-     View All <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
-    </button>
-   </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-    {
-     snacks.map(p => (
-      <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-purple-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
-       <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
-           src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-        <div class="absolute top-2 left-2 bg-purple-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Snacks</div>
-        <button class="absolute bottom-2 right-2 bg-white border border-[#7c3aed] text-[#7c3aed] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#7c3aed]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
-       </div>
-       <div class="flex-grow flex flex-col justify-between">
-        <div>
-         <div class="flex items-center flex-wrap gap-1">
-          <span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹{p.MRP}</span>
-         </div>
-         <h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">{p["Product Name"]}</h3>
-        </div>
-        <div class="mt-1">
-         <p class="text-[9px] text-neutral-500 font-bold">{p["Pack Size"] || '1 Unit'}</p>
-         <div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">
-          <span class="text-[#0c831f]">★</span>
-          <span>4.7</span>
-          <span class="text-neutral-400 font-normal">({p.StockQuantity || '3.5k'})</span>
-         </div>
-        </div>
-       </div>
-      </div>
-     ))
-    }
-   </div>
-  </section>
-
-  <!-- Household Essentials Section -->
-  <section>
-   <div class="flex items-center justify-between mb-6">
-    <h2 id="section-household" class="font-headline-md text-headline-md text-on-surface scroll-mt-36">Household Essentials</h2>
-    <button class="text-primary font-label-md text-label-md flex items-center gap-1">
-     View All <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
-    </button>
-   </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-    {
-     household.map(p => (
-      <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-teal-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
-       <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
-           src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-        <div class="absolute top-2 left-2 bg-teal-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Home</div>
-        <button class="absolute bottom-2 right-2 bg-white border border-[#0d9488] text-[#0d9488] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#0d9488]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
-       </div>
-       <div class="flex-grow flex flex-col justify-between">
-        <div>
-         <div class="flex items-center flex-wrap gap-1">
-          <span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹{p.MRP}</span>
-         </div>
-         <h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">{p["Product Name"]}</h3>
-        </div>
-        <div class="mt-1">
-         <p class="text-[9px] text-neutral-500 font-bold">{p["Pack Size"] || '1 Unit'}</p>
-         <div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">
-          <span class="text-[#0c831f]">★</span>
-          <span>4.7</span>
-          <span class="text-neutral-400 font-normal">({p.StockQuantity || '3.5k'})</span>
-         </div>
-        </div>
-       </div>
-      </div>
-     ))
-    }
-   </div>
-  </section>
-
-  <!-- Personal Care Section -->
-  <section class="pb-20">
-   <div class="flex items-center justify-between mb-6">
-    <h2 id="section-personal" class="font-headline-md text-headline-md text-on-surface scroll-mt-36">Personal Care</h2>
-    <button class="text-primary font-label-md text-label-md flex items-center gap-1">
-     View All <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
-    </button>
-   </div>
-      <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-    {
-     personal.map(p => (
-      <div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 hover:border-pink-500/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">
-       <div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">
-        <img loading="lazy" alt={p["Product Name"]} class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
-           src={p["Product Image URL"] || '/assets/d686bc969706f3bd6cf093f663be9579.jpg'} onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-        <div class="absolute top-2 left-2 bg-pink-600 text-white text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">Care</div>
-        <button class="absolute bottom-2 right-2 bg-white border border-[#db2777] text-[#db2777] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[#db2777]/5 active:scale-95 transition-all duration-200 btn-add-static">ADD</button>
-       </div>
-       <div class="flex-grow flex flex-col justify-between">
-        <div>
-         <div class="flex items-center flex-wrap gap-1">
-          <span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹{p.MRP}</span>
-         </div>
-         <h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">{p["Product Name"]}</h3>
-        </div>
-        <div class="mt-1">
-         <p class="text-[9px] text-neutral-500 font-bold">{p["Pack Size"] || '1 Unit'}</p>
-         <div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">
-          <span class="text-[#0c831f]">★</span>
-          <span>4.7</span>
-          <span class="text-neutral-400 font-normal">({p.StockQuantity || '3.5k'})</span>
-         </div>
-        </div>
-       </div>
-      </div>
-     ))
-    }
-   </div>
-  </section>
- </main>
-
- <!-- Cart Floating Bar -->
- <div class="fixed bottom-24 left-4 right-4 z-50">
-  <div class="bg-primary text-on-primary h-16 rounded-2xl flex items-center justify-between px-6 shadow-xl cursor-pointer hover:brightness-110 transition-all">
-   <div class="flex items-center gap-3">
-    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-     <span class="material-symbols-outlined" data-icon="shopping_basket">shopping_basket</span>
+      <!-- Quick Cart Button -->
+      <a href="/cart" class="flex items-center gap-1.5 bg-blueLight border border-blue-200 text-blueBrand px-3 py-1.5 rounded-xl font-bold text-xs hover:bg-blueBrand hover:text-white transition-all">
+        <span class="material-symbols-outlined text-base">shopping_bag</span>
+        <span id="header-cart-badge" class="font-extrabold">0</span>
+      </a>
     </div>
-    <div>
-     <p class="font-bold text-label-md leading-none">0 Items</p>
-     <p class="text-[10px] text-white/80">₹0 • Shivaji Nagar</p>
+  </header>
+
+  <!-- ==================== SEARCH BAR WITH LIVE AUTOCOMPLETE ==================== -->
+  <section class="max-w-7xl mx-auto px-4 mt-4 relative z-30">
+    <div class="relative">
+      <div class="relative flex items-center">
+        <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl pointer-events-none">search</span>
+        <input 
+          type="text" 
+          id="med-search-input" 
+          class="w-full bg-white border-2 border-slate-200 rounded-2xl py-3.5 pl-11 pr-10 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:border-blueBrand focus:ring-4 focus:ring-blue-100 shadow-sm transition-all"
+          placeholder="Search 'Paracetamol', 'Dolo', 'Fever', 'Sanofi', 'Diabetes'..." 
+          autocomplete="off"
+        />
+        <button id="med-search-clear" class="absolute right-3.5 w-6 h-6 rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 hidden items-center justify-center text-xs transition-colors">
+          ✕
+        </button>
+      </div>
+
+      <!-- Live Search Suggestions Dropdown -->
+      <div id="med-suggestions-dropdown" class="absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden hidden max-h-80 overflow-y-auto z-50">
+        <!-- Dynamically populated via JS -->
+      </div>
     </div>
-   </div>
-   <div class="flex items-center gap-2">
-    <span class="font-bold uppercase tracking-widest text-sm">View Cart</span>
-    <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-   </div>
+
+    <!-- Quick Search Badges / Tags -->
+    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar mt-2.5 pb-1 text-xs">
+      <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Popular:</span>
+      <button class="quick-tag-btn px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 font-bold hover:border-blueBrand hover:text-blueBrand transition-all shrink-0">Fever & Pain</button>
+      <button class="quick-tag-btn px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 font-bold hover:border-blueBrand hover:text-blueBrand transition-all shrink-0">Paracetamol</button>
+      <button class="quick-tag-btn px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 font-bold hover:border-blueBrand hover:text-blueBrand transition-all shrink-0">Diabetes</button>
+      <button class="quick-tag-btn px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 font-bold hover:border-blueBrand hover:text-blueBrand transition-all shrink-0">Blood Pressure</button>
+      <button class="quick-tag-btn px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 font-bold hover:border-blueBrand hover:text-blueBrand transition-all shrink-0">Acidity & Gas</button>
+      <button class="quick-tag-btn px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 font-bold hover:border-blueBrand hover:text-blueBrand transition-all shrink-0">Multivitamins</button>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN CONTENT & FILTERS ==================== -->
+  <main class="max-w-7xl mx-auto px-4 mt-5">
+    <div class="flex flex-col lg:flex-row gap-6">
+
+      <!-- SIDEBAR FILTERS (Desktop) & TOGGLE MODAL (Mobile) -->
+      <aside class="w-full lg:w-64 shrink-0">
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-5 sticky top-20">
+          
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <h2 class="text-sm font-black font-display text-slate-900 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-blueBrand text-lg">tune</span>
+              <span>Filters</span>
+            </h2>
+            <button id="btn-reset-filters" class="text-[11px] font-bold text-blueBrand hover:underline">Reset All</button>
+          </div>
+
+          <!-- 1. Sort By -->
+          <div class="space-y-2">
+            <label class="text-xs font-black text-slate-700 uppercase tracking-wider block">Sort By</label>
+            <select id="filter-sort" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-blueBrand">
+              <option value="popular">Popularity / Relevance</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+              <option value="newest">Newest Arrivals</option>
+            </select>
+          </div>
+
+          <!-- 2. Prescription & Type Filter -->
+          <div class="space-y-2">
+            <label class="text-xs font-black text-slate-700 uppercase tracking-wider block">Medicine Type</label>
+            <div class="space-y-1.5 text-xs font-semibold text-slate-600">
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
+                <input type="radio" name="rx_filter" value="all" checked class="accent-blueBrand" />
+                <span>All Medicines</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
+                <input type="radio" name="rx_filter" value="otc" class="accent-blueBrand" />
+                <span>OTC (No Prescription)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
+                <input type="radio" name="rx_filter" value="rx" class="accent-blueBrand" />
+                <span class="flex items-center gap-1">
+                  <span>Prescription Required</span>
+                  <span class="bg-rose-500 text-white text-[8px] font-black px-1 rounded">Rx</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 3. Availability Filter -->
+          <div class="space-y-2">
+            <label class="text-xs font-black text-slate-700 uppercase tracking-wider block">Availability</label>
+            <label class="flex items-center gap-2 text-xs font-semibold text-slate-600 cursor-pointer hover:text-slate-900">
+              <input type="checkbox" id="filter-instock" class="rounded text-blueBrand focus:ring-blueBrand accent-blueBrand" />
+              <span>In Stock Only</span>
+            </label>
+          </div>
+
+          <!-- 4. Category Filter -->
+          <div class="space-y-2">
+            <label class="text-xs font-black text-slate-700 uppercase tracking-wider block">Category</label>
+            <select id="filter-category" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-blueBrand">
+              <option value="all">All Categories</option>
+              <option value="Pain Relief">Pain Relief</option>
+              <option value="Cold & Fever">Cold & Fever</option>
+              <option value="Diabetes">Diabetes</option>
+              <option value="Heart Care">Heart Care</option>
+              <option value="Blood Pressure">Blood Pressure</option>
+              <option value="Vitamins">Vitamins</option>
+              <option value="Supplements">Supplements</option>
+              <option value="Protein">Protein</option>
+              <option value="Ayurvedic">Ayurvedic</option>
+              <option value="Baby Care">Baby Care</option>
+              <option value="Women's Care">Women's Care</option>
+              <option value="Men's Care">Men's Care</option>
+              <option value="Skin Care">Skin Care</option>
+              <option value="Hair Care">Hair Care</option>
+              <option value="Dental Care">Dental Care</option>
+              <option value="Eye Care">Eye Care</option>
+              <option value="Digestive Care">Digestive Care</option>
+              <option value="Medical Devices">Medical Devices</option>
+              <option value="Personal Care">Personal Care</option>
+              <option value="Covid Essentials">Covid Essentials</option>
+            </select>
+          </div>
+
+          <!-- 5. Brand Filter -->
+          <div class="space-y-2">
+            <label class="text-xs font-black text-slate-700 uppercase tracking-wider block">Brand</label>
+            <select id="filter-brand" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-blueBrand">
+              <option value="all">All Brands</option>
+              <option value="Micro Labs">Micro Labs</option>
+              <option value="Sanofi">Sanofi</option>
+              <option value="Sun Pharma">Sun Pharma</option>
+              <option value="Cipla">Cipla</option>
+              <option value="Abbott">Abbott</option>
+              <option value="USV">USV</option>
+              <option value="GSK">GSK</option>
+              <option value="Torrent">Torrent</option>
+              <option value="Glenmark">Glenmark</option>
+              <option value="Himalaya">Himalaya</option>
+              <option value="Dabur">Dabur</option>
+              <option value="Patanjali">Patanjali</option>
+              <option value="Omron">Omron</option>
+              <option value="Dr. Morepen">Dr. Morepen</option>
+            </select>
+          </div>
+
+          <!-- 6. Price Filter -->
+          <div class="space-y-2">
+            <label class="text-xs font-black text-slate-700 uppercase tracking-wider block">Max Price: <span id="price-val-label" class="text-blueBrand font-extrabold">₹3,000</span></label>
+            <input type="range" id="filter-price-range" min="20" max="3000" step="50" value="3000" class="w-full accent-blueBrand cursor-pointer" />
+            <div class="flex justify-between text-[10px] text-slate-400 font-bold">
+              <span>₹20</span>
+              <span>₹3,000</span>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- RESULTS PRODUCT GRID -->
+      <section class="flex-1 space-y-4">
+        
+        <!-- Header Info -->
+        <div class="flex items-center justify-between bg-white rounded-2xl border border-slate-200 p-3.5 px-4 shadow-xs">
+          <div>
+            <h2 class="text-sm sm:text-base font-black font-display text-slate-900 flex items-center gap-2">
+              <span id="results-title">Showing Medicines</span>
+              <span id="results-count-badge" class="bg-blueLight text-blueBrand text-xs font-extrabold px-2 py-0.5 rounded-full border border-blue-200">0 items</span>
+            </h2>
+            <p id="results-query-label" class="text-[11px] text-slate-500 font-semibold mt-0.5">Filter or search to explore our full pharmacy catalog</p>
+          </div>
+
+          <!-- Active Filter Tags Display -->
+          <div id="active-filter-chips" class="hidden flex-wrap items-center gap-1.5">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Grid Container -->
+        <div id="med-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+          <!-- Dynamically Rendered Cards -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="med-empty-state" class="hidden bg-white rounded-3xl border border-slate-200 p-12 text-center space-y-4 shadow-xs">
+          <div class="w-16 h-16 rounded-full bg-blueLight text-blueBrand mx-auto flex items-center justify-center">
+            <span class="material-symbols-outlined text-3xl">search_off</span>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-slate-800 font-display">No Medicines Found</h3>
+            <p class="text-xs text-slate-500 font-medium max-w-md mx-auto mt-1">We couldn't find any products matching your search criteria. Try adjusting your query or resetting filters.</p>
+          </div>
+          <button id="btn-empty-reset" class="px-5 py-2 bg-blueBrand text-white text-xs font-bold rounded-xl hover:bg-blueDark transition-colors shadow-sm">
+            Reset Filters
+          </button>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==================== FLOATING CART BAR ==================== -->
+  <div id="med-floating-cart-bar" class="fixed bottom-4 left-4 right-4 max-w-xl mx-auto bg-slate-900 text-white rounded-2xl p-3.5 shadow-2xl z-50 flex items-center justify-between transition-all transform translate-y-32 opacity-0 pointer-events-none border border-slate-800">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-blueBrand text-white flex items-center justify-center font-black shadow-md">
+        <span class="material-symbols-outlined text-xl">shopping_bag</span>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span id="med-float-count" class="text-xs font-black bg-white/20 px-2 py-0.5 rounded-md">0 ITEMS</span>
+          <span class="text-xs text-slate-400 font-bold">•</span>
+          <span id="med-float-total" class="text-sm font-black text-white">₹0</span>
+        </div>
+        <p class="text-[10px] text-slate-400 font-semibold mt-0.5">10 Min Express Pharmacy Delivery</p>
+      </div>
+    </div>
+
+    <a href="/cart" class="px-5 py-2.5 bg-blueBrand hover:bg-blueDark text-white text-xs font-black rounded-xl active:scale-95 transition-all shadow-md flex items-center gap-1">
+      <span>Continue to Cart</span>
+      <span class="material-symbols-outlined text-sm">arrow_forward</span>
+    </a>
   </div>
- </div>
 
- <!-- BottomNavBar -->
- <nav class="fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl z-50 rounded-t-xl border-t border-outline-variant/30 shadow-[0_-4px_12px_rgba(0,0,0,0.04)]">
-  <a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/home">
-   <span class="material-symbols-outlined" data-icon="home">home</span>
-   <span class="font-label-sm text-label-sm">Home</span>
-  </a>
-  <a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/orders">
-   <span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
-   <span class="font-label-sm text-label-sm">Orders</span>
-  </a>
-  <a class="flex flex-col items-center justify-center text-primary bg-primary-fixed/30 rounded-full px-4 py-1 active:scale-90 duration-200 transition-all" href="/grocery">
-   <span class="material-symbols-outlined" data-icon="search" style="font-variation-settings: 'FILL' 1;">search</span>
-   <span class="font-label-sm text-label-sm">Search</span>
-  </a>
-  <a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all active:scale-90 duration-200" href="/profile">
-   <span class="material-symbols-outlined" data-icon="person">person</span>
-   <span class="font-label-sm text-label-sm">Account</span>
-  </a>
- </nav>
+  <Switcher />
 
- <script is:inline>
-  // client_side_classification_engine_inserted
+  <!-- ==================== CLIENT SIDE CATALOG & INSTANT FILTERING SCRIPT ==================== -->
+  <script is:inline>
+    (function() {
+      // MASTER MEDICINE CATALOG DATA
+      var medicineCatalog = [
+        // Pain Relief
+        { id: 'med_101', name: 'Dolo 650mg Tablet', brand: 'Micro Labs', salt: 'Paracetamol 650mg', disease: 'Fever, Headache, Body Pain, Fever Reduction', price: 32, mrp: 34, category: 'Pain Relief', rating: '4.9', rxRequired: false, inStock: true, popularity: 99, date: '2026-01-10', pack: '15 Tablets', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_102', name: 'Combiflam Pain Relief Tablet', brand: 'Sanofi', salt: 'Ibuprofen 400mg + Paracetamol 325mg', disease: 'Joint Pain, Dental Pain, Muscle Ache', price: 45, mrp: 48, category: 'Pain Relief', rating: '4.8', rxRequired: false, inStock: true, popularity: 95, date: '2026-01-12', pack: '20 Tablets', image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_103', name: 'Volini Pain Relief Spray', brand: 'Sun Pharma', salt: 'Diclofenac Diethylamine + Methyl Salicylate', disease: 'Back Pain, Sprain, Sports Injury', price: 215, mrp: 245, category: 'Pain Relief', rating: '4.9', rxRequired: false, inStock: true, popularity: 92, date: '2026-01-15', pack: '100g Can', image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_104', name: 'Brufen 400mg Tablet', brand: 'Abbott', salt: 'Ibuprofen 400mg', disease: 'Arthritis Pain, Inflammation, Toothache', price: 35, mrp: 40, category: 'Pain Relief', rating: '4.7', rxRequired: true, inStock: true, popularity: 88, date: '2026-01-20', pack: '15 Tablets', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_105', name: 'Flexon MR Tablet', brand: 'Aristo Pharma', salt: 'Ibuprofen + Paracetamol + Chlorzoxazone', disease: 'Muscle Spasm, Severe Back Pain', price: 89, mrp: 99, category: 'Pain Relief', rating: '4.6', rxRequired: true, inStock: true, popularity: 82, date: '2026-02-01', pack: '10 Tablets', image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80' },
 
-function isPersonalCareProduct(p) {
-  const name = (p["Product Name"] || "").toLowerCase();
-  const dbCat = p.Category || "";
-  
-  if (dbCat === 'Personal Care' || dbCat === 'Baby Care' || dbCat === 'Women\'s Hygiene' || dbCat === 'Sexual Wellness' || dbCat === 'OTC Medical Products') {
-    return true;
-  }
+        // Cold & Fever
+        { id: 'med_201', name: 'Crocin Advance 500mg', brand: 'GSK', salt: 'Paracetamol Fast Release 500mg', disease: 'Fever, High Temperature, Mild Headache', price: 28, mrp: 30, category: 'Cold & Fever', rating: '4.8', rxRequired: false, inStock: true, popularity: 97, date: '2026-01-05', pack: '20 Tablets', image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_202', name: 'Vicks Vaporub Relief Balm', brand: 'P&G', salt: 'Menthol + Camphor + Eucalyptus Oil', disease: 'Nasal Congestion, Cough, Cold Relief', price: 145, mrp: 160, category: 'Cold & Fever', rating: '4.9', rxRequired: false, inStock: true, popularity: 96, date: '2026-01-08', pack: '50g Jar', image: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_203', name: 'Sinarest New Tablet', brand: 'Centaur Pharma', salt: 'Paracetamol + Phenylephrine + Chlorpheniramine', disease: 'Runny Nose, Sinus Congestion, Sneezing', price: 42, mrp: 48, category: 'Cold & Fever', rating: '4.7', rxRequired: false, inStock: true, popularity: 90, date: '2026-01-18', pack: '15 Tablets', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_204', name: 'Allegra 120mg Tablet', brand: 'Sanofi', salt: 'Fexofenadine Hydrochloride 120mg', disease: 'Allergies, Skin Rash, Rhinitis, Sneezing', price: 175, mrp: 196, category: 'Cold & Fever', rating: '4.8', rxRequired: true, inStock: true, popularity: 86, date: '2026-01-25', pack: '10 Tablets', image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_205', name: 'Cetzine 10mg Tablet', brand: 'GSK', salt: 'Cetirizine Dihydrochloride 10mg', disease: 'Dust Allergy, Sneezing, Hives', price: 18, mrp: 22, category: 'Cold & Fever', rating: '4.9', rxRequired: false, inStock: true, popularity: 91, date: '2026-02-02', pack: '10 Tablets', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' },
 
-  // Definite personal care indicators (never food)
-  const definitePersonalCare = [
-    'shampoo', 'shamp', 'lotion', 'body wash', 'bodywash', 'deodorant', 'perfume', 'toothbrush', 
-    'toothpaste', 'toothpowder', 'mouthwash', 'conditioner', 'cleanser', 'serum', 'moisturiser', 
-    'moisturizer', 'scrub', 'spray', 'hair water', 'attar', 'sandalwood', 'eau de', 'toilette', 
-    'cologne', 'body mist', 'buds', 'sunscreen', 'sun block', 'sunblock', 'lip balm', 'lip therapy', 
-    'facewash', 'face wash', 'handwash', 'hand wash', 'hair care', 'skin care', 'body care', 'face care', 
-    'hygiene', 'sheet mask', 'skin mask', 'bathing bar', 'bath bar', 'body milk'
-  ];
-  if (definitePersonalCare.some(kw => name.includes(kw))) {
-    return true;
-  }
+        // Diabetes
+        { id: 'med_301', name: 'Glycomet GP 2 Tablet', brand: 'USV', salt: 'Metformin 500mg + Glimepiride 2mg', disease: 'Type 2 Diabetes, High Blood Sugar', price: 135, mrp: 150, category: 'Diabetes', rating: '4.8', rxRequired: true, inStock: true, popularity: 94, date: '2026-01-14', pack: '15 Tablets', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_302', name: 'Janumet 50/500mg Tablet', brand: 'MSD', salt: 'Sitagliptin 50mg + Metformin 500mg', disease: 'Diabetes Mellitus, Blood Glucose Control', price: 285, mrp: 310, category: 'Diabetes', rating: '4.9', rxRequired: true, inStock: true, popularity: 89, date: '2026-01-19', pack: '7 Tablets', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_303', name: 'Sugar Free Gold Pellets', brand: 'Zydus', salt: 'Aspartame Artificial Sweetener', disease: 'Diabetic Sweetener, Weight Watchers', price: 125, mrp: 145, category: 'Diabetes', rating: '4.7', rxRequired: false, inStock: true, popularity: 85, date: '2026-01-22', pack: '500 Pellets', image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_304', name: 'Accu-Chek Active Test Strips', brand: 'Roche', salt: 'Blood Glucose Test Strip', disease: 'Blood Sugar Monitoring, Diabetes Check', price: 899, mrp: 1050, category: 'Diabetes', rating: '4.9', rxRequired: false, inStock: true, popularity: 93, date: '2026-01-28', pack: '50 Strips', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80' },
 
-  // Soap (avoid dishwash/laundry)
-  if (name.includes('soap') && !name.includes('dish') && !name.includes('laund')) {
-    return true;
-  }
+        // Heart Care & BP
+        { id: 'med_401', name: 'Ecosprin 75mg Tablet', brand: 'USV', salt: 'Aspirin Gastro-resistant 75mg', disease: 'Heart Attack Prevention, Blood Thinner, Stroke', price: 12, mrp: 14, category: 'Heart Care', rating: '4.9', rxRequired: true, inStock: true, popularity: 98, date: '2026-01-02', pack: '14 Tablets', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_402', name: 'Atorva 10mg Tablet', brand: 'Zydus', salt: 'Atorvastatin 10mg', disease: 'High Cholesterol, Triglycerides, Heart Health', price: 98, mrp: 110, category: 'Heart Care', rating: '4.8', rxRequired: true, inStock: true, popularity: 90, date: '2026-01-16', pack: '15 Tablets', image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_501', name: 'Telma 40mg Tablet', brand: 'Glenmark', salt: 'Telmisartan 40mg', disease: 'High Blood Pressure, Hypertension, Kidney Protection', price: 195, mrp: 220, category: 'Blood Pressure', rating: '4.9', rxRequired: true, inStock: true, popularity: 95, date: '2026-01-11', pack: '15 Tablets', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_502', name: 'Amlodipine 5mg Tablet', brand: 'Cipla', salt: 'Amlodipine Besylate 5mg', disease: 'High BP, Angina, Chest Pain', price: 35, mrp: 42, category: 'Blood Pressure', rating: '4.8', rxRequired: true, inStock: true, popularity: 91, date: '2026-01-17', pack: '15 Tablets', image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80' },
 
-  // Cream (avoid ice cream, sour cream, cooking creams, biscuits, cheese, chocolate)
-  if (name.includes('cream')) {
-    const foodCreams = ['ice cream', 'biscuit', 'toast', 'sour', 'whipped', 'onion', 'garlic', 'culinary', 'cheese', 'salad', 'soup', 'cookie', 'chocolate'];
-    if (!foodCreams.some(fc => name.includes(fc))) {
-      return true;
-    }
-  }
+        // Vitamins & Supplements
+        { id: 'med_601', name: 'Revital H Daily Multivitamin', brand: 'Sun Pharma', salt: 'Ginseng + Vitamins + Minerals', disease: 'Fatigue, Weakness, Immunity Booster, Daily Energy', price: 495, mrp: 550, category: 'Vitamins', rating: '4.9', rxRequired: false, inStock: true, popularity: 97, date: '2026-01-04', pack: '60 Capsules', image: 'https://images.unsplash.com/photo-1550572017-edf79289989a?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_602', name: 'Shelcal 500 Calcium & D3', brand: 'Torrent', salt: 'Elemental Calcium 500mg + Vitamin D3', disease: 'Bone Weakness, Osteoporosis, Calcium Deficiency', price: 118, mrp: 131, category: 'Vitamins', rating: '4.8', rxRequired: false, inStock: true, popularity: 94, date: '2026-01-09', pack: '15 Tablets', image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_603', name: 'Becosules Z Capsules', brand: 'Pfizer', salt: 'B-Complex + Vitamin C + Zinc', disease: 'Mouth Ulcers, Vitamin Deficiency, Immunity', price: 48, mrp: 52, category: 'Vitamins', rating: '4.9', rxRequired: false, inStock: true, popularity: 96, date: '2026-01-13', pack: '20 Capsules', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_604', name: 'Limcee 500mg Vitamin C Chewable', brand: 'Abbott', salt: 'Ascorbic Acid (Vitamin C) 500mg', disease: 'Scurvy, Immunity, Cold Defense', price: 24, mrp: 26, category: 'Vitamins', rating: '4.8', rxRequired: false, inStock: true, popularity: 92, date: '2026-01-21', pack: '15 Tablets', image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_701', name: 'Ensure Balanced Nutrition Powder', brand: 'Abbott', salt: 'Protein + 32 Essential Nutrients', disease: 'Malnutrition, Recovery, Elderly Health', price: 780, mrp: 850, category: 'Supplements', rating: '4.9', rxRequired: false, inStock: true, popularity: 89, date: '2026-01-27', pack: '400g Tin', image: 'https://images.unsplash.com/photo-1550572017-edf79289989a?auto=format&fit=crop&w=800&q=80' },
 
-  // Oil (avoid cooking oils, ghee)
-  if (name.includes('oil')) {
-    const cookingOils = ['cooking', 'mustard', 'refined', 'soyabean', 'sunflower', 'groundnut', 'olive', 'rice bran', 'ghee', 'sesame', 'castor oil for cooking', 'spices'];
-    if (!cookingOils.some(co => name.includes(co))) {
-      return true;
-    }
-  }
+        // Ayurvedic & Herbal
+        { id: 'med_901', name: 'Dabur Chyawanprash Special', brand: 'Dabur', salt: 'Amla + 40 Ayurvedic Herbs', disease: 'Immunity Booster, Seasonal Cough & Cold', price: 345, mrp: 395, category: 'Ayurvedic', rating: '4.9', rxRequired: false, inStock: true, popularity: 95, date: '2026-01-03', pack: '1kg Jar', image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_902', name: 'Patanjali Giloy Juice', brand: 'Patanjali', salt: 'Pure Giloy Extract (Tinospora)', disease: 'Fever Recovery, Platelet Booster, Immunity', price: 125, mrp: 145, category: 'Ayurvedic', rating: '4.7', rxRequired: false, inStock: true, popularity: 87, date: '2026-01-14', pack: '500ml Bottle', image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_903', name: 'Himalaya Ashvagandha Tablet', brand: 'Himalaya', salt: 'Withania Somnifera 250mg', disease: 'Stress Relief, Muscle Strength, Anxiety', price: 195, mrp: 220, category: 'Ayurvedic', rating: '4.8', rxRequired: false, inStock: true, popularity: 91, date: '2026-01-24', pack: '60 Tablets', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' },
 
-  // Powder (avoid baking, cooking powders)
-  if (name.includes('powder')) {
-    const foodPowders = ['baking', 'custard', 'cocoa', 'sugar', 'chili', 'chilly', 'turmeric', 'coriander', 'jeera', 'masala', 'pepper', 'detergent', 'washing', 'soap powder', 'chutney'];
-    if (!foodPowders.some(fp => name.includes(fp))) {
-      return true;
-    }
-  }
+        // Digestive Care & Acidity
+        { id: 'med_1701', name: 'Electral ORS Powder', brand: 'FDC', salt: 'Oral Rehydration Salts (WHO Formula)', disease: 'Dehydration, Diarrhea, Vomiting, Heat Stroke', price: 22, mrp: 22, category: 'Digestive Care', rating: '4.9', rxRequired: false, inStock: true, popularity: 98, date: '2026-01-01', pack: '1 Sachet', image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_1702', name: 'Digene Acidity & Gas Relief Gel', brand: 'Abbott', salt: 'Magnesium Hydroxide + Simethicone', disease: 'Heartburn, Indigestion, Stomach Gas, GERD', price: 95, mrp: 110, category: 'Digestive Care', rating: '4.8', rxRequired: false, inStock: true, popularity: 93, date: '2026-01-10', pack: '200ml Bottle', image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_1703', name: 'Pan D Capsule', brand: 'Alkem', salt: 'Pantoprazole 40mg + Domperidone 30mg', disease: 'Acid Reflux, Severe Acidity, Nausea', price: 125, mrp: 142, category: 'Digestive Care', rating: '4.8', rxRequired: true, inStock: true, popularity: 92, date: '2026-01-18', pack: '15 Capsules', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' },
 
-  // Gel (avoid food gels)
-  if (name.includes('gel') && !name.includes('food') && !name.includes('jelly') && !name.includes('flavor')) {
-    return true;
-  }
+        // Devices & Covid Essentials
+        { id: 'med_1801', name: 'Omron HEM-7120 BP Monitor', brand: 'Omron', salt: 'Oscillometric Digital Pressure Sensor', disease: 'Blood Pressure Check, Cardiac Care', price: 1990, mrp: 2480, category: 'Medical Devices', rating: '4.9', rxRequired: false, inStock: true, popularity: 94, date: '2026-01-06', pack: '1 Unit', image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_1802', name: 'Dr. Morepen Blood Glucose Monitor', brand: 'Dr. Morepen', salt: 'Biosensor Glucose Monitor', disease: 'Blood Sugar Test, Diabetes Tracking', price: 799, mrp: 1099, category: 'Medical Devices', rating: '4.8', rxRequired: false, inStock: true, popularity: 90, date: '2026-01-15', pack: '1 Kit + 50 Strips', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80' },
+        { id: 'med_2001', name: 'N95 Respirator Face Mask (10 Pack)', brand: 'Venus', salt: '5-Layer Meltblown Filter Mask', disease: 'Covid Protection, Pollution, Infection Control', price: 250, mrp: 350, category: 'Covid Essentials', rating: '4.8', rxRequired: false, inStock: true, popularity: 88, date: '2026-01-26', pack: '10 Masks', image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80' }
+      ];
 
-  // Brush (avoid paint brushes, etc.)
-  if (name.includes('brush') && !name.includes('paint') && !name.includes('wire')) {
-    return true;
-  }
+      // UI ELEMENTS
+      var searchInput = document.getElementById('med-search-input');
+      var searchClearBtn = document.getElementById('med-search-clear');
+      var suggestionsDropdown = document.getElementById('med-suggestions-dropdown');
+      var gridEl = document.getElementById('med-results-grid');
+      var emptyEl = document.getElementById('med-empty-state');
+      var resultsTitle = document.getElementById('results-title');
+      var resultsCountBadge = document.getElementById('results-count-badge');
+      var resultsQueryLabel = document.getElementById('results-query-label');
+      var priceValLabel = document.getElementById('price-val-label');
+      var headerCartBadge = document.getElementById('header-cart-badge');
 
-  // Check personal care brands
-  const brands = [
-    'pears', 'nivea', 'dove', 'himalaya', 'tresemme', 'colgate', 'oral-b', 'pantene', 'sunsilk', 
-    'parachute', 'vaseline', 'sensodyne', 'dettol', 'fiama', 'liril', 'cinthol', 'santoor', 
-    'biotique', 'lux', 'mamaearth', 'ponds', 'pond\'s', 'loreal', 'l\'oreal', 'garnier', 'gillette', 
-    'lakme', 'yardley', 'clinique', 'vlcc', 'neutrogena', 'cetaphil', 'body shop', 'forest essentials', 
-    'mama earth', 'soulflower', 'head & shoulders', 'head and shoulders', 'johnson\'s', 'johnson baby', 
-    'guggal', 'guggul', 'attar'
-  ];
-  if (brands.some(b => name.includes(b))) {
-    return true;
-  }
+      // FILTERS INPUTS
+      var sortSelect = document.getElementById('filter-sort');
+      var rxRadios = document.querySelectorAll('input[name="rx_filter"]');
+      var instockCheckbox = document.getElementById('filter-instock');
+      var categorySelect = document.getElementById('filter-category');
+      var brandSelect = document.getElementById('filter-brand');
+      var priceRange = document.getElementById('filter-price-range');
+      var resetBtn = document.getElementById('btn-reset-filters');
+      var emptyResetBtn = document.getElementById('btn-empty-reset');
 
-  return false;
-}
+      // STATE
+      var currentQuery = '';
 
-function getActualCategory(p) {
-  const name = (p["Product Name"] || "").toLowerCase();
-  const dbCat = p.Category || "";
-  
-  // Check laundry / cleaning items placed in wrong categories (like Spices & Masalas)
-  const isHouseholdName = (
-    name.includes('detergent') || name.includes('washing powder') || name.includes('cleaner') || 
-    name.includes('disinfectant') || name.includes('scrubber') || name.includes('foil') || 
-    name.includes('garbage bag') || name.includes('pooja') || name.includes('camphor') ||
-    name.includes('wick') || name.includes('batti') || name.includes('kapoor') ||
-    (name.includes('dish') && name.includes('wash'))
-  );
-
-  if (isPersonalCareProduct(p)) {
-    return 'Personal Care';
-  }
-  
-  if (isHouseholdName || dbCat === 'Home Cleaning' || dbCat === 'Laundry' || dbCat === 'Bathroom Cleaning' || dbCat === 'Kitchen Cleaning' || dbCat === 'Pooja Items' || dbCat === 'Disposable Products' || dbCat === 'Kitchen Essentials') {
-    return 'Home';
-  }
-
-  if (dbCat === 'Fruits & Vegetables') {
-    return 'Fruits & Vegetables';
-  }
-  
-  if (dbCat === 'Dairy' || dbCat === 'Bakery') {
-    return 'Dairy';
-  }
-  
-  if (dbCat === 'Rice, Atta & Flour' || dbCat === 'Dal & Pulses' || dbCat === 'Cooking Oil & Ghee' || dbCat === 'Spices & Masalas' || dbCat === 'Salt, Sugar & Jaggery') {
-    return 'Staples';
-  }
-  
-  if (dbCat === 'Snacks' || dbCat === 'Biscuits & Cookies' || dbCat === 'Chocolates' || dbCat === 'Noodles & Pasta' || dbCat === 'Beverages' || dbCat === 'Tea & Coffee' || dbCat === 'Ice Cream' || dbCat === 'Frozen Foods') {
-    return 'Snacks';
-  }
-  
-  return 'Staples';
-}
-
-  // Smooth scroll and dynamic click behavior
-  let fullCatalog = [];
-  let cart = JSON.parse(localStorage.getItem('bhusawal_cart_medicine') || '{}');
-  let cartCount = 0;
-  let cartTotal = 0;
-
-  const mainEl = document.querySelector('main');
-  const originalMainHTML = mainEl.innerHTML;
-  const cartBar = document.querySelector('.fixed.bottom-24');
-  const cartTextCount = cartBar.querySelector('p.font-bold');
-  const cartTextDetails = cartBar.querySelector('p.text-white\\/80');
-
-  function updateCartBar() {
-   localStorage.setItem('bhusawal_cart_medicine', JSON.stringify(cart));
-   cartCount = Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
-   cartTotal = Object.values(cart).reduce((sum, item) => sum + (item.price * item.qty), 0);
-   if (cartCount > 0) {
-    cartBar.classList.remove('hidden');
-    cartTextCount.textContent = cartCount + ' Item' + (cartCount > 1 ? 's' : '');
-    cartTextDetails.textContent = '₹' + cartTotal + ' • Shivaji Nagar';
-   } else {
-    cartBar.classList.add('hidden');
-   }
-  }
-
-  function replaceWithStepper(btn, title, price, themeColor, imgUrl = '', packSize = '', category = '') {
-   const btnClass = btn.className;
-   const stepper = document.createElement('div');
-   stepper.className = 'absolute bottom-2 right-2 flex items-center rounded-lg shadow-md overflow-hidden z-10';
-   stepper.style.backgroundColor = themeColor;
-   stepper.innerHTML = `
-    <button class="qty-minus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">−</button>
-    <span class="qty-value w-6 h-7 flex items-center justify-center text-white text-[11px] font-extrabold">1</span>
-    <button class="qty-plus w-7 h-7 flex items-center justify-center text-white font-bold text-sm hover:bg-white/20 active:scale-90 transition-all">+</button>
-   `;
-   btn.replaceWith(stepper);
-
-   if (!cart[title]) {
-    cart[title] = { price, qty: 1, themeColor, btnClass, imgUrl, packSize, category };
-   }
-   updateCartBar();
-
-   const qtyDisplay = stepper.querySelector('.qty-value');
-   qtyDisplay.textContent = cart[title].qty;
-
-   stepper.querySelector('.qty-plus').addEventListener('click', (e) => {
-    e.stopPropagation();
-    cart[title].qty++;
-    qtyDisplay.textContent = cart[title].qty;
-    updateCartBar();
-   });
-
-   stepper.querySelector('.qty-minus').addEventListener('click', (e) => {
-    e.stopPropagation();
-    cart[title].qty--;
-    if (cart[title].qty <= 0) {
-     delete cart[title];
-     const addBtn = document.createElement('button');
-     addBtn.className = btnClass;
-     addBtn.textContent = 'ADD';
-     stepper.replaceWith(addBtn);
-     bindAddButton(addBtn);
-    } else {
-     qtyDisplay.textContent = cart[title].qty;
-    }
-    updateCartBar();
-   });
-  }
-
-  function bindAddButton(btn) {
-   btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const card = btn.closest('.group');
-    const title = card.querySelector('h3').textContent.trim();
-    const priceText = card.querySelector('.selling-price').textContent.trim();
-    const price = parseInt(priceText.replace(/[^\d]/g, ''));
-    
-    const imgEl = card.querySelector('img');
-    const imgUrl = imgEl ? imgEl.getAttribute('src') : '';
-    
-    const packEl = card.querySelector('p.text-neutral-500');
-    const packSize = packEl ? packEl.textContent.trim() : '';
-    
-    const catEl = card.querySelector('.absolute.top-2.left-2');
-    const category = catEl ? catEl.textContent.trim() : 'Medicines';
-    
-    let themeColor = '#10b981';
-    const classes = Array.from(btn.classList);
-    for (const cls of classes) {
-     if (cls.startsWith('border-[') && cls.endsWith(']')) {
-      themeColor = cls.substring(8, cls.length - 1);
-      break;
-     }
-    }
-    replaceWithStepper(btn, title, price, themeColor, imgUrl, packSize, category);
-   });
-  }
-
-  function syncUIWithCart() {
-   document.querySelectorAll('.group').forEach(card => {
-    const titleEl = card.querySelector('h3');
-    if (!titleEl) return;
-    const title = titleEl.textContent.trim();
-    if (cart[title]) {
-     const btn = card.querySelector('.btn-add-static') || card.querySelector('.btn-add-dynamic');
-     if (btn) {
-      const priceText = card.querySelector('.selling-price').textContent.trim();
-      const price = parseInt(priceText.replace(/[^\d]/g, ''));
-      
-      let themeColor = '#10b981';
-      const classes = Array.from(btn.classList);
-      for (const cls of classes) {
-       if (cls.startsWith('border-[') && cls.endsWith(']')) {
-        themeColor = cls.substring(8, cls.length - 1);
-        break;
-       }
+      // INITIAL PARAMETERS FROM URL (?q=... or ?cat=...)
+      function readUrlParams() {
+        var params = new URLSearchParams(window.location.search);
+        var q = params.get('q');
+        var cat = params.get('cat');
+        if (q && q.trim()) {
+          searchInput.value = q.trim();
+          currentQuery = q.trim().toLowerCase();
+          searchClearBtn.classList.remove('hidden');
+          searchClearBtn.classList.add('flex');
+        }
+        if (cat && cat.trim()) {
+          for (var i = 0; i < categorySelect.options.length; i++) {
+            if (categorySelect.options[i].value.toLowerCase() === cat.trim().toLowerCase()) {
+              categorySelect.selectedIndex = i;
+              break;
+            }
+          }
+        }
       }
 
-      const imgEl = card.querySelector('img');
-      const imgUrl = imgEl ? imgEl.getAttribute('src') : '';
-      
-      const packEl = card.querySelector('p.text-neutral-500');
-      const packSize = packEl ? packEl.textContent.trim() : '';
-      
-      const catEl = card.querySelector('.absolute.top-2.left-2');
-      const category = catEl ? catEl.textContent.trim() : 'Medicines';
-
-      replaceWithStepper(btn, title, price, themeColor, imgUrl, packSize, category);
-     }
-    }
-   });
-   updateCartBar();
-  }
-
-  function bindStaticButtons() {
-   document.querySelectorAll('main button.btn-add-static').forEach(btn => bindAddButton(btn));
-   syncUIWithCart();
-  }
-
-  function bindScrollButtons() {
-   document.querySelectorAll('[data-target]').forEach(btn => {
-    btn.addEventListener('click', () => {
-     const targetId = btn.getAttribute('data-target');
-     if (fullCatalog.length > 0) {
-      let matches = [];
-      if (targetId === 'section-veggies') matches = fullCatalog.filter(item => getActualCategory(item) === 'Fruits & Vegetables');
-      else if (targetId === 'section-dairy') matches = fullCatalog.filter(item => getActualCategory(item) === 'Dairy');
-      else if (targetId === 'section-staples') matches = fullCatalog.filter(item => getActualCategory(item) === 'Staples');
-      else if (targetId === 'section-snacks') matches = fullCatalog.filter(item => getActualCategory(item) === 'Snacks');
-      else if (targetId === 'section-personal') matches = fullCatalog.filter(item => getActualCategory(item) === 'Personal Care');
-      else if (targetId === 'section-household') matches = fullCatalog.filter(item => getActualCategory(item) === 'Home');
-      else {
-       const allowedCats = categoryMappings[targetId] || [];
-       matches = fullCatalog.filter(item => allowedCats.includes(item.Category));
+      // CART MANAGEMENT
+      function getGlobalCart() {
+        try { return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); }
+        catch(e) { return []; }
       }
-      const categoryLabel = btn.querySelector('span:last-child').textContent.trim();
-      renderProductList(categoryLabel, matches.slice(0, 100));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-     } else {
-      const targetEl = document.getElementById(targetId);
-      if (targetEl) {
-       targetEl.scrollIntoView({ behavior: 'smooth' });
+
+      function saveGlobalCart(cart) {
+        localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new Event('cartUpdated'));
+        updateAllCartUI();
       }
-     }
-    });
-   });
-  }
 
-  function renderProductList(title, products) {
-   const heading = '<div class="flex items-center justify-between mb-6">' +
-    '<h2 class="font-headline-md text-headline-md text-on-surface">' + title + ' (' + products.length + ' Items)</h2>' +
-    '<button id="btn-clear-filter" class="text-primary font-label-md text-label-md flex items-center gap-1">' +
-     'Back to Home <span class="material-symbols-outlined text-sm">close</span>' +
-    '</button>' +
-   '</div>';
+      function updateAllCartUI() {
+        var cart = getGlobalCart();
+        var totalCount = cart.reduce(function(sum, item) { return sum + (item.quantity || 1); }, 0);
+        var totalPrice = cart.reduce(function(sum, item) { return sum + (parseFloat(item.price || 0) * (item.quantity || 1)); }, 0);
 
-   let gridHTML = '<div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">';
-   products.forEach(p => {
-    const actualCategory = getActualCategory(p);
-    const tag = actualCategory === 'Fruits & Vegetables' ? 'Organic' : 'Bestseller';
-    const tagColor = actualCategory === 'Fruits & Vegetables' ? 'bg-emerald-600 text-white' : 'bg-[#ffc107] text-neutral-900';
-    const price = p.MRP;
-    const mrpHtml = '';
-    const discountHtml = '';
-    const ratingCount = p.StockQuantity || '3.5k';
+        if (headerCartBadge) headerCartBadge.textContent = totalCount;
 
-    let iconName = 'shopping_bag';
-    if (getActualCategory(p) === 'Fruits & Vegetables') iconName = 'eco';
-    else if (getActualCategory(p) === 'Dairy') iconName = 'water_drop';
-    else if (getActualCategory(p) === 'Staples') iconName = 'inventory_2';
-    else if (getActualCategory(p) === 'Snacks') iconName = 'cookie';
-    else if (getActualCategory(p) === 'Home') iconName = 'cleaning_services';
-    else if (getActualCategory(p) === 'Personal Care') iconName = 'sanitizer';
+        var floatBar = document.getElementById('med-floating-cart-bar');
+        var floatCount = document.getElementById('med-float-count');
+        var floatTotal = document.getElementById('med-float-total');
 
-    let themeColor = '#ff3f6c';
-    let hoverBorderClass = 'hover:border-primary/20';
-    
-    if (actualCategory === 'Fruits & Vegetables') {
-      themeColor = '#0c831f';
-      hoverBorderClass = 'hover:border-emerald-500/30';
-    } else if (actualCategory === 'Dairy') {
-      themeColor = '#2563eb';
-      hoverBorderClass = 'hover:border-blue-500/30';
-    } else if (actualCategory === 'Staples') {
-      themeColor = '#d97706';
-      hoverBorderClass = 'hover:border-amber-500/30';
-    } else if (actualCategory === 'Snacks') {
-      themeColor = '#7c3aed';
-      hoverBorderClass = 'hover:border-purple-500/30';
-    } else if (actualCategory === 'Home') {
-      themeColor = '#0d9488';
-      hoverBorderClass = 'hover:border-teal-500/30';
-    } else if (actualCategory === 'Personal Care') {
-      themeColor = '#db2777';
-      hoverBorderClass = 'hover:border-pink-500/30';
-    }
+        if (floatBar) {
+          if (totalCount > 0) {
+            floatBar.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+            if (floatCount) floatCount.textContent = totalCount + (totalCount === 1 ? ' ITEM' : ' ITEMS');
+            if (floatTotal) floatTotal.textContent = '₹' + Math.round(totalPrice);
+          } else {
+            floatBar.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+          }
+        }
 
-    gridHTML += '<div class="bg-white rounded-2xl p-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.02)] flex flex-col group border border-neutral-100/80 ' + hoverBorderClass + ' hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)] transition-all duration-300 relative">' +
-     '<div class="w-full aspect-square rounded-xl bg-white border border-neutral-100/60 mb-2.5 relative flex items-center justify-center p-2.5 overflow-hidden">' +
-      '<div class="w-full h-full flex items-center justify-center bg-neutral-100/30 rounded-lg">' +
-       '<span class="material-symbols-outlined text-2xl text-neutral-300 group-hover:scale-110 transition-transform duration-300" data-icon="' + iconName + '">' + iconName + '</span>' +
-      '</div>' +
-      '<div class="absolute top-2 left-2 ' + tagColor + ' text-[7px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wider">' + tag + '</div>' +
-      '<button class="absolute bottom-2 right-2 bg-white border border-[' + themeColor + '] text-[' + themeColor + '] px-3 py-1 rounded-lg text-[10px] font-extrabold shadow-md hover:bg-[' + themeColor + ']/5 active:scale-95 transition-all duration-200 btn-add-dynamic">ADD</button>' +
-     '</div>' +
-     '<div class="flex-grow flex flex-col justify-between">' +
-      '<div>' +
-       '<div class="flex items-center flex-wrap gap-1">' +
-        '<span class="bg-[#0c831f] text-white px-1.5 py-0.5 rounded text-[10px] font-extrabold selling-price">₹' + price + '</span>' +
-        mrpHtml +
-       '</div>' +
-       discountHtml +
-       '<h3 class="text-[11px] font-extrabold text-neutral-800 line-clamp-2 h-7.5 mt-1.5 leading-snug">' + p["Product Name"] + '</h3>' +
-      '</div>' +
-      '<div class="mt-1">' +
-       '<p class="text-[9px] text-neutral-500 font-bold">' + (p["Pack Size"] || '1 Unit') + '</p>' +
-       '<div class="flex items-center gap-0.5 text-[9px] text-neutral-500 font-extrabold mt-0.5">' +
-        '<span class="text-[#0c831f]">★</span>' +
-        '<span>4.7</span>' +
-        '<span class="text-neutral-400 font-normal">(' + ratingCount + ')</span>' +
-       '</div>' +
-      '</div>' +
-     '</div>' +
-    '</div>';
-   });
-   gridHTML += '</div>';
+        // Update grid steppers
+        document.querySelectorAll('.med-card').forEach(function(card) {
+          var cid = card.getAttribute('data-id');
+          var cartItem = cart.find(function(c) { return c.id === cid; });
+          var addBtn = card.querySelector('.btn-add-med');
+          var qtySel = card.querySelector('.med-qty-selector');
+          var qtyCount = card.querySelector('.med-qty-count');
 
-   mainEl.innerHTML = '<section class="pb-20">' + heading + gridHTML + '</section>';
+          if (cartItem && cartItem.quantity > 0) {
+            if (addBtn) addBtn.classList.add('hidden');
+            if (qtySel) qtySel.classList.remove('hidden');
+            if (qtyCount) qtyCount.textContent = cartItem.quantity;
+          } else {
+            if (addBtn) addBtn.classList.remove('hidden');
+            if (qtySel) qtySel.classList.add('hidden');
+          }
+        });
+      }
 
-   mainEl.querySelectorAll('.btn-add-dynamic').forEach(btn => bindAddButton(btn));
-   syncUIWithCart();
+      // SEARCH SUGGESTIONS GENERATOR
+      function generateSuggestions(query) {
+        if (!query || query.length < 2) {
+          suggestionsDropdown.classList.add('hidden');
+          return;
+        }
 
-   document.getElementById('btn-clear-filter').addEventListener('click', () => {
-    restoreOriginalGrid();
-   });
-  }
+        var q = query.toLowerCase();
+        var matches = [];
 
-  // Bind initial behaviors
-  bindStaticButtons();
-  bindScrollButtons();
+        medicineCatalog.forEach(function(m) {
+          var nMatch = m.name.toLowerCase().includes(q);
+          var bMatch = m.brand.toLowerCase().includes(q);
+          var sMatch = m.salt.toLowerCase().includes(q);
+          var dMatch = m.disease.toLowerCase().includes(q);
+          var cMatch = m.category.toLowerCase().includes(q);
 
-  // Bind Search Input dynamic matches
-  const searchInput = document.querySelector('input');
-  if (searchInput) {
-   searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.trim().toLowerCase();
-    if (query.length > 1) {
-     const matches = fullCatalog.filter(item => {
-      const nameMatch = (item["Product Name"] || '').toLowerCase().includes(query);
-      const brandMatch = (item["Brand Name"] || '').toLowerCase().includes(query);
-      const categoryMatch = getActualCategory(item).toLowerCase().includes(query);
-      return nameMatch || brandMatch || categoryMatch;
-     });
-     renderProductList('Search Results for "' + e.target.value + '"', matches.slice(0, 40));
-    } else if (query.length === 0) {
-     restoreOriginalGrid();
-    }
-   });
-  }
+          if (nMatch || bMatch || sMatch || dMatch || cMatch) {
+            matches.push({
+              item: m,
+              type: nMatch ? 'Medicine' : (bMatch ? 'Brand' : (sMatch ? 'Salt Name' : (dMatch ? 'Condition' : 'Category')))
+            });
+          }
+        });
 
-  // Scroll shadow effect
-  window.addEventListener('scroll', () => {
-   const header = document.querySelector('header');
-   if (header) {
-    if (window.scrollY > 10) {
-     header.classList.add('shadow-md');
-    } else {
-     header.classList.remove('shadow-md');
-    }
-   }
-  });
+        if (matches.length === 0) {
+          suggestionsDropdown.innerHTML = `
+            <div class="px-4 py-3 text-xs text-slate-500 font-medium italic">
+              No matching medicines, salts, or brands for "${query}"
+            </div>
+          `;
+        } else {
+          var html = '<div class="divide-y divide-slate-100">';
+          matches.slice(0, 7).forEach(function(match) {
+            var m = match.item;
+            html += `
+              <div class="suggestion-item px-4 py-2.5 hover:bg-blue-50 cursor-pointer flex items-center justify-between transition-colors" data-name="${m.name}">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="w-7 h-7 rounded-lg bg-blueLight text-blueBrand flex items-center justify-center text-xs shrink-0 font-black">💊</span>
+                  <div class="min-w-0">
+                    <div class="text-xs font-bold text-slate-800 truncate">${m.name}</div>
+                    <div class="text-[10px] text-slate-400 font-semibold truncate">${m.brand} • <span class="text-blueBrand font-bold">${m.salt}</span></div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 shrink-0 ml-2">
+                  <span class="text-[9px] font-black text-slate-500 uppercase tracking-wider bg-slate-100 px-1.5 py-0.5 rounded">${match.type}</span>
+                  <span class="text-xs font-black text-slate-900">₹${m.price}</span>
+                </div>
+              </div>
+            `;
+          });
+          html += '</div>';
+          suggestionsDropdown.innerHTML = html;
+        }
 
-  // Cart redirect
-  cartBar.addEventListener('click', () => {
-   if (cartCount > 0) {
-    window.location.href = '/billing?type=medicine';
-   }
-  });
- </script>
- <Switcher />
-<script>
-    if (!localStorage.getItem('bhusawal_user_token')) {
-      window.location.href = '/';
-    }
-</script>
+        suggestionsDropdown.classList.remove('hidden');
+      }
+
+      // RENDER PRODUCTS GRID & APPLY ALL FILTERS
+      function renderFilteredProducts() {
+        var query = searchInput.value.trim().toLowerCase();
+        var selectedSort = sortSelect.value;
+        var selectedRx = document.querySelector('input[name="rx_filter"]:checked').value;
+        var inStockOnly = instockCheckbox.checked;
+        var selectedCat = categorySelect.value;
+        var selectedBrand = brandSelect.value;
+        var maxPrice = parseFloat(priceRange.value);
+
+        // Update Price Range Label
+        priceValLabel.textContent = '₹' + maxPrice.toLocaleString();
+
+        // 1. FILTERING
+        var filtered = medicineCatalog.filter(function(m) {
+          // Search query check (Name, Brand, Salt, Disease, Category)
+          if (query) {
+            var nMatch = m.name.toLowerCase().includes(query);
+            var bMatch = m.brand.toLowerCase().includes(query);
+            var sMatch = m.salt.toLowerCase().includes(query);
+            var dMatch = m.disease.toLowerCase().includes(query);
+            var cMatch = m.category.toLowerCase().includes(query);
+            if (!nMatch && !bMatch && !sMatch && !dMatch && !cMatch) return false;
+          }
+
+          // Rx / OTC filter
+          if (selectedRx === 'otc' && m.rxRequired) return false;
+          if (selectedRx === 'rx' && !m.rxRequired) return false;
+
+          // In Stock check
+          if (inStockOnly && !m.inStock) return false;
+
+          // Category check
+          if (selectedCat !== 'all' && m.category.toLowerCase() !== selectedCat.toLowerCase()) return false;
+
+          // Brand check
+          if (selectedBrand !== 'all' && m.brand.toLowerCase() !== selectedBrand.toLowerCase()) return false;
+
+          // Price check
+          if (m.price > maxPrice) return false;
+
+          return true;
+        });
+
+        // 2. SORTING
+        if (selectedSort === 'price_low') {
+          filtered.sort(function(a, b) { return a.price - b.price; });
+        } else if (selectedSort === 'price_high') {
+          filtered.sort(function(a, b) { return b.price - a.price; });
+        } else if (selectedSort === 'newest') {
+          filtered.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+        } else {
+          // Popular (default)
+          filtered.sort(function(a, b) { return b.popularity - a.popularity; });
+        }
+
+        // 3. RENDER UI
+        resultsCountBadge.textContent = filtered.length + ' item' + (filtered.length === 1 ? '' : 's');
+        if (query) {
+          resultsTitle.textContent = 'Results for "' + searchInput.value.trim() + '"';
+        } else if (selectedCat !== 'all') {
+          resultsTitle.textContent = selectedCat + ' Medicines';
+        } else {
+          resultsTitle.textContent = 'Showing Medicines';
+        }
+
+        if (filtered.length === 0) {
+          gridEl.classList.add('hidden');
+          emptyEl.classList.remove('hidden');
+          return;
+        }
+
+        gridEl.classList.remove('hidden');
+        emptyEl.classList.add('hidden');
+
+        var html = '';
+        filtered.forEach(function(item) {
+          var isDiscount = item.mrp > item.price;
+          var discountPct = isDiscount ? Math.round(((item.mrp - item.price) / item.mrp) * 100) : 0;
+
+          html += `
+            <div 
+              class="med-card bg-white rounded-2xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-lg hover:border-blue-200 transition-all cursor-pointer group relative"
+              data-id="${item.id}"
+              data-name="${item.name}"
+              data-price="${item.price}"
+              data-mrp="${item.mrp}"
+              data-img="${item.image}"
+              data-brand="${item.brand}"
+              data-category="${item.category}"
+              data-rx="${item.rxRequired ? 'true' : 'false'}"
+              onclick="window.location.href='/medicine_details?id=${item.id}';"
+            >
+              <!-- Wishlist Fav Button -->
+              <button 
+                class="med-fav-btn absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:border-rose-200 transition-all z-10 active:scale-90"
+                onclick="event.stopPropagation();"
+                aria-label="Add to Wishlist"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </button>
+
+              <!-- Rx Badge -->
+              ${item.rxRequired ? `
+                <span class="absolute top-2.5 left-2.5 bg-rose-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider z-10 shadow-sm">
+                  Rx
+                </span>
+              ` : ''}
+
+              <!-- Image Box -->
+              <div class="w-full aspect-square bg-slate-50 rounded-xl p-2 mb-2.5 flex items-center justify-center border border-slate-100/60 overflow-hidden relative">
+                <span class="absolute bottom-1.5 left-1.5 bg-blueLight text-blueBrand text-[8px] font-black px-1.5 py-0.5 rounded-md border border-blue-200/60">
+                  ${item.pack}
+                </span>
+                <img src="${item.image}" alt="${item.name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" loading="lazy" />
+              </div>
+
+              <!-- Metadata -->
+              <span class="text-[9px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
+                ${item.brand} • ${item.category}
+              </span>
+
+              <!-- Name & Salt -->
+              <h3 class="text-[11px] sm:text-xs font-black font-display text-slate-900 line-clamp-1 leading-tight">
+                ${item.name}
+              </h3>
+              <p class="text-[9.5px] font-semibold text-slate-400 line-clamp-1 mt-0.5">
+                Salt: <span class="text-slate-600 font-bold">${item.salt}</span>
+              </p>
+
+              <!-- Condition Tag -->
+              <div class="mt-1">
+                <span class="text-[8.5px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/60 inline-block line-clamp-1">
+                  💡 ${item.disease}
+                </span>
+              </div>
+
+              <!-- Price & Actions -->
+              <div class="pt-2 border-t border-slate-100 mt-2.5">
+                <div class="flex items-center gap-1.5 mb-2">
+                  <span class="text-sm sm:text-base font-black font-display text-slate-900">₹${item.price}</span>
+                  ${isDiscount ? `<span class="text-[9px] text-slate-400 line-through font-bold">₹${item.mrp}</span>` : ''}
+                  ${isDiscount ? `<span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded">${discountPct}% OFF</span>` : ''}
+                </div>
+
+                <div class="med-cart-actions">
+                  <button 
+                    class="btn-add-med w-full py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-95 transition-all"
+                    onclick="event.stopPropagation();"
+                  >
+                    + ADD
+                  </button>
+                  <div class="med-qty-selector hidden flex items-center justify-between w-full bg-blueBrand rounded-xl overflow-hidden">
+                    <button class="med-qty-minus px-3 py-1.5 text-white text-sm font-black hover:bg-blueDark transition-colors" onclick="event.stopPropagation();">−</button>
+                    <span class="med-qty-count text-white text-xs font-black">1</span>
+                    <button class="med-qty-plus px-3 py-1.5 text-white text-sm font-black hover:bg-blueDark transition-colors" onclick="event.stopPropagation();">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        gridEl.innerHTML = html;
+        updateAllCartUI();
+      }
+
+      // RESET FILTERS
+      function resetAllFilters() {
+        searchInput.value = '';
+        currentQuery = '';
+        searchClearBtn.classList.add('hidden');
+        suggestionsDropdown.classList.add('hidden');
+        sortSelect.value = 'popular';
+        document.querySelector('input[name="rx_filter"][value="all"]').checked = true;
+        instockCheckbox.checked = false;
+        categorySelect.value = 'all';
+        brandSelect.value = 'all';
+        priceRange.value = '3000';
+        renderFilteredProducts();
+      }
+
+      // LISTENERS
+      searchInput.addEventListener('input', function(e) {
+        var val = e.target.value;
+        if (val.trim()) {
+          searchClearBtn.classList.remove('hidden');
+          searchClearBtn.classList.add('flex');
+        } else {
+          searchClearBtn.classList.add('hidden');
+        }
+        generateSuggestions(val.trim());
+        renderFilteredProducts();
+      });
+
+      searchClearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        searchClearBtn.classList.add('hidden');
+        suggestionsDropdown.classList.add('hidden');
+        renderFilteredProducts();
+      });
+
+      // Suggestion Item Click
+      document.addEventListener('click', function(e) {
+        var item = e.target.closest('.suggestion-item');
+        if (item) {
+          var name = item.getAttribute('data-name');
+          searchInput.value = name;
+          suggestionsDropdown.classList.add('hidden');
+          renderFilteredProducts();
+        } else if (!e.target.closest('#med-search-input') && !e.target.closest('#med-suggestions-dropdown')) {
+          suggestionsDropdown.classList.add('hidden');
+        }
+      });
+
+      // Quick Tag Buttons
+      document.querySelectorAll('.quick-tag-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          searchInput.value = btn.textContent.trim();
+          searchClearBtn.classList.remove('hidden');
+          searchClearBtn.classList.add('flex');
+          renderFilteredProducts();
+        });
+      });
+
+      // Filter Inputs Change
+      sortSelect.addEventListener('change', renderFilteredProducts);
+      rxRadios.forEach(function(r) { r.addEventListener('change', renderFilteredProducts); });
+      instockCheckbox.addEventListener('change', renderFilteredProducts);
+      categorySelect.addEventListener('change', renderFilteredProducts);
+      brandSelect.addEventListener('change', renderFilteredProducts);
+      priceRange.addEventListener('input', renderFilteredProducts);
+
+      resetBtn.addEventListener('click', resetAllFilters);
+      emptyResetBtn.addEventListener('click', resetAllFilters);
+
+      // ADD TO CART CLICK HANDLERS
+      document.addEventListener('click', function(e) {
+        var addBtn = e.target.closest('.btn-add-med');
+        if (addBtn) {
+          e.stopPropagation();
+          var card = addBtn.closest('.med-card');
+          if (!card) return;
+
+          var id = card.getAttribute('data-id');
+          var name = card.getAttribute('data-name');
+          var price = parseFloat(card.getAttribute('data-price')) || 0;
+          var mrp = parseFloat(card.getAttribute('data-mrp')) || price;
+          var img = card.getAttribute('data-img');
+          var brand = card.getAttribute('data-brand') || '';
+
+          var cart = getGlobalCart();
+          var existing = cart.find(function(c) { return c.id === id; });
+          if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+          } else {
+            cart.push({
+              id: id, name: name, price: price, mrp: mrp, image: img,
+              quantity: 1, restaurant: brand || 'Bhusawal Express Pharmacy', cat: 'Medicines'
+            });
+          }
+          saveGlobalCart(cart);
+        }
+      });
+
+      // QUANTITY SELECTOR CLICK HANDLERS
+      document.addEventListener('click', function(e) {
+        var plusBtn = e.target.closest('.med-qty-plus');
+        var minusBtn = e.target.closest('.med-qty-minus');
+
+        if (plusBtn) {
+          e.stopPropagation();
+          var card = plusBtn.closest('.med-card');
+          if (!card) return;
+          var id = card.getAttribute('data-id');
+          var cart = getGlobalCart();
+          var item = cart.find(function(c) { return c.id === id; });
+          if (item) { item.quantity = (item.quantity || 1) + 1; saveGlobalCart(cart); }
+        }
+
+        if (minusBtn) {
+          e.stopPropagation();
+          var card = minusBtn.closest('.med-card');
+          if (!card) return;
+          var id = card.getAttribute('data-id');
+          var cart = getGlobalCart();
+          var idx = cart.findIndex(function(c) { return c.id === id; });
+          if (idx > -1) {
+            if (cart[idx].quantity > 1) {
+              cart[idx].quantity -= 1;
+            } else {
+              cart.splice(idx, 1);
+            }
+            saveGlobalCart(cart);
+          }
+        }
+      });
+
+      // INIT
+      readUrlParams();
+      renderFilteredProducts();
+    })();
+  </script>
+
 </body>
 </html>
