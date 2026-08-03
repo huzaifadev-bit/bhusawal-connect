@@ -179,14 +179,16 @@ const featuredPartnerRestaurants = [
 
   <main class="px-4 sm:px-6 py-5 space-y-7">
 
-    <!-- ==================== ADVANCED PRODUCT SEARCH BAR WITH INSTANT SUGGESTIONS ==================== -->
-    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2 space-y-2 relative" id="search-container-box">
+    <!-- ==================== SEARCH BAR & COMPREHENSIVE FILTER ENGINE ==================== -->
+    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2 space-y-2.5 relative" id="search-container-box">
+      
+      <!-- Search Input -->
       <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-redBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
         <input 
           type="text" 
           id="food-search-input" 
-          placeholder="Search 'pizza', 'paneer', 'chicken', 'biryani', 'dosa', 'chai'..." 
+          placeholder="Search 225+ dishes (Poha, Biryani, Thalis, Pizza, Burgers, Paneer, Sweets)..." 
           class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" 
           autocomplete="off" 
         />
@@ -200,25 +202,67 @@ const featuredPartnerRestaurants = [
         <!-- Dynamic suggestion rows injected via JS -->
       </div>
 
-      <!-- Veg / Non-Veg Diet Filter Bar -->
-      <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-1">
-        <div class="flex items-center bg-slate-100 border border-slate-200/80 p-1 rounded-2xl text-xs font-bold shrink-0">
-          <button class="diet-filter-btn px-3 py-1 rounded-xl font-black text-xs transition-all bg-white text-slate-900 shadow-xs" data-diet="all">All ({foodCatalog.length})</button>
-          <button class="diet-filter-btn px-3 py-1 rounded-xl font-extrabold text-xs text-slate-600 hover:text-emerald-700 transition-all flex items-center gap-1.5" data-diet="veg">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span> Veg
-          </button>
-          <button class="diet-filter-btn px-3 py-1 rounded-xl font-extrabold text-xs text-slate-600 hover:text-rose-700 transition-all flex items-center gap-1.5" data-diet="nonveg">
-            <span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span> Non-Veg
-          </button>
-        </div>
+      <!-- FULLY FUNCTIONAL INSTANT FILTER CHIPS (HORIZONTALLY SCROLLABLE) -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs font-black">
+        
+        <!-- Clear All Filters Pill -->
+        <button id="reset-all-filters-btn" class="hidden px-3 py-1.5 rounded-full bg-rose-100 text-rose-700 hover:bg-rose-600 hover:text-white border border-rose-200 transition-all shrink-0 flex items-center gap-1 active:scale-95">
+          <span class="material-symbols-outlined text-sm">restart_alt</span>
+          <span>Clear Filters</span>
+        </button>
 
-        <!-- Quick Tag Shortcuts -->
-        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-          <button class="quick-tag-btn px-2.5 py-1 bg-redLight text-redBrand font-black text-[11px] rounded-lg border border-red-200 whitespace-nowrap hover:bg-redBrand hover:text-white transition-colors" data-tag="pizza">🍕 Pizza</button>
-          <button class="quick-tag-btn px-2.5 py-1 bg-redLight text-redBrand font-black text-[11px] rounded-lg border border-red-200 whitespace-nowrap hover:bg-redBrand hover:text-white transition-colors" data-tag="paneer">🧀 Paneer</button>
-          <button class="quick-tag-btn px-2.5 py-1 bg-redLight text-redBrand font-black text-[11px] rounded-lg border border-red-200 whitespace-nowrap hover:bg-redBrand hover:text-white transition-colors" data-tag="chicken">🍗 Chicken</button>
-          <button class="quick-tag-btn px-2.5 py-1 bg-redLight text-redBrand font-black text-[11px] rounded-lg border border-red-200 whitespace-nowrap hover:bg-redBrand hover:text-white transition-colors" data-tag="biryani">🍲 Biryani</button>
-        </div>
+        <!-- Diet Filters -->
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 flex items-center gap-1.5 active:scale-95" data-filter-type="diet" data-filter-val="veg">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+          <span>Veg</span>
+        </button>
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 flex items-center gap-1.5 active:scale-95" data-filter-type="diet" data-filter-val="nonveg">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
+          <span>Non-Veg</span>
+        </button>
+
+        <!-- Meal Time Filters -->
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="meal" data-filter-val="breakfast">
+          🍳 Breakfast
+        </button>
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="meal" data-filter-val="lunch">
+          🍱 Lunch
+        </button>
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="meal" data-filter-val="dinner">
+          🌙 Dinner
+        </button>
+
+        <!-- Cuisine & Category Filters -->
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="cuisine" data-filter-val="fastfood">
+          🍔 Fast Food
+        </button>
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="cuisine" data-filter-val="chinese">
+          🍜 Chinese
+        </button>
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="cuisine" data-filter-val="northindian">
+          🥘 North Indian
+        </button>
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="cuisine" data-filter-val="southindian">
+          🥞 South Indian
+        </button>
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="cuisine" data-filter-val="desserts">
+          🍰 Desserts
+        </button>
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="cuisine" data-filter-val="beverages">
+          🥤 Beverages
+        </button>
+
+        <!-- Price Range Filters -->
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="price" data-filter-val="under100">
+          🏷️ Under ₹100
+        </button>
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="price" data-filter-val="100-200">
+          🏷️ ₹100–₹200
+        </button>
+        <button class="filter-pill-btn px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-filter-type="price" data-filter-val="above200">
+          🏷️ Above ₹200
+        </button>
+
       </div>
     </div>
 
@@ -321,6 +365,7 @@ const featuredPartnerRestaurants = [
                   data-id={item.id}
                   data-name={item.name}
                   data-category={item.category}
+                  data-price={item.price}
                   data-isveg={item.isVeg ? 'true' : 'false'}
                   data-kw={item.searchKeywords ? item.searchKeywords.join(' ') : ''}
                 >
@@ -439,11 +484,18 @@ const featuredPartnerRestaurants = [
     window.BHUSAWAL_FOOD_CATALOG = foodCatalog || [];
   </script>
 
-  <!-- Dynamic Client Script for Multi-Field Product Search, Suggestions & Global Cart Sync -->
+  <!-- Dynamic Client Script for Multi-Field Product Search, Comprehensive Filters & Global Cart Sync -->
   <script is:inline>
     (function() {
-      var currentDietFilter = 'all';
       var foodCatalog = window.BHUSAWAL_FOOD_CATALOG || [];
+
+      // ACTIVE FILTERS STATE OBJECT
+      var activeFilters = {
+        diet: null,      // 'veg' | 'nonveg'
+        meal: null,      // 'breakfast' | 'lunch' | 'dinner'
+        cuisine: null,   // 'fastfood' | 'chinese' | 'northindian' | 'southindian' | 'desserts' | 'beverages'
+        price: null      // 'under100' | '100-200' | 'above200'
+      };
 
       // 1. GLOBAL CART MANAGEMENT
       function getGlobalCart() {
@@ -581,54 +633,97 @@ const featuredPartnerRestaurants = [
         }
       });
 
-      // 2. MULTI-FIELD PRODUCT SEARCH & INSTANT DROPDOWN SUGGESTIONS
+      // 2. COMPREHENSIVE FILTER ENGINE (INSTANT REAL-TIME UPDATES WITHOUT RELOAD)
       var searchInput = document.getElementById('food-search-input');
       var clearSearchBtn = document.getElementById('clear-food-search');
       var suggestionsBox = document.getElementById('food-search-suggestions');
+      var resetFiltersBtn = document.getElementById('reset-all-filters-btn');
 
-      function executeProductSearch(rawQuery) {
-        var q = (rawQuery || '').toLowerCase().trim();
+      function applyCombinedFilters() {
+        var q = (searchInput?.value || '').toLowerCase().trim();
 
-        // Hide/Show Clear Button
         if (clearSearchBtn) {
           if (q.length > 0) clearSearchBtn.classList.remove('hidden');
           else clearSearchBtn.classList.add('hidden');
         }
 
-        // Filter Page Cards
-        var visibleCount = 0;
+        // Has active filters indicator
+        var hasActiveFilter = activeFilters.diet || activeFilters.meal || activeFilters.cuisine || activeFilters.price || q;
+        if (resetFiltersBtn) {
+          if (hasActiveFilter) resetFiltersBtn.classList.remove('hidden');
+          else resetFiltersBtn.classList.add('hidden');
+        }
+
+        // Loop over product cards
         document.querySelectorAll('.food-product-card').forEach(function(card) {
           var name = (card.getAttribute('data-name') || '').toLowerCase();
           var category = (card.getAttribute('data-category') || '').toLowerCase();
           var kw = (card.getAttribute('data-kw') || '').toLowerCase();
           var isVeg = card.getAttribute('data-isveg') === 'true';
+          var price = parseFloat(card.getAttribute('data-price')) || 0;
 
+          // Search Query match
           var matchesSearch = !q || name.includes(q) || category.includes(q) || kw.includes(q);
-          
-          // Special handles for veg / nonveg query strings
           if (q === 'veg' || q === 'vegetarian') matchesSearch = isVeg;
-          if (q === 'nonveg' || q === 'non-veg' || q === 'non veg') matchesSearch = !isVeg;
+          if (q === 'nonveg' || q === 'non-veg') matchesSearch = !isVeg;
 
+          // Diet Filter match
           var matchesDiet = true;
-          if (currentDietFilter === 'veg') matchesDiet = isVeg;
-          if (currentDietFilter === 'nonveg') matchesDiet = !isVeg;
+          if (activeFilters.diet === 'veg') matchesDiet = isVeg;
+          if (activeFilters.diet === 'nonveg') matchesDiet = !isVeg;
 
-          if (matchesSearch && matchesDiet) {
+          // Meal Time Filter match
+          var matchesMeal = true;
+          if (activeFilters.meal === 'breakfast') {
+            matchesMeal = category === 'breakfast' || kw.includes('breakfast') || kw.includes('poha') || kw.includes('dosa') || kw.includes('idli') || kw.includes('upma');
+          } else if (activeFilters.meal === 'lunch') {
+            matchesMeal = category === 'veg main course' || category === 'chicken' || category === 'mutton' || category === 'fish' || category === 'rice' || category === 'roti & naan';
+          } else if (activeFilters.meal === 'dinner') {
+            matchesMeal = category === 'biryani' || category === 'veg main course' || category === 'chicken' || category === 'mutton' || category === 'roti & naan' || category === 'chinese';
+          }
+
+          // Cuisine & Category Filter match
+          var matchesCuisine = true;
+          if (activeFilters.cuisine === 'fastfood') {
+            matchesCuisine = category === 'burgers' || category === 'sandwiches' || category === 'rolls' || category === 'pizza' || category === 'snacks';
+          } else if (activeFilters.cuisine === 'chinese') {
+            matchesCuisine = category === 'chinese' || kw.includes('chinese') || kw.includes('noodles') || kw.includes('manchurian') || kw.includes('schezwan');
+          } else if (activeFilters.cuisine === 'northindian') {
+            matchesCuisine = category === 'veg main course' || category === 'chicken' || category === 'roti & naan' || kw.includes('paneer') || kw.includes('butter chicken') || kw.includes('dal');
+          } else if (activeFilters.cuisine === 'southindian') {
+            matchesCuisine = category === 'breakfast' && (name.includes('dosa') || name.includes('idli') || name.includes('vada') || name.includes('uttapam'));
+          } else if (activeFilters.cuisine === 'desserts') {
+            matchesCuisine = category === 'desserts' || kw.includes('sweet') || kw.includes('ice cream');
+          } else if (activeFilters.cuisine === 'beverages') {
+            matchesCuisine = category === 'beverages' || kw.includes('chai') || kw.includes('coffee') || kw.includes('shake');
+          }
+
+          // Price Range Filter match
+          var matchesPrice = true;
+          if (activeFilters.price === 'under100') {
+            matchesPrice = price <= 100;
+          } else if (activeFilters.price === '100-200') {
+            matchesPrice = price >= 100 && price <= 200;
+          } else if (activeFilters.price === 'above200') {
+            matchesPrice = price > 200;
+          }
+
+          // FINAL COMBINED DECISION
+          if (matchesSearch && matchesDiet && matchesMeal && matchesCuisine && matchesPrice) {
             card.classList.remove('hidden');
-            visibleCount++;
           } else {
             card.classList.add('hidden');
           }
         });
 
-        // Hide/Show Section Headers based on visible items
+        // Hide empty sections
         document.querySelectorAll('.food-scroll-section').forEach(function(sec) {
-          var cards = sec.querySelectorAll('.food-product-card:not(.hidden)');
-          if (cards.length > 0) sec.classList.remove('hidden');
+          var visibleCards = sec.querySelectorAll('.food-product-card:not(.hidden)');
+          if (visibleCards.length > 0) sec.classList.remove('hidden');
           else sec.classList.add('hidden');
         });
 
-        // Update Dropdown Suggestions Box
+        // Update Dropdown Suggestions if searching
         renderSuggestionsDropdown(q);
       }
 
@@ -650,8 +745,9 @@ const featuredPartnerRestaurants = [
           if (q === 'veg') match = item.isVeg;
           if (q === 'nonveg' || q === 'non-veg') match = !item.isVeg;
 
-          if (currentDietFilter === 'veg') return match && item.isVeg;
-          if (currentDietFilter === 'nonveg') return match && !item.isVeg;
+          if (activeFilters.diet === 'veg' && !item.isVeg) return false;
+          if (activeFilters.diet === 'nonveg' && item.isVeg) return false;
+
           return match;
         }).slice(0, 7);
 
@@ -667,7 +763,6 @@ const featuredPartnerRestaurants = [
 
         var html = '';
         matches.forEach(function(item) {
-          var dotColor = item.isVeg ? 'bg-emerald-600 text-emerald-700' : 'bg-rose-600 text-rose-700';
           var dietText = item.isVeg ? 'VEG' : 'NON-VEG';
           var img = item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
 
@@ -699,7 +794,53 @@ const featuredPartnerRestaurants = [
         suggestionsBox.classList.remove('hidden');
       }
 
-      // Handle Suggestion Click
+      // Filter Pill Buttons Click Handler (Toggle & Active Styling)
+      document.querySelectorAll('.filter-pill-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var fType = btn.getAttribute('data-filter-type');
+          var fVal = btn.getAttribute('data-filter-val');
+
+          if (activeFilters[fType] === fVal) {
+            // Toggle off
+            activeFilters[fType] = null;
+            btn.classList.remove('bg-redBrand', 'text-white', 'border-redBrand', 'shadow-sm');
+            btn.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200/80');
+          } else {
+            // Clear other active pills of same type
+            document.querySelectorAll('.filter-pill-btn[data-filter-type="' + fType + '"]').forEach(function(b) {
+              b.classList.remove('bg-redBrand', 'text-white', 'border-redBrand', 'shadow-sm');
+              b.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200/80');
+            });
+
+            // Set active
+            activeFilters[fType] = fVal;
+            btn.classList.add('bg-redBrand', 'text-white', 'border-redBrand', 'shadow-sm');
+            btn.classList.remove('bg-slate-100', 'text-slate-700', 'border-slate-200/80');
+          }
+
+          applyCombinedFilters();
+        });
+      });
+
+      // Clear All Filters Button
+      if (resetFiltersBtn) {
+        resetFiltersBtn.addEventListener('click', function() {
+          activeFilters.diet = null;
+          activeFilters.meal = null;
+          activeFilters.cuisine = null;
+          activeFilters.price = null;
+
+          if (searchInput) searchInput.value = '';
+
+          document.querySelectorAll('.filter-pill-btn').forEach(function(b) {
+            b.classList.remove('bg-redBrand', 'text-white', 'border-redBrand', 'shadow-sm');
+            b.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200/80');
+          });
+
+          applyCombinedFilters();
+        });
+      }
+
       if (suggestionsBox) {
         suggestionsBox.addEventListener('click', function(e) {
           var row = e.target.closest('.suggestion-item');
@@ -721,8 +862,8 @@ const featuredPartnerRestaurants = [
       }
 
       if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
-          executeProductSearch(e.target.value);
+        searchInput.addEventListener('input', function() {
+          applyCombinedFilters();
         });
 
         searchInput.addEventListener('focus', function(e) {
@@ -736,43 +877,15 @@ const featuredPartnerRestaurants = [
         clearSearchBtn.addEventListener('click', function() {
           if (searchInput) searchInput.value = '';
           clearSearchBtn.classList.add('hidden');
-          executeProductSearch('');
+          applyCombinedFilters();
         });
       }
 
-      // Close dropdown when clicking outside
       document.addEventListener('click', function(e) {
         var searchBox = document.getElementById('search-container-box');
         if (searchBox && !searchBox.contains(e.target)) {
           if (suggestionsBox) suggestionsBox.classList.add('hidden');
         }
-      });
-
-      // Diet Filter Buttons
-      document.querySelectorAll('.diet-filter-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          document.querySelectorAll('.diet-filter-btn').forEach(function(b) {
-            b.classList.remove('bg-white', 'text-slate-900', 'shadow-xs');
-            b.classList.add('text-slate-600');
-          });
-          btn.classList.add('bg-white', 'text-slate-900', 'shadow-xs');
-          btn.classList.remove('text-slate-600');
-
-          currentDietFilter = btn.getAttribute('data-diet') || 'all';
-          executeProductSearch(searchInput ? searchInput.value : '');
-        });
-      });
-
-      // Quick Tag Buttons (Pizza, Paneer, Chicken, Biryani)
-      document.querySelectorAll('.quick-tag-btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          var tag = btn.getAttribute('data-tag') || '';
-          if (searchInput) {
-            searchInput.value = tag;
-            executeProductSearch(tag);
-            searchInput.focus();
-          }
-        });
       });
 
       // Window storage sync
