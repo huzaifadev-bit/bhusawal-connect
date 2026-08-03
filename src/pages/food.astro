@@ -179,18 +179,29 @@ const featuredPartnerRestaurants = [
 
   <main class="px-4 sm:px-6 py-5 space-y-7">
 
-    <!-- Sticky Search Bar & Filter Pills -->
-    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2 space-y-2">
+    <!-- ==================== ADVANCED PRODUCT SEARCH BAR WITH INSTANT SUGGESTIONS ==================== -->
+    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2 space-y-2 relative" id="search-container-box">
       <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-redBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
-        <input type="text" id="food-search-input" placeholder="Search 225+ dishes (Poha, Biryani, Thalis, Pizza, Burgers, Paneer, Sweets)..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
+        <input 
+          type="text" 
+          id="food-search-input" 
+          placeholder="Search 'pizza', 'paneer', 'chicken', 'biryani', 'dosa', 'chai'..." 
+          class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" 
+          autocomplete="off" 
+        />
         <button id="clear-food-search" class="hidden text-slate-400 hover:text-slate-600">
           <span class="material-symbols-outlined text-lg">close</span>
         </button>
       </div>
 
+      <!-- Instant Suggestions Dropdown Box -->
+      <div id="food-search-suggestions" class="hidden absolute top-full left-0 right-0 mt-1.5 bg-white rounded-3xl border border-slate-200 shadow-2xl z-50 max-h-80 overflow-y-auto no-scrollbar p-2 divide-y divide-slate-100">
+        <!-- Dynamic suggestion rows injected via JS -->
+      </div>
+
       <!-- Veg / Non-Veg Diet Filter Bar -->
-      <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar">
+      <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-1">
         <div class="flex items-center bg-slate-100 border border-slate-200/80 p-1 rounded-2xl text-xs font-bold shrink-0">
           <button class="diet-filter-btn px-3 py-1 rounded-xl font-black text-xs transition-all bg-white text-slate-900 shadow-xs" data-diet="all">All ({foodCatalog.length})</button>
           <button class="diet-filter-btn px-3 py-1 rounded-xl font-extrabold text-xs text-slate-600 hover:text-emerald-700 transition-all flex items-center gap-1.5" data-diet="veg">
@@ -201,12 +212,18 @@ const featuredPartnerRestaurants = [
           </button>
         </div>
 
-        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0 hidden sm:inline">225+ Bhusawal Dishes</span>
+        <!-- Quick Tag Shortcuts -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+          <button class="quick-tag-btn px-2.5 py-1 bg-redLight text-redBrand font-black text-[11px] rounded-lg border border-red-200 whitespace-nowrap hover:bg-redBrand hover:text-white transition-colors" data-tag="pizza">🍕 Pizza</button>
+          <button class="quick-tag-btn px-2.5 py-1 bg-redLight text-redBrand font-black text-[11px] rounded-lg border border-red-200 whitespace-nowrap hover:bg-redBrand hover:text-white transition-colors" data-tag="paneer">🧀 Paneer</button>
+          <button class="quick-tag-btn px-2.5 py-1 bg-redLight text-redBrand font-black text-[11px] rounded-lg border border-red-200 whitespace-nowrap hover:bg-redBrand hover:text-white transition-colors" data-tag="chicken">🍗 Chicken</button>
+          <button class="quick-tag-btn px-2.5 py-1 bg-redLight text-redBrand font-black text-[11px] rounded-lg border border-red-200 whitespace-nowrap hover:bg-redBrand hover:text-white transition-colors" data-tag="biryani">🍲 Biryani</button>
+        </div>
       </div>
     </div>
 
     <!-- ==================== FEATURED PARTNER RESTAURANTS (1 HORIZONTAL ROW ONLY) ==================== -->
-    <section class="space-y-3 pt-1 border-b border-slate-100 pb-5">
+    <section class="space-y-3 pt-1 border-b border-slate-100 pb-5" id="featured-restaurants-section">
       <div class="flex items-center justify-between px-1">
         <h2 class="text-base sm:text-lg font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
           <span class="text-amber-500">⭐</span>
@@ -260,7 +277,7 @@ const featuredPartnerRestaurants = [
     </section>
 
     <!-- Quick Navigation Chips for 18 Food Sections -->
-    <div class="sticky top-32 z-30 bg-white/95 backdrop-blur-md py-2 -mx-4 sm:-mx-6 px-4 sm:px-6 border-b border-slate-100">
+    <div class="sticky top-32 z-30 bg-white/95 backdrop-blur-md py-2 -mx-4 sm:-mx-6 px-4 sm:px-6 border-b border-slate-100" id="quick-sections-bar">
       <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
         {sectionDefinitions.map(sec => (
           <a 
@@ -417,12 +434,18 @@ const featuredPartnerRestaurants = [
 
   <Switcher />
 
-  <!-- Dynamic Client Script for Global Cart Integration & Real-time Updates -->
+  <!-- Client-Side Catalog Array for Instant Search Dropdown Suggestions -->
+  <script is:inline define:vars={{ foodCatalog }}>
+    window.BHUSAWAL_FOOD_CATALOG = foodCatalog || [];
+  </script>
+
+  <!-- Dynamic Client Script for Multi-Field Product Search, Suggestions & Global Cart Sync -->
   <script is:inline>
     (function() {
       var currentDietFilter = 'all';
+      var foodCatalog = window.BHUSAWAL_FOOD_CATALOG || [];
 
-      // 1. READ FROM EXISTING GLOBAL CART (localStorage 'bhusawal_cart')
+      // 1. GLOBAL CART MANAGEMENT
       function getGlobalCart() {
         let raw = [];
         try {
@@ -432,7 +455,6 @@ const featuredPartnerRestaurants = [
         return raw;
       }
 
-      // 2. SAVE TO EXISTING GLOBAL CART & TRIGGER BROADCAST EVENTS
       function saveGlobalCart(cart) {
         localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
         window.dispatchEvent(new Event('storage'));
@@ -440,7 +462,6 @@ const featuredPartnerRestaurants = [
         updateAllCartUI();
       }
 
-      // 3. SYNCHRONIZE BADGES, FLOATING CART BAR & CARD STEPPERS
       function updateAllCartUI() {
         var cart = getGlobalCart();
         var totalCount = 0;
@@ -453,11 +474,9 @@ const featuredPartnerRestaurants = [
           subtotalPrice += p * qty;
         });
 
-        // Update Header Cart Badge
         var badge = document.getElementById('food-cart-badge');
         if (badge) badge.textContent = totalCount;
 
-        // Update Bottom Floating Cart Bar
         var floatBar = document.getElementById('food-floating-cart-bar');
         var floatCount = document.getElementById('float-cart-count');
         var floatTotal = document.getElementById('float-cart-total');
@@ -472,7 +491,6 @@ const featuredPartnerRestaurants = [
           }
         }
 
-        // Sync Product Card Quantity Selectors (- 1 +)
         document.querySelectorAll('.food-direct-action-box').forEach(function(box) {
           var itemId = box.getAttribute('data-id');
           var addBtn = box.querySelector('.btn-add-direct-food');
@@ -497,7 +515,7 @@ const featuredPartnerRestaurants = [
         });
       }
 
-      // 4. LISTEN FOR ADD TO CART & STEPPER BUTTON CLICKS
+      // Add to Cart & Stepper Click Handler
       document.addEventListener('click', function(e) {
         var addBtn = e.target.closest('.btn-add-direct-food');
         if (addBtn) {
@@ -563,39 +581,154 @@ const featuredPartnerRestaurants = [
         }
       });
 
-      // 5. SEARCH & DIET FILTER ENGINE
-      function filterProducts() {
-        var query = (document.getElementById('food-search-input')?.value || '').toLowerCase().trim();
+      // 2. MULTI-FIELD PRODUCT SEARCH & INSTANT DROPDOWN SUGGESTIONS
+      var searchInput = document.getElementById('food-search-input');
+      var clearSearchBtn = document.getElementById('clear-food-search');
+      var suggestionsBox = document.getElementById('food-search-suggestions');
 
+      function executeProductSearch(rawQuery) {
+        var q = (rawQuery || '').toLowerCase().trim();
+
+        // Hide/Show Clear Button
+        if (clearSearchBtn) {
+          if (q.length > 0) clearSearchBtn.classList.remove('hidden');
+          else clearSearchBtn.classList.add('hidden');
+        }
+
+        // Filter Page Cards
+        var visibleCount = 0;
         document.querySelectorAll('.food-product-card').forEach(function(card) {
           var name = (card.getAttribute('data-name') || '').toLowerCase();
           var category = (card.getAttribute('data-category') || '').toLowerCase();
           var kw = (card.getAttribute('data-kw') || '').toLowerCase();
           var isVeg = card.getAttribute('data-isveg') === 'true';
 
-          var matchesSearch = !query || name.includes(query) || category.includes(query) || kw.includes(query);
+          var matchesSearch = !q || name.includes(q) || category.includes(q) || kw.includes(q);
+          
+          // Special handles for veg / nonveg query strings
+          if (q === 'veg' || q === 'vegetarian') matchesSearch = isVeg;
+          if (q === 'nonveg' || q === 'non-veg' || q === 'non veg') matchesSearch = !isVeg;
+
           var matchesDiet = true;
           if (currentDietFilter === 'veg') matchesDiet = isVeg;
           if (currentDietFilter === 'nonveg') matchesDiet = !isVeg;
 
           if (matchesSearch && matchesDiet) {
             card.classList.remove('hidden');
+            visibleCount++;
           } else {
             card.classList.add('hidden');
           }
         });
+
+        // Hide/Show Section Headers based on visible items
+        document.querySelectorAll('.food-scroll-section').forEach(function(sec) {
+          var cards = sec.querySelectorAll('.food-product-card:not(.hidden)');
+          if (cards.length > 0) sec.classList.remove('hidden');
+          else sec.classList.add('hidden');
+        });
+
+        // Update Dropdown Suggestions Box
+        renderSuggestionsDropdown(q);
       }
 
-      var searchInput = document.getElementById('food-search-input');
-      var clearSearchBtn = document.getElementById('clear-food-search');
+      function renderSuggestionsDropdown(q) {
+        if (!suggestionsBox) return;
+
+        if (!q || q.length < 2) {
+          suggestionsBox.classList.add('hidden');
+          suggestionsBox.innerHTML = '';
+          return;
+        }
+
+        var matches = foodCatalog.filter(function(item) {
+          var name = (item.name || '').toLowerCase();
+          var category = (item.category || '').toLowerCase();
+          var kw = (item.searchKeywords || []).join(' ').toLowerCase();
+
+          var match = name.includes(q) || category.includes(q) || kw.includes(q);
+          if (q === 'veg') match = item.isVeg;
+          if (q === 'nonveg' || q === 'non-veg') match = !item.isVeg;
+
+          if (currentDietFilter === 'veg') return match && item.isVeg;
+          if (currentDietFilter === 'nonveg') return match && !item.isVeg;
+          return match;
+        }).slice(0, 7);
+
+        if (matches.length === 0) {
+          suggestionsBox.innerHTML = `
+            <div class="p-3 text-center text-xs font-bold text-slate-400">
+              No food dishes matching "<span class="text-slate-800">${q}</span>". Try 'pizza', 'paneer' or 'biryani'.
+            </div>
+          `;
+          suggestionsBox.classList.remove('hidden');
+          return;
+        }
+
+        var html = '';
+        matches.forEach(function(item) {
+          var dotColor = item.isVeg ? 'bg-emerald-600 text-emerald-700' : 'bg-rose-600 text-rose-700';
+          var dietText = item.isVeg ? 'VEG' : 'NON-VEG';
+          var img = item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+
+          html += `
+            <div class="suggestion-item p-2.5 hover:bg-red-50/60 rounded-2xl cursor-pointer flex items-center justify-between transition-colors group" data-id="${item.id}" data-name="${item.name}">
+              <div class="flex items-center gap-3">
+                <img src="${img}" alt="${item.name}" class="w-10 h-10 rounded-xl object-cover border border-slate-100" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                <div>
+                  <h4 class="text-xs font-extrabold text-slate-900 group-hover:text-redBrand transition-colors">${item.name}</h4>
+                  <div class="flex items-center gap-2 text-[10px] font-bold text-slate-400 mt-0.5">
+                    <span class="text-redBrand uppercase font-black">${item.category}</span>
+                    <span>•</span>
+                    <span class="flex items-center gap-1 font-black ${item.isVeg ? 'text-emerald-700' : 'text-rose-700'}">
+                      <span class="w-1.5 h-1.5 rounded-full ${item.isVeg ? 'bg-emerald-600' : 'bg-rose-600'}"></span> ${dietText}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-black text-slate-900">₹${item.price}</span>
+                <span class="material-symbols-outlined text-sm text-slate-400 group-hover:text-redBrand group-hover:translate-x-0.5 transition-all">arrow_forward</span>
+              </div>
+            </div>
+          `;
+        });
+
+        suggestionsBox.innerHTML = html;
+        suggestionsBox.classList.remove('hidden');
+      }
+
+      // Handle Suggestion Click
+      if (suggestionsBox) {
+        suggestionsBox.addEventListener('click', function(e) {
+          var row = e.target.closest('.suggestion-item');
+          if (!row) return;
+
+          var itemId = row.getAttribute('data-id');
+          var card = document.querySelector('.food-product-card[data-id="' + itemId + '"]');
+          
+          suggestionsBox.classList.add('hidden');
+
+          if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.classList.add('ring-4', 'ring-redBrand', 'ring-offset-2');
+            setTimeout(function() {
+              card.classList.remove('ring-4', 'ring-redBrand', 'ring-offset-2');
+            }, 2500);
+          }
+        });
+      }
 
       if (searchInput) {
         searchInput.addEventListener('input', function(e) {
-          if (clearSearchBtn) {
-            if (e.target.value.length > 0) clearSearchBtn.classList.remove('hidden');
-            else clearSearchBtn.classList.add('hidden');
+          executeProductSearch(e.target.value);
+        });
+
+        searchInput.addEventListener('focus', function(e) {
+          if (e.target.value.trim().length >= 2) {
+            renderSuggestionsDropdown(e.target.value.trim());
           }
-          filterProducts();
         });
       }
 
@@ -603,10 +736,19 @@ const featuredPartnerRestaurants = [
         clearSearchBtn.addEventListener('click', function() {
           if (searchInput) searchInput.value = '';
           clearSearchBtn.classList.add('hidden');
-          filterProducts();
+          executeProductSearch('');
         });
       }
 
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        var searchBox = document.getElementById('search-container-box');
+        if (searchBox && !searchBox.contains(e.target)) {
+          if (suggestionsBox) suggestionsBox.classList.add('hidden');
+        }
+      });
+
+      // Diet Filter Buttons
       document.querySelectorAll('.diet-filter-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
           document.querySelectorAll('.diet-filter-btn').forEach(function(b) {
@@ -617,15 +759,26 @@ const featuredPartnerRestaurants = [
           btn.classList.remove('text-slate-600');
 
           currentDietFilter = btn.getAttribute('data-diet') || 'all';
-          filterProducts();
+          executeProductSearch(searchInput ? searchInput.value : '');
         });
       });
 
-      // Listen to window storage events from other tabs
+      // Quick Tag Buttons (Pizza, Paneer, Chicken, Biryani)
+      document.querySelectorAll('.quick-tag-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var tag = btn.getAttribute('data-tag') || '';
+          if (searchInput) {
+            searchInput.value = tag;
+            executeProductSearch(tag);
+            searchInput.focus();
+          }
+        });
+      });
+
+      // Window storage sync
       window.addEventListener('storage', updateAllCartUI);
       window.addEventListener('cartUpdated', updateAllCartUI);
 
-      // Initial Badges Sync
       document.addEventListener('DOMContentLoaded', updateAllCartUI);
       updateAllCartUI();
     })();
