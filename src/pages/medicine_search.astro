@@ -389,6 +389,98 @@ import Switcher from '../components/Switcher.astro';
       }
 
       // CART MANAGEMENT
+      
+      // GLOBAL MED CART FUNCTIONS EXPOSED TO WINDOW FOR Direct 100% RELIABLE CLICK HANDLERS
+      window.getGlobalCart = function() {
+        try { return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); }
+        catch(e) { return []; }
+      };
+
+      window.saveGlobalCart = function(cart) {
+        localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new Event('cartUpdated'));
+        if (typeof updateAllCartUI === 'function') updateAllCartUI();
+      };
+
+      window.goToMedDetails = function(event, id) {
+        if (event.target.closest('.btn-add-med') || event.target.closest('.med-qty-selector') || event.target.closest('.med-fav-btn')) {
+          return;
+        }
+        window.location.href = '/medicine_details?id=' + id;
+      };
+
+      window.addMedToCart = function(btn, event) {
+        if (event) event.stopPropagation();
+        var card = btn.closest('.med-card');
+        if (!card) return;
+
+        var id = card.getAttribute('data-id');
+        var name = card.getAttribute('data-name');
+        var price = parseFloat(card.getAttribute('data-price')) || 0;
+        var mrp = parseFloat(card.getAttribute('data-mrp')) || price;
+        var img = card.getAttribute('data-img');
+        var brand = card.getAttribute('data-brand') || '';
+        var rxRequired = card.getAttribute('data-rx') === 'true';
+
+        var cart = window.getGlobalCart();
+        var existing = cart.find(function(c) { return c.id === id; });
+        if (existing) {
+          existing.quantity = (existing.quantity || 1) + 1;
+        } else {
+          cart.push({
+            id: id,
+            name: name,
+            price: price,
+            mrp: mrp,
+            image: img,
+            quantity: 1,
+            restaurant: brand || 'Bhusawal Express Pharmacy',
+            cat: 'Medicines',
+            rxRequired: rxRequired
+          });
+        }
+        window.saveGlobalCart(cart);
+      };
+
+      window.medQtyPlus = function(btn, event) {
+        if (event) event.stopPropagation();
+        var card = btn.closest('.med-card');
+        if (!card) return;
+        var id = card.getAttribute('data-id');
+        var cart = window.getGlobalCart();
+        var item = cart.find(function(c) { return c.id === id; });
+        if (item) {
+          item.quantity = (item.quantity || 1) + 1;
+          window.saveGlobalCart(cart);
+        }
+      };
+
+      window.medQtyMinus = function(btn, event) {
+        if (event) event.stopPropagation();
+        var card = btn.closest('.med-card');
+        if (!card) return;
+        var id = card.getAttribute('data-id');
+        var cart = window.getGlobalCart();
+        var idx = cart.findIndex(function(c) { return c.id === id; });
+        if (idx > -1) {
+          if (cart[idx].quantity > 1) {
+            cart[idx].quantity -= 1;
+          } else {
+            cart.splice(idx, 1);
+          }
+          window.saveGlobalCart(cart);
+        }
+      };
+
+      window.toggleMedFav = function(btn, event) {
+        if (event) event.stopPropagation();
+        btn.classList.toggle('text-rose-500');
+        btn.classList.toggle('border-rose-200');
+        btn.classList.toggle('text-slate-400');
+        btn.classList.toggle('border-slate-200');
+      };
+
       function getGlobalCart() {
         try { return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); }
         catch(e) { return []; }
@@ -590,7 +682,7 @@ import Switcher from '../components/Switcher.astro';
               data-brand="${item.brand}"
               data-category="${item.category}"
               data-rx="${item.rxRequired ? 'true' : 'false'}"
-              onclick="window.location.href='/medicine_details?id=${item.id}';"
+              onclick="window.goToMedDetails(event, '${item.id}');"
             >
               <!-- Wishlist Fav Button -->
               <button 
@@ -647,14 +739,14 @@ import Switcher from '../components/Switcher.astro';
                 <div class="med-cart-actions">
                   <button 
                     class="btn-add-med w-full py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-95 transition-all"
-                    onclick="event.stopPropagation();"
+                    onclick="window.addMedToCart(this, event);"
                   >
                     + ADD
                   </button>
                   <div class="med-qty-selector hidden flex items-center justify-between w-full bg-blueBrand rounded-xl overflow-hidden">
-                    <button class="med-qty-minus px-3 py-1.5 text-white text-sm font-black hover:bg-blueDark transition-colors" onclick="event.stopPropagation();">−</button>
+                    <button class="med-qty-minus px-3 py-1.5 text-white text-sm font-black hover:bg-blueDark transition-colors" onclick="window.medQtyMinus(this, event)">−</button>
                     <span class="med-qty-count text-white text-xs font-black">1</span>
-                    <button class="med-qty-plus px-3 py-1.5 text-white text-sm font-black hover:bg-blueDark transition-colors" onclick="event.stopPropagation();">+</button>
+                    <button class="med-qty-plus px-3 py-1.5 text-white text-sm font-black hover:bg-blueDark transition-colors" onclick="window.medQtyPlus(this, event)">+</button>
                   </div>
                 </div>
               </div>
