@@ -14,7 +14,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_102",
@@ -31,7 +32,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_103",
@@ -48,7 +50,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_104",
@@ -65,7 +68,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_105",
@@ -82,7 +86,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_106",
@@ -99,7 +104,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_107",
@@ -116,7 +122,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_108",
@@ -133,7 +140,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_109",
@@ -150,7 +158,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_110",
@@ -167,7 +176,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_111",
@@ -184,7 +194,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_112",
@@ -201,7 +212,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_113",
@@ -218,7 +230,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_114",
@@ -235,7 +248,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_115",
@@ -252,7 +266,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_116",
@@ -269,7 +284,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_117",
@@ -286,7 +302,8 @@
       "breakfast",
       "veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_118",
@@ -303,7 +320,8 @@
       "breakfast",
       "non-veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_119",
@@ -320,7 +338,8 @@
       "breakfast",
       "non-veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_120",
@@ -337,7 +356,8 @@
       "breakfast",
       "non-veg"
     ],
-    "restaurantId": "south_corner"
+    "restaurantId": "south_corner",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_121",
@@ -354,7 +374,8 @@
       "burgers",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_122",
@@ -371,7 +392,8 @@
       "burgers",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_123",
@@ -388,7 +410,8 @@
       "burgers",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_124",
@@ -405,7 +428,8 @@
       "burgers",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_125",
@@ -422,7 +446,8 @@
       "burgers",
       "non-veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_126",
@@ -439,7 +464,8 @@
       "burgers",
       "non-veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_127",
@@ -456,7 +482,8 @@
       "pizza",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_128",
@@ -473,7 +500,8 @@
       "pizza",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_129",
@@ -490,7 +518,8 @@
       "pizza",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_130",
@@ -507,7 +536,8 @@
       "pizza",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_131",
@@ -524,7 +554,8 @@
       "pizza",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_132",
@@ -541,7 +572,8 @@
       "pizza",
       "non-veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_133",
@@ -558,7 +590,8 @@
       "pizza",
       "non-veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_134",
@@ -575,7 +608,8 @@
       "pizza",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_135",
@@ -592,7 +626,8 @@
       "sandwiches",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_136",
@@ -609,7 +644,8 @@
       "sandwiches",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_137",
@@ -626,7 +662,8 @@
       "sandwiches",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_138",
@@ -643,7 +680,8 @@
       "sandwiches",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_139",
@@ -660,7 +698,8 @@
       "sandwiches",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_140",
@@ -677,7 +716,8 @@
       "sandwiches",
       "non-veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_141",
@@ -694,7 +734,8 @@
       "rolls",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_142",
@@ -711,7 +752,8 @@
       "rolls",
       "veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_143",
@@ -728,7 +770,8 @@
       "rolls",
       "non-veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_144",
@@ -745,7 +788,8 @@
       "rolls",
       "non-veg"
     ],
-    "restaurantId": "burger_station"
+    "restaurantId": "burger_station",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_145",
@@ -762,7 +806,8 @@
       "chinese",
       "veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_146",
@@ -779,7 +824,8 @@
       "chinese",
       "non-veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_147",
@@ -796,7 +842,8 @@
       "chinese",
       "veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_148",
@@ -813,7 +860,8 @@
       "chinese",
       "non-veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_149",
@@ -830,7 +878,8 @@
       "chinese",
       "veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_150",
@@ -847,7 +896,8 @@
       "chinese",
       "veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_151",
@@ -864,7 +914,8 @@
       "chinese",
       "non-veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_152",
@@ -881,7 +932,8 @@
       "chinese",
       "veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_153",
@@ -898,7 +950,8 @@
       "chinese",
       "non-veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_154",
@@ -915,7 +968,8 @@
       "chinese",
       "veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_155",
@@ -932,7 +986,8 @@
       "chinese",
       "non-veg"
     ],
-    "restaurantId": "tandoor_hut"
+    "restaurantId": "tandoor_hut",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_156",
@@ -949,7 +1004,8 @@
       "biryani",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_157",
@@ -966,7 +1022,8 @@
       "biryani",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_158",
@@ -983,7 +1040,8 @@
       "biryani",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_159",
@@ -1000,7 +1058,8 @@
       "biryani",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_160",
@@ -1017,7 +1076,8 @@
       "biryani",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_161",
@@ -1034,7 +1094,8 @@
       "biryani",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_162",
@@ -1051,7 +1112,8 @@
       "biryani",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_163",
@@ -1068,7 +1130,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_164",
@@ -1085,7 +1148,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_165",
@@ -1102,7 +1166,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_166",
@@ -1119,7 +1184,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_167",
@@ -1136,7 +1202,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_168",
@@ -1153,7 +1220,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_169",
@@ -1170,7 +1238,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_170",
@@ -1187,7 +1256,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_171",
@@ -1204,7 +1274,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_172",
@@ -1221,7 +1292,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_173",
@@ -1238,7 +1310,8 @@
       "veg main course",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_174",
@@ -1255,7 +1328,8 @@
       "chicken",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_175",
@@ -1272,7 +1346,8 @@
       "chicken",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_176",
@@ -1289,7 +1364,8 @@
       "chicken",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_177",
@@ -1306,7 +1382,8 @@
       "chicken",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_178",
@@ -1323,7 +1400,8 @@
       "chicken",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_179",
@@ -1340,7 +1418,8 @@
       "chicken",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_180",
@@ -1357,7 +1436,8 @@
       "chicken",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_181",
@@ -1374,7 +1454,8 @@
       "chicken",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_182",
@@ -1391,7 +1472,8 @@
       "chicken",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_183",
@@ -1408,7 +1490,8 @@
       "chicken",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_184",
@@ -1425,7 +1508,8 @@
       "mutton",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_185",
@@ -1442,7 +1526,8 @@
       "mutton",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_186",
@@ -1459,7 +1544,8 @@
       "mutton",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_187",
@@ -1476,7 +1562,8 @@
       "mutton",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_188",
@@ -1493,7 +1580,8 @@
       "fish",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_189",
@@ -1510,7 +1598,8 @@
       "fish",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_190",
@@ -1527,7 +1616,8 @@
       "fish",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_191",
@@ -1544,7 +1634,8 @@
       "egg",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_192",
@@ -1561,7 +1652,8 @@
       "egg",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_193",
@@ -1578,7 +1670,8 @@
       "egg",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_194",
@@ -1595,7 +1688,8 @@
       "egg",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_195",
@@ -1612,7 +1706,8 @@
       "roti & naan",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_196",
@@ -1629,7 +1724,8 @@
       "roti & naan",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_197",
@@ -1646,7 +1742,8 @@
       "roti & naan",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_198",
@@ -1663,7 +1760,8 @@
       "roti & naan",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_199",
@@ -1680,7 +1778,8 @@
       "roti & naan",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_200",
@@ -1697,7 +1796,8 @@
       "roti & naan",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_201",
@@ -1714,7 +1814,8 @@
       "roti & naan",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_202",
@@ -1731,7 +1832,8 @@
       "roti & naan",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_203",
@@ -1748,7 +1850,8 @@
       "roti & naan",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_204",
@@ -1765,7 +1868,8 @@
       "rice",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_205",
@@ -1782,7 +1886,8 @@
       "rice",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_206",
@@ -1799,7 +1904,8 @@
       "rice",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_207",
@@ -1816,7 +1922,8 @@
       "rice",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_208",
@@ -1833,7 +1940,8 @@
       "rice",
       "non-veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_209",
@@ -1850,7 +1958,8 @@
       "rice",
       "veg"
     ],
-    "restaurantId": "sagar_grand"
+    "restaurantId": "sagar_grand",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_210",
@@ -1867,7 +1976,8 @@
       "desserts",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_211",
@@ -1884,7 +1994,8 @@
       "desserts",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_212",
@@ -1901,7 +2012,8 @@
       "desserts",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_213",
@@ -1918,7 +2030,8 @@
       "desserts",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_214",
@@ -1935,7 +2048,8 @@
       "desserts",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_215",
@@ -1952,7 +2066,8 @@
       "desserts",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_216",
@@ -1969,7 +2084,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_217",
@@ -1986,7 +2102,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_218",
@@ -2003,7 +2120,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_219",
@@ -2020,7 +2138,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_220",
@@ -2037,7 +2156,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_221",
@@ -2054,7 +2174,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_222",
@@ -2071,7 +2192,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_223",
@@ -2088,7 +2210,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_224",
@@ -2105,7 +2228,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_225",
@@ -2122,7 +2246,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_226",
@@ -2139,7 +2264,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_227",
@@ -2156,7 +2282,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_228",
@@ -2173,7 +2300,8 @@
       "beverages",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_snk_01",
@@ -2191,7 +2319,8 @@
       "fast food",
       "veg"
     ],
-    "restaurantId": "shiv_dairy"
+    "restaurantId": "shiv_dairy",
+    "rating": "4.8"
   },
   {
     "id": "bc_food_snk_02",
@@ -2209,7 +2338,8 @@
       "fast food",
       "veg"
     ],
-    "restaurantId": "shiv_dairy"
+    "restaurantId": "shiv_dairy",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_snk_03",
@@ -2228,7 +2358,8 @@
       "fast food",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.7"
   },
   {
     "id": "bc_food_snk_04",
@@ -2247,7 +2378,8 @@
       "spicy",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.6"
   },
   {
     "id": "bc_food_snk_05",
@@ -2265,7 +2397,8 @@
       "snacks",
       "veg"
     ],
-    "restaurantId": "shiv_dairy"
+    "restaurantId": "shiv_dairy",
+    "rating": "4.9"
   },
   {
     "id": "bc_food_snk_06",
@@ -2283,6 +2416,7 @@
       "snacks",
       "veg"
     ],
-    "restaurantId": "kwality_hub"
+    "restaurantId": "kwality_hub",
+    "rating": "4.8"
   }
 ]
