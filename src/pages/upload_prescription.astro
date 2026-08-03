@@ -2,360 +2,336 @@
 import Switcher from '../components/Switcher.astro';
 ---
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8" />
-<meta content="width=device-width, initial-scale=1.0" name="viewport" />
-<title>Upload Prescription - Bhusawal Connect</title>
-<script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
-<link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
-<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
-<link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
-<script is:inline id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "secondary-container": "#e5e2e1",
-                        "on-primary": "#ffffff",
-                        "on-tertiary-fixed": "#002204",
-                        "on-tertiary-container": "#003208",
-                        "on-surface-variant": "#5b4039",
-                        "outline": "#907067",
-                        "on-primary-container": "#541200",
-                        "surface-tint": "#b02f00",
-                        "secondary": "#5f5e5e",
-                        "inverse-primary": "#ffb5a0",
-                        "outline-variant": "#e4beb4",
-                        "on-secondary-fixed": "#1c1b1b",
-                        "background": "#f9f9f9",
-                        "error-container": "#ffdad6",
-                        "tertiary": "#006e1c",
-                        "surface-container-lowest": "#ffffff",
-                        "on-error": "#ffffff",
-                        "inverse-surface": "#2f3131",
-                        "on-tertiary": "#ffffff",
-                        "surface-container-highest": "#e2e2e2",
-                        "secondary-fixed": "#e5e2e1",
-                        "tertiary-fixed": "#94f990",
-                        "surface-container": "#eeeeee",
-                        "on-surface": "#1a1c1c",
-                        "primary": "#0d9488",
-                        "primary-container": "#14b8a6",
-                        "on-secondary-container": "#656464",
-                        "surface-container-low": "#f3f3f3",
-                        "surface-dim": "#dadada",
-                        "primary-fixed": "#ccfbf1",
-                        "on-primary-fixed-variant": "#862200",
-                        "error": "#ba1a1a",
-                        "on-error-container": "#93000a",
-                        "surface-container-high": "#e8e8e8",
-                        "surface-bright": "#f9f9f9",
-                        "on-secondary": "#ffffff",
-                        "surface": "#f9f9f9"
-                    },
-                    "fontFamily": {
-                        "label-sm": ["Plus Jakarta Sans"],
-                        "label-md": ["Plus Jakarta Sans"],
-                        "headline-xl": ["Plus Jakarta Sans"],
-                        "headline-lg": ["Plus Jakarta Sans"],
-                        "body-lg": ["Plus Jakarta Sans"],
-                        "headline-md": ["Plus Jakarta Sans"],
-                        "headline-lg-mobile": ["Plus Jakarta Sans"],
-                        "body-md": ["Plus Jakarta Sans"]
-                    },
-                    "fontSize": {
-                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
-                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
-                        "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
-                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
-                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
-                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
-                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
-                    },
-                    "spacing": {
-                        "margin-desktop": "64px",
-                        "unit": "4px",
-                        "gutter": "16px",
-                        "container-max": "1280px",
-                        "margin-mobile": "16px"
-                    }
-                }
-            }
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Doctor Prescription | Bhusawal Connect</title>
+  
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- CLEAN LIGHT BLUE (#3B82F6) & WHITE THEME TAILWIND CONFIGURATION -->
+  <script is:inline>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            blueBrand: '#3B82F6',
+            blueDark: '#2563EB',
+            blueLight: '#EFF6FF'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
         }
-    </script>
-<style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f9f9f9; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-        .step-line::after {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 40px;
-            bottom: -20px;
-            width: 2px;
-            background: #e4beb4;
-        }
-        .step-line:last-child::after { display: none; }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .active-icon {
-            font-variation-settings: 'FILL' 1;
-        }
-    </style>
-<style>
-    body {
-      min-height: 100dvh;
-    }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    html { scroll-behavior: smooth; }
   </style>
-  </head>
-<body class="text-on-surface selection:bg-primary-fixed">
-<!-- Top App Bar -->
-<header class="bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-sm docked full-width top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
-<div class="flex items-center gap-3">
-<a href="/medicines" class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-150 ease-in-out flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">arrow_back</span>
-</a>
-<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Order Medicines</h1>
-</div>
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary">notifications</span>
-</div>
-</header>
-<main class="max-w-md mx-auto px-margin-mobile pt-8 pb-32">
-<!-- Header Messaging -->
-<section class="mb-8">
-<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Upload Prescription</h2>
-<p class="font-body-md text-body-md text-on-surface-variant">Our licensed pharmacist will review your prescription and fulfill your order quickly.</p>
-</section>
-<!-- Upload Area: Bento Style -->
-<div class="grid grid-cols-2 gap-4 mb-10">
-<!-- Hidden Inputs -->
-<input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" />
-<input type="file" id="gallery-input" accept="image/*" class="hidden" />
+</head>
 
-<!-- Camera Option -->
-<button id="btn-camera" class="col-span-1 group flex flex-col items-center justify-center p-6 rounded-2xl bg-surface-container-lowest shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:bg-primary-fixed/20 transition-all duration-300 border border-outline-variant/30 active:scale-95">
-<div class="w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">photo_camera</span>
-</div>
-<span class="font-label-md text-label-md text-on-surface">Camera</span>
-</button>
-<!-- Gallery Option -->
-<button id="btn-gallery" class="col-span-1 group flex flex-col items-center justify-center p-6 rounded-2xl bg-surface-container-lowest shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:bg-primary-fixed/20 transition-all duration-300 border border-outline-variant/30 active:scale-95">
-<div class="w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">image</span>
-</div>
-<span class="font-label-md text-label-md text-on-surface">Gallery</span>
-</button>
-<!-- Status Box (Initially Hidden) -->
-<div class="hidden col-span-2 p-4 rounded-xl bg-tertiary-fixed/30 border border-tertiary-container/20 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500" id="upload-status">
-<div class="w-12 h-12 rounded-lg overflow-hidden bg-surface-dim">
-<img loading="lazy" class="w-full h-full object-cover" data-alt="A macro close-up photograph of a professional medical prescription document with handwritten notes and a clinic seal, featuring soft morning lighting in a clean, modern pharmacy setting with high-end light-mode aesthetics. The focus is sharp on the paper texture, highlighting the reliability of the medical service. The color palette includes sterile whites, clinical blues, and warm Connect Orange accents." src="/assets/204c96c472dfa0c7cae8c9f08a05a9e4.jpg"  onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
-</div>
-<div class="flex-1">
-<p class="font-label-md text-label-md text-on-tertiary-fixed">prescription_final.jpg</p>
-<p class="text-xs text-on-tertiary-fixed-variant">Ready for review</p>
-</div>
-<button id="btn-remove" class="text-on-surface-variant hover:text-error transition-colors">
-<span class="material-symbols-outlined">cancel</span>
-</button>
-</div>
-</div>
-<!-- Pharmacy Choice Card -->
-<div class="p-5 rounded-2xl bg-white border border-outline-variant/30 shadow-[0_4px_12px_rgba(0,0,0,0.02)] mb-8 space-y-4">
-  <div class="flex items-center gap-2">
-    <span class="material-symbols-outlined text-primary">store</span>
-    <h4 class="font-label-md text-label-md text-on-surface">Pharmacy Preference (Optional)</h4>
-  </div>
-  <div class="space-y-3">
-    <div class="space-y-1">
-      <label for="pharmacy-name-choice" class="text-[10px] font-bold text-neutral-500">Pharmacy Name</label>
-      <input type="text" id="pharmacy-name-choice" class="w-full h-12 px-4 bg-background border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-xs font-bold text-neutral-800" placeholder="e.g. Shiva Medico, Balaji Pharmacy" />
+<body class="pb-32 max-w-4xl mx-auto min-h-screen text-slate-800 antialiased bg-white">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-6 py-3.5 shadow-xs flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a href="/medicines" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors active:scale-95">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+      </a>
+      <div>
+        <h1 class="text-base sm:text-lg font-black font-display text-slate-900 leading-tight flex items-center gap-2">
+          <span>📋 Upload Prescription</span>
+          <span class="bg-blueLight text-blueBrand text-[10px] font-black px-2 py-0.5 rounded-full uppercase border border-blue-200">EXPRESS RX</span>
+        </h1>
+        <p class="text-xs text-slate-500 font-medium">Licensed Pharmacist Verification & Fast Doorstep Delivery</p>
+      </div>
     </div>
-    <div class="space-y-1">
-      <label for="pharmacy-address-choice" class="text-[10px] font-bold text-neutral-500">Pharmacy Address / Location</label>
-      <input type="text" id="pharmacy-address-choice" class="w-full h-12 px-4 bg-background border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-xs font-bold text-neutral-800" placeholder="e.g. Jamner Road, near railway gate" />
+
+    <a href="/cart" class="w-10 h-10 rounded-full bg-blueLight text-blueBrand flex items-center justify-center font-bold hover:bg-blueBrand hover:text-white transition-all shadow-xs">
+      <span class="material-symbols-outlined text-xl">shopping_bag</span>
+    </a>
+  </header>
+
+  <main class="px-4 sm:px-6 py-6 space-y-6">
+
+    <!-- HERO BANNER -->
+    <div class="bg-gradient-to-r from-blueLight via-white to-blue-50/50 rounded-3xl p-6 border border-blue-100 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="space-y-1.5 text-center sm:text-left">
+        <div class="flex items-center justify-center sm:justify-start gap-2">
+          <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-emerald-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Pharmacists Active 24x7
+          </span>
+          <span class="inline-flex items-center gap-1 bg-blue-50 text-blueBrand text-[10px] font-black px-2.5 py-0.5 rounded-full border border-blue-200">
+            🛡️ 100% Confidential
+          </span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black font-display text-slate-900 tracking-tight">Need Medicines via Prescription?</h2>
+        <p class="text-xs sm:text-sm text-slate-600 font-medium max-w-lg">Upload your prescription photo or document. Our verified Bhusawal chemist will process your order within 10-15 minutes!</p>
+      </div>
+      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-blueBrand text-white flex items-center justify-center shadow-lg shrink-0">
+        <span class="material-symbols-outlined text-4xl sm:text-5xl">description</span>
+      </div>
     </div>
-    <p class="text-[10px] text-neutral-400 font-bold leading-normal">Mention store details if you want our delivery partner to pick up from a specific store. If left blank, they will purchase it from any nearby pharmacy.</p>
-  </div>
-</div>
-<!-- How It Works Section -->
-<section class="mb-12">
-<h3 class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-6">How it works</h3>
-<div class="space-y-8">
-<!-- Step 1 -->
-<div class="relative flex gap-6 step-line">
-<div class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">1</div>
-<div>
-<h4 class="font-label-md text-label-md text-on-surface">Upload Prescription</h4>
-<p class="font-body-md text-body-md text-on-surface-variant">Snap a clear photo of your valid medical prescription.</p>
-</div>
-</div>
-<!-- Step 2 -->
-<div class="relative flex gap-6 step-line">
-<div class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold">2</div>
-<div>
-<h4 class="font-label-md text-label-md text-on-surface">Pharmacist Review</h4>
-<p class="font-body-md text-body-md text-on-surface-variant">Our certified pharmacist will verify the medicines and check availability.</p>
-</div>
-</div>
-<!-- Step 3 -->
-<div class="relative flex gap-6">
-<div class="relative z-10 w-10 h-10 shrink-0 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold">3</div>
-<div>
-<h4 class="font-label-md text-label-md text-on-surface">Order Confirmation</h4>
-<p class="font-body-md text-body-md text-on-surface-variant">Review the cart and confirm your delivery details and payment.</p>
-</div>
-</div>
-</div>
-</section>
-<!-- Safety Guidelines Card -->
-<div class="p-5 rounded-2xl bg-secondary-container/30 border border-outline-variant/30 mb-8">
-<div class="flex gap-3 mb-2">
-<span class="material-symbols-outlined text-primary">verified_user</span>
-<h4 class="font-label-md text-label-md text-on-surface">Safety Assurance</h4>
-</div>
-<p class="text-sm text-on-surface-variant leading-relaxed">Your data is encrypted. We only share prescriptions with authorized local pharmacies in Bhusawal for fulfillment.</p>
-</div>
-</main>
-<!-- Bottom Action Bar (Fixed) -->
-<footer class="fixed bottom-0 left-0 right-0 p-margin-mobile bg-surface/90 backdrop-blur-xl border-t border-outline-variant/20 z-40">
-<div class="max-w-md mx-auto">
-<button class="w-full h-14 rounded-full bg-outline-variant text-on-surface-variant font-label-md text-label-md flex items-center justify-center gap-2 transition-all duration-300 cursor-not-allowed" disabled="" id="btn-continue">
-<span>Continue</span>
-<span class="material-symbols-outlined">arrow_forward</span>
-</button>
-</div>
-</footer>
-<!-- Bottom Navigation (Mobile) -->
-<nav class="fixed bottom-0 w-full flex justify-around items-center h-20 pb-safe px-4 bg-surface/80 dark:bg-inverse-surface/80 backdrop-blur-xl shadow-[0_-4px_12px_rgba(0,0,0,0.04)] border-t border-outline-variant/30 z-50 md:hidden">
-<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/home">
-<span class="material-symbols-outlined">home</span>
-<span class="font-label-sm text-label-sm">Home</span>
-</a>
-<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/orders">
-<span class="material-symbols-outlined">receipt_long</span>
-<span class="font-label-sm text-label-sm">Orders</span>
-</a>
-<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/medicine_search">
-<span class="material-symbols-outlined">search</span>
-<span class="font-label-sm text-label-sm">Search</span>
-</a>
-<a class="flex flex-col items-center justify-center text-secondary hover:text-primary-container transition-all" href="/profile">
-<span class="material-symbols-outlined">person</span>
-<span class="font-label-sm text-label-sm">Account</span>
-</a>
-</nav>
-<script>
-        const cameraInput = document.getElementById('camera-input');
-        const galleryInput = document.getElementById('gallery-input');
-        const btnCamera = document.getElementById('btn-camera');
-        const btnGallery = document.getElementById('btn-gallery');
-        const btnRemove = document.getElementById('btn-remove');
-        const statusBox = document.getElementById('upload-status');
-        const btnContinue = document.getElementById('btn-continue');
-        let currentObjectUrl = null;
 
-        const defaultPreviewSrc = '/assets/204c96c472dfa0c7cae8c9f08a05a9e4.jpg';
+    <!-- UPLOAD SELECTION CARDS -->
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Hidden file inputs -->
+      <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" />
+      <input type="file" id="gallery-input" accept="image/*" class="hidden" />
 
-        // Handle button clicks to trigger input click
-        btnCamera.addEventListener('click', () => {
-            cameraInput.value = '';
-            cameraInput.click();
+      <!-- Camera Option -->
+      <button id="btn-camera" type="button" class="group flex flex-col items-center justify-center p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md hover:border-blueBrand transition-all active:scale-95 text-center space-y-3 cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl bg-blueLight text-blueBrand group-hover:bg-blueBrand group-hover:text-white transition-colors flex items-center justify-center shadow-xs">
+          <span class="material-symbols-outlined text-3xl">photo_camera</span>
+        </div>
+        <div>
+          <h3 class="text-sm font-black font-display text-slate-900 group-hover:text-blueBrand transition-colors">Take Photo</h3>
+          <p class="text-[11px] text-slate-500 font-medium">Use Phone Camera</p>
+        </div>
+      </button>
+
+      <!-- Gallery Option -->
+      <button id="btn-gallery" type="button" class="group flex flex-col items-center justify-center p-6 rounded-3xl bg-white border border-slate-200/80 shadow-sm hover:shadow-md hover:border-blueBrand transition-all active:scale-95 text-center space-y-3 cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl bg-blueLight text-blueBrand group-hover:bg-blueBrand group-hover:text-white transition-colors flex items-center justify-center shadow-xs">
+          <span class="material-symbols-outlined text-3xl">image</span>
+        </div>
+        <div>
+          <h3 class="text-sm font-black font-display text-slate-900 group-hover:text-blueBrand transition-colors">Choose File</h3>
+          <p class="text-[11px] text-slate-500 font-medium">Gallery or PDF</p>
+        </div>
+      </button>
+    </div>
+
+    <!-- UPLOAD PREVIEW STATUS BOX -->
+    <div id="upload-status" class="hidden bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center justify-between gap-4 transition-all">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-white p-1 border border-emerald-200 overflow-hidden shrink-0 shadow-xs">
+          <img src="" alt="Prescription Preview" class="w-full h-full object-cover rounded-lg" id="status-preview-img" />
+        </div>
+        <div>
+          <h4 class="text-xs font-black text-slate-900 truncate max-w-[200px] sm:max-w-xs" id="status-file-name">prescription.jpg</h4>
+          <p class="text-[11px] font-bold text-emerald-600 flex items-center gap-1 mt-0.5">
+            <span class="material-symbols-outlined text-sm">check_circle</span>
+            Prescription attached & ready
+          </p>
+        </div>
+      </div>
+      <button id="btn-remove" type="button" class="text-xs font-black text-rose-600 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-xl border border-rose-200 transition-colors">
+        Remove
+      </button>
+    </div>
+
+    <!-- PREFERRED PHARMACY OPTIONAL CARD -->
+    <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-blueLight text-blueBrand flex items-center justify-center font-bold">
+          <span class="material-symbols-outlined text-lg">store</span>
+        </div>
+        <div>
+          <h3 class="text-sm font-black font-display text-slate-900">Pharmacy Preference</h3>
+          <p class="text-[11px] text-slate-500 font-medium">Optional — Specify store name or leave blank for nearest verified partner</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        <div>
+          <label for="pharmacy-name-choice" class="text-[11px] font-bold text-slate-600 block mb-1">Pharmacy Name</label>
+          <input type="text" id="pharmacy-name-choice" placeholder="e.g. Apollo Pharmacy, Samarth Medical" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blueBrand/40 transition-all" />
+        </div>
+        <div>
+          <label for="pharmacy-address-choice" class="text-[11px] font-bold text-slate-600 block mb-1">Store Area / Landmark</label>
+          <input type="text" id="pharmacy-address-choice" placeholder="e.g. Station Road, Jamner Gate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blueBrand/40 transition-all" />
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS STEPS -->
+    <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+      <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 font-display">How Express Delivery Works</h3>
+      
+      <div class="space-y-4">
+        <div class="flex items-start gap-3">
+          <div class="w-7 h-7 rounded-full bg-blueBrand text-white flex items-center justify-center text-xs font-black shrink-0 mt-0.5">1</div>
+          <div>
+            <h4 class="text-xs font-black text-slate-900">Upload Doctor Prescription</h4>
+            <p class="text-[11px] text-slate-500 font-medium">Take a clear picture or upload document containing doctor's seal & patient info.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-7 h-7 rounded-full bg-blueBrand text-white flex items-center justify-center text-xs font-black shrink-0 mt-0.5">2</div>
+          <div>
+            <h4 class="text-xs font-black text-slate-900">Pharmacist Verification</h4>
+            <p class="text-[11px] text-slate-500 font-medium">Our licensed chemist reviews dosage and calls you if any substitute is required.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-3">
+          <div class="w-7 h-7 rounded-full bg-blueBrand text-white flex items-center justify-center text-xs font-black shrink-0 mt-0.5">3</div>
+          <div>
+            <h4 class="text-xs font-black text-slate-900">10-15 Min Express Delivery</h4>
+            <p class="text-[11px] text-slate-500 font-medium">Rider picks up packed medicines directly from pharmacy and delivers to your doorstep.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT / CONTINUE BUTTON -->
+    <div class="pt-2">
+      <button 
+        id="btn-continue" 
+        disabled 
+        type="button" 
+        class="w-full py-4 bg-slate-200 text-slate-400 font-black text-sm rounded-2xl cursor-not-allowed transition-all shadow-md flex items-center justify-center gap-2"
+      >
+        <span>Submit Prescription & Track Order</span>
+        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+      </button>
+    </div>
+
+  </main>
+
+  <Switcher />
+
+  <script is:inline>
+    (function() {
+      var cameraInput = document.getElementById('camera-input');
+      var galleryInput = document.getElementById('gallery-input');
+      var btnCamera = document.getElementById('btn-camera');
+      var btnGallery = document.getElementById('btn-gallery');
+      var btnRemove = document.getElementById('btn-remove');
+      var statusBox = document.getElementById('upload-status');
+      var btnContinue = document.getElementById('btn-continue');
+      var previewImg = document.getElementById('status-preview-img');
+      var fileNameEl = document.getElementById('status-file-name');
+      var currentObjectUrl = null;
+
+      var defaultPreviewSrc = 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=200&q=80';
+
+      if (btnCamera && cameraInput) {
+        btnCamera.addEventListener('click', function() {
+          cameraInput.value = '';
+          cameraInput.click();
         });
-        btnGallery.addEventListener('click', () => {
-            galleryInput.value = '';
-            galleryInput.click();
+      }
+
+      if (btnGallery && galleryInput) {
+        btnGallery.addEventListener('click', function() {
+          galleryInput.value = '';
+          galleryInput.click();
         });
+      }
 
-        // Handle file selection
-        function handleFileSelection(e) {
-            const files = e.target.files;
-            if (files && files[0]) {
-                const file = files[0];
-                const previewImg = statusBox.querySelector('img');
-                const fileNameEl = statusBox.querySelector('p');
+      function handleFileSelection(e) {
+        var files = e.target.files;
+        if (files && files[0]) {
+          var file = files[0];
 
-                fileNameEl.textContent = file.name;
+          if (fileNameEl) fileNameEl.textContent = file.name;
 
-                if (currentObjectUrl) {
-                    URL.revokeObjectURL(currentObjectUrl);
-                    currentObjectUrl = null;
-                }
+          if (currentObjectUrl) {
+            URL.revokeObjectURL(currentObjectUrl);
+            currentObjectUrl = null;
+          }
 
-                previewImg.onerror = function() {
-                    this.src = defaultPreviewSrc;
-                };
-
-                if (file.type && file.type.startsWith('image/')) {
-                    currentObjectUrl = URL.createObjectURL(file);
-                    previewImg.src = currentObjectUrl;
-                } else {
-                    previewImg.src = defaultPreviewSrc;
-                }
-
-                statusBox.classList.remove('hidden');
-
-                // Enable continue button
-                btnContinue.disabled = false;
-                btnContinue.classList.remove('bg-outline-variant', 'text-on-surface-variant', 'cursor-not-allowed');
-                btnContinue.classList.add('bg-primary', 'text-on-primary', 'shadow-lg', 'shadow-primary/20', 'active:scale-95');
-            }
-        }
-
-        cameraInput.addEventListener('change', handleFileSelection);
-        galleryInput.addEventListener('change', handleFileSelection);
-
-        // Remove upload
-        btnRemove.addEventListener('click', () => {
-            if (currentObjectUrl) {
-                URL.revokeObjectURL(currentObjectUrl);
-                currentObjectUrl = null;
-            }
-            statusBox.classList.add('hidden');
-            cameraInput.value = '';
-            galleryInput.value = '';
-            
-            // Disable button
-            btnContinue.disabled = true;
-            btnContinue.classList.add('bg-outline-variant', 'text-on-surface-variant', 'cursor-not-allowed');
-            btnContinue.classList.remove('bg-primary', 'text-on-primary', 'shadow-lg', 'shadow-primary/20', 'active:scale-95');
-        });
-
-        // Handle button redirect
-        btnContinue.addEventListener('click', () => {
-            const nameChoice = document.getElementById('pharmacy-name-choice').value.trim();
-            const addressChoice = document.getElementById('pharmacy-address-choice').value.trim();
-            let pharmacyDisplay = 'Any Nearby Pharmacy';
-            if (nameChoice) {
-                pharmacyDisplay = nameChoice;
-                if (addressChoice) {
-                    pharmacyDisplay += ' (' + addressChoice + ')';
-                }
-            }
-            
-            const order = {
-                id: `PRE-${Math.floor(1000 + Math.random() * 9000)}`,
-                items: "Prescription Medicine Verification",
-                total: 0,
-                date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                status: 'Verifying',
-                pharmacy: pharmacyDisplay
+          if (previewImg) {
+            previewImg.onerror = function() {
+              this.src = defaultPreviewSrc;
             };
-            const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
-            orders.unshift(order);
-            localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
-            localStorage.setItem('bhusawal_active_order', JSON.stringify(order));
-            
-            window.location.href = '/track_order';
+
+            if (file.type && file.type.startsWith('image/')) {
+              currentObjectUrl = URL.createObjectURL(file);
+              previewImg.src = currentObjectUrl;
+            } else {
+              previewImg.src = defaultPreviewSrc;
+            }
+          }
+
+          if (statusBox) statusBox.classList.remove('hidden');
+
+          if (btnContinue) {
+            btnContinue.disabled = false;
+            btnContinue.classList.remove('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+            btnContinue.classList.add('bg-blueBrand', 'hover:bg-blueDark', 'text-white', 'shadow-lg', 'active:scale-95');
+          }
+        }
+      }
+
+      if (cameraInput) cameraInput.addEventListener('change', handleFileSelection);
+      if (galleryInput) galleryInput.addEventListener('change', handleFileSelection);
+
+      if (btnRemove) {
+        btnRemove.addEventListener('click', function() {
+          if (currentObjectUrl) {
+            URL.revokeObjectURL(currentObjectUrl);
+            currentObjectUrl = null;
+          }
+          if (statusBox) statusBox.classList.add('hidden');
+          if (cameraInput) cameraInput.value = '';
+          if (galleryInput) galleryInput.value = '';
+
+          if (btnContinue) {
+            btnContinue.disabled = true;
+            btnContinue.classList.add('bg-slate-200', 'text-slate-400', 'cursor-not-allowed');
+            btnContinue.classList.remove('bg-blueBrand', 'hover:bg-blueDark', 'text-white', 'shadow-lg', 'active:scale-95');
+          }
         });
-    </script>
-    <Switcher />
-</body></html>
+      }
+
+      if (btnContinue) {
+        btnContinue.addEventListener('click', function() {
+          var nameChoice = (document.getElementById('pharmacy-name-choice') || {}).value || '';
+          var addressChoice = (document.getElementById('pharmacy-address-choice') || {}).value || '';
+
+          var pharmacyDisplay = 'Nearest Partner Pharmacy';
+          if (nameChoice.trim()) {
+            pharmacyDisplay = nameChoice.trim();
+            if (addressChoice.trim()) {
+              pharmacyDisplay += ' (' + addressChoice.trim() + ')';
+            }
+          }
+
+          var orderId = 'RX-BHU-' + Math.floor(100000 + Math.random() * 900000);
+          var rxOrder = {
+            id: orderId,
+            type: 'PRESCRIPTION',
+            patientName: 'Customer',
+            mobile: '9876543210',
+            address: 'Varangaon Road, Bhusawal',
+            notes: 'Prescription uploaded directly',
+            storeChoice: nameChoice.trim() ? 'PREFERRED' : 'NEAREST',
+            pharmacy: pharmacyDisplay,
+            fileName: (fileNameEl ? fileNameEl.textContent : '') || 'Prescription.jpg',
+            total: 0,
+            status: 'Accepted',
+            timestamp: new Date().toISOString()
+          };
+
+          try {
+            localStorage.setItem('bhusawal_active_order', JSON.stringify(rxOrder));
+            var orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+            orders.unshift(rxOrder);
+            localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+          } catch(e) {}
+
+          window.location.href = '/track_order';
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
