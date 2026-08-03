@@ -194,7 +194,7 @@ const medicalDevicesItems = [
 
     <!-- Notification Button & Global Cart Button -->
     <div class="flex items-center gap-2">
-      <a href="/upload_prescription" class="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full bg-blueLight text-blueBrand text-xs font-black border border-blue-200 hover:bg-blueBrand hover:text-white transition-all shadow-xs">
+      <a href="#section-prescription-upload" class="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full bg-blueLight text-blueBrand text-xs font-black border border-blue-200 hover:bg-blueBrand hover:text-white transition-all shadow-xs">
         <span class="material-symbols-outlined text-sm">upload_file</span>
         <span>Upload Rx</span>
       </a>
@@ -331,23 +331,226 @@ const medicalDevicesItems = [
       </div>
     </section>
 
-    <!-- ==================== 5. UPLOAD DOCTOR PRESCRIPTION BANNER ==================== -->
-    <section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-3xl p-6 shadow-xl relative overflow-hidden border border-blue-400/30">
-      <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div class="space-y-1.5 max-w-lg">
-          <span class="bg-white/20 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">⚡ 10 Min Rx Processing</span>
-          <h2 class="text-xl sm:text-2xl font-black font-display leading-tight">Have a Doctor's Prescription?</h2>
-          <p class="text-xs text-blue-100 font-medium">Upload photo of your prescription & our licensed Bhusawal pharmacist will fulfill & deliver medicines to your doorstep.</p>
+    <!-- ==================== 5. LARGE DOCTOR PRESCRIPTION UPLOAD SECTION (DIRECTLY BELOW FEATURED STORES) ==================== -->
+    <section class="bg-gradient-to-br from-blue-50 via-white to-blue-50/50 rounded-3xl p-5 sm:p-7 border-2 border-blue-200/80 shadow-lg space-y-6" id="section-prescription-upload">
+      
+      <!-- HEADER -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-blue-100 pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full bg-blueBrand text-white text-[10px] font-black uppercase tracking-wider">⚡ 10 MIN RX PROCESSING</span>
+            <span class="text-xs font-extrabold text-emerald-600 flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+              Pharmacist Online
+            </span>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black font-display text-slate-900 tracking-tight mt-1 flex items-center gap-2">
+            <span>📋 Doctor Prescription Upload</span>
+          </h2>
+          <p class="text-xs text-slate-600 font-medium mt-0.5">Upload doctor prescription photo or PDF & our licensed Bhusawal pharmacist will fulfill & deliver your medicines.</p>
         </div>
 
-        <a 
-          href="/upload_prescription" 
-          class="px-6 py-3 bg-white text-blueBrand hover:bg-blue-50 font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all shrink-0 flex items-center gap-2"
-        >
-          <span class="material-symbols-outlined text-lg">cloud_upload</span>
-          <span>Upload Doctor Prescription</span>
-        </a>
+        <div class="hidden sm:flex items-center gap-2 text-xs font-extrabold text-blueBrand bg-white px-3.5 py-2 rounded-2xl border border-blue-200 shadow-xs">
+          <span class="material-symbols-outlined text-base">verified_user</span>
+          <span>100% Confidential & Secure</span>
+        </div>
       </div>
+
+      <!-- 4 UPLOAD ACTION BUTTONS -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        
+        <!-- BUTTON 1: UPLOAD PRESCRIPTION -->
+        <label class="flex flex-col items-center justify-center p-3.5 bg-white rounded-2xl border border-blue-200 hover:border-blueBrand hover:bg-blueLight/50 cursor-pointer transition-all active:scale-95 text-center group shadow-xs">
+          <input type="file" accept="image/*,application/pdf" class="hidden rx-file-trigger" data-type="general" />
+          <span class="w-10 h-10 rounded-full bg-blueLight text-blueBrand flex items-center justify-center text-xl font-bold mb-1.5 group-hover:bg-blueBrand group-hover:text-white transition-colors">
+            📤
+          </span>
+          <span class="text-xs font-black text-slate-900 group-hover:text-blueBrand">Upload Prescription</span>
+          <span class="text-[9px] text-slate-400 font-bold mt-0.5">Auto-Detect File</span>
+        </label>
+
+        <!-- BUTTON 2: TAKE PHOTO USING CAMERA -->
+        <label class="flex flex-col items-center justify-center p-3.5 bg-white rounded-2xl border border-blue-200 hover:border-blueBrand hover:bg-blueLight/50 cursor-pointer transition-all active:scale-95 text-center group shadow-xs">
+          <input type="file" accept="image/*" capture="environment" class="hidden rx-file-trigger" data-type="camera" />
+          <span class="w-10 h-10 rounded-full bg-blueLight text-blueBrand flex items-center justify-center text-xl font-bold mb-1.5 group-hover:bg-blueBrand group-hover:text-white transition-colors">
+            📷
+          </span>
+          <span class="text-xs font-black text-slate-900 group-hover:text-blueBrand">Take Camera Photo</span>
+          <span class="text-[9px] text-slate-400 font-bold mt-0.5">Instant Capture</span>
+        </label>
+
+        <!-- BUTTON 3: UPLOAD PDF -->
+        <label class="flex flex-col items-center justify-center p-3.5 bg-white rounded-2xl border border-blue-200 hover:border-blueBrand hover:bg-blueLight/50 cursor-pointer transition-all active:scale-95 text-center group shadow-xs">
+          <input type="file" accept="application/pdf" class="hidden rx-file-trigger" data-type="pdf" />
+          <span class="w-10 h-10 rounded-full bg-blueLight text-blueBrand flex items-center justify-center text-xl font-bold mb-1.5 group-hover:bg-blueBrand group-hover:text-white transition-colors">
+            📄
+          </span>
+          <span class="text-xs font-black text-slate-900 group-hover:text-blueBrand">Upload PDF Document</span>
+          <span class="text-[9px] text-slate-400 font-bold mt-0.5">PDF Format</span>
+        </label>
+
+        <!-- BUTTON 4: UPLOAD IMAGE -->
+        <label class="flex flex-col items-center justify-center p-3.5 bg-white rounded-2xl border border-blue-200 hover:border-blueBrand hover:bg-blueLight/50 cursor-pointer transition-all active:scale-95 text-center group shadow-xs">
+          <input type="file" accept="image/*" class="hidden rx-file-trigger" data-type="image" />
+          <span class="w-10 h-10 rounded-full bg-blueLight text-blueBrand flex items-center justify-center text-xl font-bold mb-1.5 group-hover:bg-blueBrand group-hover:text-white transition-colors">
+            🖼️
+          </span>
+          <span class="text-xs font-black text-slate-900 group-hover:text-blueBrand">Upload Gallery Image</span>
+          <span class="text-[9px] text-slate-400 font-bold mt-0.5">JPG, PNG, WEBP</span>
+        </label>
+
+      </div>
+
+      <!-- FILE UPLOAD STATUS & PREVIEW CARD -->
+      <div id="rx-upload-preview-box" class="hidden bg-white p-4 rounded-2xl border border-blue-300 shadow-sm flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-12 h-12 rounded-xl bg-blueLight text-blueBrand flex items-center justify-center text-2xl font-black shrink-0 border border-blue-200" id="rx-file-icon-box">
+            📄
+          </div>
+          <div class="min-w-0">
+            <h4 class="text-xs sm:text-sm font-black text-slate-900 truncate" id="rx-file-name">prescription_dr_sharma.pdf</h4>
+            <p class="text-[11px] font-bold text-emerald-600 flex items-center gap-1 mt-0.5">
+              <span class="material-symbols-outlined text-xs">check_circle</span>
+              Prescription Attached Successfully
+            </p>
+          </div>
+        </div>
+
+        <button type="button" id="rx-clear-file-btn" class="px-3 py-1.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-600 text-xs font-black rounded-xl transition-colors shrink-0">
+          Change File
+        </button>
+      </div>
+
+      <!-- FORM (Patient Name, Phone, Address, Notes & Store Choice) -->
+      <div id="rx-order-form-container" class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 space-y-4 shadow-xs">
+        
+        <div class="border-b border-slate-100 pb-2">
+          <h3 class="text-sm font-black font-display text-slate-900 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-blueBrand text-base">person</span>
+            <span>Patient & Delivery Details</span>
+          </h3>
+          <p class="text-[11px] font-bold text-slate-400">Please provide patient details so our pharmacist can contact you.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Patient Name -->
+          <div class="space-y-1">
+            <label class="text-xs font-extrabold text-slate-700 block">Patient Name *</label>
+            <input 
+              type="text" 
+              id="rx-input-patient-name"
+              placeholder="Full Patient Name (e.g. Ramesh Patil)" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blueBrand/40 focus:bg-white transition-all"
+            />
+          </div>
+
+          <!-- Mobile Number -->
+          <div class="space-y-1">
+            <label class="text-xs font-extrabold text-slate-700 block">Mobile Number *</label>
+            <input 
+              type="tel" 
+              id="rx-input-mobile"
+              value="7498071274"
+              placeholder="10-digit Mobile Number" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blueBrand/40 focus:bg-white transition-all"
+            />
+          </div>
+        </div>
+
+        <!-- Delivery Address -->
+        <div class="space-y-1">
+          <label class="text-xs font-extrabold text-slate-700 block">Delivery Address in Bhusawal *</label>
+          <input 
+            type="text" 
+            id="rx-input-address"
+            value="Home - Varangaon Road, Bhusawal"
+            placeholder="Full Delivery Address" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blueBrand/40 focus:bg-white transition-all"
+          />
+        </div>
+
+        <!-- Special Notes -->
+        <div class="space-y-1">
+          <label class="text-xs font-extrabold text-slate-700 block">Special Notes / Dosage Requests (Optional)</label>
+          <textarea 
+            id="rx-input-notes"
+            rows="2" 
+            placeholder="e.g. Please send 1-month supply, include generic brand, or call before dispatch..."
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blueBrand/40 focus:bg-white transition-all"
+          ></textarea>
+        </div>
+
+        <!-- PARTICULAR MEDICAL STORE QUESTION -->
+        <div class="pt-3 border-t border-slate-100 space-y-3">
+          <label class="text-xs font-black text-slate-900 block">
+            Do you want medicines from a particular medical store?
+          </label>
+
+          <div class="flex items-center gap-4">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="rx_store_choice" value="NO" checked class="w-4 h-4 text-blueBrand focus:ring-blueBrand" id="rx-choice-no" />
+              <span class="text-xs font-extrabold text-slate-800">NO (Fastest Delivery)</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" name="rx_store_choice" value="YES" class="w-4 h-4 text-blueBrand focus:ring-blueBrand" id="rx-choice-yes" />
+              <span class="text-xs font-extrabold text-slate-800">YES (Choose Pharmacy)</span>
+            </label>
+          </div>
+
+          <!-- IF YES: STORE NAME & STORE AREA -->
+          <div id="rx-preferred-store-fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4 bg-blueLight/50 p-4 rounded-xl border border-blue-200">
+            <div class="space-y-1">
+              <label class="text-xs font-extrabold text-slate-800 block">Medical Store Name *</label>
+              <select id="rx-store-name-select" class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blueBrand/40">
+                <option value="Apollo Pharmacy - Station Road">Apollo Pharmacy - Station Road</option>
+                <option value="Wellness Forever Chemists 24x7">Wellness Forever Chemists 24x7</option>
+                <option value="Shree Samarth Medical & Surgicals">Shree Samarth Medical & Surgicals</option>
+                <option value="New Maharashtra Medical Store">New Maharashtra Medical Store</option>
+                <option value="Shri Ram Medico & Healthcare">Shri Ram Medico & Healthcare</option>
+                <option value="Other Pharmacy">Other Pharmacy (Type in Area)</option>
+              </select>
+            </div>
+
+            <div class="space-y-1">
+              <label class="text-xs font-extrabold text-slate-800 block">Medical Store Area *</label>
+              <input 
+                type="text" 
+                id="rx-store-area-input"
+                value="Station Road, Bhusawal" 
+                placeholder="e.g. Station Road, Jamner Road, Khadaka Road"
+                class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-blueBrand/40"
+              />
+            </div>
+          </div>
+
+          <!-- IF NO: WE WILL ARRANGE FROM NEAREST PHARMACY BADGE -->
+          <div id="rx-auto-store-badge" class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-emerald-600 text-lg">verified</span>
+            <p class="text-xs font-extrabold text-emerald-800">
+              "We will arrange medicines from our nearest verified pharmacy."
+            </p>
+          </div>
+        </div>
+
+        <!-- EXPLICIT NO MEDICINE NAMES REQUIREMENT BADGE -->
+        <div class="bg-blueLight border border-blue-200 p-3 rounded-xl flex items-center gap-2 text-[11px] font-bold text-blue-900">
+          <span class="material-symbols-outlined text-blueBrand text-sm">info</span>
+          <span>You don't need to type medicine names. Our licensed pharmacist will read your uploaded prescription.</span>
+        </div>
+
+        <!-- SUBMIT PRESCRIPTION ORDER BUTTON -->
+        <button 
+          type="button" 
+          id="btn-submit-prescription-order"
+          class="w-full py-4 bg-blueBrand hover:bg-blueDark text-white font-black text-sm rounded-2xl shadow-lg shadow-blue-900/15 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2"
+        >
+          <span class="material-symbols-outlined text-lg">send</span>
+          <span>Submit Doctor Prescription Order</span>
+        </button>
+
+      </div>
+
     </section>
 
     <!-- ==================== 6. SHOP BY CATEGORY ==================== -->
@@ -682,9 +885,105 @@ const medicalDevicesItems = [
 
   <Switcher />
 
-  <!-- DYNAMIC CLIENT SCRIPT FOR MEDICINE CART & SEARCH -->
+  <!-- DYNAMIC CLIENT SCRIPT FOR PRESCRIPTION UPLOAD & STORE TOGGLE -->
   <script is:inline>
     (function() {
+      // 1. File Upload Logic
+      var fileTriggers = document.querySelectorAll('.rx-file-trigger');
+      var previewBox = document.getElementById('rx-upload-preview-box');
+      var fileNameEl = document.getElementById('rx-file-name');
+      var clearFileBtn = document.getElementById('rx-clear-file-btn');
+      var uploadedFileName = '';
+
+      fileTriggers.forEach(function(input) {
+        input.addEventListener('change', function(e) {
+          if (e.target.files && e.target.files[0]) {
+            var file = e.target.files[0];
+            uploadedFileName = file.name;
+            if (fileNameEl) fileNameEl.textContent = file.name;
+            if (previewBox) previewBox.classList.remove('hidden');
+          }
+        });
+      });
+
+      if (clearFileBtn) {
+        clearFileBtn.addEventListener('click', function() {
+          uploadedFileName = '';
+          if (previewBox) previewBox.classList.add('hidden');
+        });
+      }
+
+      // 2. Radio Choice YES / NO Store Toggle
+      var choiceNo = document.getElementById('rx-choice-no');
+      var choiceYes = document.getElementById('rx-choice-yes');
+      var prefFields = document.getElementById('rx-preferred-store-fields');
+      var autoBadge = document.getElementById('rx-auto-store-badge');
+
+      function updateStoreChoiceUI() {
+        if (choiceYes && choiceYes.checked) {
+          if (prefFields) prefFields.classList.remove('hidden');
+          if (autoBadge) autoBadge.classList.add('hidden');
+        } else {
+          if (prefFields) prefFields.classList.add('hidden');
+          if (autoBadge) autoBadge.classList.remove('hidden');
+        }
+      }
+
+      if (choiceNo) choiceNo.addEventListener('change', updateStoreChoiceUI);
+      if (choiceYes) choiceYes.addEventListener('change', updateStoreChoiceUI);
+
+      // 3. Submit Prescription Order Handler
+      var submitBtn = document.getElementById('btn-submit-prescription-order');
+      if (submitBtn) {
+        submitBtn.addEventListener('click', function() {
+          var patientName = (document.getElementById('rx-input-patient-name') || {}).value || '';
+          var mobile = (document.getElementById('rx-input-mobile') || {}).value || '';
+          var address = (document.getElementById('rx-input-address') || {}).value || '';
+          var notes = (document.getElementById('rx-input-notes') || {}).value || '';
+          var isParticularStore = choiceYes && choiceYes.checked;
+          var storeName = isParticularStore ? ((document.getElementById('rx-store-name-select') || {}).value || '') : 'Nearest Verified Pharmacy';
+          var storeArea = isParticularStore ? ((document.getElementById('rx-store-area-input') || {}).value || '') : 'Bhusawal Local Area';
+
+          if (!patientName.trim()) {
+            alert('Please enter Patient Name');
+            return;
+          }
+
+          if (!mobile.trim()) {
+            alert('Please enter Mobile Number');
+            return;
+          }
+
+          var orderId = 'RX-BHU-' + Math.floor(100000 + Math.random() * 900000);
+          var rxOrder = {
+            id: orderId,
+            type: 'PRESCRIPTION',
+            patientName: patientName,
+            mobile: mobile,
+            address: address,
+            notes: notes,
+            storeChoice: isParticularStore ? 'YES' : 'NO',
+            storeName: storeName,
+            storeArea: storeArea,
+            fileName: uploadedFileName || 'Prescription_Attached.pdf',
+            total: 0,
+            status: 'Accepted',
+            timestamp: new Date().toISOString()
+          };
+
+          try {
+            localStorage.setItem('bhusawal_active_order', JSON.stringify(rxOrder));
+            var orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+            orders.unshift(rxOrder);
+            localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+          } catch(e) {}
+
+          alert('Prescription order submitted successfully! Redirecting to live tracking...');
+          window.location.href = '/track_order';
+        });
+      }
+
+      // 4. Cart UI Functions
       function getGlobalCart() {
         try {
           return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
