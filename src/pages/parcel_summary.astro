@@ -647,6 +647,8 @@ import Switcher from '../components/Switcher.astro';
         confirmBtn.addEventListener('click', function() {
           var orderId = 'PARCEL-BHU-' + Math.floor(100000 + Math.random() * 900000);
           
+          var generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+
           var finalOrder = {
             id: orderId,
             type: 'PARCEL',
@@ -663,6 +665,8 @@ import Switcher from '../components/Switcher.astro';
             rating: '4.9 ⭐',
             deliveries: '850+ completed deliveries',
             vehicle: 'Express Delivery Bike (MH 19 BJ 5921)',
+            otp: generatedOtp,
+            otpVerified: false,
             timestamp: new Date().toISOString()
           };
 
