@@ -401,93 +401,120 @@ import Switcher from '../components/Switcher.astro';
     </section>
 
 
-    <!-- ==================== 5. WHAT ARE YOU SENDING? ==================== -->
-    <section class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-5">
+    <!-- ==================== ITEM DETAILS CARD ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-5" id="item-details-card">
       <div>
         <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
-          <span class="text-skyBrand">📦</span>
-          <span>5. What are you sending?</span>
+          <span class="text-skyBrand text-lg">📦</span>
+          <span>Item Details</span>
         </h2>
-        <p class="text-xs text-slate-500 font-medium">Select package category and weight for instant rider allocation</p>
+        <p class="text-xs text-slate-500 font-medium">Select what you are sending and approximate parcel weight</p>
       </div>
 
-      <!-- CATEGORY CHIPS -->
-      <div class="space-y-2">
-        <label class="text-[11px] font-bold text-slate-600 block uppercase tracking-wider">Item Category</label>
+      <!-- WHAT ARE YOU SENDING? (11 QUICK OPTIONS) -->
+      <div class="space-y-2.5">
+        <label class="text-[11px] font-bold text-slate-600 block uppercase tracking-wider">What are you sending?</label>
+        
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="category-picker-grid">
           
-          <button type="button" class="item-cat-btn active flex items-center gap-2.5 p-3 rounded-2xl border-2 border-skyBrand bg-skyLight text-skyBrand font-bold text-xs transition-all shadow-xs cursor-pointer active:scale-95" data-category="Documents / Files" data-extra="0">
+          <button type="button" class="item-cat-btn active flex items-center gap-2 p-3 rounded-2xl border-2 border-skyBrand bg-skyLight text-skyBrand font-bold text-xs transition-all shadow-xs cursor-pointer active:scale-95" data-category="Documents" data-extra="0">
             <span class="text-lg">📄</span>
-            <span>Documents / File</span>
+            <span>Documents</span>
           </button>
 
-          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Keys / Wallet" data-extra="0">
+          <button type="button" class="item-cat-btn flex items-center gap-2 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Keys" data-extra="0">
             <span class="text-lg">🔑</span>
-            <span>Keys / Wallet</span>
+            <span>Keys</span>
           </button>
 
-          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Food / Tiffin Box" data-extra="0">
-            <span class="text-lg">🍱</span>
-            <span>Food / Lunchbox</span>
-          </button>
-
-          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Clothes / Shopping" data-extra="5">
-            <span class="text-lg">📦</span>
-            <span>Clothes / Goods</span>
-          </button>
-
-          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Electronics" data-extra="10">
-            <span class="text-lg">📱</span>
-            <span>Electronics</span>
-          </button>
-
-          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Medicines" data-extra="0">
-            <span class="text-lg">💊</span>
-            <span>Medicines</span>
-          </button>
-
-          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Gift Parcel" data-extra="5">
+          <button type="button" class="item-cat-btn flex items-center gap-2 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Gift" data-extra="5">
             <span class="text-lg">🎁</span>
-            <span>Gift Box</span>
+            <span>Gift</span>
           </button>
 
-          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Other Item" data-extra="0">
+          <button type="button" class="item-cat-btn flex items-center gap-2 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Laptop" data-extra="10">
+            <span class="text-lg">💻</span>
+            <span>Laptop</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Bag" data-extra="5">
             <span class="text-lg">🎒</span>
-            <span>Other Items</span>
+            <span>Bag</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Tiffin" data-extra="0">
+            <span class="text-lg">🍱</span>
+            <span>Tiffin</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Shopping Bag" data-extra="5">
+            <span class="text-lg">🛍</span>
+            <span>Shopping Bag</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Small Package" data-extra="5">
+            <span class="text-lg">📦</span>
+            <span>Small Package</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Mobile" data-extra="10">
+            <span class="text-lg">📱</span>
+            <span>Mobile</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Medicine" data-extra="0">
+            <span class="text-lg">💊</span>
+            <span>Medicine</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Other" data-extra="0">
+            <span class="text-lg">✨</span>
+            <span>Other</span>
           </button>
         </div>
       </div>
 
-      <!-- PACKAGE WEIGHT SELECTOR -->
+      <!-- CONDITIONAL INPUT TEXT BOX (DISPLAYED WHEN "OTHER" IS SELECTED) -->
+      <div id="other-item-container" class="hidden animate-in fade-in duration-200">
+        <label for="other-item-text" class="text-[11px] font-bold text-skyBrand block mb-1">Please specify what item you are sending <span class="text-rose-500">*</span></label>
+        <input 
+          type="text" 
+          id="other-item-text" 
+          placeholder="e.g. Books, Tools, Spare Parts, Artwork..." 
+          class="w-full bg-skyLight/60 border-2 border-skyBorder rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand transition-all"
+        />
+      </div>
+
+      <!-- APPROXIMATE WEIGHT SELECTOR (0-1 kg, 1-5 kg, 5-10 kg, 10-20 kg) -->
       <div class="space-y-2">
         <label class="text-[11px] font-bold text-slate-600 block uppercase tracking-wider">Approximate Weight</label>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="weight-picker-grid">
           
-          <button type="button" class="item-weight-btn active py-2.5 px-3 rounded-xl border-2 border-skyBrand bg-skyLight text-skyBrand text-xs font-black transition-all text-center shadow-xs cursor-pointer active:scale-95" data-weight="Up to 1 kg" data-charge="0">
-            Up to 1 kg (₹0)
+          <button type="button" class="item-weight-btn active py-2.5 px-3 rounded-xl border-2 border-skyBrand bg-skyLight text-skyBrand text-xs font-black transition-all text-center shadow-xs cursor-pointer active:scale-95" data-weight="0–1 kg" data-charge="0">
+            0–1 kg (₹0)
           </button>
 
-          <button type="button" class="item-weight-btn py-2.5 px-3 rounded-xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 text-xs font-black transition-all text-center shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-weight="1 kg - 5 kg" data-charge="15">
-            1 kg - 5 kg (+₹15)
+          <button type="button" class="item-weight-btn py-2.5 px-3 rounded-xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 text-xs font-black transition-all text-center shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-weight="1–5 kg" data-charge="15">
+            1–5 kg (+₹15)
           </button>
 
-          <button type="button" class="item-weight-btn py-2.5 px-3 rounded-xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 text-xs font-black transition-all text-center shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-weight="5 kg - 10 kg" data-charge="30">
-            5 kg - 10 kg (+₹30)
+          <button type="button" class="item-weight-btn py-2.5 px-3 rounded-xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 text-xs font-black transition-all text-center shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-weight="5–10 kg" data-charge="30">
+            5–10 kg (+₹30)
           </button>
 
-          <button type="button" class="item-weight-btn py-2.5 px-3 rounded-xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 text-xs font-black transition-all text-center shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-weight="10 kg - 15 kg" data-charge="50">
-            10 kg - 15 kg (+₹50)
+          <button type="button" class="item-weight-btn py-2.5 px-3 rounded-xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 text-xs font-black transition-all text-center shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-weight="10–20 kg" data-charge="50">
+            10–20 kg (+₹50)
           </button>
         </div>
       </div>
 
-      <!-- OPTIONAL ITEM NOTES -->
+      <!-- OPTIONAL SPECIAL INSTRUCTIONS -->
       <div>
-        <label for="item-notes" class="text-[11px] font-bold text-slate-600 block mb-1">Item Description / Instructions <span class="text-slate-400">(Optional)</span></label>
+        <label for="item-notes" class="text-[11px] font-bold text-slate-600 block mb-1">Optional Special Instructions</label>
         <textarea 
           id="item-notes" 
           rows="2" 
-          placeholder="e.g. Handle with care, fragile documents, call receiver before arriving..." 
+          placeholder="e.g. Handle with care, fragile item, call receiver before arriving..." 
           class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all"
         ></textarea>
       </div>
@@ -1028,6 +1055,8 @@ import Switcher from '../components/Switcher.astro';
 
       // 10. CATEGORY & WEIGHT CHIPS
       var catBtns = document.querySelectorAll('.item-cat-btn');
+      var otherContainer = document.getElementById('other-item-container');
+
       catBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
           catBtns.forEach(function(b) {
@@ -1039,6 +1068,13 @@ import Switcher from '../components/Switcher.astro';
 
           selectedCategory = btn.getAttribute('data-category');
           categoryExtra = parseInt(btn.getAttribute('data-extra') || '0');
+
+          if (selectedCategory === 'Other') {
+            if (otherContainer) otherContainer.classList.remove('hidden');
+          } else {
+            if (otherContainer) otherContainer.classList.add('hidden');
+          }
+
           calculateFare();
         });
       });
@@ -1073,6 +1109,19 @@ import Switcher from '../components/Switcher.astro';
             return;
           }
 
+          var itemCatName = selectedCategory;
+          if (selectedCategory === 'Other') {
+            var otherTxt = (document.getElementById('other-item-text') || {}).value || '';
+            if (otherTxt.trim()) {
+              itemCatName = 'Other (' + otherTxt.trim() + ')';
+            } else {
+              alert('Please specify what item you are sending in the text box');
+              var txtInput = document.getElementById('other-item-text');
+              if (txtInput) txtInput.focus();
+              return;
+            }
+          }
+
           var pickupAddr = (document.getElementById('pickup-address-input') || {}).value || '';
           var senderName = (document.getElementById('pickup-sender-name') || {}).value || '';
           var senderPhone = (document.getElementById('pickup-sender-phone') || {}).value || '';
@@ -1088,7 +1137,7 @@ import Switcher from '../components/Switcher.astro';
           var parcelOrder = {
             id: orderId,
             type: 'PARCEL',
-            category: selectedCategory,
+            category: itemCatName,
             weight: selectedWeight,
             pickupAddress: pickupAddr,
             senderName: senderName,
@@ -1109,7 +1158,7 @@ import Switcher from '../components/Switcher.astro';
             localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
           } catch(e) {}
 
-          alert('🛵 Parcel pickup request booked! Rider assigned to collect from ' + pickupAddr + '. Redirecting to live tracking...');
+          alert('🛵 Parcel pickup request booked! Rider assigned to collect ' + itemCatName + ' from ' + pickupAddr + '. Redirecting to live tracking...');
           window.location.href = '/track_order';
         });
       }
