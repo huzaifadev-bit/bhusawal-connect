@@ -1,6 +1,38 @@
 ---
 import Switcher from '../components/Switcher.astro';
 
+// Premium 28 Food Categories with Icons
+const foodCategories = [
+  { id: 'all', name: 'All Foods', icon: '🍽️', kw: '' },
+  { id: 'breakfast', name: 'Breakfast', icon: '🍳', kw: 'breakfast' },
+  { id: 'snacks', name: 'Snacks', icon: '🍿', kw: 'snacks' },
+  { id: 'pizza', name: 'Pizza', icon: '🍕', kw: 'pizza' },
+  { id: 'burger', name: 'Burger', icon: '🍔', kw: 'burger' },
+  { id: 'sandwich', name: 'Sandwich', icon: '🥪', kw: 'sandwich' },
+  { id: 'rolls', name: 'Rolls', icon: '🌯', kw: 'rolls' },
+  { id: 'biryani', name: 'Biryani', icon: '🍲', kw: 'biryani' },
+  { id: 'rice', name: 'Rice', icon: '🍚', kw: 'rice' },
+  { id: 'chinese', name: 'Chinese', icon: '🍜', kw: 'chinese' },
+  { id: 'south_indian', name: 'South Indian', icon: '🥞', kw: 'south' },
+  { id: 'north_indian', name: 'North Indian', icon: '🍱', kw: 'north' },
+  { id: 'veg_curry', name: 'Veg Curry', icon: '🥘', kw: 'veg curry' },
+  { id: 'chicken_curry', name: 'Chicken Curry', icon: '🍗', kw: 'chicken' },
+  { id: 'mutton', name: 'Mutton', icon: '🍖', kw: 'mutton' },
+  { id: 'seafood', name: 'Seafood', icon: '🦐', kw: 'seafood' },
+  { id: 'roti', name: 'Roti', icon: '🫓', kw: 'roti' },
+  { id: 'naan', name: 'Naan', icon: '🍞', kw: 'naan' },
+  { id: 'paratha', name: 'Paratha', icon: '🥙', kw: 'paratha' },
+  { id: 'thali', name: 'Thali', icon: '🍱', kw: 'thali' },
+  { id: 'desserts', name: 'Desserts', icon: '🍨', kw: 'desserts' },
+  { id: 'ice_cream', name: 'Ice Cream', icon: '🍦', kw: 'ice cream' },
+  { id: 'juices', name: 'Juices', icon: '🧃', kw: 'juices' },
+  { id: 'tea', name: 'Tea', icon: '🫖', kw: 'tea' },
+  { id: 'coffee', name: 'Coffee', icon: '☕', kw: 'coffee' },
+  { id: 'milkshake', name: 'Milkshake', icon: '🥤', kw: 'milkshake' },
+  { id: 'street_food', name: 'Street Food', icon: '🧆', kw: 'street food' },
+  { id: 'bakery', name: 'Bakery', icon: '🥐', kw: 'bakery' }
+];
+
 // Banners for Food Slider
 const foodBanners = [
   {
@@ -80,7 +112,7 @@ const sponsoredPartnerRestaurants = [
   }
 ];
 
-// Direct Food Catalog Items (No Restaurant Names Displayed)
+// Direct Food Catalog Items
 const directFoodItems = [
   {
     id: 'food_hyderabadi_biryani',
@@ -94,7 +126,7 @@ const directFoodItems = [
   {
     id: 'food_shahi_mutton_biryani',
     name: 'Royal Shahi Mutton Dum Biryani',
-    category: 'Biryani',
+    category: 'Mutton',
     isVeg: false,
     price: 320,
     rating: '4.9',
@@ -103,7 +135,7 @@ const directFoodItems = [
   {
     id: 'food_deluxe_veg_thali',
     name: 'Special Veg Deluxe Unlimited Thali',
-    category: 'North Indian',
+    category: 'Thali',
     isVeg: true,
     price: 180,
     rating: '4.9',
@@ -112,7 +144,7 @@ const directFoodItems = [
   {
     id: 'food_paneer_butter_naan',
     name: 'Paneer Butter Masala & Butter Naan Combo',
-    category: 'North Indian',
+    category: 'Naan',
     isVeg: true,
     price: 210,
     rating: '4.8',
@@ -121,7 +153,7 @@ const directFoodItems = [
   {
     id: 'food_sweets_gift_box',
     name: 'Fresh Cow Ghee Sweets & Pedha Gift Box',
-    category: 'Desserts',
+    category: 'Bakery',
     isVeg: true,
     price: 250,
     rating: '4.9',
@@ -130,7 +162,7 @@ const directFoodItems = [
   {
     id: 'food_choco_lava_sundae',
     name: 'Chocolate Lava Fudge Sundae Tub (750ml)',
-    category: 'Desserts',
+    category: 'Ice Cream',
     isVeg: true,
     price: 190,
     rating: '4.7',
@@ -184,7 +216,7 @@ const directFoodItems = [
   {
     id: 'food_pithla_bhakri_thali',
     name: 'Special Maharashtrian Pithla Bhakri Thali',
-    category: 'Maharashtrian',
+    category: 'Thali',
     isVeg: true,
     price: 150,
     rating: '4.8',
@@ -279,9 +311,9 @@ const directFoodItems = [
 
   </header>
 
-  <main class="px-4 sm:px-6 py-5 space-y-7">
+  <main class="px-4 sm:px-6 py-5 space-y-6">
 
-    <!-- 2. SEARCH BAR -->
+    <!-- 2. STICKY SEARCH BAR -->
     <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2">
       <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-redBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
@@ -292,7 +324,26 @@ const directFoodItems = [
       </div>
     </div>
 
-    <!-- 3. FOOD BANNER SLIDER / CAROUSEL -->
+    <!-- 3. STICKY 28 PREMIUM FOOD CATEGORIES BAR (RESPONSIVE HORIZONTAL CHIPS) -->
+    <section class="sticky top-32 z-30 bg-white/95 backdrop-blur-md py-2.5 border-y border-slate-100/80 -mx-4 sm:-mx-6 px-4 sm:px-6">
+      <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
+        {foodCategories.map((cat, idx) => (
+          <button 
+            class={`food-cat-chip flex items-center gap-2 px-4 py-2 rounded-full font-black text-xs whitespace-nowrap cursor-pointer transition-all active:scale-95 shrink-0 shadow-xs ${
+              idx === 0 
+                ? 'bg-redBrand text-white shadow-md ring-2 ring-redBrand/30' 
+                : 'bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80'
+            }`}
+            data-kw={cat.kw}
+          >
+            <span class="text-base leading-none">{cat.icon}</span>
+            <span>{cat.name}</span>
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <!-- 4. FOOD BANNER SLIDER / CAROUSEL -->
     <section class="relative overflow-hidden rounded-3xl shadow-xl bg-gradient-to-r from-red-600 via-red-700 to-rose-900 text-white p-6 sm:p-8">
       <div class="relative z-10 max-w-xl space-y-3" id="banner-slider-content">
         <div class="flex items-center gap-2">
@@ -317,7 +368,7 @@ const directFoodItems = [
       </div>
     </section>
 
-    <!-- 4. HORIZONTAL SECTION: SPONSORED RESTAURANTS -->
+    <!-- 5. HORIZONTAL SECTION: SPONSORED RESTAURANTS -->
     <section class="space-y-4 pt-1">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -332,7 +383,6 @@ const directFoodItems = [
         </span>
       </div>
 
-      <!-- HORIZONTAL CAROUSEL GRID -->
       <div id="sponsored-restaurants-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {sponsoredPartnerRestaurants.map(rest => (
           <div 
@@ -375,7 +425,7 @@ const directFoodItems = [
       </div>
     </section>
 
-    <!-- 5. MAIN SECTION: ORDER FOOD DIRECTLY (PREMIUM GROCERY-STYLE PRODUCT GRID) -->
+    <!-- 6. MAIN SECTION: ORDER FOOD DIRECTLY (PREMIUM GROCERY-STYLE PRODUCT GRID) -->
     <section id="order-food-directly" class="space-y-4 pt-4 border-t border-slate-100">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -467,7 +517,7 @@ const directFoodItems = [
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CART ENGINE & DIRECT ORDER QUANTITY CONTROLS -->
+  <!-- CLIENT-SIDE CART ENGINE & DYNAMIC CATEGORY FILTERING -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -561,36 +611,60 @@ const directFoodItems = [
         });
       });
 
-      // Search Filter for Food & Restaurants
+      // Search & Category Filtering Engine
       const searchInput = document.getElementById('food-search-input');
       const clearBtn = document.getElementById('clear-food-search');
       const foodCards = document.querySelectorAll('.food-product-card');
+      const categoryChips = document.querySelectorAll('.food-cat-chip');
 
-      searchInput?.addEventListener('input', (e) => {
-        const query = e.target.value.trim().toLowerCase();
-        
-        if (query.length > 0) {
-          clearBtn?.classList.remove('hidden');
-        } else {
-          clearBtn?.classList.add('hidden');
-        }
+      let activeCategoryKw = '';
+
+      function applyFoodFilters() {
+        const query = (searchInput?.value || '').trim().toLowerCase();
 
         foodCards.forEach(card => {
           const name = card.dataset.name || '';
           const category = card.dataset.category || '';
 
-          if (!query || name.includes(query) || category.includes(query)) {
+          const matchesSearch = !query || name.includes(query) || category.includes(query);
+          const matchesCategory = !activeCategoryKw || category.includes(activeCategoryKw) || name.includes(activeCategoryKw);
+
+          if (matchesSearch && matchesCategory) {
             card.classList.remove('hidden');
           } else {
             card.classList.add('hidden');
           }
         });
+      }
+
+      searchInput?.addEventListener('input', (e) => {
+        if (e.target.value.length > 0) {
+          clearBtn?.classList.remove('hidden');
+        } else {
+          clearBtn?.classList.add('hidden');
+        }
+        applyFoodFilters();
       });
 
       clearBtn?.addEventListener('click', () => {
         searchInput.value = '';
         clearBtn.classList.add('hidden');
-        foodCards.forEach(card => card.classList.remove('hidden'));
+        applyFoodFilters();
+      });
+
+      categoryChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          categoryChips.forEach(c => {
+            c.classList.remove('bg-redBrand', 'text-white', 'shadow-md', 'ring-2', 'ring-redBrand/30');
+            c.classList.add('bg-slate-100', 'text-slate-700', 'border', 'border-slate-200/80');
+          });
+
+          chip.classList.remove('bg-slate-100', 'text-slate-700', 'border', 'border-slate-200/80');
+          chip.classList.add('bg-redBrand', 'text-white', 'shadow-md', 'ring-2', 'ring-redBrand/30');
+
+          activeCategoryKw = chip.dataset.kw || '';
+          applyFoodFilters();
+        });
       });
 
     });
