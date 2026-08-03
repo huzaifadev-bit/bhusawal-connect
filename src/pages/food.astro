@@ -2,26 +2,53 @@
 import Switcher from '../components/Switcher.astro';
 import foodCatalog from '../../public/food_catalog.json';
 
-// Standardized Food Categories
-const foodCategories = [
-  { id: 'all', name: 'All Foods', icon: '🍽️', kw: '' },
-  { id: 'breakfast', name: 'Breakfast', icon: '🍳', kw: 'breakfast' },
-  { id: 'burgers', name: 'Burgers', icon: '🍔', kw: 'burgers' },
-  { id: 'pizza', name: 'Pizza', icon: '🍕', kw: 'pizza' },
-  { id: 'sandwiches', name: 'Sandwiches', icon: '🥪', kw: 'sandwiches' },
-  { id: 'rolls', name: 'Rolls', icon: '🌯', kw: 'rolls' },
-  { id: 'chinese', name: 'Chinese', icon: '🍜', kw: 'chinese' },
-  { id: 'biryani', name: 'Biryani', icon: '🍲', kw: 'biryani' },
-  { id: 'veg_main', name: 'Veg Main Course', icon: '🥘', kw: 'veg main course' },
-  { id: 'chicken', name: 'Chicken', icon: '🍗', kw: 'chicken' },
-  { id: 'mutton', name: 'Mutton', icon: '🍖', kw: 'mutton' },
-  { id: 'fish', name: 'Fish', icon: '🐟', kw: 'fish' },
-  { id: 'egg', name: 'Egg', icon: '🥚', kw: 'egg' },
-  { id: 'rice', name: 'Rice', icon: '🍚', kw: 'rice' },
-  { id: 'roti_naan', name: 'Roti & Naan', icon: '🫓', kw: 'roti & naan' },
-  { id: 'desserts', name: 'Desserts', icon: '🍰', kw: 'desserts' },
-  { id: 'beverages', name: 'Beverages', icon: '🥤', kw: 'beverages' }
+// Standardized 18 Food Sections Definition
+const sectionDefinitions = [
+  { id: 'popular', name: 'Popular Today', icon: '🔥', subtitle: 'Most ordered food items in Bhusawal today' },
+  { id: 'breakfast', name: 'Breakfast', icon: '🍳', subtitle: 'Poha, Upma, Idli, Dosa & Morning Bites' },
+  { id: 'pizza', name: 'Pizza', icon: '🍕', subtitle: 'Cheesy Margheritas, Farmhouse & Peri Peri Pizzas' },
+  { id: 'burger', name: 'Burger', icon: '🍔', subtitle: 'Crispy Veg, Paneer & Chicken Burgers' },
+  { id: 'sandwich', name: 'Sandwich', icon: '🥪', subtitle: 'Grilled Cheese, Veg & Club Sandwiches' },
+  { id: 'rolls', name: 'Rolls', icon: '🌯', subtitle: 'Kathi Rolls, Paneer & Egg Chicken Rolls' },
+  { id: 'chinese', name: 'Chinese', icon: '🍜', subtitle: 'Noodles, Manchurian, Fried Rice & Starters' },
+  { id: 'biryani', name: 'Biryani', icon: '🍲', subtitle: 'Aromatic Dum Biryani, Hyderabadi & Thalis' },
+  { id: 'veg_meals', name: 'Veg Meals', icon: '🥘', subtitle: 'Paneer Curries, Dal Tadka, Sev Bhaji & Main Course' },
+  { id: 'chicken', name: 'Chicken', icon: '🍗', subtitle: 'Butter Chicken, Handi, Tandoori & Curries' },
+  { id: 'mutton', name: 'Mutton', icon: '🍖', subtitle: 'Mutton Curry, Masala & Handi Delights' },
+  { id: 'fish', name: 'Fish', icon: '🐟', subtitle: 'Fish Curry, Fish Fry & Seafood Specialties' },
+  { id: 'egg', name: 'Egg', icon: '🥚', subtitle: 'Egg Curry, Bhurji, Masala & Egg Rice' },
+  { id: 'rice', name: 'Rice', icon: '🍚', subtitle: 'Jeera Rice, Pulao, Dal Khichdi & Fried Rice' },
+  { id: 'roti_naan', name: 'Roti & Naan', icon: '🫓', subtitle: 'Butter Roti, Garlic Naan, Laccha Paratha & Chapatis' },
+  { id: 'snacks', name: 'Snacks', icon: '🍟', subtitle: 'Samosas, French Fries, Pakodas & Evening Snacks' },
+  { id: 'desserts', name: 'Desserts', icon: '🍰', subtitle: 'Gulab Jamun, Rasgulla, Brownie & Ice Creams' },
+  { id: 'beverages', name: 'Beverages', icon: '🥤', subtitle: 'Chai, Cold Coffee, Lime Soda, Shakes & Drinks' }
 ];
+
+// Helper to filter items for each section
+function getItemsForSection(secId: string) {
+  if (secId === 'popular') {
+    // Hand-picked top items across categories
+    return foodCatalog.filter(x => ['bc_food_101', 'bc_food_105', 'bc_food_115', 'bc_food_121', 'bc_food_127', 'bc_food_135', 'bc_food_142', 'bc_food_149', 'bc_food_159', 'bc_food_169', 'bc_food_176', 'bc_food_188', 'bc_food_snk_01', 'bc_food_snk_03'].includes(x.id));
+  }
+  if (secId === 'breakfast') return foodCatalog.filter(x => x.category === 'Breakfast');
+  if (secId === 'pizza') return foodCatalog.filter(x => x.category === 'Pizza');
+  if (secId === 'burger') return foodCatalog.filter(x => x.category === 'Burgers');
+  if (secId === 'sandwich') return foodCatalog.filter(x => x.category === 'Sandwiches');
+  if (secId === 'rolls') return foodCatalog.filter(x => x.category === 'Rolls');
+  if (secId === 'chinese') return foodCatalog.filter(x => x.category === 'Chinese');
+  if (secId === 'biryani') return foodCatalog.filter(x => x.category === 'Biryani');
+  if (secId === 'veg_meals') return foodCatalog.filter(x => x.category === 'Veg Main Course');
+  if (secId === 'chicken') return foodCatalog.filter(x => x.category === 'Chicken');
+  if (secId === 'mutton') return foodCatalog.filter(x => x.category === 'Mutton');
+  if (secId === 'fish') return foodCatalog.filter(x => x.category === 'Fish');
+  if (secId === 'egg') return foodCatalog.filter(x => x.category === 'Egg');
+  if (secId === 'rice') return foodCatalog.filter(x => x.category === 'Rice');
+  if (secId === 'roti_naan') return foodCatalog.filter(x => x.category === 'Roti & Naan');
+  if (secId === 'snacks') return foodCatalog.filter(x => x.category === 'Snacks');
+  if (secId === 'desserts') return foodCatalog.filter(x => x.category === 'Desserts');
+  if (secId === 'beverages') return foodCatalog.filter(x => x.category === 'Beverages');
+  return [];
+}
 
 // Featured Partner Restaurants (1 Compact Horizontal Row Only)
 const featuredPartnerRestaurants = [
@@ -69,7 +96,7 @@ const featuredPartnerRestaurants = [
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Food Delivery | Bhusawal Connect</title>
+  <title>Food Shopping & Delivery | Bhusawal Connect</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
   <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
@@ -105,10 +132,11 @@ const featuredPartnerRestaurants = [
     h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    html { scroll-behavior: smooth; }
   </style>
 </head>
 
-<body class="pb-28 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased bg-white">
+<body class="pb-32 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased bg-white">
 
   <!-- ==================== TOP SECTION: DELIVERY ADDRESS, SEARCH & NOTIFICATION ==================== -->
   <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-6 py-3.5 shadow-xs flex items-center justify-between">
@@ -150,13 +178,13 @@ const featuredPartnerRestaurants = [
 
   </header>
 
-  <main class="px-4 sm:px-6 py-5 space-y-6">
+  <main class="px-4 sm:px-6 py-5 space-y-7">
 
-    <!-- Search Bar (Searches Food Name, Category, Restaurant & Keywords) -->
+    <!-- Sticky Search Bar -->
     <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2">
       <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-redBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
-        <input type="text" id="food-search-input" placeholder="Search food items, biryani, thalis, pizza, burger..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
+        <input type="text" id="food-search-input" placeholder="Search food items, biryani, thalis, pizza, burger, sweets..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
         <button id="clear-food-search" class="hidden text-slate-400 hover:text-slate-600">
           <span class="material-symbols-outlined text-lg">close</span>
         </button>
@@ -164,7 +192,7 @@ const featuredPartnerRestaurants = [
     </div>
 
     <!-- ==================== FEATURED PARTNER RESTAURANTS (1 HORIZONTAL ROW ONLY) ==================== -->
-    <section class="space-y-3 pt-1">
+    <section class="space-y-3 pt-1 border-b border-slate-100 pb-5">
       <div class="flex items-center justify-between px-1">
         <h2 class="text-base sm:text-lg font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
           <span class="text-amber-500">⭐</span>
@@ -217,173 +245,161 @@ const featuredPartnerRestaurants = [
       </div>
     </section>
 
-    <!-- ==================== FOOD CATEGORIES (HORIZONTAL CHIPS) ==================== -->
-    <section class="space-y-3 pt-2">
-      <div class="flex items-center justify-between px-1">
-        <h2 class="text-base sm:text-lg font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-          <span>🍕</span>
-          <span>Food Categories</span>
-        </h2>
-      </div>
-
-      <!-- HORIZONTAL CATEGORY CHIPS -->
-      <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
-        {foodCategories.map((cat, idx) => (
-          <button 
-            class={`food-cat-chip flex items-center gap-2 px-4 py-2 rounded-full font-black text-xs whitespace-nowrap cursor-pointer transition-all active:scale-95 shrink-0 shadow-xs ${
-              idx === 0 
-                ? 'bg-redBrand text-white shadow-md ring-2 ring-redBrand/30' 
-                : 'bg-slate-100 text-slate-700 hover:bg-redLight hover:text-redBrand border border-slate-200/80'
-            }`}
-            data-kw={cat.kw}
+    <!-- Quick Navigation Chips for 18 Food Sections -->
+    <div class="sticky top-32 z-30 bg-white/95 backdrop-blur-md py-2 -mx-4 sm:-mx-6 px-4 sm:px-6 border-b border-slate-100">
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+        {sectionDefinitions.map(sec => (
+          <a 
+            href={`#section-${sec.id}`}
+            class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-redBrand hover:text-white font-extrabold text-xs whitespace-nowrap transition-all shrink-0 border border-slate-200/80 active:scale-95"
           >
-            <span class="text-base leading-none">{cat.icon}</span>
-            <span>{cat.name}</span>
-          </button>
+            <span>{sec.icon}</span>
+            <span>{sec.name}</span>
+          </a>
         ))}
       </div>
-    </section>
+    </div>
 
-    <!-- ==================== ALL FOOD PRODUCTS (STANDARDIZED PRODUCT GRID) ==================== -->
-    <section id="all-food-products" class="space-y-4 pt-4 border-t border-slate-100">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
-        <div>
-          <h2 class="text-xl sm:text-2xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span>🍽️</span>
-            <span>All Food Products</span>
-          </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5" id="catalog-count-subtitle">Order directly from standardized Bhusawal Connect food menu ({foodCatalog.length} items)</p>
-        </div>
+    <!-- ==================== PRODUCT-BASED FOOD SHOPPING (18 HORIZONTALLY SCROLLABLE SECTIONS) ==================== -->
+    <div class="space-y-10 pt-2" id="all-food-sections-container">
+      {sectionDefinitions.map(sec => {
+        const items = getItemsForSection(sec.id);
+        if (items.length === 0) return null;
 
-        <!-- FILTERS & SORTING BAR -->
-        <div class="flex flex-wrap items-center gap-2 shrink-0">
-          
-          <!-- Veg / Non-Veg Diet Filter Pills -->
-          <div class="flex items-center bg-slate-100 border border-slate-200/80 p-0.5 rounded-xl text-xs font-bold">
-            <button class="diet-filter-btn px-3 py-1.5 rounded-lg font-black text-xs transition-all bg-white text-slate-900 shadow-xs" data-diet="all">All</button>
-            <button class="diet-filter-btn px-3 py-1.5 rounded-lg font-extrabold text-xs text-slate-600 hover:text-emerald-700 transition-all flex items-center gap-1" data-diet="veg">
-              <span class="w-2 h-2 rounded-full bg-emerald-600"></span> Veg
-            </button>
-            <button class="diet-filter-btn px-3 py-1.5 rounded-lg font-extrabold text-xs text-slate-600 hover:text-rose-700 transition-all flex items-center gap-1" data-diet="nonveg">
-              <span class="w-2 h-2 rounded-full bg-rose-600"></span> Non-Veg
-            </button>
-          </div>
-
-          <!-- Sort Select Dropdown -->
-          <select id="food-sort-select" class="bg-slate-100 border border-slate-200/80 text-slate-800 text-xs font-extrabold rounded-xl px-3 py-2 outline-none focus:border-redBrand cursor-pointer">
-            <option value="default">Sort: Default</option>
-            <option value="low-high">Price: Low to High</option>
-            <option value="high-low">Price: High to Low</option>
-          </select>
-
-        </div>
-      </div>
-
-      <!-- PRODUCT GRID STATIC SSR + DYNAMIC CLIENT HYDRATION -->
-      <div id="direct-food-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
-        {foodCatalog.map(item => (
-          <div 
-            class="food-product-card bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative"
-            data-id={item.id}
-          >
-            <div>
-              <!-- Large Food Image Container (Square Aspect) -->
-              <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden relative">
-                
-                <!-- Veg / Non-Veg Badge -->
-                <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
-                  <span class={`w-2 h-2 rounded-full ${item.isVeg !== false ? 'bg-emerald-600' : 'bg-rose-600'} shrink-0`}></span>
-                  <span class={item.isVeg !== false ? 'text-emerald-700' : 'text-rose-700'}>{item.isVeg !== false ? 'VEG' : 'NON-VEG'}</span>
-                </div>
-
-                <!-- Prep Time Badge -->
-                <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-0.5 shadow-xs z-10">
-                  <span>⏱️ {item.prepTime || '15 mins'}</span>
-                </div>
-
-                <!-- Favourite Heart Button -->
-                <button class="fav-food-btn absolute top-2 right-2 w-7 h-7 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
-                  <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
-                </button>
-
-                <img loading="lazy" src={item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+        return (
+          <section id={`section-${sec.id}`} class="food-scroll-section space-y-3.5 scroll-mt-48">
+            
+            <!-- Section Title & Subtitle -->
+            <div class="flex items-end justify-between px-1">
+              <div>
+                <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+                  <span>{sec.icon}</span>
+                  <span>{sec.name}</span>
+                </h2>
+                <p class="text-xs text-slate-500 font-medium mt-0.5">{sec.subtitle} ({items.length} items)</p>
               </div>
 
-              <!-- Category Tag (NO RESTAURANT NAME DISPLAYED ON CARDS) -->
-              <span class="text-[10px] font-bold text-redBrand uppercase tracking-wider block mb-0.5">
-                {item.category}
-              </span>
-
-              <!-- Food Name -->
-              <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug min-h-[2.2rem]">
-                {item.name}
-              </h3>
+              <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
             </div>
 
-            <!-- Price & Add / Quantity Selector -->
-            <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
-              <span class="text-xs sm:text-sm font-black text-slate-900">₹{item.price}</span>
+            <!-- HORIZONTALLY SCROLLABLE PRODUCT CAROUSEL (NO RESTAURANTS - ONLY FOOD PRODUCTS) -->
+            <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-1 px-0.5">
+              {items.map(item => (
+                <div 
+                  class="food-product-card w-48 sm:w-56 shrink-0 bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative"
+                  data-id={item.id}
+                  data-name={item.name}
+                  data-category={item.category}
+                  data-kw={item.searchKeywords ? item.searchKeywords.join(' ') : ''}
+                >
+                  <div>
+                    <!-- Image Container (Square Aspect) -->
+                    <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden relative">
+                      
+                      <!-- Veg / Non-Veg Badge -->
+                      <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
+                        <span class={`w-2 h-2 rounded-full shrink-0 ${item.isVeg ? 'bg-emerald-600' : 'bg-rose-600'}`}></span>
+                        <span class={item.isVeg ? 'text-emerald-700' : 'text-rose-700'}>{item.isVeg ? 'VEG' : 'NON-VEG'}</span>
+                      </div>
 
-              <div class="food-direct-action-box" data-id={item.id} data-name={item.name} data-price={item.price} data-img={item.image}>
-                <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-[10px] font-black rounded-xl active:scale-90 transition-all shadow-xs">
-                  + ADD
-                </button>
-                
-                <div class="qty-control-wrapper hidden items-center bg-redLight border border-red-200 rounded-xl p-0.5 shadow-xs">
-                  <button class="btn-qty-minus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
-                    -
-                  </button>
-                  <span class="food-qty-num px-2 text-xs font-black text-redBrand min-w-[16px] text-center">1</span>
-                  <button class="btn-qty-plus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
-                    +
-                  </button>
+                      <!-- Prep Time Badge -->
+                      <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-0.5 shadow-xs z-10">
+                        <span>⏱️ {item.prepTime || '15-20 mins'}</span>
+                      </div>
+
+                      <!-- Favourite Heart Button -->
+                      <button 
+                        class="fav-food-btn absolute top-2 right-2 w-7 h-7 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition-all z-10 shadow-xs"
+                        onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';"
+                      >
+                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+                      </button>
+
+                      <img 
+                        loading="lazy" 
+                        src={item.image} 
+                        alt={item.name} 
+                        class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                        onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';"
+                      />
+                    </div>
+
+                    <!-- Category Tag -->
+                    <span class="text-[10px] font-bold text-redBrand uppercase tracking-wider block mb-0.5 truncate">
+                      {item.category}
+                    </span>
+
+                    <!-- Food Name -->
+                    <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug min-h-[2.2rem]">
+                      {item.name}
+                    </h3>
+                  </div>
+
+                  <!-- Price & Add / Quantity Selector -->
+                  <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
+                    <span class="text-xs sm:text-sm font-black text-slate-900">₹{item.price}</span>
+
+                    <div 
+                      class="food-direct-action-box" 
+                      data-id={item.id} 
+                      data-name={item.name} 
+                      data-price={item.price} 
+                      data-img={item.image}
+                    >
+                      <button class="btn-add-direct-food px-3 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-[10px] font-black rounded-xl active:scale-90 transition-all shadow-xs">
+                        + ADD
+                      </button>
+
+                      <div class="qty-control-wrapper hidden items-center bg-redLight border border-red-200 rounded-xl p-0.5 shadow-xs">
+                        <button class="btn-qty-minus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
+                          -
+                        </button>
+                        <span class="food-qty-num px-2 text-xs font-black text-redBrand min-w-[16px] text-center">1</span>
+                        <button class="btn-qty-plus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
-              </div>
-
+              ))}
             </div>
-          </div>
-        ))}
-      </div>
-    </section>
+
+          </section>
+        );
+      })}
+    </div>
 
   </main>
 
+  <!-- ==================== FIXED BOTTOM FLOATING CART BAR ==================== -->
+  <div id="food-floating-cart-bar" class="fixed bottom-4 left-4 right-4 max-w-xl mx-auto bg-slate-900 text-white rounded-2xl p-3.5 shadow-2xl z-50 flex items-center justify-between transition-all transform translate-y-32 opacity-0 pointer-events-none border border-slate-800">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-redBrand text-white flex items-center justify-center font-black shadow-md">
+        <span class="material-symbols-outlined text-xl">shopping_bag</span>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span id="float-cart-count" class="text-xs font-black bg-white/20 px-2 py-0.5 rounded-md">0 ITEMS</span>
+          <span class="text-xs text-slate-400 font-bold">•</span>
+          <span id="float-cart-total" class="text-sm font-black text-white">₹0</span>
+        </div>
+        <p class="text-[10px] text-slate-400 font-semibold mt-0.5">Delivery fee ₹30 added at checkout</p>
+      </div>
+    </div>
+
+    <a href="/cart" class="px-5 py-2.5 bg-redBrand hover:bg-redDark text-white text-xs font-black rounded-xl active:scale-95 transition-all shadow-md flex items-center gap-1">
+      <span>View Cart</span>
+      <span class="material-symbols-outlined text-sm">arrow_forward</span>
+    </a>
+  </div>
+
   <Switcher />
 
-  <!-- CLIENT-SIDE CATALOG, SEARCH, FILTER & CART ENGINE -->
-  <script is:inline define:vars={{ initialCatalog: foodCatalog }}>
-    document.addEventListener('DOMContentLoaded', () => {
-
-      // Clear old browser cache if catalog version updated
-      try {
-        const CURRENT_VERSION = 'bc_food_v3.5';
-        if (localStorage.getItem('bhusawal_food_catalog_version') !== CURRENT_VERSION) {
-          localStorage.setItem('bhusawal_food_catalog_version', CURRENT_VERSION);
-          localStorage.setItem('bhusawal_food_catalog', JSON.stringify(initialCatalog));
-        }
-      } catch(e) {}
-
-      const RESTAURANT_NAMES = {
-        royal_biryani: 'Royal Biryani & Caterers',
-        sagar_grand: 'Hotel Sagar Grand',
-        shiv_dairy: 'Shiv Dairy & Sweets',
-        kwality_hub: "Kwality Wall's Ice Cream Hub",
-        tandoor_hut: 'Tandoor Hut Chinese & Grill',
-        south_corner: 'South Corner Dosa Point',
-        burger_station: 'Burger & Fries Station'
-      };
-
-      function getActiveCatalog() {
-        try {
-          const stored = localStorage.getItem('bhusawal_food_catalog');
-          if (stored) {
-            const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-          }
-        } catch(e) {}
-        return initialCatalog;
-      }
-
+  <!-- Dynamic Client Script for Cart Sync and Search -->
+  <script is:inline>
+    (function() {
       function getCart() {
         try {
           return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
@@ -392,291 +408,165 @@ const featuredPartnerRestaurants = [
         }
       }
 
-      function setCart(cart) {
+      function saveCart(cart) {
         localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-        updateCartBadge();
-        syncDirectFoodQtyUi();
+        updateCartBadges();
       }
 
-      function updateCartBadge() {
-        const cart = getCart();
-        const badge = document.getElementById('food-cart-badge');
-        const totalQty = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
-        if (badge) badge.textContent = totalQty;
-      }
+      function updateCartBadges() {
+        var cart = getCart();
+        var totalCount = 0;
+        var totalPrice = 0;
 
-      let activeCatalog = getActiveCatalog();
-      let activeCategoryKw = '';
-      let activeDiet = 'all';
-      let activeSortMode = 'default';
-
-      // Render Food Products Grid
-      function renderFoodGrid() {
-        const grid = document.getElementById('direct-food-grid');
-        const countSubtitle = document.getElementById('catalog-count-subtitle');
-        if (!grid) return;
-
-        const query = (document.getElementById('food-search-input')?.value || '').trim().toLowerCase();
-
-        // 1. Filter items
-        let filtered = activeCatalog.filter(item => {
-          const name = (item.name || '').toLowerCase();
-          const category = (item.category || '').toLowerCase();
-          const keywords = (item.searchKeywords || []).join(' ').toLowerCase();
-          const restName = (RESTAURANT_NAMES[item.restaurantId] || '').toLowerCase();
-
-          // Search matching Name, Category, Restaurant Name, or Keywords
-          const matchesSearch = !query || 
-            name.includes(query) || 
-            category.includes(query) || 
-            keywords.includes(query) ||
-            restName.includes(query);
-
-          // Category Filter
-          const matchesCategory = !activeCategoryKw || 
-            category.includes(activeCategoryKw) || 
-            keywords.includes(activeCategoryKw);
-
-          // Diet Filter (Veg / Non-Veg)
-          let matchesDiet = true;
-          if (activeDiet === 'veg') matchesDiet = item.isVeg === true;
-          if (activeDiet === 'nonveg') matchesDiet = item.isVeg === false;
-
-          return matchesSearch && matchesCategory && matchesDiet;
+        cart.forEach(function(item) {
+          totalCount += item.quantity || 1;
+          totalPrice += (item.price || 0) * (item.quantity || 1);
         });
 
-        // 2. Sort items
-        if (activeSortMode === 'low-high') {
-          filtered.sort((a, b) => parseFloat(a.price || 0) - parseFloat(b.price || 0));
-        } else if (activeSortMode === 'high-low') {
-          filtered.sort((a, b) => parseFloat(b.price || 0) - parseFloat(a.price || 0));
-        }
+        // Update header badge
+        var badge = document.getElementById('food-cart-badge');
+        if (badge) badge.textContent = totalCount;
 
-        if (countSubtitle) {
-          countSubtitle.textContent = `Showing ${filtered.length} products in Bhusawal Connect food menu`;
-        }
+        // Update floating bar
+        var floatBar = document.getElementById('food-floating-cart-bar');
+        var floatCount = document.getElementById('float-cart-count');
+        var floatTotal = document.getElementById('float-cart-total');
 
-        if (filtered.length === 0) {
-          grid.innerHTML = `
-            <div class="col-span-full bg-white rounded-3xl p-8 text-center space-y-2 border border-slate-100">
-              <span class="material-symbols-outlined text-4xl text-slate-300">search_off</span>
-              <h3 class="text-sm font-black text-slate-800">No food items found matching your filters</h3>
-              <p class="text-xs font-bold text-slate-400">Try clearing your search query or selecting another category.</p>
-            </div>
-          `;
-          return;
-        }
-
-        let html = '';
-        filtered.forEach(item => {
-          const id = item.id;
-          const name = item.name;
-          const category = item.category || 'Food';
-          const isVeg = item.isVeg !== false;
-          const price = parseFloat(item.price || 0);
-          const prepTime = item.prepTime || '15 mins';
-          const image = item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-
-          html += `
-            <div 
-              class="food-product-card bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative"
-              data-id="${id}"
-            >
-              <div>
-                <!-- Large Food Image Container (Square Aspect) -->
-                <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden relative">
-                  
-                  <!-- Veg / Non-Veg Badge -->
-                  <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
-                    <span class="w-2 h-2 rounded-full ${isVeg ? 'bg-emerald-600' : 'bg-rose-600'} shrink-0"></span>
-                    <span class="${isVeg ? 'text-emerald-700' : 'text-rose-700'}">${isVeg ? 'VEG' : 'NON-VEG'}</span>
-                  </div>
-
-                  <!-- Prep Time Badge -->
-                  <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-0.5 shadow-xs z-10">
-                    <span>⏱️ ${prepTime}</span>
-                  </div>
-
-                  <!-- Favourite Heart Button -->
-                  <button class="fav-food-btn absolute top-2 right-2 w-7 h-7 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
-                    <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
-                  </button>
-
-                  <img loading="lazy" src="${image}" alt="${name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-                </div>
-
-                <!-- Category Tag (NO RESTAURANT NAME DISPLAYED ON CARDS) -->
-                <span class="text-[10px] font-bold text-redBrand uppercase tracking-wider block mb-0.5">
-                  ${category}
-                </span>
-
-                <!-- Food Name -->
-                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug min-h-[2.2rem]">
-                  ${name}
-                </h3>
-              </div>
-
-              <!-- Price & Add / Quantity Selector -->
-              <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
-                <span class="text-xs sm:text-sm font-black text-slate-900">₹${price}</span>
-
-                <div class="food-direct-action-box" data-id="${id}" data-name="${name.replace(/"/g, '&quot;')}" data-price="${price}" data-img="${image}">
-                  <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-[10px] font-black rounded-xl active:scale-90 transition-all shadow-xs">
-                    + ADD
-                  </button>
-                  
-                  <div class="qty-control-wrapper hidden items-center bg-redLight border border-red-200 rounded-xl p-0.5 shadow-xs">
-                    <button class="btn-qty-minus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
-                      -
-                    </button>
-                    <span class="food-qty-num px-2 text-xs font-black text-redBrand min-w-[16px] text-center">1</span>
-                    <button class="btn-qty-plus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
-                      +
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          `;
-        });
-
-        grid.innerHTML = html;
-        bindFoodActionHandlers();
-        syncDirectFoodQtyUi();
-      }
-
-      function syncDirectFoodQtyUi() {
-        const cart = getCart();
-        document.querySelectorAll('.food-direct-action-box').forEach(box => {
-          const id = box.dataset.id;
-          const item = cart.find(i => i.id === id);
-          const addBtn = box.querySelector('.btn-add-direct-food');
-          const qtyWrapper = box.querySelector('.qty-control-wrapper');
-          const qtyNum = box.querySelector('.food-qty-num');
-
-          if (item && item.quantity > 0) {
-            addBtn?.classList.add('hidden');
-            qtyWrapper?.classList.remove('hidden');
-            qtyWrapper?.classList.add('flex');
-            if (qtyNum) qtyNum.textContent = item.quantity;
+        if (floatBar) {
+          if (totalCount > 0) {
+            floatBar.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+            if (floatCount) floatCount.textContent = totalCount + (totalCount === 1 ? ' ITEM' : ' ITEMS');
+            if (floatTotal) floatTotal.textContent = '₹' + totalPrice;
           } else {
-            addBtn?.classList.remove('hidden');
-            qtyWrapper?.classList.add('hidden');
-            qtyWrapper?.classList.remove('flex');
+            floatBar.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+          }
+        }
+
+        // Sync card quantity controls
+        document.querySelectorAll('.food-direct-action-box').forEach(function(box) {
+          var itemId = box.getAttribute('data-id');
+          var addBtn = box.querySelector('.btn-add-direct-food');
+          var qtyWrapper = box.querySelector('.qty-control-wrapper');
+          var qtyNum = box.querySelector('.food-qty-num');
+
+          var existing = cart.find(function(c) { return c.id === itemId; });
+          if (existing && existing.quantity > 0) {
+            if (addBtn) addBtn.classList.add('hidden');
+            if (qtyWrapper) qtyWrapper.classList.remove('hidden');
+            if (qtyWrapper) qtyWrapper.classList.add('flex');
+            if (qtyNum) qtyNum.textContent = existing.quantity;
+          } else {
+            if (addBtn) addBtn.classList.remove('hidden');
+            if (qtyWrapper) qtyWrapper.classList.add('hidden');
+            if (qtyWrapper) qtyWrapper.classList.remove('flex');
           }
         });
       }
 
-      function bindFoodActionHandlers() {
-        document.querySelectorAll('.food-direct-action-box').forEach(box => {
-          const id = box.dataset.id;
-          const name = box.dataset.name;
-          const price = parseFloat(box.dataset.price);
-          const img = box.dataset.img;
+      // Add to cart click handler
+      document.addEventListener('click', function(e) {
+        var addBtn = e.target.closest('.btn-add-direct-food');
+        if (addBtn) {
+          var box = addBtn.closest('.food-direct-action-box');
+          if (!box) return;
 
-          const addBtn = box.querySelector('.btn-add-direct-food');
-          const minusBtn = box.querySelector('.btn-qty-minus');
-          const plusBtn = box.querySelector('.btn-qty-plus');
+          var id = box.getAttribute('data-id');
+          var name = box.getAttribute('data-name');
+          var price = parseFloat(box.getAttribute('data-price')) || 0;
+          var img = box.getAttribute('data-img');
 
-          addBtn?.onclick = () => {
-            let cart = getCart();
-            const existing = cart.find(i => i.id === id);
-            if (existing) {
-              existing.quantity += 1;
+          var cart = getCart();
+          var existing = cart.find(function(c) { return c.id === id; });
+          if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+          } else {
+            cart.push({
+              id: id,
+              name: name,
+              price: price,
+              image: img,
+              quantity: 1,
+              vendor: 'Bhusawal Food Express'
+            });
+          }
+          saveCart(cart);
+          return;
+        }
+
+        var plusBtn = e.target.closest('.btn-qty-plus');
+        if (plusBtn) {
+          var box = plusBtn.closest('.food-direct-action-box');
+          if (!box) return;
+          var id = box.getAttribute('data-id');
+          var cart = getCart();
+          var existing = cart.find(function(c) { return c.id === id; });
+          if (existing) {
+            existing.quantity = (existing.quantity || 1) + 1;
+            saveCart(cart);
+          }
+          return;
+        }
+
+        var minusBtn = e.target.closest('.btn-qty-minus');
+        if (minusBtn) {
+          var box = minusBtn.closest('.food-direct-action-box');
+          if (!box) return;
+          var id = box.getAttribute('data-id');
+          var cart = getCart();
+          var existingIndex = cart.findIndex(function(c) { return c.id === id; });
+          if (existingIndex > -1) {
+            if (cart[existingIndex].quantity > 1) {
+              cart[existingIndex].quantity -= 1;
             } else {
-              cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Food Express' });
+              cart.splice(existingIndex, 1);
             }
-            setCart(cart);
-          };
+            saveCart(cart);
+          }
+          return;
+        }
+      });
 
-          minusBtn?.onclick = () => {
-            let cart = getCart();
-            const existing = cart.find(i => i.id === id);
-            if (existing) {
-              if (existing.quantity > 1) {
-                existing.quantity -= 1;
-              } else {
-                cart = cart.filter(i => i.id !== id);
-              }
-              setCart(cart);
-            }
-          };
+      // Search functionality across all 18 sections
+      var searchInput = document.getElementById('food-search-input');
+      var clearSearchBtn = document.getElementById('clear-food-search');
 
-          plusBtn?.onclick = () => {
-            let cart = getCart();
-            const existing = cart.find(i => i.id === id);
-            if (existing) {
-              existing.quantity += 1;
-              setCart(cart);
+      if (searchInput) {
+        searchInput.addEventListener('input', function(e) {
+          var query = e.target.value.toLowerCase().trim();
+          if (clearSearchBtn) {
+            if (query.length > 0) clearSearchBtn.classList.remove('hidden');
+            else clearSearchBtn.classList.add('hidden');
+          }
+
+          document.querySelectorAll('.food-product-card').forEach(function(card) {
+            var name = (card.getAttribute('data-name') || '').toLowerCase();
+            var category = (card.getAttribute('data-category') || '').toLowerCase();
+            var kw = (card.getAttribute('data-kw') || '').toLowerCase();
+
+            if (!query || name.includes(query) || category.includes(query) || kw.includes(query)) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
             }
-          };
+          });
         });
       }
 
-      // Initialize Grid
-      renderFoodGrid();
-      updateCartBadge();
-
-      // Search Input Listener
-      const searchInput = document.getElementById('food-search-input');
-      const clearBtn = document.getElementById('clear-food-search');
-      searchInput?.addEventListener('input', (e) => {
-        if (e.target.value.length > 0) {
-          clearBtn?.classList.remove('hidden');
-        } else {
-          clearBtn?.classList.add('hidden');
-        }
-        renderFoodGrid();
-      });
-
-      clearBtn?.addEventListener('click', () => {
-        searchInput.value = '';
-        clearBtn.classList.add('hidden');
-        renderFoodGrid();
-      });
-
-      // Sort Select Listener
-      document.getElementById('food-sort-select')?.addEventListener('change', (e) => {
-        activeSortMode = e.target.value;
-        renderFoodGrid();
-      });
-
-      // Diet Filter Buttons (All, Veg, Non-Veg)
-      const dietBtns = document.querySelectorAll('.diet-filter-btn');
-      dietBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          dietBtns.forEach(b => {
-            b.classList.remove('bg-white', 'text-slate-900', 'shadow-xs');
-            b.classList.add('text-slate-600');
+      if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', function() {
+          if (searchInput) searchInput.value = '';
+          clearSearchBtn.classList.add('hidden');
+          document.querySelectorAll('.food-product-card').forEach(function(card) {
+            card.classList.remove('hidden');
           });
-
-          btn.classList.remove('text-slate-600');
-          btn.classList.add('bg-white', 'text-slate-900', 'shadow-xs');
-
-          activeDiet = btn.dataset.diet;
-          renderFoodGrid();
         });
-      });
+      }
 
-      // Category Chips Listener
-      const categoryChips = document.querySelectorAll('.food-cat-chip');
-      categoryChips.forEach(chip => {
-        chip.addEventListener('click', () => {
-          categoryChips.forEach(c => {
-            c.classList.remove('bg-redBrand', 'text-white', 'shadow-md', 'ring-2', 'ring-redBrand/30');
-            c.classList.add('bg-slate-100', 'text-slate-700', 'border', 'border-slate-200/80');
-          });
-
-          chip.classList.remove('bg-slate-100', 'text-slate-700', 'border', 'border-slate-200/80');
-          chip.classList.add('bg-redBrand', 'text-white', 'shadow-md', 'ring-2', 'ring-redBrand/30');
-
-          activeCategoryKw = chip.dataset.kw || '';
-          renderFoodGrid();
-        });
-      });
-
-    });
+      // Initial Badges Sync
+      document.addEventListener('DOMContentLoaded', updateCartBadges);
+      updateCartBadges();
+    })();
   </script>
+
 </body>
 </html>
