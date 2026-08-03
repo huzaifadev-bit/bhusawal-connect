@@ -1,43 +1,72 @@
 ---
 import Switcher from '../components/Switcher.astro';
 
-// Sponsored Pharmacies in Bhusawal
-const sponsoredMedicalStores = [
+// Featured Medical Stores in Bhusawal (Displayed only once)
+const featuredMedicalStores = [
   {
     id: 'apollo_bhusawal',
     name: 'Apollo Pharmacy - Station Road',
     cover: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&w=800&q=80',
+    logo: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=200&q=80',
     rating: '4.9',
-    deliveryTime: '10-15 min',
-    isVerified: true,
-    discount: 'Flat 15% OFF on Prescription'
+    ratingsCount: '1.4k+',
+    isOpen: true,
+    timing: 'Open Now • 24x7',
+    deliveryTime: '10-15 mins',
+    distance: '0.8 km',
+    isVerified: true
   },
   {
     id: 'wellness_forever',
-    name: 'Wellness Forever 24x7',
+    name: 'Wellness Forever Chemists 24x7',
     cover: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=800&q=80',
+    logo: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=200&q=80',
     rating: '4.8',
-    deliveryTime: '12-18 min',
-    isVerified: true,
-    discount: '24x7 Emergency Delivery'
+    ratingsCount: '980+',
+    isOpen: true,
+    timing: 'Open Now • 24x7 Emergency',
+    deliveryTime: '12-18 mins',
+    distance: '1.2 km',
+    isVerified: true
   },
   {
     id: 'samarth_medical',
     name: 'Shree Samarth Medical & Surgicals',
     cover: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=800&q=80',
+    logo: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=200&q=80',
     rating: '4.9',
-    deliveryTime: '10-15 min',
-    isVerified: true,
-    discount: 'Free Delivery above ₹299'
+    ratingsCount: '2.1k+',
+    isOpen: true,
+    timing: 'Open Now • Closes 11 PM',
+    deliveryTime: '10-15 mins',
+    distance: '0.5 km',
+    isVerified: true
   },
   {
     id: 'maharashtra_medical',
-    name: 'New Maharashtra Medical',
+    name: 'New Maharashtra Medical Store',
     cover: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80',
+    logo: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=200&q=80',
     rating: '4.7',
-    deliveryTime: '15-20 min',
-    isVerified: true,
-    discount: '100% Genuine Medicines'
+    ratingsCount: '750+',
+    isOpen: true,
+    timing: 'Open Now • Closes 10:30 PM',
+    deliveryTime: '15-20 mins',
+    distance: '1.8 km',
+    isVerified: true
+  },
+  {
+    id: 'ram_medical',
+    name: 'Shri Ram Medico & Healthcare',
+    cover: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80',
+    logo: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&w=200&q=80',
+    rating: '4.8',
+    ratingsCount: '1.1k+',
+    isOpen: true,
+    timing: 'Open Now • Closes 11:30 PM',
+    deliveryTime: '12-15 mins',
+    distance: '1.0 km',
+    isVerified: true
   }
 ];
 
@@ -228,40 +257,74 @@ const medicalDevicesItems = [
       </button>
     </div>
 
-    <!-- ==================== 4. SPONSORED MEDICAL STORES (HORIZONTAL CAROUSEL) ==================== -->
-    <section class="space-y-3 pt-1 border-b border-slate-100 pb-5">
+    <!-- ==================== 4. FEATURED MEDICAL STORES (SINGLE HORIZONTAL SCROLLING CAROUSEL) ==================== -->
+    <section class="space-y-3.5 pt-1 border-b border-slate-100 pb-6">
       <div class="flex items-center justify-between px-1">
-        <h2 class="text-base sm:text-lg font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-          <span class="text-blueBrand">🏥</span>
-          <span>Sponsored Medical Stores</span>
-        </h2>
-        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Scroll →</span>
+        <div>
+          <h2 class="text-base sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+            <span class="text-blueBrand">🏥</span>
+            <span>Featured Medical Stores</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Verified partner pharmacies in Bhusawal with express delivery</p>
+        </div>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
       </div>
 
-      <div class="flex items-center gap-4 overflow-x-auto no-scrollbar py-1.5 px-0.5">
-        {sponsoredMedicalStores.map(store => (
+      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-1.5 px-0.5">
+        {featuredMedicalStores.map(store => (
           <div 
-            class="w-64 sm:w-72 shrink-0 bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-lg hover:border-blueBrand transition-all cursor-pointer overflow-hidden flex flex-col justify-between group"
+            class="w-72 sm:w-80 shrink-0 bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-blueBrand transition-all cursor-pointer overflow-hidden flex flex-col justify-between group relative"
             onclick={`window.location.href='/shops?id=${store.id}';`}
           >
-            <div class="h-28 sm:h-32 bg-slate-100 relative overflow-hidden">
+            <!-- STORE IMAGE HEADER -->
+            <div class="h-32 sm:h-36 bg-slate-100 relative overflow-hidden">
               <img src={store.cover} alt={store.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
               
-              <span class="absolute top-2 left-2 px-2.5 py-0.5 bg-white/95 backdrop-blur-md text-blueBrand text-[9px] font-black rounded-full uppercase tracking-wider shadow-xs border border-slate-200">
-                ✓ Verified Pharmacy
-              </span>
+              <!-- VERIFIED PARTNER BADGE -->
+              <div class="absolute top-2.5 left-2.5 flex items-center gap-1 px-2.5 py-1 bg-white/95 backdrop-blur-md text-blueBrand text-[9px] font-black rounded-full shadow-xs border border-blue-100">
+                <span class="material-symbols-outlined text-[11px] text-blueBrand font-black">verified</span>
+                <span>Verified Partner</span>
+              </div>
 
-              <span class="absolute bottom-2 right-2 px-2.5 py-0.5 bg-blueBrand text-white text-[9px] font-black rounded-full shadow-xs">
+              <!-- OPEN / CLOSED BADGE -->
+              <div class="absolute top-2.5 right-2.5 px-2.5 py-1 bg-emerald-500/90 backdrop-blur-md text-white text-[9px] font-black rounded-full shadow-xs flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                <span>{store.timing}</span>
+              </div>
+
+              <!-- STORE LOGO AVATAR OVERLAY -->
+              <div class="absolute -bottom-3 left-4 w-12 h-12 rounded-2xl bg-white border-2 border-white p-1 shadow-md overflow-hidden shrink-0">
+                <img src={store.logo} alt={store.name} class="w-full h-full object-cover rounded-xl" />
+              </div>
+
+              <!-- ETA BADGE -->
+              <span class="absolute bottom-2.5 right-2.5 px-2.5 py-0.5 bg-blueBrand text-white text-[9px] font-black rounded-full shadow-xs">
                 ⚡ {store.deliveryTime}
               </span>
             </div>
 
-            <div class="p-3.5 space-y-1">
-              <h3 class="text-xs font-black font-display text-slate-900 group-hover:text-blueBrand transition-colors truncate">
-                {store.name}
-              </h3>
-              <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">{store.discount}</p>
+            <!-- CARD BODY -->
+            <div class="pt-5 p-4 space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <h3 class="text-sm font-black font-display text-slate-900 group-hover:text-blueBrand transition-colors line-clamp-1">
+                  {store.name}
+                </h3>
+              </div>
+
+              <div class="flex items-center justify-between text-xs font-bold text-slate-500 pt-1 border-t border-slate-100/80">
+                <!-- RATING -->
+                <div class="flex items-center gap-1 text-slate-800">
+                  <span class="text-amber-500 font-black">★ {store.rating}</span>
+                  <span class="text-[10px] text-slate-400 font-medium">({store.ratingsCount})</span>
+                </div>
+
+                <!-- DISTANCE -->
+                <div class="flex items-center gap-1 text-slate-600 text-[11px] font-extrabold">
+                  <span class="material-symbols-outlined text-xs text-blueBrand">near_me</span>
+                  <span>{store.distance} away</span>
+                </div>
+              </div>
             </div>
           </div>
         ))}
