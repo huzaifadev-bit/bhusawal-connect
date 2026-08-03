@@ -2,366 +2,725 @@
 import Switcher from '../components/Switcher.astro';
 ---
 
-<html class="light" lang="en">
+<!DOCTYPE html>
+<html lang="en" class="light">
 <head>
   <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Send Parcel - Bhusawal Connect</title>
-  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline="" />
-  <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
-  <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Express Pickup & Drop Parcel Service | Bhusawal Connect</title>
   
-  <script is:inline id="tailwind-config">
+  <!-- TAILWIND & GOOGLE FONTS -->
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- LEAFLET MAPS FOR ROUTE PREVIEW -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+  <!-- SKY BLUE & WHITE THEME TAILWIND CONFIGURATION -->
+  <script is:inline>
     tailwind.config = {
-      darkMode: "class",
       theme: {
         extend: {
-          "colors": {
-            "secondary-container": "#e5e2e1",
-            "on-primary": "#ffffff",
-            "on-surface-variant": "#5b4039",
-            "outline": "#907067",
-            "on-primary-container": "#541200",
-            "surface-tint": "#b02f00",
-            "secondary": "#5f5e5e",
-            "inverse-primary": "#ffb5a0",
-            "outline-variant": "#e4beb4",
-            "on-secondary-fixed": "#1c1b1b",
-            "background": "#f9f9f9",
-            "error-container": "#ffdad6",
-            "tertiary": "#006e1c",
-            "surface-container-lowest": "#ffffff",
-            "on-error": "#ffffff",
-            "inverse-surface": "#2f3131",
-            "on-tertiary": "#ffffff",
-            "surface-container-highest": "#e2e2e2",
-            "secondary-fixed": "#e5e2e1",
-            "tertiary-fixed": "#94f990",
-            "surface-container": "#eeeeee",
-            "on-surface": "#1a1c1c",
-            "primary": "#4f46e5",
-            "primary-container": "#6366f1",
-            "on-secondary-container": "#656464",
-            "surface-container-low": "#f3f3f3",
-            "surface-dim": "#dadada",
-            "primary-fixed": "#e0e7ff",
-            "on-primary-fixed-variant": "#862200",
-            "error": "#ba1a1a",
-            "on-error-container": "#93000a",
-            "surface-container-high": "#e8e8e8",
-            "surface-bright": "#f9f9f9",
-            "on-secondary": "#ffffff",
-            "surface": "#f9f9f9"
+          colors: {
+            skyBrand: '#0284C7',
+            skyDark: '#0369A1',
+            skyLight: '#F0F9FF',
+            skyBorder: '#BAE6FD',
+            skyAccent: '#38BDF8'
           },
-          "fontFamily": {
-            "label-sm": ["Plus Jakarta Sans"],
-            "label-md": ["Plus Jakarta Sans"],
-            "body-md": ["Plus Jakarta Sans"],
-            "headline-md": ["Plus Jakarta Sans"],
-            "headline-lg-mobile": ["Plus Jakarta Sans"]
-          },
-          "spacing": {
-            "margin-mobile": "16px",
-            "gutter": "16px"
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
           }
         }
       }
-    }
+    };
   </script>
-  
+
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f9f9f9; min-height: 100dvh; }
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #ffffff; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    html { scroll-behavior: smooth; }
+
+    /* Custom Leaflet Pin Styling */
+    .leaflet-popup-content-wrapper {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.15);
     }
   </style>
-
-    <!-- Leaflet Map CSS & JS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <style>
-        .custom-pin-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
-
 </head>
-<body class="text-on-surface bg-background pb-32">
-  <!-- Top App Bar -->
-  <header class="bg-surface/80 backdrop-blur-xl shadow-sm top-0 sticky z-50 flex items-center justify-between px-margin-mobile h-16 w-full">
+
+<body class="pb-36 max-w-4xl mx-auto min-h-screen text-slate-800 antialiased bg-white">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-6 py-3.5 shadow-xs flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <a href="/home" class="p-2 hover:bg-surface-container-high rounded-full transition-colors active:scale-95 duration-150">
-        <span class="material-symbols-outlined text-primary">arrow_back</span>
+      <a href="/home" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors active:scale-95">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
       </a>
-      <h1 class="font-headline-lg-mobile text-headline-md text-on-surface">Send Parcel</h1>
+      <div>
+        <h1 class="text-base sm:text-lg font-black font-display text-slate-900 leading-tight flex items-center gap-2">
+          <span>🛵 Pickup & Drop Express</span>
+          <span class="bg-skyLight text-skyBrand text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-skyBorder">BHUSAWAL PARCEL</span>
+        </h1>
+        <p class="text-xs text-slate-500 font-medium">Anything Delivered Anywhere in Bhusawal Under 30 Mins</p>
+      </div>
     </div>
+
+    <!-- Help & Support -->
+    <a href="tel:+919876543210" class="flex items-center gap-1.5 px-3 py-1.5 bg-skyLight text-skyBrand text-xs font-black rounded-full border border-skyBorder hover:bg-skyBrand hover:text-white transition-all shadow-xs">
+      <span class="material-symbols-outlined text-sm">headset_mic</span>
+      <span class="hidden sm:inline">Support</span>
+    </a>
   </header>
 
-  <main class="max-w-md mx-auto px-margin-mobile pt-6 space-y-6">
-    <div class="px-4 mt-3 max-w-md mx-auto">
-      <div class="bg-white p-3 rounded-2xl border border-neutral-100 shadow-sm space-y-2">
-        <div class="flex items-center justify-between text-xs font-black text-neutral-800">
-          <span>📦 Bhusawal Pickup & Drop Route</span>
-          <span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[10px]">Google Maps Live</span>
+  <main class="px-4 sm:px-6 py-6 space-y-7">
+
+    <!-- ==================== 1. PICKUP ADDRESS ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4 relative overflow-hidden group hover:border-skyBrand transition-all">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-black shadow-md shrink-0">
+            <span class="material-symbols-outlined text-xl">my_location</span>
+          </div>
+          <div>
+            <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
+              <span>1. Pickup Address</span>
+              <span class="text-[10px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Rider Collects Here</span>
+            </h2>
+            <p class="text-xs text-slate-500 font-medium">Where should our rider pick up the parcel?</p>
+          </div>
         </div>
-        <div id="parcel-bhusawal-map" class="h-36 w-full rounded-xl border border-neutral-200"></div>
-      </div>
-    </div>
-    <!-- Form Container -->
-    <div class="bg-white rounded-2xl p-6 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4">
-      <h2 class="font-bold text-headline-md text-on-surface mb-2">Delivery Details</h2>
-      
-      <!-- Addresses -->
-      <div class="space-y-3">
-        <div>
-          <label class="block text-xs font-bold text-secondary uppercase mb-1">Pickup Address</label>
-          <input type="text" id="pickup-addr" class="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="Enter pickup location in Bhusawal" value="Varangaon Road, Bhusawal" />
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-secondary uppercase mb-1">Drop Address</label>
-          <input type="text" id="drop-addr" class="w-full bg-white border border-outline-variant/50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm" placeholder="Enter recipient address" />
-        </div>
+        
+        <button id="btn-current-location" type="button" class="flex items-center gap-1 text-xs font-black text-skyBrand bg-skyLight hover:bg-skyBrand hover:text-white px-3 py-1.5 rounded-xl border border-skyBorder transition-all shadow-xs shrink-0 active:scale-95">
+          <span class="material-symbols-outlined text-sm">gps_fixed</span>
+          <span class="hidden sm:inline">Use Current GPS</span>
+        </button>
       </div>
 
-      <!-- Interactive GPS Route Map -->
-      <div id="map" class="h-44 w-full rounded-2xl border border-outline-variant/30 overflow-hidden shadow-inner mt-4" style="z-index:10; position: relative;"></div>
-
-      <!-- Recipient Info -->
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-xs font-bold text-secondary uppercase mb-1">Receiver Name</label>
-          <input type="text" id="receiver-name" class="w-full bg-white border border-outline-variant/50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm" placeholder="Name" />
+      <!-- Address Input Fields -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        <div class="sm:col-span-2">
+          <label for="pickup-address" class="text-[11px] font-bold text-slate-600 block mb-1">House / Flat / Building & Street <span class="text-rose-500">*</span></label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3.5 text-slate-400 text-lg">location_on</span>
+            <input 
+              type="text" 
+              id="pickup-address" 
+              value="Varangaon Road, Near Station Square, Bhusawal" 
+              placeholder="Enter pickup address in Bhusawal..." 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all" 
+            />
+          </div>
         </div>
+
         <div>
-          <label class="block text-xs font-bold text-secondary uppercase mb-1">Receiver Phone</label>
-          <input type="text" id="receiver-phone" class="w-full bg-white border border-outline-variant/50 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all shadow-sm" placeholder="Phone" />
+          <label for="pickup-sender-name" class="text-[11px] font-bold text-slate-600 block mb-1">Sender Name <span class="text-rose-500">*</span></label>
+          <input 
+            type="text" 
+            id="pickup-sender-name" 
+            value="Rahul Patil" 
+            placeholder="Your Full Name" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all" 
+          />
+        </div>
+
+        <div>
+          <label for="pickup-sender-phone" class="text-[11px] font-bold text-slate-600 block mb-1">Sender Mobile Number <span class="text-rose-500">*</span></label>
+          <input 
+            type="tel" 
+            id="pickup-sender-phone" 
+            value="9876543210" 
+            placeholder="10-digit mobile number" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all" 
+          />
         </div>
       </div>
-    </div>
 
-    <!-- Package Config -->
-    <div class="bg-white rounded-2xl p-6 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] space-y-4">
-      <h2 class="font-bold text-headline-md text-on-surface mb-2">Package Information</h2>
+      <!-- Quick Preset Locations -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 text-[11px] font-bold">
+        <span class="text-slate-400 font-bold shrink-0">Quick Select:</span>
+        <button type="button" class="preset-pickup-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-skyLight hover:text-skyBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-addr="Home - Varangaon Road, Bhusawal">
+          🏠 Home (Varangaon Rd)
+        </button>
+        <button type="button" class="preset-pickup-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-skyLight hover:text-skyBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-addr="Bhusawal Railway Station Gate 1">
+          🚉 Railway Station
+        </button>
+        <button type="button" class="preset-pickup-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-skyLight hover:text-skyBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-addr="Jamner Road Commercial Market, Bhusawal">
+          🏬 Jamner Market
+        </button>
+      </div>
+    </section>
 
-      <!-- Type Selectors -->
+
+    <!-- ==================== 2. DROP ADDRESS ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4 relative overflow-hidden group hover:border-skyBrand transition-all">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-rose-500 text-white flex items-center justify-center font-black shadow-md shrink-0">
+          <span class="material-symbols-outlined text-xl">location_on</span>
+        </div>
+        <div>
+          <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
+            <span>2. Drop Address</span>
+            <span class="text-[10px] font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">Destination</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-medium">Where should our rider deliver the item?</p>
+        </div>
+      </div>
+
+      <!-- Address Input Fields -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+        <div class="sm:col-span-2">
+          <label for="drop-address" class="text-[11px] font-bold text-slate-600 block mb-1">Receiver Address & Landmark <span class="text-rose-500">*</span></label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3.5 text-slate-400 text-lg">flag</span>
+            <input 
+              type="text" 
+              id="drop-address" 
+              value="Jamner Road, Near Ordnance Factory Gate, Bhusawal" 
+              placeholder="Enter receiver's delivery location in Bhusawal..." 
+              class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all" 
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="drop-receiver-name" class="text-[11px] font-bold text-slate-600 block mb-1">Receiver Name <span class="text-rose-500">*</span></label>
+          <input 
+            type="text" 
+            id="drop-receiver-name" 
+            value="Amit Sharma" 
+            placeholder="Receiver Full Name" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all" 
+          />
+        </div>
+
+        <div>
+          <label for="drop-receiver-phone" class="text-[11px] font-bold text-slate-600 block mb-1">Receiver Mobile Number <span class="text-rose-500">*</span></label>
+          <input 
+            type="tel" 
+            id="drop-receiver-phone" 
+            value="9123456789" 
+            placeholder="10-digit mobile number" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all" 
+          />
+        </div>
+      </div>
+
+      <!-- Quick Preset Drop Locations -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 text-[11px] font-bold">
+        <span class="text-slate-400 font-bold shrink-0">Popular Drops:</span>
+        <button type="button" class="preset-drop-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-skyLight hover:text-skyBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-addr="Ordnance Factory Estate, Jamner Road, Bhusawal">
+          🏢 Ordnance Factory
+        </button>
+        <button type="button" class="preset-drop-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-skyLight hover:text-skyBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-addr="Khadaka Road, Deepnagar Township, Bhusawal">
+          ⚡ Deepnagar
+        </button>
+        <button type="button" class="preset-drop-btn px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 hover:bg-skyLight hover:text-skyBrand border border-slate-200/80 transition-all shrink-0 active:scale-95" data-addr="Nahata College Chowk, Bhusawal">
+          🎓 Nahata Chowk
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ==================== 3. GOOGLE MAPS ROUTE PREVIEW ==================== -->
+    <section class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-3">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
+            <span class="text-skyBrand">🗺️</span>
+            <span>3. Google Maps Route Preview</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-medium">Real-time distance and rider route calculation in Bhusawal</p>
+        </div>
+
+        <div class="flex items-center gap-2 bg-skyLight border border-skyBorder px-3 py-1 rounded-xl text-xs font-black text-skyBrand shadow-xs">
+          <span>⚡ <span id="route-distance-text">3.2 km</span></span>
+          <span class="text-slate-300">•</span>
+          <span>⏱️ <span id="route-time-text">12 mins</span></span>
+        </div>
+      </div>
+
+      <!-- MAP CONTAINER -->
+      <div class="w-full h-56 sm:h-64 rounded-2xl overflow-hidden border border-slate-200 relative shadow-inner z-10" id="route-map">
+        <!-- Leaflet map initialized via JS -->
+      </div>
+    </section>
+
+
+    <!-- ==================== 4. SERVICE ILLUSTRATION ==================== -->
+    <section class="bg-gradient-to-r from-skyBrand via-sky-600 to-skyDark text-white rounded-3xl p-6 shadow-md overflow-hidden relative group">
+      <!-- Background subtle glow -->
+      <div class="absolute -top-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center relative z-10">
+        <!-- LEFT 7 COLS: TEXT CONTENT -->
+        <div class="sm:col-span-7 space-y-3 text-center sm:text-left">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-wider border border-white/30">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Two-Wheeler Express Fleet</span>
+          </div>
+
+          <h3 class="text-xl sm:text-2xl font-black font-display leading-tight">
+            Fastest Scooter Delivery in Bhusawal!
+          </h3>
+
+          <p class="text-xs text-sky-100 font-medium leading-relaxed">
+            Our 2-person rider fleet picks up packages from your location and delivers directly to the receiver with real-time GPS tracking and live OTP verification.
+          </p>
+
+          <div class="pt-1 flex flex-wrap items-center justify-center sm:justify-start gap-3 text-[11px] font-bold text-sky-50">
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm text-emerald-300">verified</span>
+              <span>100% Insured</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm text-amber-300">speed</span>
+              <span>Under 30 Mins</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm text-sky-200">security</span>
+              <span>Tamper Proof</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT 5 COLS: SCOOTER SERVICE ILLUSTRATION -->
+        <div class="sm:col-span-5 flex items-center justify-center">
+          <div class="w-full max-w-[240px] aspect-video sm:aspect-square bg-white/10 rounded-2xl p-2 border border-white/20 shadow-xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
+            <img 
+              src="/assets/scooter_parcel_delivery.jpg" 
+              alt="Two people riding a scooter delivery service" 
+              class="w-full h-full object-cover rounded-xl"
+              onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&q=80';" 
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== 5. WHAT ARE YOU SENDING? ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-5">
       <div>
-        <label class="block text-xs font-bold text-secondary uppercase mb-2">Package Type</label>
-        <div class="grid grid-cols-4 gap-2 text-center" id="package-types">
-          <button class="p-2 border border-primary bg-primary-fixed/30 text-primary font-bold rounded-xl text-[10px] active:scale-95 transition-all">Docs</button>
-          <button class="p-2 border border-outline-variant bg-white text-secondary rounded-xl text-[10px] active:scale-95 transition-all">Food</button>
-          <button class="p-2 border border-outline-variant bg-white text-secondary rounded-xl text-[10px] active:scale-95 transition-all">Clothes</button>
-          <button class="p-2 border border-outline-variant bg-white text-secondary rounded-xl text-[10px] active:scale-95 transition-all">Other</button>
+        <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
+          <span class="text-skyBrand">📦</span>
+          <span>5. What are you sending?</span>
+        </h2>
+        <p class="text-xs text-slate-500 font-medium">Select package category and weight for instant rider allocation</p>
+      </div>
+
+      <!-- CATEGORY CHIPS -->
+      <div class="space-y-2">
+        <label class="text-[11px] font-bold text-slate-600 block uppercase tracking-wider">Item Category</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="category-picker-grid">
+          
+          <button type="button" class="item-cat-btn active flex items-center gap-2.5 p-3 rounded-2xl border-2 border-skyBrand bg-skyLight text-skyBrand font-bold text-xs transition-all shadow-xs cursor-pointer active:scale-95" data-category="Documents / Files" data-extra="0">
+            <span class="text-lg">📄</span>
+            <span>Documents / File</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Keys / Wallet" data-extra="0">
+            <span class="text-lg">🔑</span>
+            <span>Keys / Wallet</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Food / Tiffin Box" data-extra="0">
+            <span class="text-lg">🍱</span>
+            <span>Food / Lunchbox</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Clothes / Shopping" data-extra="5">
+            <span class="text-lg">📦</span>
+            <span>Clothes / Goods</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Electronics" data-extra="10">
+            <span class="text-lg">📱</span>
+            <span>Electronics</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Medicines" data-extra="0">
+            <span class="text-lg">💊</span>
+            <span>Medicines</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Gift Parcel" data-extra="5">
+            <span class="text-lg">🎁</span>
+            <span>Gift Box</span>
+          </button>
+
+          <button type="button" class="item-cat-btn flex items-center gap-2.5 p-3 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 font-bold text-xs transition-all shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-category="Other Item" data-extra="0">
+            <span class="text-lg">🎒</span>
+            <span>Other Items</span>
+          </button>
         </div>
       </div>
 
-      <!-- Weight Slider -->
-      <div>
-        <div class="flex justify-between items-center mb-1">
-          <label class="text-xs font-bold text-secondary uppercase">Weight Estimation</label>
-          <span class="text-sm font-bold text-primary" id="weight-label">1 kg</span>
-        </div>
-        <input type="range" id="weight-slider" min="1" max="15" value="1" class="w-full h-2 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary" />
-        <p class="text-[10px] text-on-surface-variant mt-1">Weight changes impact base delivery fees.</p>
-      </div>
-    </div>
+      <!-- PACKAGE WEIGHT SELECTOR -->
+      <div class="space-y-2">
+        <label class="text-[11px] font-bold text-slate-600 block uppercase tracking-wider">Approximate Weight</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5" id="weight-picker-grid">
+          
+          <button type="button" class="item-weight-btn active py-2.5 px-3 rounded-xl border-2 border-skyBrand bg-skyLight text-skyBrand text-xs font-black transition-all text-center shadow-xs cursor-pointer active:scale-95" data-weight="Up to 1 kg" data-charge="0">
+            Up to 1 kg (₹0)
+          </button>
 
-    <!-- Booking Summary Card -->
-    <div class="bg-white rounded-2xl p-6 border border-outline-variant/10 shadow-[0_4px_12px_rgba(0,0,0,0.02)] flex justify-between items-center">
-      <div>
-        <p class="text-[10px] text-secondary font-bold uppercase tracking-wide">Estimated Fee</p>
-        <p class="text-2xl font-bold text-primary" id="fare-label">₹50.00</p>
+          <button type="button" class="item-weight-btn py-2.5 px-3 rounded-xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 text-xs font-black transition-all text-center shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-weight="1 kg - 5 kg" data-charge="15">
+            1 kg - 5 kg (+₹15)
+          </button>
+
+          <button type="button" class="item-weight-btn py-2.5 px-3 rounded-xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 text-xs font-black transition-all text-center shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-weight="5 kg - 10 kg" data-charge="30">
+            5 kg - 10 kg (+₹30)
+          </button>
+
+          <button type="button" class="item-weight-btn py-2.5 px-3 rounded-xl border-2 border-slate-200/80 bg-slate-50 text-slate-700 text-xs font-black transition-all text-center shadow-xs hover:border-skyBrand cursor-pointer active:scale-95" data-weight="10 kg - 15 kg" data-charge="50">
+            10 kg - 15 kg (+₹50)
+          </button>
+        </div>
       </div>
-      <button id="btn-book-parcel" class="bg-primary text-on-primary font-bold h-14 px-8 rounded-full flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20">
-        Request Rider
-        <span class="material-symbols-outlined">arrow_forward</span>
-      </button>
-    </div>
+
+      <!-- OPTIONAL ITEM NOTES -->
+      <div>
+        <label for="item-notes" class="text-[11px] font-bold text-slate-600 block mb-1">Item Description / Instructions <span class="text-slate-400">(Optional)</span></label>
+        <textarea 
+          id="item-notes" 
+          rows="2" 
+          placeholder="e.g. Handle with care, fragile documents, call receiver before arriving..." 
+          class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-skyBrand/40 transition-all"
+        ></textarea>
+      </div>
+    </section>
+
+
+    <!-- ==================== 6. INSTANT FARE ESTIMATE ==================== -->
+    <section class="bg-gradient-to-br from-skyLight via-white to-blue-50/50 rounded-3xl p-5 sm:p-6 border border-skyBorder shadow-sm space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-skyBrand text-white flex items-center justify-center font-black shadow-xs">
+            <span class="material-symbols-outlined text-lg">receipt_long</span>
+          </div>
+          <div>
+            <h2 class="text-base font-black font-display text-slate-900">6. Instant Fare Estimate</h2>
+            <p class="text-xs text-slate-500 font-medium">Transparent pricing based on distance & weight</p>
+          </div>
+        </div>
+
+        <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-black px-2.5 py-1 rounded-full border border-emerald-200">
+          🏷️ ₹15 Express Discount
+        </span>
+      </div>
+
+      <!-- FARE BREAKDOWN CARD -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs space-y-2.5">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
+          <span>Base Delivery Fee (First 2 km)</span>
+          <span class="font-bold text-slate-800">₹30</span>
+        </div>
+
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
+          <span>Distance Charge (<span id="fare-distance-km">3.2 km</span> @ ₹8/km)</span>
+          <span class="font-bold text-slate-800" id="fare-distance-cost">₹25</span>
+        </div>
+
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
+          <span>Weight Surcharge (<span id="fare-weight-text">Up to 1 kg</span>)</span>
+          <span class="font-bold text-slate-800" id="fare-weight-cost">₹0</span>
+        </div>
+
+        <div class="flex items-center justify-between text-xs font-semibold text-emerald-600 pt-1 border-t border-slate-100">
+          <span>Express Pass Discount</span>
+          <span class="font-bold">-₹15</span>
+        </div>
+
+        <div class="flex items-center justify-between text-base font-black font-display text-slate-900 pt-2 border-t border-slate-200">
+          <span>Total Fare Payable</span>
+          <span class="text-xl text-skyBrand" id="total-fare-display">₹40</span>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== 7. SAFETY INFORMATION ==================== -->
+    <section class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-skyBrand text-lg">🛡️</span>
+        <h2 class="text-sm font-black font-display text-slate-900 uppercase tracking-wider">8. Safety & Parcel Security Guarantee</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-100 space-y-1">
+          <div class="flex items-center gap-1.5 text-skyBrand text-xs font-black">
+            <span class="material-symbols-outlined text-base">verified_user</span>
+            <span>100% Insured</span>
+          </div>
+          <p class="text-[11px] text-slate-500 font-medium">Coverage up to ₹5,000 against loss or transit damage.</p>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-100 space-y-1">
+          <div class="flex items-center gap-1.5 text-emerald-600 text-xs font-black">
+            <span class="material-symbols-outlined text-base">lock</span>
+            <span>Live OTP Handover</span>
+          </div>
+          <p class="text-[11px] text-slate-500 font-medium">Delivery completed only after receiver verifies 4-digit OTP.</p>
+        </div>
+
+        <div class="bg-slate-50 rounded-2xl p-3.5 border border-slate-100 space-y-1">
+          <div class="flex items-center gap-1.5 text-amber-600 text-xs font-black">
+            <span class="material-symbols-outlined text-base">block</span>
+            <span>Prohibited Items</span>
+          </div>
+          <p class="text-[11px] text-slate-500 font-medium">No cash, illegal substances, dangerous chemicals or weapons.</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <script is:inline>
-    // Handle package types selections
-    const typeButtons = document.querySelectorAll('#package-types button');
-    let selectedType = "Docs";
 
-    typeButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        typeButtons.forEach(b => {
-          b.className = "p-2 border border-outline-variant bg-white text-secondary rounded-xl text-[10px] transition-all";
-        });
-        btn.className = "p-2 border border-primary bg-primary-fixed/30 text-primary font-bold rounded-xl text-[10px] transition-all";
-        selectedType = btn.textContent.trim();
-      });
-    });
+  <!-- ==================== 7. CONTINUE BUTTON (FIXED BOTTOM ACTION BAR) ==================== -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3.5 shadow-2xl">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
+      
+      <div>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Estimated Fare</span>
+        <div class="flex items-baseline gap-1.5">
+          <span class="text-xl sm:text-2xl font-black font-display text-skyBrand" id="bar-fare-total">₹40</span>
+          <span class="text-xs text-slate-400 line-through font-bold">₹55</span>
+        </div>
+      </div>
 
-    // Handle Weight Slider & Fare logic
-    const slider = document.getElementById('weight-slider');
-    const weightLabel = document.getElementById('weight-label');
-    const fareLabel = document.getElementById('fare-label');
-    let currentDistance = 2.0; // Default 2 km
-    let baseFare = 40;
+      <button 
+        id="btn-confirm-parcel-order" 
+        type="button" 
+        class="flex-1 sm:flex-none px-6 sm:px-8 py-3.5 bg-skyBrand hover:bg-skyDark text-white text-sm font-black rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <span>Confirm Pickup & Book Rider</span>
+        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+      </button>
 
-    function calculateFare() {
-      const weight = parseInt(slider.value);
-      // Fare: Base 40 + (weight * 5) + (distance * 12)
-      const totalFare = Math.round(baseFare + (weight * 5) + (currentDistance * 12));
-      fareLabel.textContent = `₹${totalFare}.00`;
-    }
-
-    slider.addEventListener('input', (e) => {
-      weightLabel.textContent = `${e.target.value} kg`;
-      calculateFare();
-    });
-
-    // Initialize Leaflet Map
-    let userLatLng = [21.0478, 75.7896];
-    const map = L.map('map', { zoomControl: false }).setView(userLatLng, 13);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
-
-    const createPin = (icon, color) => {
-        return L.divIcon({
-            className: 'custom-pin-icon',
-            html: `<div class="w-8 h-8 rounded-full ${color} text-white flex items-center justify-center border-2 border-white shadow-md">
-                       <span class="material-symbols-outlined text-sm font-bold">${icon}</span>
-                   </div>`,
-            iconSize: [32, 32],
-            iconAnchor: [16, 16]
-        });
-    };
-
-    // Current pickup marker
-    const pickupMarker = L.marker(userLatLng, {
-        icon: createPin('radio_button_checked', 'bg-primary')
-    }).addTo(map);
-
-    let dropMarker = null;
-    let routeLine = null;
-
-    // Distance calculator helper
-    function getDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371;
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
-        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    }
-
-    const dropInput = document.getElementById('drop-addr');
-
-    dropInput.addEventListener('focus', () => {
-        if (!dropMarker) {
-            const dropLat = userLatLng[0] + 0.012;
-            const dropLng = userLatLng[1] - 0.015;
-            currentDistance = getDistance(userLatLng[0], userLatLng[1], dropLat, dropLng);
-
-            dropMarker = L.marker([dropLat, dropLng], {
-                icon: createPin('location_on', 'bg-emerald-600'),
-                draggable: true
-            }).addTo(map).bindPopup("Recipient Drop Point (Drag to change)").openPopup();
-
-            routeLine = L.polyline([userLatLng, [dropLat, dropLng]], {
-                color: '#4f46e5',
-                weight: 3,
-                dashArray: '5, 5'
-            }).addTo(map);
-
-            map.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
-            dropInput.value = "Station Road, Bhusawal";
-            calculateFare();
-
-            // Recalculate fare when drop marker is dragged
-            dropMarker.on('dragend', () => {
-                const newPos = dropMarker.getLatLng();
-                routeLine.setLatLngs([userLatLng, newPos]);
-                currentDistance = getDistance(userLatLng[0], userLatLng[1], newPos.lat, newPos.lng);
-                calculateFare();
-                map.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
-            });
-        }
-    });
-
-    // Read cached location from launch or request permission
-    const cachedLat = localStorage.getItem('bhusawal_user_lat');
-    const cachedLng = localStorage.getItem('bhusawal_user_lng');
-
-    if (cachedLat && cachedLng) {
-        const lat = parseFloat(cachedLat);
-        const lng = parseFloat(cachedLng);
-        userLatLng = [lat, lng];
-        pickupMarker.setLatLng(userLatLng);
-        pickupMarker.bindPopup("Your Location: Pickup").openPopup();
-        map.setView(userLatLng, 13);
-    } else if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                userLatLng = [lat, lng];
-                localStorage.setItem('bhusawal_user_lat', lat);
-                localStorage.setItem('bhusawal_user_lng', lng);
-                
-                pickupMarker.setLatLng(userLatLng);
-                pickupMarker.bindPopup("Your Location: Pickup").openPopup();
-                map.setView(userLatLng, 13);
-                
-                if (dropMarker) {
-                    routeLine.setLatLngs([userLatLng, dropMarker.getLatLng()]);
-                    currentDistance = getDistance(userLatLng[0], userLatLng[1], dropMarker.getLatLng().lat, dropMarker.getLatLng().lng);
-                    calculateFare();
-                }
-            },
-            (error) => {
-                console.warn("Location permission denied, using default Bhusawal.");
-                pickupMarker.bindPopup("Pickup: Varangaon Road, Bhusawal").openPopup();
-            }
-        );
-    }
-
-    // Dispatch Order
-    document.getElementById('btn-book-parcel').addEventListener('click', () => {
-      const pickup = document.getElementById('pickup-addr').value.trim();
-      const drop = document.getElementById('drop-addr').value.trim();
-      const name = document.getElementById('receiver-name').value.trim();
-      const phone = document.getElementById('receiver-phone').value.trim();
-
-      if (!drop || !name || !phone) {
-        alert("Please fill all drop-off and recipient fields.");
-        return;
-      }
-
-      // Proceed with simulated booking
-      localStorage.setItem('bhusawal_last_order', JSON.stringify({
-        id: 'PRC-' + Math.floor(Math.random() * 9000 + 1000),
-        items: `Parcel (${selectedType}, ${slider.value}kg) to ${name}`,
-        total: Math.round(baseFare + (parseInt(slider.value) * 5) + (currentDistance * 12)),
-        status: 'Verifying...',
-        date: 'Today'
-      }));
-
-      alert("Rider request sent! Redirecting to confirmation.");
-      window.location.href = "/order_confirmation?type=parcel";
-    });
-  </script>
+    </div>
+  </div>
 
   <Switcher />
-<script>
-        if (!localStorage.getItem('bhusawal_user_token')) {
-            window.location.href = '/';
-        }
-</script>
-<script is:inline>
-    try {
-      const bhusawalParcelMap = L.map('parcel-bhusawal-map', { zoomControl: false, attributionControl: false }).setView([21.0478, 75.7896], 15);
-      L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
-      }).addTo(bhusawalParcelMap);
-      L.marker([21.0455, 75.7858]).addTo(bhusawalParcelMap).bindPopup("Pickup: Station Road");
-      L.marker([21.0520, 75.7980]).addTo(bhusawalParcelMap).bindPopup("Drop: Jamner Road");
-    } catch(e){}
+
+
+  <!-- ==================== CLIENT DYNAMIC SCRIPT ==================== -->
+  <script is:inline>
+    (function() {
+      // 1. STATE VARIABLES
+      var selectedCategory = 'Documents / Files';
+      var categoryExtra = 0;
+      var selectedWeight = 'Up to 1 kg';
+      var weightCharge = 0;
+      var distanceKm = 3.2;
+      var baseFare = 30;
+
+      // 2. LEAFLET MAP INITIALIZATION
+      var map;
+      function initMap() {
+        var mapContainer = document.getElementById('route-map');
+        if (!mapContainer || typeof L === 'undefined') return;
+
+        // Bhusawal center coordinates: 21.0455° N, 75.7893° E
+        var pickupCoords = [21.0455, 75.7893];
+        var dropCoords = [21.0385, 75.8050];
+
+        map = L.map('route-map', {
+          zoomControl: false,
+          scrollWheelZoom: false
+        }).setView([21.0420, 75.7970], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 18,
+          attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Custom Green Pin Icon for Pickup
+        var pickupIcon = L.divIcon({
+          className: 'custom-pin-icon',
+          html: '<div style="background:#10B981;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #fff;">📍</div>',
+          iconSize: [32, 32]
+        });
+
+        // Custom Red Pin Icon for Drop
+        var dropIcon = L.divIcon({
+          className: 'custom-pin-icon',
+          html: '<div style="background:#EF4444;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #fff;">🏁</div>',
+          iconSize: [32, 32]
+        });
+
+        L.marker(pickupCoords, { icon: pickupIcon }).addTo(map).bindPopup('<b>Pickup Location</b><br>Varangaon Road, Bhusawal');
+        L.marker(dropCoords, { icon: dropIcon }).addTo(map).bindPopup('<b>Drop Destination</b><br>Jamner Road, Bhusawal');
+
+        // Route Line
+        var latlngs = [pickupCoords, [21.0420, 75.7950], dropCoords];
+        var polyline = L.polyline(latlngs, { color: '#0284C7', weight: 4, dashArray: '8, 8' }).addTo(map);
+        map.fitBounds(polyline.getBounds(), { padding: [30, 30] });
+      }
+
+      // Run map init after DOM loads
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(initMap, 300);
+      } else {
+        document.addEventListener('DOMContentLoaded', function() { setTimeout(initMap, 300); });
+      }
+
+      // 3. FARE CALCULATOR
+      function calculateFare() {
+        var distanceCost = Math.round(distanceKm * 8);
+        var totalBeforeDiscount = baseFare + distanceCost + weightCharge + categoryExtra;
+        var discount = 15;
+        var finalTotal = Math.max(25, totalBeforeDiscount - discount);
+
+        var distKmEl = document.getElementById('fare-distance-km');
+        var distCostEl = document.getElementById('fare-distance-cost');
+        var weightTextEl = document.getElementById('fare-weight-text');
+        var weightCostEl = document.getElementById('fare-weight-cost');
+        var fareDisplayEl = document.getElementById('total-fare-display');
+        var barFareTotalEl = document.getElementById('bar-fare-total');
+
+        if (distKmEl) distKmEl.textContent = distanceKm + ' km';
+        if (distCostEl) distCostEl.textContent = '₹' + distanceCost;
+        if (weightTextEl) weightTextEl.textContent = selectedWeight;
+        if (weightCostEl) weightCostEl.textContent = '₹' + (weightCharge + categoryExtra);
+        if (fareDisplayEl) fareDisplayEl.textContent = '₹' + finalTotal;
+        if (barFareTotalEl) barFareTotalEl.textContent = '₹' + finalTotal;
+
+        return finalTotal;
+      }
+
+      // 4. CATEGORY PICKER HANDLER
+      var catBtns = document.querySelectorAll('.item-cat-btn');
+      catBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          catBtns.forEach(function(b) {
+            b.classList.remove('active', 'border-skyBrand', 'bg-skyLight', 'text-skyBrand');
+            b.classList.add('border-slate-200/80', 'bg-slate-50', 'text-slate-700');
+          });
+          btn.classList.add('active', 'border-skyBrand', 'bg-skyLight', 'text-skyBrand');
+          btn.classList.remove('border-slate-200/80', 'bg-slate-50', 'text-slate-700');
+
+          selectedCategory = btn.getAttribute('data-category');
+          categoryExtra = parseInt(btn.getAttribute('data-extra') || '0');
+          calculateFare();
+        });
+      });
+
+      // 5. WEIGHT PICKER HANDLER
+      var weightBtns = document.querySelectorAll('.item-weight-btn');
+      weightBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          weightBtns.forEach(function(b) {
+            b.classList.remove('active', 'border-skyBrand', 'bg-skyLight', 'text-skyBrand');
+            b.classList.add('border-slate-200/80', 'bg-slate-50', 'text-slate-700');
+          });
+          btn.classList.add('active', 'border-skyBrand', 'bg-skyLight', 'text-skyBrand');
+          btn.classList.remove('border-slate-200/80', 'bg-slate-50', 'text-slate-700');
+
+          selectedWeight = btn.getAttribute('data-weight');
+          weightCharge = parseInt(btn.getAttribute('data-charge') || '0');
+          calculateFare();
+        });
+      });
+
+      // 6. PRESET ADDRESS BUTTONS
+      var pickupPresets = document.querySelectorAll('.preset-pickup-btn');
+      pickupPresets.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var input = document.getElementById('pickup-address');
+          if (input) input.value = btn.getAttribute('data-addr');
+        });
+      });
+
+      var dropPresets = document.querySelectorAll('.preset-drop-btn');
+      dropPresets.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var input = document.getElementById('drop-address');
+          if (input) input.value = btn.getAttribute('data-addr');
+        });
+      });
+
+      // 7. CURRENT GPS BUTTON
+      var gpsBtn = document.getElementById('btn-current-location');
+      if (gpsBtn) {
+        gpsBtn.addEventListener('click', function() {
+          if (navigator.geolocation) {
+            gpsBtn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Locating...';
+            navigator.geolocation.getCurrentPosition(function(pos) {
+              var input = document.getElementById('pickup-address');
+              if (input) input.value = 'GPS: ' + pos.coords.latitude.toFixed(4) + ', ' + pos.coords.longitude.toFixed(4) + ' (Varangaon Road, Bhusawal)';
+              gpsBtn.innerHTML = '<span class="material-symbols-outlined text-sm text-emerald-600">check_circle</span> Located!';
+              setTimeout(function() {
+                gpsBtn.innerHTML = '<span class="material-symbols-outlined text-sm">gps_fixed</span> <span class="hidden sm:inline">Use Current GPS</span>';
+              }, 2500);
+            }, function() {
+              alert('GPS Permission denied or unavailable. Using default Bhusawal address.');
+              gpsBtn.innerHTML = '<span class="material-symbols-outlined text-sm">gps_fixed</span> <span class="hidden sm:inline">Use Current GPS</span>';
+            });
+          }
+        });
+      }
+
+      // 8. ORDER CONFIRMATION & REDIRECT TO TRACKING
+      var confirmBtn = document.getElementById('btn-confirm-parcel-order');
+      if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+          var pickupAddr = (document.getElementById('pickup-address') || {}).value || '';
+          var senderName = (document.getElementById('pickup-sender-name') || {}).value || '';
+          var senderPhone = (document.getElementById('pickup-sender-phone') || {}).value || '';
+
+          var dropAddr = (document.getElementById('drop-address') || {}).value || '';
+          var receiverName = (document.getElementById('drop-receiver-name') || {}).value || '';
+          var receiverPhone = (document.getElementById('drop-receiver-phone') || {}).value || '';
+          var notes = (document.getElementById('item-notes') || {}).value || '';
+
+          if (!pickupAddr.trim()) { alert('Please enter Pickup Address'); return; }
+          if (!senderName.trim() || !senderPhone.trim()) { alert('Please enter Sender Name and Mobile Number'); return; }
+          if (!dropAddr.trim()) { alert('Please enter Drop Address'); return; }
+          if (!receiverName.trim() || !receiverPhone.trim()) { alert('Please enter Receiver Name and Mobile Number'); return; }
+
+          var finalFare = calculateFare();
+          var orderId = 'PRC-BHU-' + Math.floor(100000 + Math.random() * 900000);
+
+          var parcelOrder = {
+            id: orderId,
+            type: 'PARCEL',
+            category: selectedCategory,
+            weight: selectedWeight,
+            pickupAddress: pickupAddr,
+            senderName: senderName,
+            senderPhone: senderPhone,
+            dropAddress: dropAddr,
+            receiverName: receiverName,
+            receiverPhone: receiverPhone,
+            notes: notes,
+            total: finalFare,
+            status: 'Accepted',
+            timestamp: new Date().toISOString()
+          };
+
+          try {
+            localStorage.setItem('bhusawal_active_order', JSON.stringify(parcelOrder));
+            var orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+            orders.unshift(parcelOrder);
+            localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+          } catch(e) {}
+
+          alert('🛵 Parcel pickup request booked! Rider is assigned and heading to pickup location. Redirecting to live tracking...');
+          window.location.href = '/track_order';
+        });
+      }
+
+      // Initial fare calc
+      calculateFare();
+    })();
   </script>
 </body>
 </html>
