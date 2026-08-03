@@ -7,7 +7,7 @@ import Switcher from '../components/Switcher.astro';
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Food Checkout & Delivery Address | Bhusawal Connect</title>
+  <title>Checkout & Delivery Address | Bhusawal Connect</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,15 +19,19 @@ import Switcher from '../components/Switcher.astro';
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- RED & WHITE THEME TAILWIND CONFIGURATION -->
+  <!-- TAILWIND CONFIGURATION -->
   <script is:inline>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
+            blueBrand: '#3B82F6',
+            blueDark: '#2563EB',
+            blueLight: '#EFF6FF',
             redBrand: '#E53935',
             redDark: '#C62828',
-            redLight: '#FFEBEE'
+            redLight: '#FFEBEE',
+            emeraldBrand: '#10B981'
           },
           fontFamily: {
             sans: ['Plus Jakarta Sans', 'sans-serif'],
@@ -56,14 +60,14 @@ import Switcher from '../components/Switcher.astro';
         <span class="material-symbols-outlined text-xl">arrow_back</span>
       </a>
       <a href="/home" class="flex items-center gap-1.5">
-        <span class="text-lg font-black font-display text-redBrand tracking-tight">bhusawal<span class="text-slate-900">connect</span></span>
+        <span class="text-lg font-black font-display text-blueBrand tracking-tight">bhusawal<span class="text-slate-900">connect</span></span>
       </a>
     </div>
 
     <!-- Estimated Delivery Time Widget -->
-    <div class="flex items-center gap-2 bg-emerald-50 text-emerald-800 px-3.5 py-1.5 rounded-full border border-emerald-200 shadow-xs">
-      <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
-      <span class="text-xs font-black">⚡ Estimated Delivery: 20 Mins Express</span>
+    <div class="flex items-center gap-2 bg-blueLight text-blueBrand px-3.5 py-1.5 rounded-full border border-blue-200 shadow-xs">
+      <span class="w-2.5 h-2.5 rounded-full bg-blueBrand animate-ping"></span>
+      <span class="text-xs font-black">⚡ Express Delivery: ~20 Mins</span>
     </div>
   </header>
 
@@ -73,7 +77,7 @@ import Switcher from '../components/Switcher.astro';
     <!-- PAGE TITLE & STEP INDICATOR -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/60 pb-4">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900">Food Checkout</h1>
+        <h1 class="text-2xl sm:text-3xl font-black font-display text-slate-900" id="checkout-title">Order Checkout</h1>
         <p class="text-xs font-bold text-slate-400 mt-0.5">Select delivery address, map pin location & payment method</p>
       </div>
 
@@ -81,16 +85,34 @@ import Switcher from '../components/Switcher.astro';
       <div class="flex items-center gap-2 text-xs font-extrabold">
         <span class="text-slate-400">Cart</span>
         <span class="text-slate-300">→</span>
-        <span class="px-3 py-1 rounded-full bg-redBrand text-white font-black">Address & Checkout</span>
+        <span class="px-3 py-1 rounded-full bg-blueBrand text-white font-black">Address & Checkout</span>
         <span class="text-slate-300">→</span>
         <span class="text-slate-400">Confirmation</span>
+      </div>
+    </div>
+
+    <!-- PRESCRIPTION STATUS BANNER (If Medicine / Rx items exist) -->
+    <div id="checkout-rx-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-3xl p-4 sm:p-5 shadow-sm space-y-2">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-xl shrink-0 font-black shadow-xs">
+          📋
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2">
+            <h3 class="text-sm font-black text-amber-900 uppercase tracking-wider">Prescription Status</h3>
+            <span class="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[10px] font-black" id="checkout-rx-status-badge">Verification Required</span>
+          </div>
+          <p class="text-xs font-semibold text-amber-800 mt-0.5" id="checkout-rx-status-desc">
+            Prescription Verification Required Before Dispatch. Certified partner pharmacist will verify details upon order placement.
+          </p>
+        </div>
       </div>
     </div>
 
     <!-- CHECKOUT MAIN RESPONSIVE GRID -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-      <!-- LEFT 7 COLS: ADDRESS SELECTION, MAP PICKER & PAYMENT METHOD -->
+      <!-- LEFT 7 COLS: ADDRESS SELECTION, MAP PICKER, PREFERRED PHARMACY & PAYMENT METHOD -->
       <div class="lg:col-span-7 space-y-6">
 
         <!-- 1. MANDATORY ADDRESS SELECTION & MAP CONTAINER -->
@@ -99,12 +121,12 @@ import Switcher from '../components/Switcher.astro';
           <div class="flex items-center justify-between">
             <div>
               <h2 class="text-lg font-black font-display text-slate-900 flex items-center gap-2">
-                <span class="material-symbols-outlined text-redBrand text-2xl">location_on</span>
-                <span>Delivery Address & Location</span>
+                <span class="material-symbols-outlined text-blueBrand text-2xl">location_on</span>
+                <span>Saved Address & Delivery Location</span>
               </h2>
               <p class="text-xs font-bold text-slate-400 mt-0.5">Choose a saved address or pin your exact location</p>
             </div>
-            <button id="btn-open-address-modal" class="px-3.5 py-1.5 bg-redBrand hover:bg-redDark text-white text-xs font-black rounded-xl transition-all shadow-xs flex items-center gap-1 active:scale-95">
+            <button id="btn-open-address-modal" class="px-3.5 py-1.5 bg-blueBrand hover:bg-blueDark text-white text-xs font-black rounded-xl transition-all shadow-xs flex items-center gap-1 active:scale-95">
               <span>+ Add New Address</span>
             </button>
           </div>
@@ -113,13 +135,13 @@ import Switcher from '../components/Switcher.astro';
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             
             <!-- Option 1: Use Current Location (GPS) -->
-            <button id="btn-use-current-gps" class="p-4 rounded-2xl border-2 border-red-200 bg-redLight/60 hover:bg-redLight text-left transition-all group flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl bg-redBrand text-white flex items-center justify-center font-black shrink-0 shadow-md group-hover:scale-105 transition-transform">
+            <button id="btn-use-current-gps" class="p-4 rounded-2xl border-2 border-blue-200 bg-blueLight/60 hover:bg-blueLight text-left transition-all group flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blueBrand text-white flex items-center justify-center font-black shrink-0 shadow-md group-hover:scale-105 transition-transform">
                 <span class="material-symbols-outlined text-xl">my_location</span>
               </div>
               <div>
-                <h3 class="text-xs font-black text-slate-900">1. Current Location (GPS)</h3>
-                <p class="text-[11px] font-bold text-slate-500 mt-0.5">Detect your live GPS coordinates</p>
+                <h3 class="text-xs font-black text-slate-900">Current Location</h3>
+                <p class="text-[11px] font-bold text-slate-500 mt-0.5">Detect live GPS coordinates</p>
               </div>
             </button>
 
@@ -129,8 +151,8 @@ import Switcher from '../components/Switcher.astro';
                 <span class="material-symbols-outlined text-xl">map</span>
               </div>
               <div>
-                <h3 class="text-xs font-black text-slate-900">2. Google Maps Location Picker</h3>
-                <p class="text-[11px] font-bold text-slate-500 mt-0.5">Drag pin to set exact doorstep</p>
+                <h3 class="text-xs font-black text-slate-900">Google Maps Address Picker</h3>
+                <p class="text-[11px] font-bold text-slate-500 mt-0.5">Drag pin to set doorstep</p>
               </div>
             </button>
 
@@ -138,7 +160,7 @@ import Switcher from '../components/Switcher.astro';
 
           <!-- SAVED ADDRESSES LIST -->
           <div class="space-y-3 pt-2">
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider">Your Saved Addresses</h3>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider">Saved Address</h3>
             <div id="saved-addresses-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <!-- Dynamically populated by JS -->
             </div>
@@ -148,26 +170,69 @@ import Switcher from '../components/Switcher.astro';
           <div class="space-y-2 pt-2 border-t border-slate-100">
             <div class="flex items-center justify-between text-xs font-black text-slate-700">
               <span class="flex items-center gap-1">
-                <span class="material-symbols-outlined text-redBrand text-sm">map</span>
+                <span class="material-symbols-outlined text-blueBrand text-sm">map</span>
                 Selected Pin Location on Map
               </span>
-              <span id="display-lat-lng" class="text-[10px] font-mono text-redBrand bg-redLight px-2 py-0.5 rounded-md">Lat: 21.0478, Lng: 75.7896</span>
+              <span id="display-lat-lng" class="text-[10px] font-mono text-blueBrand bg-blueLight px-2 py-0.5 rounded-md">Lat: 21.0478, Lng: 75.7896</span>
             </div>
             <div id="checkout-leaflet-map" class="shadow-inner border border-slate-200"></div>
           </div>
 
         </div>
 
-        <!-- 2. PAYMENT METHODS -->
+        <!-- 2. PREFERRED MEDICAL STORE SECTION -->
+        <div id="preferred-store-card" class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-blueBrand text-2xl">local_pharmacy</span>
+            <div>
+              <h2 class="text-lg font-black font-display text-slate-900">Preferred Medical Store (Optional)</h2>
+              <p class="text-xs font-bold text-slate-400 mt-0.5">Specify a favorite pharmacy in Bhusawal or leave empty for auto-assignment</p>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <input 
+              type="text" 
+              id="preferred-pharmacy-input"
+              placeholder="e.g. Apollo Pharmacy Station Road, MedPlus Jamner Road..." 
+              class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-xs font-extrabold text-slate-900 outline-none focus:border-blueBrand focus:bg-white transition-all placeholder-slate-400"
+            />
+            
+            <div id="pharmacy-notice-default" class="p-3 rounded-2xl bg-blueLight/60 border border-blue-200 text-xs font-bold text-blueBrand flex items-center gap-2">
+              <span class="material-symbols-outlined text-base">info</span>
+              <span id="pharmacy-notice-text">We will source your medicines from a nearby verified partner pharmacy.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. SPECIAL INSTRUCTIONS SECTION -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-blueBrand text-2xl">edit_note</span>
+            <div>
+              <h2 class="text-lg font-black font-display text-slate-900">Special Instructions</h2>
+              <p class="text-xs font-bold text-slate-400 mt-0.5">Add packaging or delivery notes for store & rider</p>
+            </div>
+          </div>
+
+          <textarea 
+            id="checkout-special-instructions"
+            rows="2"
+            placeholder="e.g. Leave parcel at security desk, call before arriving, include extra carry bag..."
+            class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs font-semibold text-slate-800 outline-none focus:border-blueBrand focus:bg-white transition-all placeholder-slate-400"
+          ></textarea>
+        </div>
+
+        <!-- 4. PAYMENT METHOD -->
         <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
           <h2 class="text-lg font-black font-display text-slate-900 flex items-center gap-2">
-            <span class="material-symbols-outlined text-redBrand text-2xl">payments</span>
-            <span>Select Payment Method</span>
+            <span class="material-symbols-outlined text-blueBrand text-2xl">payments</span>
+            <span>Payment Method</span>
           </h2>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <label class="p-4 rounded-2xl border-2 border-redBrand bg-redLight/40 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment-method" value="UPI" checked class="accent-redBrand w-4 h-4" />
+            <label class="p-4 rounded-2xl border-2 border-blueBrand bg-blueLight/40 flex items-center gap-3 cursor-pointer">
+              <input type="radio" name="payment-method" value="UPI" checked class="accent-blueBrand w-4 h-4" />
               <div>
                 <span class="text-xs font-black text-slate-900 block">Instant UPI QR</span>
                 <span class="text-[10px] font-bold text-slate-400">GPay, PhonePe, Paytm</span>
@@ -175,7 +240,7 @@ import Switcher from '../components/Switcher.astro';
             </label>
 
             <label class="p-4 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment-method" value="COD" class="accent-redBrand w-4 h-4" />
+              <input type="radio" name="payment-method" value="COD" class="accent-blueBrand w-4 h-4" />
               <div>
                 <span class="text-xs font-black text-slate-900 block">Cash on Delivery</span>
                 <span class="text-[10px] font-bold text-slate-400">Pay at Doorstep</span>
@@ -183,7 +248,7 @@ import Switcher from '../components/Switcher.astro';
             </label>
 
             <label class="p-4 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment-method" value="CARD" class="accent-redBrand w-4 h-4" />
+              <input type="radio" name="payment-method" value="CARD" class="accent-blueBrand w-4 h-4" />
               <div>
                 <span class="text-xs font-black text-slate-900 block">Card / NetBanking</span>
                 <span class="text-[10px] font-bold text-slate-400">Visa, Mastercard</span>
@@ -199,7 +264,7 @@ import Switcher from '../components/Switcher.astro';
 
         <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4 sticky top-24">
           <h2 class="text-lg font-black font-display text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
-            <span class="material-symbols-outlined text-redBrand text-xl">receipt_long</span>
+            <span class="material-symbols-outlined text-blueBrand text-xl">receipt_long</span>
             <span>Order Summary</span>
           </h2>
 
@@ -220,21 +285,21 @@ import Switcher from '../components/Switcher.astro';
             </div>
             <div class="flex justify-between text-sm font-black text-slate-900 pt-3 border-t border-slate-200">
               <span>Grand Total:</span>
-              <span id="summary-grand-total" class="text-redBrand text-xl font-black font-display">₹30</span>
+              <span id="summary-grand-total" class="text-blueBrand text-xl font-black font-display">₹30</span>
             </div>
           </div>
 
           <!-- Selected Address Summary Box -->
           <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
-            <span class="text-[10px] font-black text-redBrand uppercase tracking-wider block">Deliver To:</span>
+            <span class="text-[10px] font-black text-blueBrand uppercase tracking-wider block">Deliver To:</span>
             <p id="summary-selected-address" class="text-xs font-extrabold text-slate-900 line-clamp-2">
               Select or add an address above
             </p>
           </div>
 
           <!-- PLACE ORDER BUTTON -->
-          <button id="btn-place-order" class="w-full py-4 bg-redBrand hover:bg-redDark text-white font-black text-sm rounded-2xl shadow-xl shadow-red-900/20 active:scale-95 transition-all flex items-center justify-center gap-2">
-            <span>Place Order & Pay</span>
+          <button id="btn-place-order" class="w-full py-4 bg-blueBrand hover:bg-blueDark text-white font-black text-sm rounded-2xl shadow-xl shadow-blue-900/20 active:scale-95 transition-all flex items-center justify-center gap-2">
+            <span>Place Order</span>
             <span class="material-symbols-outlined text-lg">arrow_forward</span>
           </button>
         </div>
@@ -259,7 +324,7 @@ import Switcher from '../components/Switcher.astro';
       </div>
 
       <!-- DETECTED LAT/LNG DISPLAY BADGE -->
-      <div class="p-2.5 bg-redLight rounded-xl border border-red-100 flex items-center justify-between text-xs font-bold text-redBrand">
+      <div class="p-2.5 bg-blueLight rounded-xl border border-blue-100 flex items-center justify-between text-xs font-bold text-blueBrand">
         <span>📍 Detected Coordinates:</span>
         <span id="modal-lat-lng-text" class="font-mono text-[11px]">Lat: 21.0478, Lng: 75.7896</span>
       </div>
@@ -270,58 +335,58 @@ import Switcher from '../components/Switcher.astro';
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="text-[11px] font-black text-slate-700 block uppercase">Full Name *</label>
-            <input type="text" id="field-name" required placeholder="Sahil Patel" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-redBrand" />
+            <input type="text" id="field-name" required placeholder="Sahil Patel" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-blueBrand" />
           </div>
           <div>
             <label class="text-[11px] font-black text-slate-700 block uppercase">Mobile Number *</label>
-            <input type="tel" id="field-phone" required maxlength="10" placeholder="9923456789" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-redBrand" />
+            <input type="tel" id="field-phone" required maxlength="10" placeholder="9923456789" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-blueBrand" />
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="text-[11px] font-black text-slate-700 block uppercase">House / Flat No. *</label>
-            <input type="text" id="field-house" required placeholder="Plot 42 / Flat 3B" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-redBrand" />
+            <input type="text" id="field-house" required placeholder="Plot 42 / Flat 3B" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-blueBrand" />
           </div>
           <div>
             <label class="text-[11px] font-black text-slate-700 block uppercase">Building Name</label>
-            <input type="text" id="field-building" placeholder="Gokul Heights" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-redBrand" />
+            <input type="text" id="field-building" placeholder="Gokul Heights" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-blueBrand" />
           </div>
         </div>
 
         <div>
           <label class="text-[11px] font-black text-slate-700 block uppercase">Street / Road Name *</label>
-          <input type="text" id="field-street" required placeholder="Station Road / Varangaon Road" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-redBrand" />
+          <input type="text" id="field-street" required placeholder="Station Road / Varangaon Road" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-blueBrand" />
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="text-[11px] font-black text-slate-700 block uppercase">Area / Colony *</label>
-            <input type="text" id="field-area" required placeholder="Shivaji Nagar" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-redBrand" />
+            <input type="text" id="field-area" required placeholder="Shivaji Nagar" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-blueBrand" />
           </div>
           <div>
             <label class="text-[11px] font-black text-slate-700 block uppercase">Landmark</label>
-            <input type="text" id="field-landmark" placeholder="Near Railway Station" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-redBrand" />
+            <input type="text" id="field-landmark" placeholder="Near Railway Station" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-blueBrand" />
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="text-[11px] font-black text-slate-700 block uppercase">City *</label>
-            <input type="text" id="field-city" value="Bhusawal" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-redBrand" />
+            <input type="text" id="field-city" value="Bhusawal" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-blueBrand" />
           </div>
           <div>
             <label class="text-[11px] font-black text-slate-700 block uppercase">PIN Code *</label>
-            <input type="text" id="field-pincode" value="425201" required maxlength="6" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-redBrand" />
+            <input type="text" id="field-pincode" value="425201" required maxlength="6" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-blueBrand" />
           </div>
         </div>
 
         <div class="pt-2 flex items-center gap-2">
-          <input type="checkbox" id="field-save-profile" checked class="accent-redBrand w-4 h-4" />
+          <input type="checkbox" id="field-save-profile" checked class="accent-blueBrand w-4 h-4" />
           <label for="field-save-profile" class="text-xs font-bold text-slate-700">Save this address to my profile for future orders</label>
         </div>
 
-        <button type="submit" class="w-full py-3.5 bg-redBrand hover:bg-redDark text-white font-black text-xs rounded-2xl shadow-md transition-all flex items-center justify-center gap-1.5 mt-2">
+        <button type="submit" class="w-full py-3.5 bg-blueBrand hover:bg-blueDark text-white font-black text-xs rounded-2xl shadow-md transition-all flex items-center justify-center gap-1.5 mt-2">
           <span class="material-symbols-outlined text-base">check</span>
           <span>Save & Use Address</span>
         </button>
@@ -435,10 +500,10 @@ import Switcher from '../components/Switcher.astro';
           }
 
           html += `
-            <div class="saved-addr-card p-3.5 rounded-2xl border-2 ${isSelected ? 'border-redBrand bg-redLight/50' : 'border-slate-200 bg-white'} cursor-pointer transition-all hover:border-red-300" data-idx="${idx}">
+            <div class="saved-addr-card p-3.5 rounded-2xl border-2 ${isSelected ? 'border-blueBrand bg-blueLight/50' : 'border-slate-200 bg-white'} cursor-pointer transition-all hover:border-blue-300" data-idx="${idx}">
               <div class="flex items-center justify-between mb-1">
-                <span class="text-xs font-black text-redBrand flex items-center gap-1">📍 ${addr.tag || 'Address'}</span>
-                ${isSelected ? '<span class="w-4 h-4 rounded-full bg-redBrand flex items-center justify-center text-white text-[9px] font-black">✓</span>' : ''}
+                <span class="text-xs font-black text-blueBrand flex items-center gap-1">📍 ${addr.tag || 'Address'}</span>
+                ${isSelected ? '<span class="w-4 h-4 rounded-full bg-blueBrand flex items-center justify-center text-white text-[9px] font-black">✓</span>' : ''}
               </div>
               <p class="text-xs font-black text-slate-900">${addr.name || 'Customer'}</p>
               <p class="text-[11px] font-bold text-slate-500 line-clamp-2 mt-0.5">${addr.full}</p>
@@ -542,6 +607,36 @@ import Switcher from '../components/Switcher.astro';
         alert('Delivery address saved successfully!');
       });
 
+      // Preferred Pharmacy input handler
+      const prefInput = document.getElementById('preferred-pharmacy-input');
+      const noticeText = document.getElementById('pharmacy-notice-text');
+
+      if (prefInput) {
+        prefInput.value = localStorage.getItem('bhusawal_preferred_pharmacy') || '';
+        if (prefInput.value.trim() && noticeText) {
+          noticeText.textContent = `Order will be requested from ${prefInput.value.trim()}.`;
+        }
+
+        prefInput.addEventListener('input', () => {
+          const val = prefInput.value.trim();
+          localStorage.setItem('bhusawal_preferred_pharmacy', val);
+          if (val) {
+            noticeText.textContent = `Order will be requested from ${val}.`;
+          } else {
+            noticeText.textContent = `We will source your medicines from a nearby verified partner pharmacy.`;
+          }
+        });
+      }
+
+      // Special Instructions
+      const specInstInput = document.getElementById('checkout-special-instructions');
+      if (specInstInput) {
+        specInstInput.value = localStorage.getItem('bhusawal_cart_notes') || '';
+        specInstInput.addEventListener('input', () => {
+          localStorage.setItem('bhusawal_cart_notes', specInstInput.value);
+        });
+      }
+
       // Render Cart Summary Items & Calculations
       function renderCartSummary() {
         let cart = [];
@@ -552,8 +647,24 @@ import Switcher from '../components/Switcher.astro';
         const itemsBox = document.getElementById('checkout-cart-items');
         if (!itemsBox) return;
 
+        const hasRx = cart.some(item => {
+          if (item.rxRequired === true || item.rx === 'true' || item.rx === true) return true;
+          var name = (item.name || '').toLowerCase();
+          var cat = (item.cat || item.category || '').toLowerCase();
+          if (cat.includes('prescription')) return true;
+          const rxNames = ['brufen', 'flexon', 'allegra', 'glycomet', 'janumet', 'ecosprin', 'atorva', 'telma', 'amlodipine', 'losartan', 'folic acid', 'pan d', 'minoxidil', 'moxifloxacin'];
+          return rxNames.some(rn => name.includes(rn));
+        });
+
+        const rxBanner = document.getElementById('checkout-rx-banner');
+        if (hasRx) {
+          rxBanner?.classList.remove('hidden');
+        } else {
+          rxBanner?.classList.add('hidden');
+        }
+
         if (cart.length === 0) {
-          itemsBox.innerHTML = '<p class="text-xs font-bold text-slate-400 py-3">Your food cart is empty.</p>';
+          itemsBox.innerHTML = '<p class="text-xs font-bold text-slate-400 py-3">Your cart is empty.</p>';
           return;
         }
 
@@ -605,20 +716,31 @@ import Switcher from '../components/Switcher.astro';
         }
 
         const selectedPayment = document.querySelector('input[name="payment-method"]:checked')?.value || 'UPI';
+        const preferredStore = (document.getElementById('preferred-pharmacy-input')?.value || '').trim();
+        const specialNotes = (document.getElementById('checkout-special-instructions')?.value || '').trim();
+
+        const isMedicineOrder = cart.some(i => i.cat || i.category || i.brand || i.rxRequired);
+        const hasRx = cart.some(item => item.rxRequired === true || item.rx === 'true');
 
         // Create Order Object
-        const orderId = 'BHU-' + Math.floor(100000 + Math.random() * 900000);
+        const orderId = (hasRx ? 'RX-BHU-' : 'BHU-') + Math.floor(100000 + Math.random() * 900000);
         let subtotal = cart.reduce((acc, i) => acc + (parseFloat(i.price || 0) * (i.quantity || 1)), 0);
         const grandTotal = Math.round(subtotal + 30);
 
         const newOrder = {
           id: orderId,
+          type: hasRx ? 'PRESCRIPTION' : (isMedicineOrder ? 'MEDICINE' : 'STANDARD'),
           date: new Date().toISOString(),
-          status: 'Confirmed',
+          status: hasRx ? 'Under Verification' : 'Confirmed',
           items: cart,
           total: grandTotal,
           address: selectedAddressObject.full,
-          payment: selectedPayment
+          lat: currentLat,
+          lng: currentLng,
+          payment: selectedPayment,
+          storeName: preferredStore || 'Nearby Verified Partner Pharmacy',
+          notes: specialNotes,
+          rxStatus: hasRx ? 'Prescription Verification Required Before Dispatch' : 'Verified'
         };
 
         // Save order to history
@@ -628,12 +750,17 @@ import Switcher from '../components/Switcher.astro';
         } catch(e) {}
         orders.unshift(newOrder);
         localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+        localStorage.setItem('bhusawal_active_order', JSON.stringify(newOrder));
 
         // Clear Cart
         localStorage.removeItem('bhusawal_cart');
 
-        // Redirect to Confirmation
-        window.location.href = `/order_confirmation?orderId=${orderId}`;
+        // Redirect to Confirmation or Tracking
+        if (hasRx) {
+          window.location.href = `/track_order?id=${orderId}`;
+        } else {
+          window.location.href = `/order_confirmation?orderId=${orderId}`;
+        }
       });
 
       // Initial Calls
