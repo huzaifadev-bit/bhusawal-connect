@@ -1,0 +1,764 @@
+---
+import Switcher from '../components/Switcher.astro';
+---
+
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pickup & Drop Booking History | Bhusawal Connect</title>
+  
+  <!-- TAILWIND & GOOGLE FONTS -->
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <!-- GROCERY & PARCEL MATCHED YELLOW THEME -->
+  <script is:inline>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            yellowBrand: '#FACC15',
+            yellowDark: '#CA8A04',
+            yellowLight: '#FEF9C3',
+            yellowBorder: '#FEF08A',
+            yellowDeep: '#854D0E'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAFAFA; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #printable-receipt-modal, #printable-receipt-modal * { visibility: visible; }
+      #printable-receipt-modal { position: absolute; left: 0; top: 0; width: 100%; }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen pb-32 text-slate-800 antialiased bg-slate-50/50">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 shadow-xs flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a href="/parcel" class="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-all active:scale-95 border border-slate-200" title="Back to Parcel Service">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+      </a>
+      <div>
+        <h1 class="text-lg sm:text-xl font-black font-display text-slate-900 leading-tight flex items-center gap-2">
+          <span>📜 Pickup & Drop Booking History</span>
+        </h1>
+        <p class="text-xs text-slate-500 font-medium">View past express courier deliveries, status & tax receipts</p>
+      </div>
+    </div>
+
+    <!-- NEW BOOKING CTA -->
+    <a href="/parcel" class="px-4 py-2 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white font-black text-xs rounded-xl shadow-xs border border-yellowDark/20 flex items-center gap-1.5 transition-all active:scale-95">
+      <span class="material-symbols-outlined text-base">add_circle</span>
+      <span>+ Book New Parcel</span>
+    </a>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- SEARCH BAR & CATEGORY TABS -->
+    <div class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-sm space-y-4">
+      
+      <!-- SEARCH INPUT -->
+      <div class="relative w-full">
+        <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+        <input 
+          type="text" 
+          id="search-history-input" 
+          placeholder="Search by Order ID, Pickup address, Drop destination, Category, or Rider name..." 
+          class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-10 py-3 text-xs font-bold text-slate-800 placeholder-slate-400 outline-none focus:bg-white focus:border-yellowBrand focus:ring-2 focus:ring-yellowBrand/20 transition-all shadow-xs" 
+        />
+        <button id="btn-clear-search" type="button" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <!-- STATUS FILTER TABS -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
+        <button class="status-tab-btn active px-4 py-2 rounded-xl bg-yellowBrand text-slate-950 font-black text-xs border border-yellowDark/20 transition-all shadow-xs" data-status="ALL">
+          All Bookings (<span id="count-all">0</span>)
+        </button>
+        <button class="status-tab-btn px-4 py-2 rounded-xl bg-slate-50 hover:bg-yellowLight text-slate-700 font-bold text-xs border border-slate-200 transition-all" data-status="Delivered">
+          ✅ Delivered (<span id="count-delivered">0</span>)
+        </button>
+        <button class="status-tab-btn px-4 py-2 rounded-xl bg-slate-50 hover:bg-yellowLight text-slate-700 font-bold text-xs border border-slate-200 transition-all" data-status="In Transit">
+          ⚡ In Transit (<span id="count-active">0</span>)
+        </button>
+        <button class="status-tab-btn px-4 py-2 rounded-xl bg-slate-50 hover:bg-yellowLight text-slate-700 font-bold text-xs border border-slate-200 transition-all" data-status="Cancelled">
+          ❌ Cancelled (<span id="count-cancelled">0</span>)
+        </button>
+      </div>
+
+    </div>
+
+    <!-- BOOKINGS LIST CONTAINER -->
+    <div id="bookings-container" class="space-y-4">
+      <!-- Dynamically Populated Cards via Client JS -->
+    </div>
+
+    <!-- EMPTY STATE ILLUSTATION -->
+    <div id="empty-history-state" class="hidden bg-white rounded-3xl p-8 sm:p-12 text-center border border-slate-200/80 shadow-sm space-y-4">
+      <div class="w-20 h-20 bg-yellowLight rounded-full flex items-center justify-center text-4xl mx-auto border-2 border-yellowBorder">
+        📦
+      </div>
+      <div class="max-w-md mx-auto space-y-1">
+        <h3 class="text-lg font-black font-display text-slate-900">No Pickup & Drop Bookings Found</h3>
+        <p class="text-xs font-bold text-slate-500">You haven't placed any parcel delivery bookings yet or no orders match your search criteria.</p>
+      </div>
+      <a href="/parcel" class="inline-flex items-center gap-2 px-6 py-3 bg-yellowBrand hover:bg-yellowDark text-slate-950 font-black text-xs rounded-2xl shadow-md transition-all active:scale-95">
+        <span>Book Your First Parcel Courier</span>
+        <span class="material-symbols-outlined text-base">arrow_forward</span>
+      </a>
+    </div>
+
+  </main>
+
+
+  <!-- ==================== BOOKING DETAILS MODAL ==================== -->
+  <div id="details-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl border border-slate-200 flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- MODAL HEADER -->
+      <div class="bg-slate-900 text-white p-5 flex items-center justify-between border-b border-slate-800">
+        <div>
+          <span class="text-[10px] font-black text-yellowBrand uppercase tracking-wider block">Booking Details</span>
+          <h3 id="modal-order-id" class="text-base font-black font-display">PARCEL-BHU-849201</h3>
+        </div>
+        <button id="btn-close-details-modal" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+
+      <!-- MODAL BODY -->
+      <div class="p-5 sm:p-6 overflow-y-auto space-y-4 no-scrollbar text-xs">
+        
+        <!-- STATUS BANNER -->
+        <div id="modal-status-banner" class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between font-black text-emerald-900">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-emerald-600 text-xl">verified</span>
+            <span id="modal-status-text">Delivered Successfully</span>
+          </div>
+          <span id="modal-delivered-time" class="text-[11px] font-extrabold text-emerald-700">Aug 04, 2026 • 11:48 AM</span>
+        </div>
+
+        <!-- ADDRESSES -->
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3 relative pl-4 border-l-2 border-dashed border-slate-300">
+          <div>
+            <span class="text-[10px] font-black text-sky-700 uppercase tracking-wider block">📍 Pickup Address</span>
+            <p class="font-black text-slate-900" id="modal-pickup-addr">Varangaon Road, Bhusawal</p>
+            <p class="text-slate-500 font-medium" id="modal-sender-info">Sender: Rahul Patil • 9876543210</p>
+          </div>
+
+          <div class="pt-2 border-t border-slate-200">
+            <span class="text-[10px] font-black text-slate-700 uppercase tracking-wider block">🏁 Drop Address</span>
+            <p class="font-black text-slate-900" id="modal-drop-addr">Jamner Road, Bhusawal</p>
+            <p class="text-slate-500 font-medium" id="modal-receiver-info">Receiver: Amit Sharma • 9123456789</p>
+          </div>
+        </div>
+
+        <!-- RIDER & OTP DETAILS -->
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+            <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider block">👨‍✈️ Delivery Partner</span>
+            <p class="font-black text-slate-900 mt-0.5" id="modal-rider-name">Vikram Patil</p>
+            <p class="text-[10px] text-slate-500 font-bold" id="modal-vehicle-info">Express Bike (MH 19 BJ 5921)</p>
+          </div>
+
+          <div class="bg-yellowLight p-3.5 rounded-2xl border border-yellowBorder">
+            <span class="text-[10px] font-black text-yellowDeep uppercase tracking-wider block">🔐 Handover OTP</span>
+            <p class="font-black font-mono text-base text-slate-900 mt-0.5" id="modal-otp-code">4892</p>
+            <span class="text-[9px] font-extrabold text-emerald-700 block">✓ OTP Verified</span>
+          </div>
+        </div>
+
+        <!-- ITEM SPECIFICATIONS -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 space-y-1.5">
+          <div class="flex justify-between font-bold">
+            <span class="text-slate-500">Item Category:</span>
+            <span class="text-slate-900 font-black" id="modal-category">Documents</span>
+          </div>
+          <div class="flex justify-between font-bold">
+            <span class="text-slate-500">Weight Category:</span>
+            <span class="text-slate-900 font-black" id="modal-weight">Up to 1 kg</span>
+          </div>
+          <div class="flex justify-between font-bold">
+            <span class="text-slate-500">Distance & Time:</span>
+            <span class="text-slate-900 font-black" id="modal-dist-time">3.5 km • 15-20 Mins</span>
+          </div>
+          <div class="flex justify-between font-bold pt-1 border-t border-slate-200">
+            <span class="text-slate-500">Total Delivery Fee:</span>
+            <span class="text-yellowDeep font-black text-sm" id="modal-fee">₹40</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MODAL FOOTER -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-2">
+        <button id="modal-btn-download" type="button" class="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-base">download</span>
+          <span>Download Receipt</span>
+        </button>
+
+        <button id="modal-btn-rebook" type="button" class="flex-1 py-3 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-base">refresh</span>
+          <span>Book Again</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== PRINTABLE TAX RECEIPT MODAL ==================== -->
+  <div id="printable-receipt-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4">
+      
+      <!-- RECEIPT HEADER -->
+      <div class="border-b-2 border-slate-900 pb-3 flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-black font-display text-slate-900 tracking-tight">Bhusawal Connect</h2>
+          <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Express Parcel Courier Receipt</p>
+        </div>
+        <span class="text-2xl">📦</span>
+      </div>
+
+      <!-- RECEIPT METADATA -->
+      <div class="space-y-2 text-xs font-bold text-slate-700">
+        <div class="flex justify-between">
+          <span class="text-slate-500">Booking ID:</span>
+          <span class="font-mono font-black text-slate-900" id="receipt-id">PARCEL-BHU-849201</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Date & Time:</span>
+          <span id="receipt-date">Aug 04, 2026 • 11:30 AM</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Service Type:</span>
+          <span>Express Scooter Parcel Transport</span>
+        </div>
+      </div>
+
+      <!-- ADDRESS SUMMARY -->
+      <div class="bg-slate-50 p-3 rounded-xl space-y-1.5 text-xs font-bold text-slate-800 border border-slate-200">
+        <div>
+          <span class="text-[9px] font-black text-slate-500 uppercase block">Pickup Location</span>
+          <p id="receipt-pickup">Varangaon Road, Bhusawal</p>
+        </div>
+        <div class="pt-1 border-t border-slate-200">
+          <span class="text-[9px] font-black text-slate-500 uppercase block">Drop Destination</span>
+          <p id="receipt-drop">Jamner Road, Ordnance Factory Gate, Bhusawal</p>
+        </div>
+      </div>
+
+      <!-- FARE BREAKDOWN TABLE -->
+      <table class="w-full text-xs font-semibold text-slate-700 border-t border-b border-slate-200 py-2">
+        <tbody>
+          <tr>
+            <td class="py-1">Base Courier Fee</td>
+            <td class="py-1 text-right font-bold text-slate-900">₹30.00</td>
+          </tr>
+          <tr>
+            <td class="py-1">Distance Charge</td>
+            <td class="py-1 text-right font-bold text-slate-900">₹15.00</td>
+          </tr>
+          <tr>
+            <td class="py-1">Promo Discount</td>
+            <td class="py-1 text-right font-bold text-emerald-600">-₹5.00</td>
+          </tr>
+          <tr class="font-black text-sm border-t border-slate-900 text-slate-900">
+            <td class="pt-2">Total Amount Paid</td>
+            <td class="pt-2 text-right text-yellowDeep font-black" id="receipt-total">₹40.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="text-[10px] text-center text-slate-400 font-bold space-y-0.5">
+        <p>Thank you for choosing Bhusawal Connect Express Delivery!</p>
+        <p>GSTIN: 27AAAAA0000A1Z5 • Support: +91 74980 71274</p>
+      </div>
+
+      <!-- BUTTONS -->
+      <div class="grid grid-cols-2 gap-2 pt-2 print:hidden">
+        <button id="btn-do-print" type="button" class="py-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1">
+          <span class="material-symbols-outlined text-base">print</span>
+          <span>Print / Save PDF</span>
+        </button>
+
+        <button id="btn-close-receipt" type="button" class="py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <Switcher />
+
+
+  <!-- ==================== CLIENT SCRIPT ==================== -->
+  <script is:inline>
+    (function() {
+      // SAMPLE DEMO BOOKINGS IF LOCALSTORAGE IS EMPTY
+      var sampleParcelBookings = [
+        {
+          id: 'PARCEL-BHU-849201',
+          type: 'PARCEL',
+          category: 'Documents / Legal Papers',
+          description: 'Sealed waterproof legal document pouch',
+          weight: 'Up to 1 kg',
+          pickupAddress: 'Varangaon Road, Near Station Square, Bhusawal',
+          dropAddress: 'Jamner Road, Near Ordnance Factory Gate, Bhusawal',
+          senderName: 'Rahul Patil',
+          senderPhone: '9876543210',
+          receiverName: 'Amit Sharma',
+          receiverPhone: '9123456789',
+          distance: '3.5 km',
+          estTime: '15 - 20 Mins',
+          total: 40,
+          paymentMethod: 'Cash on Pickup',
+          status: 'Delivered',
+          rider: 'Vikram Patil',
+          vehicle: 'Express Bike (MH 19 BJ 5921)',
+          otp: '4892',
+          otpVerified: true,
+          timestamp: '2026-08-04T11:30:00.000Z',
+          deliveredAt: '2026-08-04T11:48:00.000Z'
+        },
+        {
+          id: 'PARCEL-BHU-719304',
+          type: 'PARCEL',
+          category: 'Homemade Food / Tiffin',
+          description: 'Hot homecooked lunch tiffin box',
+          weight: '1–5 kg',
+          pickupAddress: 'Khadka Road, Near ZP School, Bhusawal',
+          dropAddress: 'Railway Colony, Quarter 42, Bhusawal',
+          senderName: 'Sunita Patil',
+          senderPhone: '9422001122',
+          receiverName: 'Rohan Patil',
+          receiverPhone: '9822334455',
+          distance: '4.2 km',
+          estTime: '18 - 22 Mins',
+          total: 55,
+          paymentMethod: 'UPI / QR Code',
+          status: 'Delivered',
+          rider: 'Suresh Mahajan',
+          vehicle: 'Delivery Scooter (MH 19 CK 4012)',
+          otp: '7214',
+          otpVerified: true,
+          timestamp: '2026-08-03T14:15:00.000Z',
+          deliveredAt: '2026-08-03T14:37:00.000Z'
+        },
+        {
+          id: 'PARCEL-BHU-602918',
+          type: 'PARCEL',
+          category: 'Mobile / Electronics',
+          description: 'Smartphone box with charger & invoice',
+          weight: 'Up to 1 kg',
+          pickupAddress: 'Main Market, Mobile Plaza, Bhusawal',
+          dropAddress: 'Tapti Nagar, Block C, Bhusawal',
+          senderName: 'Ganesh Electronics',
+          senderPhone: '9890112233',
+          receiverName: 'Pooja Chaudhari',
+          receiverPhone: '9765432109',
+          distance: '2.8 km',
+          estTime: '12 - 16 Mins',
+          total: 45,
+          paymentMethod: 'Cash on Delivery',
+          status: 'Delivered',
+          rider: 'Vikram Patil',
+          vehicle: 'Express Bike (MH 19 BJ 5921)',
+          otp: '9103',
+          otpVerified: true,
+          timestamp: '2026-08-01T16:00:00.000Z',
+          deliveredAt: '2026-08-01T16:18:00.000Z'
+        }
+      ];
+
+      // READ BOOKINGS FROM LOCALSTORAGE
+      var allOrders = [];
+      try {
+        allOrders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+      } catch(e) {}
+
+      // Filter parcel / bike ride bookings or fallback to samples
+      var parcelBookings = allOrders.filter(function(o) { return o.type === 'PARCEL' || o.type === 'BIKE_RIDE' || o.pickupAddress; });
+      if (parcelBookings.length === 0) {
+        parcelBookings = sampleParcelBookings;
+      }
+
+      var currentFilterStatus = 'ALL';
+      var currentSearchQuery = '';
+
+      var containerEl = document.getElementById('bookings-container');
+      var emptyEl = document.getElementById('empty-history-state');
+      var searchInput = document.getElementById('search-history-input');
+      var clearSearchBtn = document.getElementById('btn-clear-search');
+
+      // UPDATE STATS COUNTS
+      function updateCounts() {
+        var countAll = parcelBookings.length;
+        var countDel = parcelBookings.filter(function(b) { return b.status === 'Delivered'; }).length;
+        var countAct = parcelBookings.filter(function(b) { return b.status !== 'Delivered' && b.status !== 'Cancelled'; }).length;
+        var countCan = parcelBookings.filter(function(b) { return b.status === 'Cancelled'; }).length;
+
+        var elAll = document.getElementById('count-all');
+        var elDel = document.getElementById('count-delivered');
+        var elAct = document.getElementById('count-active');
+        var elCan = document.getElementById('count-cancelled');
+
+        if (elAll) elAll.textContent = countAll;
+        if (elDel) elDel.textContent = countDel;
+        if (elAct) elAct.textContent = countAct;
+        if (elCan) elCan.textContent = countCan;
+      }
+
+      // RENDER BOOKINGS
+      function renderBookings() {
+        if (!containerEl) return;
+        updateCounts();
+
+        var query = currentSearchQuery.toLowerCase().trim();
+
+        var filtered = parcelBookings.filter(function(b) {
+          // Status filter
+          if (currentFilterStatus === 'Delivered' && b.status !== 'Delivered') return false;
+          if (currentFilterStatus === 'In Transit' && (b.status === 'Delivered' || b.status === 'Cancelled')) return false;
+          if (currentFilterStatus === 'Cancelled' && b.status !== 'Cancelled') return false;
+
+          // Search filter
+          if (query) {
+            var matchId = (b.id || '').toLowerCase().indexOf(query) !== -1;
+            var matchPick = (b.pickupAddress || '').toLowerCase().indexOf(query) !== -1;
+            var matchDrop = (b.dropAddress || '').toLowerCase().indexOf(query) !== -1;
+            var matchCat = (b.category || '').toLowerCase().indexOf(query) !== -1;
+            var matchRider = (b.rider || '').toLowerCase().indexOf(query) !== -1;
+            return matchId || matchPick || matchDrop || matchCat || matchRider;
+          }
+
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          containerEl.innerHTML = '';
+          if (emptyEl) emptyEl.classList.remove('hidden');
+          return;
+        }
+
+        if (emptyEl) emptyEl.classList.add('hidden');
+
+        var html = '';
+        filtered.forEach(function(b) {
+          var dateStr = b.timestamp ? new Date(b.timestamp).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Aug 04, 2026';
+          var delTimeStr = b.deliveredAt ? new Date(b.deliveredAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '11:48 AM';
+
+          var isDelivered = b.status === 'Delivered';
+          var isCancelled = b.status === 'Cancelled';
+
+          var statusBadge = isDelivered 
+            ? '<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">✅ Delivered</span>'
+            : (isCancelled 
+              ? '<span class="bg-rose-100 text-rose-800 border border-rose-300 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">❌ Cancelled</span>'
+              : '<span class="bg-yellowBrand text-slate-950 border border-yellowDark/20 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase animate-pulse">⚡ In Transit</span>');
+
+          html += `
+            <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-4 group">
+              
+              <!-- CARD HEADER -->
+              <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-9 h-9 rounded-xl bg-yellowLight text-yellowDeep flex items-center justify-center text-lg font-black border border-yellowBorder shadow-2xs">
+                    📦
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="text-sm font-black font-display text-slate-900">${b.id || 'PARCEL-BHU'}</h3>
+                      ${statusBadge}
+                    </div>
+                    <span class="text-[10px] font-extrabold text-slate-400">Booking Date: ${dateStr}</span>
+                  </div>
+                </div>
+
+                <div class="text-right">
+                  <span class="text-lg font-black font-display text-yellowDeep block">₹${b.total || 40}</span>
+                  <span class="text-[10px] font-bold text-slate-400 block">${b.paymentMethod || 'Cash on Pickup'}</span>
+                </div>
+              </div>
+
+              <!-- CARD BODY: ADDRESSES & SPECIFICATIONS -->
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-4 text-xs">
+                
+                <!-- ADDRESSES (7 COLS) -->
+                <div class="md:col-span-7 space-y-2 relative pl-3.5 border-l-2 border-dashed border-slate-300">
+                  <div>
+                    <span class="text-[9px] font-black text-sky-700 uppercase tracking-wider block">📍 Pickup Address</span>
+                    <p class="font-bold text-slate-900 truncate">${b.pickupAddress || 'Varangaon Road, Bhusawal'}</p>
+                  </div>
+                  <div>
+                    <span class="text-[9px] font-black text-slate-700 uppercase tracking-wider block">🏁 Drop Address</span>
+                    <p class="font-bold text-slate-900 truncate">${b.dropAddress || 'Jamner Road, Bhusawal'}</p>
+                  </div>
+                </div>
+
+                <!-- ITEM & RIDER INFO (5 COLS) -->
+                <div class="md:col-span-5 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 space-y-1.5">
+                  <div class="flex justify-between font-semibold">
+                    <span class="text-slate-500 text-[10px]">Item Category:</span>
+                    <span class="font-black text-slate-900 text-[11px]">${b.category || 'Documents'}</span>
+                  </div>
+                  <div class="flex justify-between font-semibold">
+                    <span class="text-slate-500 text-[10px]">Delivery Partner:</span>
+                    <span class="font-black text-slate-900 text-[11px]">${b.rider || 'Vikram Patil'}</span>
+                  </div>
+                  <div class="flex justify-between font-semibold">
+                    <span class="text-slate-500 text-[10px]">Delivered Time:</span>
+                    <span class="font-bold text-emerald-700 text-[11px]">${isDelivered ? delTimeStr : 'In Transit'}</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- ACTION BUTTONS: VIEW DETAILS, BOOK AGAIN, DOWNLOAD RECEIPT -->
+              <div class="pt-2 border-t border-slate-100 flex items-center justify-end gap-2 flex-wrap">
+                <!-- VIEW DETAILS -->
+                <button type="button" class="btn-view-details px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs rounded-xl transition-all active:scale-95 flex items-center gap-1" data-id="${b.id}">
+                  <span class="material-symbols-outlined text-base text-slate-600">visibility</span>
+                  <span>View Details</span>
+                </button>
+
+                <!-- BOOK AGAIN -->
+                <button type="button" class="btn-book-again px-4 py-2.5 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white font-black text-xs rounded-xl transition-all active:scale-95 flex items-center gap-1 shadow-xs" data-id="${b.id}">
+                  <span class="material-symbols-outlined text-base">refresh</span>
+                  <span>Book Again</span>
+                </button>
+
+                <!-- DOWNLOAD RECEIPT -->
+                <button type="button" class="btn-download-receipt px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs rounded-xl transition-all active:scale-95 flex items-center gap-1 shadow-xs" data-id="${b.id}">
+                  <span class="material-symbols-outlined text-base text-yellowBrand">download</span>
+                  <span>Download Receipt</span>
+                </button>
+              </div>
+
+            </div>
+          `;
+        });
+
+        containerEl.innerHTML = html;
+        attachCardListeners();
+      }
+
+      // ATTACH EVENT LISTENERS TO CARD BUTTONS
+      var activeSelectedBooking = null;
+
+      function attachCardListeners() {
+        // VIEW DETAILS BUTTON
+        document.querySelectorAll('.btn-view-details').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var bId = btn.getAttribute('data-id');
+            var booking = parcelBookings.find(function(x) { return x.id === bId; });
+            if (!booking) return;
+
+            activeSelectedBooking = booking;
+
+            var dId = document.getElementById('modal-order-id');
+            var dStatus = document.getElementById('modal-status-text');
+            var dTime = document.getElementById('modal-delivered-time');
+            var dPick = document.getElementById('modal-pickup-addr');
+            var dDrop = document.getElementById('modal-drop-addr');
+            var dSender = document.getElementById('modal-sender-info');
+            var dReceiver = document.getElementById('modal-receiver-info');
+            var dRider = document.getElementById('modal-rider-name');
+            var dVehicle = document.getElementById('modal-vehicle-info');
+            var dOtp = document.getElementById('modal-otp-code');
+            var dCat = document.getElementById('modal-category');
+            var dWeight = document.getElementById('modal-weight');
+            var dDist = document.getElementById('modal-dist-time');
+            var dFee = document.getElementById('modal-fee');
+
+            if (dId) dId.textContent = booking.id;
+            if (dStatus) dStatus.textContent = booking.status === 'Delivered' ? 'Delivered Successfully' : booking.status;
+            if (dTime) dTime.textContent = booking.deliveredAt ? new Date(booking.deliveredAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'In Transit';
+            if (dPick) dPick.textContent = booking.pickupAddress;
+            if (dDrop) dDrop.textContent = booking.dropAddress;
+            if (dSender) dSender.textContent = 'Sender: ' + (booking.senderName || 'Rahul Patil') + ' • ' + (booking.senderPhone || '9876543210');
+            if (dReceiver) dReceiver.textContent = 'Receiver: ' + (booking.receiverName || 'Amit Sharma') + ' • ' + (booking.receiverPhone || '9123456789');
+            if (dRider) dRider.textContent = booking.rider || 'Vikram Patil';
+            if (dVehicle) dVehicle.textContent = booking.vehicle || 'Express Bike (MH 19 BJ 5921)';
+            if (dOtp) dOtp.textContent = booking.otp || '4892';
+            if (dCat) dCat.textContent = booking.category || 'Documents';
+            if (dWeight) dWeight.textContent = booking.weight || 'Up to 1 kg';
+            if (dDist) dDist.textContent = (booking.distance || '3.5 km') + ' • ' + (booking.estTime || '15 - 20 Mins');
+            if (dFee) dFee.textContent = '₹' + (booking.total || 40);
+
+            var dModal = document.getElementById('details-modal');
+            if (dModal) dModal.classList.remove('hidden');
+          });
+        });
+
+        // BOOK AGAIN BUTTON
+        document.querySelectorAll('.btn-book-again').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var bId = btn.getAttribute('data-id');
+            var booking = parcelBookings.find(function(x) { return x.id === bId; });
+            if (!booking) return;
+
+            var draft = {
+              pickupAddress: booking.pickupAddress,
+              dropAddress: booking.dropAddress,
+              category: booking.category,
+              description: booking.description || '',
+              weight: booking.weight || 'Up to 1 kg',
+              instructions: booking.instructions || ''
+            };
+            try {
+              localStorage.setItem('bhusawal_parcel_draft', JSON.stringify(draft));
+            } catch(e) {}
+
+            window.location.href = '/parcel';
+          });
+        });
+
+        // DOWNLOAD RECEIPT BUTTON
+        document.querySelectorAll('.btn-download-receipt').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var bId = btn.getAttribute('data-id');
+            var booking = parcelBookings.find(function(x) { return x.id === bId; });
+            if (!booking) return;
+
+            openReceiptModal(booking);
+          });
+        });
+      }
+
+      function openReceiptModal(booking) {
+        activeSelectedBooking = booking;
+
+        var rId = document.getElementById('receipt-id');
+        var rDate = document.getElementById('receipt-date');
+        var rPick = document.getElementById('receipt-pickup');
+        var rDrop = document.getElementById('receipt-drop');
+        var rTotal = document.getElementById('receipt-total');
+
+        if (rId) rId.textContent = booking.id;
+        if (rDate) rDate.textContent = booking.timestamp ? new Date(booking.timestamp).toLocaleString() : 'Aug 04, 2026';
+        if (rPick) rPick.textContent = booking.pickupAddress;
+        if (rDrop) rDrop.textContent = booking.dropAddress;
+        if (rTotal) rTotal.textContent = '₹' + (booking.total || 40) + '.00';
+
+        var rModal = document.getElementById('printable-receipt-modal');
+        if (rModal) rModal.classList.remove('hidden');
+      }
+
+      // TAB FILTER CLICK LISTENERS
+      document.querySelectorAll('.status-tab-btn').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          document.querySelectorAll('.status-tab-btn').forEach(function(t) {
+            t.classList.remove('bg-yellowBrand', 'text-slate-950', 'active');
+            t.classList.add('bg-slate-50', 'text-slate-700');
+          });
+          tab.classList.add('bg-yellowBrand', 'text-slate-950', 'active');
+          tab.classList.remove('bg-slate-50', 'text-slate-700');
+
+          currentFilterStatus = tab.getAttribute('data-status');
+          renderBookings();
+        });
+      });
+
+      // SEARCH INPUT LISTENER
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          currentSearchQuery = searchInput.value;
+          if (clearSearchBtn) {
+            if (currentSearchQuery) clearSearchBtn.classList.remove('hidden');
+            else clearSearchBtn.classList.add('hidden');
+          }
+          renderBookings();
+        });
+      }
+
+      if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', function() {
+          if (searchInput) searchInput.value = '';
+          currentSearchQuery = '';
+          clearSearchBtn.classList.add('hidden');
+          renderBookings();
+        });
+      }
+
+      // CLOSE DETAILS MODAL
+      var btnCloseDetails = document.getElementById('btn-close-details-modal');
+      var detailsModal = document.getElementById('details-modal');
+      if (btnCloseDetails && detailsModal) {
+        btnCloseDetails.addEventListener('click', function() {
+          detailsModal.classList.add('hidden');
+        });
+      }
+
+      // MODAL FOOTER ACTION BUTTONS
+      var modalBtnDownload = document.getElementById('modal-btn-download');
+      var modalBtnRebook = document.getElementById('modal-btn-rebook');
+
+      if (modalBtnDownload) {
+        modalBtnDownload.addEventListener('click', function() {
+          if (detailsModal) detailsModal.classList.add('hidden');
+          if (activeSelectedBooking) openReceiptModal(activeSelectedBooking);
+        });
+      }
+
+      if (modalBtnRebook) {
+        modalBtnRebook.addEventListener('click', function() {
+          if (!activeSelectedBooking) return;
+          var draft = {
+            pickupAddress: activeSelectedBooking.pickupAddress,
+            dropAddress: activeSelectedBooking.dropAddress,
+            category: activeSelectedBooking.category
+          };
+          try { localStorage.setItem('bhusawal_parcel_draft', JSON.stringify(draft)); } catch(e) {}
+          window.location.href = '/parcel';
+        });
+      }
+
+      // RECEIPT MODAL BUTTONS
+      var btnDoPrint = document.getElementById('btn-do-print');
+      var btnCloseReceipt = document.getElementById('btn-close-receipt');
+      var receiptModal = document.getElementById('printable-receipt-modal');
+
+      if (btnDoPrint) {
+        btnDoPrint.addEventListener('click', function() {
+          window.print();
+        });
+      }
+
+      if (btnCloseReceipt && receiptModal) {
+        btnCloseReceipt.addEventListener('click', function() {
+          receiptModal.classList.add('hidden');
+        });
+      }
+
+      // INITIAL RENDER
+      renderBookings();
+
+    })();
+  </script>
+</body>
+</html>
