@@ -27,7 +27,6 @@ const sectionDefinitions = [
 // Helper to filter items for each section
 function getItemsForSection(secId: string) {
   if (secId === 'popular') {
-    // Hand-picked top items across categories
     return foodCatalog.filter(x => ['bc_food_101', 'bc_food_105', 'bc_food_115', 'bc_food_121', 'bc_food_127', 'bc_food_135', 'bc_food_142', 'bc_food_149', 'bc_food_159', 'bc_food_169', 'bc_food_176', 'bc_food_188', 'bc_food_snk_01', 'bc_food_snk_03'].includes(x.id));
   }
   if (secId === 'breakfast') return foodCatalog.filter(x => x.category === 'Breakfast');
@@ -260,7 +259,7 @@ const featuredPartnerRestaurants = [
       </div>
     </div>
 
-    <!-- ==================== PRODUCT-BASED FOOD SHOPPING (18 HORIZONTALLY SCROLLABLE SECTIONS) ==================== -->
+    <!-- ==================== REDESIGNED PREMIUM FOOD PRODUCT CARDS (MATCHES GROCERY CARDS) ==================== -->
     <div class="space-y-10 pt-2" id="all-food-sections-container">
       {sectionDefinitions.map(sec => {
         const items = getItemsForSection(sec.id);
@@ -282,39 +281,38 @@ const featuredPartnerRestaurants = [
               <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
             </div>
 
-            <!-- HORIZONTALLY SCROLLABLE PRODUCT CAROUSEL (NO RESTAURANTS - ONLY FOOD PRODUCTS) -->
-            <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-1 px-0.5">
+            <!-- HORIZONTALLY SCROLLABLE PRODUCT CAROUSEL -->
+            <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
               {items.map(item => (
                 <div 
-                  class="food-product-card w-48 sm:w-56 shrink-0 bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative"
+                  class="food-product-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative"
                   data-id={item.id}
                   data-name={item.name}
                   data-category={item.category}
                   data-kw={item.searchKeywords ? item.searchKeywords.join(' ') : ''}
                 >
                   <div>
-                    <!-- Image Container (Square Aspect) -->
-                    <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden relative">
+                    <!-- 1. LARGE FOOD IMAGE CONTAINER -->
+                    <div class="w-full aspect-square bg-slate-50/90 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative group-hover:bg-red-50/30 transition-colors">
                       
-                      <!-- Veg / Non-Veg Badge -->
+                      <!-- 2. VEG / NON-VEG BADGE (TOP-LEFT) -->
                       <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
                         <span class={`w-2 h-2 rounded-full shrink-0 ${item.isVeg ? 'bg-emerald-600' : 'bg-rose-600'}`}></span>
                         <span class={item.isVeg ? 'text-emerald-700' : 'text-rose-700'}>{item.isVeg ? 'VEG' : 'NON-VEG'}</span>
                       </div>
 
-                      <!-- Prep Time Badge -->
-                      <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-0.5 shadow-xs z-10">
-                        <span>⏱️ {item.prepTime || '15-20 mins'}</span>
+                      <!-- 3. RATING BADGE (TOP-RIGHT) -->
+                      <div class="absolute top-2 right-2 bg-amber-50 text-amber-800 border border-amber-200/80 px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-0.5 shadow-xs z-10">
+                        <span>⭐</span>
+                        <span>{item.rating || '4.8'}</span>
                       </div>
 
-                      <!-- Favourite Heart Button -->
-                      <button 
-                        class="fav-food-btn absolute top-2 right-2 w-7 h-7 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition-all z-10 shadow-xs"
-                        onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';"
-                      >
-                        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
-                      </button>
+                      <!-- 4. PREPARATION TIME BADGE (BOTTOM-LEFT) -->
+                      <div class="absolute bottom-2 left-2 bg-slate-900/85 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-1 shadow-xs z-10">
+                        <span>⏱️ {item.prepTime || '15-20 min'}</span>
+                      </div>
 
+                      <!-- Large Product Image -->
                       <img 
                         loading="lazy" 
                         src={item.image} 
@@ -324,20 +322,23 @@ const featuredPartnerRestaurants = [
                       />
                     </div>
 
-                    <!-- Category Tag -->
-                    <span class="text-[10px] font-bold text-redBrand uppercase tracking-wider block mb-0.5 truncate">
+                    <!-- Category Label -->
+                    <span class="text-[10px] font-extrabold text-redBrand uppercase tracking-wider block mb-0.5 truncate">
                       {item.category}
                     </span>
 
-                    <!-- Food Name -->
-                    <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug min-h-[2.2rem]">
+                    <!-- 5. PRODUCT NAME -->
+                    <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem] group-hover:text-redBrand transition-colors">
                       {item.name}
                     </h3>
                   </div>
 
-                  <!-- Price & Add / Quantity Selector -->
-                  <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
-                    <span class="text-xs sm:text-sm font-black text-slate-900">₹{item.price}</span>
+                  <!-- 6. PRICE, ADD TO CART BUTTON & QUANTITY SELECTOR -->
+                  <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
+                    <div class="flex flex-col">
+                      <span class="text-[9px] text-slate-400 font-bold uppercase">Price</span>
+                      <span class="text-sm sm:text-base font-black font-display text-slate-900">₹{item.price}</span>
+                    </div>
 
                     <div 
                       class="food-direct-action-box" 
@@ -346,10 +347,12 @@ const featuredPartnerRestaurants = [
                       data-price={item.price} 
                       data-img={item.image}
                     >
-                      <button class="btn-add-direct-food px-3 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-[10px] font-black rounded-xl active:scale-90 transition-all shadow-xs">
-                        + ADD
+                      <!-- 7. ADD TO CART BUTTON -->
+                      <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs flex items-center gap-1">
+                        <span>+ ADD</span>
                       </button>
 
+                      <!-- 8. QUANTITY SELECTOR STEPPER (- 1 +) -->
                       <div class="qty-control-wrapper hidden items-center bg-redLight border border-red-200 rounded-xl p-0.5 shadow-xs">
                         <button class="btn-qty-minus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
                           -
