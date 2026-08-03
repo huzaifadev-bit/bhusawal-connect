@@ -1174,18 +1174,20 @@ const allMedicines = [
           var mrp = parseFloat(card.getAttribute('data-mrp')) || price;
           var img = card.getAttribute('data-img');
           var brand = card.getAttribute('data-brand') || '';
+          var rxRequired = card.getAttribute('data-rx') === 'true';
 
-          var cart = getGlobalCart();
+          var cart = window.getGlobalCart();
           var existing = cart.find(function(c) { return c.id === id; });
           if (existing) {
             existing.quantity = (existing.quantity || 1) + 1;
           } else {
             cart.push({
               id: id, name: name, price: price, mrp: mrp, image: img,
-              quantity: 1, restaurant: brand || 'Bhusawal Express Pharmacy', cat: 'Medicines'
+              quantity: 1, restaurant: brand || 'Bhusawal Express Pharmacy', cat: 'Medicines',
+              rxRequired: rxRequired
             });
           }
-          saveGlobalCart(cart);
+          window.saveGlobalCart(cart);
         }
       });
 
