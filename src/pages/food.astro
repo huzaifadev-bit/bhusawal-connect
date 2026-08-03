@@ -2,49 +2,34 @@
 import Switcher from '../components/Switcher.astro';
 import foodCatalog from '../../public/food_catalog.json';
 
-// Premium 28 Food Categories with Icons
+// Food Categories
 const foodCategories = [
   { id: 'all', name: 'All Foods', icon: '🍽️', kw: '' },
-  { id: 'breakfast', name: 'Breakfast', icon: '🍳', kw: 'breakfast' },
-  { id: 'snacks', name: 'Snacks', icon: '🍿', kw: 'snacks' },
   { id: 'pizza', name: 'Pizza', icon: '🍕', kw: 'pizza' },
   { id: 'burger', name: 'Burger', icon: '🍔', kw: 'burger' },
-  { id: 'sandwich', name: 'Sandwich', icon: '🥪', kw: 'sandwich' },
-  { id: 'rolls', name: 'Rolls', icon: '🌯', kw: 'rolls' },
   { id: 'biryani', name: 'Biryani', icon: '🍲', kw: 'biryani' },
-  { id: 'rice', name: 'Rice', icon: '🍚', kw: 'rice' },
   { id: 'chinese', name: 'Chinese', icon: '🍜', kw: 'chinese' },
   { id: 'south_indian', name: 'South Indian', icon: '🥞', kw: 'south' },
   { id: 'north_indian', name: 'North Indian', icon: '🍱', kw: 'north' },
-  { id: 'veg_curry', name: 'Veg Curry', icon: '🥘', kw: 'veg curry' },
-  { id: 'chicken_curry', name: 'Chicken Curry', icon: '🍗', kw: 'chicken' },
+  { id: 'veg', name: 'Veg', icon: '🟢', kw: 'veg' },
+  { id: 'non_veg', name: 'Non Veg', icon: '🔴', kw: 'non' },
+  { id: 'chicken', name: 'Chicken', icon: '🍗', kw: 'chicken' },
   { id: 'mutton', name: 'Mutton', icon: '🍖', kw: 'mutton' },
   { id: 'seafood', name: 'Seafood', icon: '🦐', kw: 'seafood' },
   { id: 'roti', name: 'Roti', icon: '🫓', kw: 'roti' },
-  { id: 'naan', name: 'Naan', icon: '🍞', kw: 'naan' },
-  { id: 'paratha', name: 'Paratha', icon: '🥙', kw: 'paratha' },
-  { id: 'thali', name: 'Thali', icon: '🍱', kw: 'thali' },
   { id: 'desserts', name: 'Desserts', icon: '🍨', kw: 'desserts' },
-  { id: 'ice_cream', name: 'Ice Cream', icon: '🍦', kw: 'ice cream' },
-  { id: 'juices', name: 'Juices', icon: '🧃', kw: 'juices' },
-  { id: 'tea', name: 'Tea', icon: '🫖', kw: 'tea' },
-  { id: 'coffee', name: 'Coffee', icon: '☕', kw: 'coffee' },
-  { id: 'milkshake', name: 'Milkshake', icon: '🥤', kw: 'milkshake' },
-  { id: 'street_food', name: 'Street Food', icon: '🧆', kw: 'street food' },
-  { id: 'bakery', name: 'Bakery', icon: '🥐', kw: 'bakery' }
+  { id: 'beverages', name: 'Beverages', icon: '🥤', kw: 'shake' }
 ];
 
-// Partner Sponsored Restaurants
-const sponsoredPartnerRestaurants = [
+// Featured Partner Restaurants (Compact 1 Horizontal Scroll Row)
+const featuredPartnerRestaurants = [
   {
     id: 'royal_biryani',
     name: 'Royal Biryani & Caterers',
     logo: '🍲',
     cover: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
     rating: '4.8',
-    ratingsCount: '850+',
     deliveryTime: '20-25 min',
-    cuisine: 'Mughlai • Dum Biryani • North Indian',
     isVerified: true
   },
   {
@@ -53,9 +38,7 @@ const sponsoredPartnerRestaurants = [
     logo: '🏨',
     cover: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
     rating: '4.9',
-    ratingsCount: '1,120+',
     deliveryTime: '15-20 min',
-    cuisine: 'Multi-Cuisine • Thalis • North Indian',
     isVerified: true
   },
   {
@@ -64,9 +47,7 @@ const sponsoredPartnerRestaurants = [
     logo: '🥛',
     cover: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80',
     rating: '4.9',
-    ratingsCount: '1,500+',
     deliveryTime: '10-15 min',
-    cuisine: 'Fresh Milk • Paneer • Traditional Sweets',
     isVerified: true
   },
   {
@@ -75,9 +56,7 @@ const sponsoredPartnerRestaurants = [
     logo: '🍦',
     cover: 'https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=800&q=80',
     rating: '4.7',
-    ratingsCount: '610+',
     deliveryTime: '12-18 min',
-    cuisine: 'Ice Creams • Shakes • Sundaes • Desserts',
     isVerified: true
   }
 ];
@@ -129,7 +108,7 @@ const sponsoredPartnerRestaurants = [
 
 <body class="pb-28 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased bg-white">
 
-  <!-- 1. TOP HEADER (DELIVERY ADDRESS & NOTIFICATION BUTTON) -->
+  <!-- ==================== SECTION 1: HEADER, SEARCH & BANNER ==================== -->
   <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-6 py-3.5 shadow-xs flex items-center justify-between">
     
     <div class="flex items-center gap-3">
@@ -171,19 +150,105 @@ const sponsoredPartnerRestaurants = [
 
   <main class="px-4 sm:px-6 py-5 space-y-6">
 
-    <!-- 2. STICKY SEARCH BAR -->
+    <!-- Search Bar -->
     <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2">
       <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-redBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
-        <input type="text" id="food-search-input" placeholder="Search dishes, biryani, thalis, pizza, sweets..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
+        <input type="text" id="food-search-input" placeholder="Search dishes, biryani, thalis, pizza, burger..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
         <button id="clear-food-search" class="hidden text-slate-400 hover:text-slate-600">
           <span class="material-symbols-outlined text-lg">close</span>
         </button>
       </div>
     </div>
 
-    <!-- 3. STICKY 28 PREMIUM FOOD CATEGORIES BAR -->
-    <section class="sticky top-32 z-30 bg-white/95 backdrop-blur-md py-2.5 border-y border-slate-100/80 -mx-4 sm:-mx-6 px-4 sm:px-6">
+    <!-- Food Banner Slider / Carousel -->
+    <section class="relative overflow-hidden rounded-3xl shadow-xl bg-gradient-to-r from-red-600 via-red-700 to-rose-900 text-white p-6 sm:p-8">
+      <div class="relative z-10 max-w-xl space-y-3" id="banner-slider-content">
+        <div class="flex items-center gap-2">
+          <span class="px-3 py-1 bg-white text-redBrand text-[10px] font-black uppercase tracking-wider rounded-full shadow-xs">BHUSAWAL FOOD EXPRESS</span>
+          <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">20 MIN DELIVERY</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black font-display text-white leading-tight" id="banner-slider-title">Craving Something Delicious?</h1>
+        <p class="text-xs sm:text-sm text-red-100 font-semibold" id="banner-slider-subtitle">Order Biryani, Thalis, Starters & Sweets directly with 20-Min express delivery.</p>
+        <div class="pt-1">
+          <a href="#order-food-directly" id="banner-slider-btn" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-redBrand hover:bg-redLight font-black text-xs rounded-xl shadow-md transition-all active:scale-95">
+            <span>Order Food Now</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="absolute bottom-3 right-4 flex items-center gap-1.5 z-10">
+        <span class="w-2.5 h-2.5 rounded-full bg-white transition-all cursor-pointer" id="dot-0"></span>
+        <span class="w-2 h-2 rounded-full bg-white/40 transition-all cursor-pointer" id="dot-1"></span>
+        <span class="w-2 h-2 rounded-full bg-white/40 transition-all cursor-pointer" id="dot-2"></span>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 2: FEATURED PARTNER RESTAURANTS (1 SCROLL ROW ONLY) ==================== -->
+    <section class="space-y-3 pt-1">
+      <div class="flex items-center justify-between px-1">
+        <h2 class="text-base sm:text-lg font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+          <span class="text-amber-500">⭐</span>
+          <span>Featured Partner Restaurants</span>
+        </h2>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">Scroll →</span>
+      </div>
+
+      <!-- SINGLE COMPACT HORIZONTAL SCROLLING ROW -->
+      <div class="flex items-center gap-4 overflow-x-auto no-scrollbar py-1.5 px-0.5">
+        {featuredPartnerRestaurants.map(rest => (
+          <div 
+            class="compact-rest-card w-64 sm:w-72 shrink-0 bg-white rounded-2xl border border-slate-100 shadow-xs hover:shadow-lg hover:border-redBrand transition-all cursor-pointer overflow-hidden flex flex-col justify-between group"
+            onclick={`window.location.href='/shops?id=${rest.id}';`}
+          >
+            <!-- Cover Image (Compact Height) -->
+            <div class="h-28 sm:h-32 bg-slate-100 relative overflow-hidden">
+              <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+              
+              <!-- Verified Partner Badge -->
+              <span class="absolute top-2 left-2 px-2 py-0.5 bg-white/95 backdrop-blur-md text-emerald-700 text-[9px] font-black rounded-full uppercase tracking-wider shadow-xs border border-slate-200">
+                ✓ Verified
+              </span>
+
+              <!-- Delivery Time -->
+              <span class="absolute bottom-2 right-2 px-2 py-0.5 bg-redBrand text-white text-[9px] font-black rounded-full shadow-xs">
+                ⚡ {rest.deliveryTime}
+              </span>
+            </div>
+
+            <!-- Compact Content -->
+            <div class="p-3 flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-redLight text-redBrand flex items-center justify-center text-lg shrink-0 border border-red-100">
+                {rest.logo}
+              </div>
+              <div class="min-w-0 flex-1">
+                <h3 class="text-xs font-black font-display text-slate-900 group-hover:text-redBrand transition-colors truncate">
+                  {rest.name}
+                </h3>
+                <div class="flex items-center gap-1 text-[10px] font-bold text-amber-500 mt-0.5">
+                  <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+                  <span>{rest.rating} Rating</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 3: FOOD CATEGORIES (HORIZONTAL CHIPS) ==================== -->
+    <section class="space-y-3 pt-2">
+      <div class="flex items-center justify-between px-1">
+        <h2 class="text-base sm:text-lg font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+          <span>🍕</span>
+          <span>Food Categories</span>
+        </h2>
+      </div>
+
+      <!-- HORIZONTAL CATEGORY CHIPS -->
       <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
         {foodCategories.map((cat, idx) => (
           <button 
@@ -201,89 +266,7 @@ const sponsoredPartnerRestaurants = [
       </div>
     </section>
 
-    <!-- 4. FOOD BANNER SLIDER / CAROUSEL -->
-    <section class="relative overflow-hidden rounded-3xl shadow-xl bg-gradient-to-r from-red-600 via-red-700 to-rose-900 text-white p-6 sm:p-8">
-      <div class="relative z-10 max-w-xl space-y-3" id="banner-slider-content">
-        <div class="flex items-center gap-2">
-          <span class="px-3 py-1 bg-white text-redBrand text-[10px] font-black uppercase tracking-wider rounded-full shadow-xs">BHUSAWAL FOOD EXPRESS</span>
-          <span class="px-2.5 py-0.5 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-full">HOT & FRESH</span>
-        </div>
-        <h1 class="text-2xl sm:text-3xl font-black font-display text-white leading-tight" id="banner-slider-title">Craving Something Delicious?</h1>
-        <p class="text-xs sm:text-sm text-red-100 font-semibold" id="banner-slider-subtitle">Order Biryani, Thalis, Starters & Sweets directly with 20-Min express delivery.</p>
-        <div class="pt-1">
-          <a href="#order-food-directly" id="banner-slider-btn" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-redBrand hover:bg-redLight font-black text-xs rounded-xl shadow-md transition-all active:scale-95">
-            <span>Order Food Now</span>
-            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Slider Indicator Dots -->
-      <div class="absolute bottom-3 right-4 flex items-center gap-1.5 z-10">
-        <span class="w-2.5 h-2.5 rounded-full bg-white transition-all cursor-pointer" id="dot-0"></span>
-        <span class="w-2 h-2 rounded-full bg-white/40 transition-all cursor-pointer" id="dot-1"></span>
-        <span class="w-2 h-2 rounded-full bg-white/40 transition-all cursor-pointer" id="dot-2"></span>
-      </div>
-    </section>
-
-    <!-- 5. HORIZONTAL SECTION: SPONSORED RESTAURANTS -->
-    <section class="space-y-4 pt-1">
-      <div class="flex items-center justify-between px-1">
-        <div>
-          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span class="text-amber-500">⭐</span>
-            <span>Sponsored Restaurants</span>
-          </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Top featured dining partners</p>
-        </div>
-        <span class="px-3 py-1 bg-amber-100 text-amber-800 text-[10px] font-black uppercase tracking-wider rounded-full border border-amber-200">
-          PARTNERS
-        </span>
-      </div>
-
-      <div id="sponsored-restaurants-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {sponsoredPartnerRestaurants.map(rest => (
-          <div 
-            class="restaurant-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-redBrand transition-all duration-300 overflow-hidden cursor-pointer flex flex-col justify-between relative"
-            data-id={rest.id}
-            data-name={rest.name.toLowerCase()} 
-            data-cuisine={rest.cuisine.toLowerCase()}
-            onclick={`window.location.href='/shops?id=${rest.id}';`}
-          >
-            <div class="h-40 bg-slate-100 relative overflow-hidden rounded-t-3xl">
-              <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent"></div>
-              
-              <div class="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-emerald-700 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-md z-10 border border-slate-200">
-                <span>✓ Verified</span>
-              </div>
-
-              <div class="absolute bottom-3 left-3 bg-slate-900/85 backdrop-blur-md text-amber-400 px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-1 shadow-xs z-10">
-                <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
-                <span class="text-white">{rest.rating}</span>
-              </div>
-            </div>
-
-            <div class="p-3.5 space-y-2 flex-1 flex flex-col justify-between">
-              <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-redLight text-redBrand flex items-center justify-center text-xl shrink-0 border border-red-100">
-                  {rest.logo}
-                </div>
-                <div class="min-w-0 flex-1">
-                  <h3 class="text-sm font-black font-display text-slate-900 group-hover:text-redBrand transition-colors truncate">
-                    {rest.name}
-                  </h3>
-                  <p class="text-[11px] font-bold text-slate-400 truncate">{rest.cuisine}</p>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- 6. MAIN SECTION: ORDER FOOD DIRECTLY (DYNAMIC PRODUCT CATALOG ENGINE) -->
+    <!-- ==================== SECTION 4: ORDER FOOD DIRECTLY (MAIN PRODUCT GRID) ==================== -->
     <section id="order-food-directly" class="space-y-4 pt-4 border-t border-slate-100">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -291,16 +274,16 @@ const sponsoredPartnerRestaurants = [
             <span>🍽️</span>
             <span>Order Food Directly</span>
           </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Order instant meals & dishes without opening restaurant pages</p>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Main section: Order instant dishes directly to cart without opening restaurant pages</p>
         </div>
         <span class="px-3.5 py-1.5 bg-redBrand text-white text-xs font-black rounded-full shadow-sm flex items-center gap-1">
           <span>⚡ Direct Order</span>
         </span>
       </div>
 
-      <!-- DYNAMICALLY POPULATED PRODUCT GRID -->
+      <!-- PRODUCT GRID EXACTLY LIKE GROCERY (2 cols mobile, 3 tablet, 4 lg, 5 xl) -->
       <div id="direct-food-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
-        <!-- JS renders products dynamically from catalog / admin storage -->
+        <!-- Dynamically rendered food products (NO RESTAURANT NAMES DISPLAYED) -->
       </div>
     </section>
 
@@ -308,12 +291,11 @@ const sponsoredPartnerRestaurants = [
 
   <Switcher />
 
-  <!-- DYNAMIC CATALOG & PRICES ENGINE -->
+  <!-- CLIENT-SIDE CATALOG & CART ENGINE -->
   <script is:inline define:vars={{ initialCatalog: foodCatalog }}>
     document.addEventListener('DOMContentLoaded', () => {
 
-      // 1. Load Catalog (Allows Admin Panel Price Edits via localStorage)
-      function getActiveFoodCatalog() {
+      function getActiveCatalog() {
         try {
           const stored = localStorage.getItem('bhusawal_food_catalog');
           if (stored) {
@@ -345,7 +327,7 @@ const sponsoredPartnerRestaurants = [
         if (badge) badge.textContent = totalQty;
       }
 
-      // 2. Render Dynamic Food Cards (No Hardcoded Prices)
+      // Render Food Products Grid (Grocery Style, Zero Restaurant Names)
       function renderFoodGrid(catalogItems) {
         const grid = document.getElementById('direct-food-grid');
         if (!grid) return;
@@ -354,10 +336,9 @@ const sponsoredPartnerRestaurants = [
         catalogItems.forEach(item => {
           const id = item.id;
           const name = item.name;
-          const category = item.category || 'General';
+          const category = item.category || 'Food';
           const isVeg = item.isVeg !== false;
           const price = parseFloat(item.price || 0);
-          const prepTime = item.prepTime || '15 mins';
           const image = item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
 
           html += `
@@ -368,18 +349,13 @@ const sponsoredPartnerRestaurants = [
               data-category="${category.toLowerCase()}"
             >
               <div>
-                <!-- Large Food Image Container -->
+                <!-- Large Food Image Container (Square Aspect) -->
                 <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden relative">
                   
                   <!-- Veg / Non-Veg Badge -->
                   <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
                     <span class="w-2 h-2 rounded-full ${isVeg ? 'bg-emerald-600' : 'bg-rose-600'} shrink-0"></span>
                     <span class="${isVeg ? 'text-emerald-700' : 'text-rose-700'}">${isVeg ? 'VEG' : 'NON-VEG'}</span>
-                  </div>
-
-                  <!-- Prep Time Badge -->
-                  <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-0.5 shadow-xs z-10">
-                    <span>⏱️ ${prepTime}</span>
                   </div>
 
                   <!-- Favourite Heart Button -->
@@ -390,7 +366,7 @@ const sponsoredPartnerRestaurants = [
                   <img loading="lazy" src="${image}" alt="${name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                 </div>
 
-                <!-- Category Tag (No Restaurant Name Displayed) -->
+                <!-- Category Tag (NO RESTAURANT NAME) -->
                 <span class="text-[10px] font-bold text-redBrand uppercase tracking-wider block mb-0.5">
                   ${category}
                 </span>
@@ -401,7 +377,7 @@ const sponsoredPartnerRestaurants = [
                 </h3>
               </div>
 
-              <!-- Dynamic Price & Action Container -->
+              <!-- Price & Add / Quantity Selector -->
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
                 <span class="text-xs sm:text-sm font-black text-slate-900">MRP ₹${price}</span>
 
@@ -499,19 +475,18 @@ const sponsoredPartnerRestaurants = [
         });
       }
 
-      // Initialize Catalog Render
-      const currentCatalog = getActiveFoodCatalog();
-      renderFoodGrid(currentCatalog);
+      // Initialize Grid
+      const catalog = getActiveCatalog();
+      renderFoodGrid(catalog);
       updateCartBadge();
 
-      // Search & Category Filtering Engine
+      // Category Chips Filtering
       const searchInput = document.getElementById('food-search-input');
       const clearBtn = document.getElementById('clear-food-search');
       const categoryChips = document.querySelectorAll('.food-cat-chip');
+      let activeKw = '';
 
-      let activeCategoryKw = '';
-
-      function applyFoodFilters() {
+      function applyFilters() {
         const query = (searchInput?.value || '').trim().toLowerCase();
         const foodCards = document.querySelectorAll('.food-product-card');
 
@@ -520,7 +495,7 @@ const sponsoredPartnerRestaurants = [
           const category = card.dataset.category || '';
 
           const matchesSearch = !query || name.includes(query) || category.includes(query);
-          const matchesCategory = !activeCategoryKw || category.includes(activeCategoryKw) || name.includes(activeCategoryKw);
+          const matchesCategory = !activeKw || category.includes(activeKw) || name.includes(activeKw);
 
           if (matchesSearch && matchesCategory) {
             card.classList.remove('hidden');
@@ -536,13 +511,13 @@ const sponsoredPartnerRestaurants = [
         } else {
           clearBtn?.classList.add('hidden');
         }
-        applyFoodFilters();
+        applyFilters();
       });
 
       clearBtn?.addEventListener('click', () => {
         searchInput.value = '';
         clearBtn.classList.add('hidden');
-        applyFoodFilters();
+        applyFilters();
       });
 
       categoryChips.forEach(chip => {
@@ -555,8 +530,8 @@ const sponsoredPartnerRestaurants = [
           chip.classList.remove('bg-slate-100', 'text-slate-700', 'border', 'border-slate-200/80');
           chip.classList.add('bg-redBrand', 'text-white', 'shadow-md', 'ring-2', 'ring-redBrand/30');
 
-          activeCategoryKw = chip.dataset.kw || '';
-          applyFoodFilters();
+          activeKw = chip.dataset.kw || '';
+          applyFilters();
         });
       });
 
