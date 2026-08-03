@@ -1,5 +1,6 @@
 ---
 import Switcher from '../components/Switcher.astro';
+import foodCatalog from '../../public/food_catalog.json';
 
 // Premium 28 Food Categories with Icons
 const foodCategories = [
@@ -31,37 +32,6 @@ const foodCategories = [
   { id: 'milkshake', name: 'Milkshake', icon: '🥤', kw: 'milkshake' },
   { id: 'street_food', name: 'Street Food', icon: '🧆', kw: 'street food' },
   { id: 'bakery', name: 'Bakery', icon: '🥐', kw: 'bakery' }
-];
-
-// Banners for Food Slider
-const foodBanners = [
-  {
-    id: 1,
-    title: 'Royal Biryani Special',
-    subtitle: 'Hot & Authentic Dum Biryani delivered in 20 Mins',
-    tag: 'BHUSAWAL FOOD EXPRESS',
-    bgGradient: 'from-red-600 via-red-700 to-rose-900',
-    btnText: 'Order Biryani Now',
-    link: '/shops?id=royal_biryani'
-  },
-  {
-    id: 2,
-    title: 'Special Veg Deluxe Thali',
-    subtitle: 'Fresh Home-style Thalis & Sabzi from Sagar Grand',
-    tag: 'TOP RATED DINING',
-    bgGradient: 'from-rose-600 via-red-600 to-red-800',
-    btnText: 'Explore Thalis',
-    link: '/shops?id=sagar_grand'
-  },
-  {
-    id: 3,
-    title: 'Fresh Sweets & Dairy Treats',
-    subtitle: 'Pure Cow Ghee Sweets & Malai Paneer from Shiv Dairy',
-    tag: 'FRESH MORNING',
-    bgGradient: 'from-red-700 via-rose-700 to-red-900',
-    btnText: 'Order Sweets',
-    link: '/shops?id=shiv_dairy'
-  }
 ];
 
 // Partner Sponsored Restaurants
@@ -109,118 +79,6 @@ const sponsoredPartnerRestaurants = [
     deliveryTime: '12-18 min',
     cuisine: 'Ice Creams • Shakes • Sundaes • Desserts',
     isVerified: true
-  }
-];
-
-// Direct Food Catalog Items
-const directFoodItems = [
-  {
-    id: 'food_hyderabadi_biryani',
-    name: 'Special Hyderabadi Chicken Dum Biryani',
-    category: 'Biryani',
-    isVeg: false,
-    price: 240,
-    rating: '4.8',
-    image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_shahi_mutton_biryani',
-    name: 'Royal Shahi Mutton Dum Biryani',
-    category: 'Mutton',
-    isVeg: false,
-    price: 320,
-    rating: '4.9',
-    image: 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_deluxe_veg_thali',
-    name: 'Special Veg Deluxe Unlimited Thali',
-    category: 'Thali',
-    isVeg: true,
-    price: 180,
-    rating: '4.9',
-    image: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_paneer_butter_naan',
-    name: 'Paneer Butter Masala & Butter Naan Combo',
-    category: 'Naan',
-    isVeg: true,
-    price: 210,
-    rating: '4.8',
-    image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_sweets_gift_box',
-    name: 'Fresh Cow Ghee Sweets & Pedha Gift Box',
-    category: 'Bakery',
-    isVeg: true,
-    price: 250,
-    rating: '4.9',
-    image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_choco_lava_sundae',
-    name: 'Chocolate Lava Fudge Sundae Tub (750ml)',
-    category: 'Ice Cream',
-    isVeg: true,
-    price: 190,
-    rating: '4.7',
-    image: 'https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_schezwan_hakka_noodles',
-    name: 'Schezwan Hakka Noodles & Manchurian Gravy',
-    category: 'Chinese',
-    isVeg: true,
-    price: 160,
-    rating: '4.6',
-    image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_chicken_kathi_roll',
-    name: 'Crispy Double Chicken Kathi Roll Supreme',
-    category: 'Rolls',
-    isVeg: false,
-    price: 140,
-    rating: '4.7',
-    image: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_masala_dosa_combo',
-    name: 'Special Butter Masala Dosa & Filter Coffee',
-    category: 'South Indian',
-    isVeg: true,
-    price: 120,
-    rating: '4.7',
-    image: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_cheese_burst_pizza',
-    name: 'Double Cheese Burst Margherita Pizza',
-    category: 'Pizza',
-    isVeg: true,
-    price: 260,
-    rating: '4.6',
-    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_crispy_veg_burger',
-    name: 'Crispy Veg Loaded Burger & Fries Combo',
-    category: 'Burger',
-    isVeg: true,
-    price: 110,
-    rating: '4.5',
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    id: 'food_pithla_bhakri_thali',
-    name: 'Special Maharashtrian Pithla Bhakri Thali',
-    category: 'Thali',
-    isVeg: true,
-    price: 150,
-    rating: '4.8',
-    image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80'
   }
 ];
 ---
@@ -324,7 +182,7 @@ const directFoodItems = [
       </div>
     </div>
 
-    <!-- 3. STICKY 28 PREMIUM FOOD CATEGORIES BAR (RESPONSIVE HORIZONTAL CHIPS) -->
+    <!-- 3. STICKY 28 PREMIUM FOOD CATEGORIES BAR -->
     <section class="sticky top-32 z-30 bg-white/95 backdrop-blur-md py-2.5 border-y border-slate-100/80 -mx-4 sm:-mx-6 px-4 sm:px-6">
       <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
         {foodCategories.map((cat, idx) => (
@@ -425,7 +283,7 @@ const directFoodItems = [
       </div>
     </section>
 
-    <!-- 6. MAIN SECTION: ORDER FOOD DIRECTLY (PREMIUM GROCERY-STYLE PRODUCT GRID) -->
+    <!-- 6. MAIN SECTION: ORDER FOOD DIRECTLY (DYNAMIC PRODUCT CATALOG ENGINE) -->
     <section id="order-food-directly" class="space-y-4 pt-4 border-t border-slate-100">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -440,76 +298,9 @@ const directFoodItems = [
         </span>
       </div>
 
-      <!-- PREMIUM GROCERY PRODUCT GRID STYLE (2 cols mobile, 3 tablet, 4 lg, 5 xl) -->
+      <!-- DYNAMICALLY POPULATED PRODUCT GRID -->
       <div id="direct-food-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
-        {directFoodItems.map(item => (
-          <div 
-            class="food-product-card bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative"
-            data-id={item.id}
-            data-name={item.name.toLowerCase()}
-            data-category={item.category.toLowerCase()}
-          >
-            
-            <div>
-              <!-- Large Food Image Container (Square Aspect) -->
-              <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden relative">
-                
-                <!-- Veg / Non-Veg Badge -->
-                <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
-                  {item.isVeg ? (
-                    <span class="w-2 h-2 rounded-full bg-emerald-600 shrink-0"></span>
-                  ) : (
-                    <span class="w-2 h-2 rounded-full bg-rose-600 shrink-0"></span>
-                  )}
-                  <span class={item.isVeg ? 'text-emerald-700' : 'text-rose-700'}>
-                    {item.isVeg ? 'VEG' : 'NON-VEG'}
-                  </span>
-                </div>
-
-                <!-- Favourite Heart Button -->
-                <button class="fav-food-btn absolute top-2 right-2 w-7 h-7 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
-                  <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
-                </button>
-
-                <img loading="lazy" src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              </div>
-
-              <!-- Category Tag (No Restaurant Name) -->
-              <span class="text-[10px] font-bold text-redBrand uppercase tracking-wider block mb-0.5">
-                {item.category}
-              </span>
-
-              <!-- Food Name -->
-              <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug min-h-[2.2rem]">
-                {item.name}
-              </h3>
-            </div>
-
-            <!-- Price & Add / Quantity Action Container -->
-            <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
-              <span class="text-xs sm:text-sm font-black text-slate-900">MRP ₹{item.price}</span>
-
-              <!-- Action Box -->
-              <div class="food-direct-action-box" data-id={item.id} data-name={item.name} data-price={item.price} data-img={item.image}>
-                <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-[10px] font-black rounded-xl active:scale-90 transition-all shadow-xs">
-                  + ADD
-                </button>
-                
-                <div class="qty-control-wrapper hidden items-center bg-redLight border border-red-200 rounded-xl p-0.5 shadow-xs">
-                  <button class="btn-qty-minus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
-                    -
-                  </button>
-                  <span class="food-qty-num px-2 text-xs font-black text-redBrand min-w-[16px] text-center">1</span>
-                  <button class="btn-qty-plus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
-                    +
-                  </button>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        ))}
+        <!-- JS renders products dynamically from catalog / admin storage -->
       </div>
     </section>
 
@@ -517,9 +308,21 @@ const directFoodItems = [
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CART ENGINE & DYNAMIC CATEGORY FILTERING -->
-  <script is:inline>
+  <!-- DYNAMIC CATALOG & PRICES ENGINE -->
+  <script is:inline define:vars={{ initialCatalog: foodCatalog }}>
     document.addEventListener('DOMContentLoaded', () => {
+
+      // 1. Load Catalog (Allows Admin Panel Price Edits via localStorage)
+      function getActiveFoodCatalog() {
+        try {
+          const stored = localStorage.getItem('bhusawal_food_catalog');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          }
+        } catch(e) {}
+        return initialCatalog;
+      }
 
       function getCart() {
         try {
@@ -540,6 +343,92 @@ const directFoodItems = [
         const badge = document.getElementById('food-cart-badge');
         const totalQty = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
         if (badge) badge.textContent = totalQty;
+      }
+
+      // 2. Render Dynamic Food Cards (No Hardcoded Prices)
+      function renderFoodGrid(catalogItems) {
+        const grid = document.getElementById('direct-food-grid');
+        if (!grid) return;
+
+        let html = '';
+        catalogItems.forEach(item => {
+          const id = item.id;
+          const name = item.name;
+          const category = item.category || 'General';
+          const isVeg = item.isVeg !== false;
+          const price = parseFloat(item.price || 0);
+          const prepTime = item.prepTime || '15 mins';
+          const image = item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+
+          html += `
+            <div 
+              class="food-product-card bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative"
+              data-id="${id}"
+              data-name="${name.toLowerCase()}"
+              data-category="${category.toLowerCase()}"
+            >
+              <div>
+                <!-- Large Food Image Container -->
+                <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden relative">
+                  
+                  <!-- Veg / Non-Veg Badge -->
+                  <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
+                    <span class="w-2 h-2 rounded-full ${isVeg ? 'bg-emerald-600' : 'bg-rose-600'} shrink-0"></span>
+                    <span class="${isVeg ? 'text-emerald-700' : 'text-rose-700'}">${isVeg ? 'VEG' : 'NON-VEG'}</span>
+                  </div>
+
+                  <!-- Prep Time Badge -->
+                  <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-0.5 shadow-xs z-10">
+                    <span>⏱️ ${prepTime}</span>
+                  </div>
+
+                  <!-- Favourite Heart Button -->
+                  <button class="fav-food-btn absolute top-2 right-2 w-7 h-7 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+                    <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+                  </button>
+
+                  <img loading="lazy" src="${image}" alt="${name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                </div>
+
+                <!-- Category Tag (No Restaurant Name Displayed) -->
+                <span class="text-[10px] font-bold text-redBrand uppercase tracking-wider block mb-0.5">
+                  ${category}
+                </span>
+
+                <!-- Food Name -->
+                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug min-h-[2.2rem]">
+                  ${name}
+                </h3>
+              </div>
+
+              <!-- Dynamic Price & Action Container -->
+              <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
+                <span class="text-xs sm:text-sm font-black text-slate-900">MRP ₹${price}</span>
+
+                <div class="food-direct-action-box" data-id="${id}" data-name="${name}" data-price="${price}" data-img="${image}">
+                  <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-[10px] font-black rounded-xl active:scale-90 transition-all shadow-xs">
+                    + ADD
+                  </button>
+                  
+                  <div class="qty-control-wrapper hidden items-center bg-redLight border border-red-200 rounded-xl p-0.5 shadow-xs">
+                    <button class="btn-qty-minus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
+                      -
+                    </button>
+                    <span class="food-qty-num px-2 text-xs font-black text-redBrand min-w-[16px] text-center">1</span>
+                    <button class="btn-qty-plus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
+                      +
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          `;
+        });
+
+        grid.innerHTML = html;
+        bindFoodActionHandlers();
+        syncDirectFoodQtyUi();
       }
 
       function syncDirectFoodQtyUi() {
@@ -564,63 +453,67 @@ const directFoodItems = [
         });
       }
 
-      updateCartBadge();
-      syncDirectFoodQtyUi();
+      function bindFoodActionHandlers() {
+        document.querySelectorAll('.food-direct-action-box').forEach(box => {
+          const id = box.dataset.id;
+          const name = box.dataset.name;
+          const price = parseFloat(box.dataset.price);
+          const img = box.dataset.img;
 
-      document.querySelectorAll('.food-direct-action-box').forEach(box => {
-        const id = box.dataset.id;
-        const name = box.dataset.name;
-        const price = parseFloat(box.dataset.price);
-        const img = box.dataset.img;
+          const addBtn = box.querySelector('.btn-add-direct-food');
+          const minusBtn = box.querySelector('.btn-qty-minus');
+          const plusBtn = box.querySelector('.btn-qty-plus');
 
-        const addBtn = box.querySelector('.btn-add-direct-food');
-        const minusBtn = box.querySelector('.btn-qty-minus');
-        const plusBtn = box.querySelector('.btn-qty-plus');
-
-        addBtn?.addEventListener('click', () => {
-          let cart = getCart();
-          const existing = cart.find(i => i.id === id);
-          if (existing) {
-            existing.quantity += 1;
-          } else {
-            cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Direct Food Express' });
-          }
-          setCart(cart);
-        });
-
-        minusBtn?.addEventListener('click', () => {
-          let cart = getCart();
-          const existing = cart.find(i => i.id === id);
-          if (existing) {
-            if (existing.quantity > 1) {
-              existing.quantity -= 1;
+          addBtn?.onclick = () => {
+            let cart = getCart();
+            const existing = cart.find(i => i.id === id);
+            if (existing) {
+              existing.quantity += 1;
             } else {
-              cart = cart.filter(i => i.id !== id);
+              cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Direct Food Express' });
             }
             setCart(cart);
-          }
-        });
+          };
 
-        plusBtn?.addEventListener('click', () => {
-          let cart = getCart();
-          const existing = cart.find(i => i.id === id);
-          if (existing) {
-            existing.quantity += 1;
-            setCart(cart);
-          }
+          minusBtn?.onclick = () => {
+            let cart = getCart();
+            const existing = cart.find(i => i.id === id);
+            if (existing) {
+              if (existing.quantity > 1) {
+                existing.quantity -= 1;
+              } else {
+                cart = cart.filter(i => i.id !== id);
+              }
+              setCart(cart);
+            }
+          };
+
+          plusBtn?.onclick = () => {
+            let cart = getCart();
+            const existing = cart.find(i => i.id === id);
+            if (existing) {
+              existing.quantity += 1;
+              setCart(cart);
+            }
+          };
         });
-      });
+      }
+
+      // Initialize Catalog Render
+      const currentCatalog = getActiveFoodCatalog();
+      renderFoodGrid(currentCatalog);
+      updateCartBadge();
 
       // Search & Category Filtering Engine
       const searchInput = document.getElementById('food-search-input');
       const clearBtn = document.getElementById('clear-food-search');
-      const foodCards = document.querySelectorAll('.food-product-card');
       const categoryChips = document.querySelectorAll('.food-cat-chip');
 
       let activeCategoryKw = '';
 
       function applyFoodFilters() {
         const query = (searchInput?.value || '').trim().toLowerCase();
+        const foodCards = document.querySelectorAll('.food-product-card');
 
         foodCards.forEach(card => {
           const name = card.dataset.name || '';
