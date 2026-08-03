@@ -121,40 +121,15 @@ import Switcher from '../components/Switcher.astro';
       
       <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-2"></div>
 
-      <!-- 6 STEP-BY-STEP LIVE STATUS BAR -->
+      <!-- STEP-BY-STEP LIVE STATUS BAR -->
       <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
-        <span class="text-[10px] font-black text-redBrand uppercase tracking-wider block">LIVE ORDER PROGRESS</span>
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-black text-redBrand uppercase tracking-wider block" id="progress-bar-label">LIVE ORDER PROGRESS</span>
+          <span class="text-[10px] font-extrabold text-slate-500" id="progress-bar-step-num">Step 2 of 7</span>
+        </div>
         
-        <div class="grid grid-cols-6 gap-1 text-center" id="tracking-steps-bar">
-          <div class="step-box flex flex-col items-center gap-1" data-step="1">
-            <div class="w-7 h-7 rounded-full bg-redBrand text-white flex items-center justify-center text-xs font-black shadow-xs">✓</div>
-            <span class="text-[9px] font-black text-slate-900">Accepted</span>
-          </div>
-
-          <div class="step-box flex flex-col items-center gap-1" data-step="2">
-            <div class="w-7 h-7 rounded-full bg-redBrand text-white flex items-center justify-center text-xs font-black shadow-xs animate-pulse">🍳</div>
-            <span class="text-[9px] font-black text-redBrand">Preparing</span>
-          </div>
-
-          <div class="step-box flex flex-col items-center gap-1 opacity-40" data-step="3">
-            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-black">📦</div>
-            <span class="text-[9px] font-bold text-slate-500">Ready</span>
-          </div>
-
-          <div class="step-box flex flex-col items-center gap-1 opacity-40" data-step="4">
-            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-black">🛵</div>
-            <span class="text-[9px] font-bold text-slate-500">Picked Up</span>
-          </div>
-
-          <div class="step-box flex flex-col items-center gap-1 opacity-40" data-step="5">
-            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-black">⚡</div>
-            <span class="text-[9px] font-bold text-slate-500">On Way</span>
-          </div>
-
-          <div class="step-box flex flex-col items-center gap-1 opacity-40" data-step="6">
-            <div class="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-black">🎉</div>
-            <span class="text-[9px] font-bold text-slate-500">Delivered</span>
-          </div>
+        <div class="grid grid-cols-7 gap-1 text-center" id="tracking-steps-bar">
+          <!-- Dynamically Populated for Prescription (7 steps) or Standard Order (6 steps) -->
         </div>
       </div>
 
@@ -243,15 +218,91 @@ import Switcher from '../components/Switcher.astro';
     document.addEventListener('DOMContentLoaded', () => {
       let activeOrder = {};
       try {
-        activeOrder = JSON.parse(localStorage.getItem('bhusawal_active_order') || localStorage.getItem('last_active_order') || '{}');
+        // Read URL param ?id=... or localStorage active order
+        const urlParams = new URLSearchParams(window.location.search);
+        const reqId = urlParams.get('id');
+        const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+
+        if (reqId) {
+          activeOrder = orders.find(o => o.id === reqId) || {};
+        }
+        if (!activeOrder.id) {
+          activeOrder = JSON.parse(localStorage.getItem('bhusawal_active_order') || localStorage.getItem('last_active_order') || '{}');
+        }
       } catch(e) {}
+
+      const isRx = activeOrder.type === 'PRESCRIPTION' || (activeOrder.id || '').startsWith('RX-');
 
       if (activeOrder.id) {
         document.getElementById('header-order-id').textContent = 'Order ID: #' + activeOrder.id;
       }
 
-      // Render Order Items Summary
-      if (activeOrder.items && Array.isArray(activeOrder.items)) {
+      // Populate Steps Bar dynamically (7 steps for Prescription, 6 steps for others)
+      const stepsBar = document.getElementById('tracking-steps-bar');
+      const stepNumLabel = document.getElementById('progress-bar-step-num');
+      const barLabel = document.getElementById('progress-bar-label');
+
+      const RX_STEPS = [
+        { step: 1, label: 'Uploaded', icon: '📄' },
+        { step: 2, label: 'Verification', icon: '🔍' },
+        { step: 3, label: 'Verified', icon: '✅' },
+        { step: 4, label: 'Packed', icon: '📦' },
+        { step: 5, label: 'Picked Up', icon: '🛵' },
+        { step: 6, label: 'On Way', icon: '⚡' },
+        { step: 7, label: 'Delivered', icon: '🎉' }
+      ];
+
+      const STD_STEPS = [
+        { step: 1, label: 'Accepted', icon: '✓' },
+        { step: 2, label: 'Preparing', icon: '🍳' },
+        { step: 3, label: 'Ready', icon: '📦' },
+        { step: 4, label: 'Picked Up', icon: '🛵' },
+        { step: 5, label: 'On Way', icon: '⚡' },
+        { step: 6, label: 'Delivered', icon: '🎉' }
+      ];
+
+      const activeSteps = isRx ? RX_STEPS : STD_STEPS;
+      if (barLabel) barLabel.textContent = isRx ? "PRESCRIPTION VERIFICATION PROGRESS" : "LIVE ORDER PROGRESS";
+
+      function renderStepBar(currentStep) {
+        if (!stepsBar) return;
+        if (stepNumLabel) stepNumLabel.textContent = `Step ${currentStep} of ${activeSteps.length}`;
+
+        let sHtml = '';
+        activeSteps.forEach(s => {
+          const isDone = currentStep >= s.step;
+          const isCurrent = currentStep === s.step;
+          sHtml += `
+            <div class="step-box flex flex-col items-center gap-1 ${isDone ? 'opacity-100' : 'opacity-40'}" data-step="${s.step}">
+              <div class="w-7 h-7 rounded-full ${isCurrent ? 'bg-redBrand text-white font-black animate-pulse ring-2 ring-red-200' : (isDone ? 'bg-emerald-500 text-white font-black' : 'bg-slate-200 text-slate-500')} flex items-center justify-center text-xs shadow-xs">
+                ${isDone && !isCurrent ? '✓' : s.icon}
+              </div>
+              <span class="text-[8px] sm:text-[9px] ${isCurrent ? 'font-black text-redBrand' : (isDone ? 'font-black text-slate-900' : 'font-bold text-slate-400')} leading-tight">
+                ${s.label}
+              </span>
+            </div>
+          `;
+        });
+        stepsBar.className = isRx ? "grid grid-cols-7 gap-1 text-center" : "grid grid-cols-6 gap-1 text-center";
+        stepsBar.innerHTML = sHtml;
+      }
+
+      function getRxStep(status) {
+        if (status === 'Prescription Uploaded') return 1;
+        if (status === 'Under Verification') return 2;
+        if (status === 'Verified') return 3;
+        if (status === 'Medicines Packed') return 4;
+        if (status === 'Picked Up') return 5;
+        if (status === 'Out For Delivery' || status === 'Out for Delivery') return 6;
+        if (status === 'Delivered') return 7;
+        return 2;
+      }
+
+      const initialStep = isRx ? getRxStep(activeOrder.status) : 2;
+      renderStepBar(initialStep);
+
+      // Render Summary
+      if (activeOrder.items && Array.isArray(activeOrder.items) && activeOrder.items.length > 0) {
         const listEl = document.getElementById('order-summary-items-list');
         if (listEl) {
           let sHtml = '';
@@ -266,6 +317,16 @@ import Switcher from '../components/Switcher.astro';
             `;
           });
           listEl.innerHTML = sHtml;
+        }
+      } else if (isRx) {
+        const listEl = document.getElementById('order-summary-items-list');
+        if (listEl) {
+          listEl.innerHTML = `
+            <div class="text-xs font-bold text-slate-600 bg-blue-50 p-2.5 rounded-xl border border-blue-100">
+              📄 Prescription Document Attached (${activeOrder.fileName || 'Prescription.pdf'})
+              ${activeOrder.notes ? '<p class="text-[11px] text-slate-500 font-normal mt-0.5">Note: ' + activeOrder.notes + '</p>' : ''}
+            </div>
+          `;
         }
       }
 
@@ -287,17 +348,6 @@ import Switcher from '../components/Switcher.astro';
           toast.classList.remove('hidden');
           setTimeout(() => toast.classList.add('hidden'), 4000);
         }
-      }
-
-      function updateStepBar(stepNum) {
-        document.querySelectorAll('#tracking-steps-bar .step-box').forEach(box => {
-          const s = parseInt(box.getAttribute('data-step') || '1');
-          if (s <= stepNum) {
-            box.classList.remove('opacity-40');
-          } else {
-            box.classList.add('opacity-40');
-          }
-        });
       }
 
       // Initialize Google Live Tracker Engine
@@ -323,44 +373,69 @@ import Switcher from '../components/Switcher.astro';
           const titleEl = document.getElementById('top-status-title');
           const subEl = document.getElementById('top-status-sub');
           
-          if (status === 'ACCEPTED') {
-            if (titleEl) titleEl.textContent = "Order Accepted";
-            if (subEl) subEl.textContent = "Restaurant accepted your food order";
-            updateStepBar(1);
-            showToast("Restaurant accepted your food order!");
-          } else if (status === 'PREPARING_FOOD' || status === 'REACHED_STORE') {
-            if (titleEl) titleEl.textContent = "Preparing Food";
-            if (subEl) subEl.textContent = "Chef is cooking your order at the kitchen";
-            updateStepBar(2);
-            showToast("Chef is preparing your food order!");
-          } else if (status === 'FOOD_READY') {
-            if (titleEl) titleEl.textContent = "Food Ready!";
-            if (subEl) subEl.textContent = "Packed and waiting for delivery partner pickup";
-            updateStepBar(3);
-            showToast("Food is hot & ready for pickup!");
-          } else if (status === 'PICKED_UP') {
-            if (titleEl) titleEl.textContent = "Order Picked Up!";
-            if (subEl) subEl.textContent = "Rahul has picked up your food parcel";
-            updateStepBar(4);
-            showToast("Delivery partner picked up your order!");
-          } else if (status === 'OUT_FOR_DELIVERY') {
-            if (titleEl) titleEl.textContent = "Out For Delivery";
-            if (subEl) subEl.textContent = "Rahul is riding towards your doorstep";
-            updateStepBar(5);
-            showToast("Order is out for delivery!");
-          } else if (status === 'DELIVERED') {
-            onDeliveryComplete();
+          if (isRx) {
+            if (status === 'ACCEPTED' || status === 'Prescription Uploaded') {
+              if (titleEl) titleEl.textContent = "Prescription Uploaded";
+              if (subEl) subEl.textContent = "Waiting for partner pharmacist review";
+              renderStepBar(1);
+            } else if (status === 'PREPARING_FOOD' || status === 'Under Verification') {
+              if (titleEl) titleEl.textContent = "Under Verification";
+              if (subEl) subEl.textContent = "Pharmacist is verifying medicine availability";
+              renderStepBar(2);
+            } else if (status === 'FOOD_READY' || status === 'Verified') {
+              if (titleEl) titleEl.textContent = "Prescription Verified!";
+              if (subEl) subEl.textContent = "Medicines verified by pharmacist";
+              renderStepBar(3);
+            } else if (status === 'Medicines Packed') {
+              if (titleEl) titleEl.textContent = "Medicines Packed";
+              if (subEl) subEl.textContent = "Sealed at pharmacy & ready for rider";
+              renderStepBar(4);
+            } else if (status === 'PICKED_UP') {
+              if (titleEl) titleEl.textContent = "Picked Up";
+              if (subEl) subEl.textContent = "Rider collected medicine parcel";
+              renderStepBar(5);
+            } else if (status === 'OUT_FOR_DELIVERY') {
+              if (titleEl) titleEl.textContent = "Out For Delivery";
+              if (subEl) subEl.textContent = "Rider is delivering to your doorstep";
+              renderStepBar(6);
+            } else if (status === 'DELIVERED') {
+              onDeliveryComplete();
+            }
+          } else {
+            if (status === 'ACCEPTED') {
+              if (titleEl) titleEl.textContent = "Order Accepted";
+              if (subEl) subEl.textContent = "Store accepted your order";
+              renderStepBar(1);
+            } else if (status === 'PREPARING_FOOD' || status === 'REACHED_STORE') {
+              if (titleEl) titleEl.textContent = "Preparing Order";
+              if (subEl) subEl.textContent = "Store is packing your items";
+              renderStepBar(2);
+            } else if (status === 'FOOD_READY') {
+              if (titleEl) titleEl.textContent = "Order Ready!";
+              if (subEl) subEl.textContent = "Packed and waiting for rider";
+              renderStepBar(3);
+            } else if (status === 'PICKED_UP') {
+              if (titleEl) titleEl.textContent = "Order Picked Up!";
+              if (subEl) subEl.textContent = "Rider picked up your parcel";
+              renderStepBar(4);
+            } else if (status === 'OUT_FOR_DELIVERY') {
+              if (titleEl) titleEl.textContent = "Out For Delivery";
+              if (subEl) subEl.textContent = "Rider is en route to your location";
+              renderStepBar(5);
+            } else if (status === 'DELIVERED') {
+              onDeliveryComplete();
+            }
           }
         }
       });
 
       function onDeliveryComplete() {
-        updateStepBar(6);
-        document.getElementById('top-status-title').textContent = "Food Delivered!";
-        document.getElementById('top-status-sub').textContent = "Rahul delivered your hot meal to your doorstep";
+        renderStepBar(isRx ? 7 : 6);
+        document.getElementById('top-status-title').textContent = isRx ? "Medicines Delivered!" : "Order Delivered!";
+        document.getElementById('top-status-sub').textContent = "Rider safely delivered your order to your doorstep";
         document.getElementById('bottom-eta-banner')?.classList.add('hidden');
         document.getElementById('delivery-completed-banner')?.classList.remove('hidden');
-        showToast("🎉 Food Order Delivered Successfully!");
+        showToast("🎉 Order Delivered Successfully!");
       }
     });
   </script>
