@@ -252,7 +252,7 @@ const featuredPartnerRestaurants = [
             <span>🍽️</span>
             <span>All Food Products</span>
           </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5" id="catalog-count-subtitle">Order directly from standardized Bhusawal Connect food menu</p>
+          <p class="text-xs text-slate-500 font-medium mt-0.5" id="catalog-count-subtitle">Order directly from standardized Bhusawal Connect food menu ({foodCatalog.length} items)</p>
         </div>
 
         <!-- FILTERS & SORTING BAR -->
@@ -279,9 +279,70 @@ const featuredPartnerRestaurants = [
         </div>
       </div>
 
-      <!-- PRODUCT GRID EXACTLY LIKE GROCERY (2 cols mobile, 3 tablet, 4 lg, 5 xl) -->
+      <!-- PRODUCT GRID STATIC SSR + DYNAMIC CLIENT HYDRATION -->
       <div id="direct-food-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
-        <!-- Dynamically rendered food products from standardized catalog -->
+        {foodCatalog.map(item => (
+          <div 
+            class="food-product-card bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative"
+            data-id={item.id}
+          >
+            <div>
+              <!-- Large Food Image Container (Square Aspect) -->
+              <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden relative">
+                
+                <!-- Veg / Non-Veg Badge -->
+                <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
+                  <span class={`w-2 h-2 rounded-full ${item.isVeg !== false ? 'bg-emerald-600' : 'bg-rose-600'} shrink-0`}></span>
+                  <span class={item.isVeg !== false ? 'text-emerald-700' : 'text-rose-700'}>{item.isVeg !== false ? 'VEG' : 'NON-VEG'}</span>
+                </div>
+
+                <!-- Prep Time Badge -->
+                <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-0.5 shadow-xs z-10">
+                  <span>⏱️ {item.prepTime || '15 mins'}</span>
+                </div>
+
+                <!-- Favourite Heart Button -->
+                <button class="fav-food-btn absolute top-2 right-2 w-7 h-7 rounded-full bg-white/95 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
+                  <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
+                </button>
+
+                <img loading="lazy" src={item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+              </div>
+
+              <!-- Category Tag (NO RESTAURANT NAME DISPLAYED ON CARDS) -->
+              <span class="text-[10px] font-bold text-redBrand uppercase tracking-wider block mb-0.5">
+                {item.category}
+              </span>
+
+              <!-- Food Name -->
+              <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-900 line-clamp-2 leading-snug min-h-[2.2rem]">
+                {item.name}
+              </h3>
+            </div>
+
+            <!-- Price & Add / Quantity Selector -->
+            <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
+              <span class="text-xs sm:text-sm font-black text-slate-900">₹{item.price}</span>
+
+              <div class="food-direct-action-box" data-id={item.id} data-name={item.name} data-price={item.price} data-img={item.image}>
+                <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-[10px] font-black rounded-xl active:scale-90 transition-all shadow-xs">
+                  + ADD
+                </button>
+                
+                <div class="qty-control-wrapper hidden items-center bg-redLight border border-red-200 rounded-xl p-0.5 shadow-xs">
+                  <button class="btn-qty-minus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
+                    -
+                  </button>
+                  <span class="food-qty-num px-2 text-xs font-black text-redBrand min-w-[16px] text-center">1</span>
+                  <button class="btn-qty-plus w-6 h-6 rounded-lg bg-white text-redBrand flex items-center justify-center font-black active:scale-90 transition-all hover:bg-redBrand hover:text-white">
+                    +
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        ))}
       </div>
     </section>
 
@@ -292,6 +353,15 @@ const featuredPartnerRestaurants = [
   <!-- CLIENT-SIDE CATALOG, SEARCH, FILTER & CART ENGINE -->
   <script is:inline define:vars={{ initialCatalog: foodCatalog }}>
     document.addEventListener('DOMContentLoaded', () => {
+
+      // Clear old browser cache if catalog version updated
+      try {
+        const CURRENT_VERSION = 'bc_food_v3.5';
+        if (localStorage.getItem('bhusawal_food_catalog_version') !== CURRENT_VERSION) {
+          localStorage.setItem('bhusawal_food_catalog_version', CURRENT_VERSION);
+          localStorage.setItem('bhusawal_food_catalog', JSON.stringify(initialCatalog));
+        }
+      } catch(e) {}
 
       const RESTAURANT_NAMES = {
         royal_biryani: 'Royal Biryani & Caterers',
