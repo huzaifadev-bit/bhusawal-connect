@@ -70,58 +70,119 @@ const featuredMedicalStores = [
   }
 ];
 
-// Shop By Category Grid
-const shopCategories = [
-  { id: 'cat_rx', name: 'Prescription Medicines', icon: '💊', color: 'bg-blue-50 border-blue-200 text-blue-700' },
-  { id: 'cat_wellness', name: 'Health & Wellness', icon: '💪', color: 'bg-indigo-50 border-indigo-200 text-indigo-700' },
-  { id: 'cat_personal', name: 'Personal Care', icon: '🧴', color: 'bg-teal-50 border-teal-200 text-teal-700' },
-  { id: 'cat_baby', name: 'Baby Care', icon: '👶', color: 'bg-sky-50 border-sky-200 text-sky-700' },
-  { id: 'cat_devices', name: 'Medical Devices', icon: '🩺', color: 'bg-cyan-50 border-cyan-200 text-cyan-700' },
-  { id: 'cat_ayurveda', name: 'Ayurveda & Herbal', icon: '🌱', color: 'bg-emerald-50 border-emerald-200 text-emerald-700' }
+// ===== 20 MEDICINE CATEGORY CHIPS =====
+const medicineCategories = [
+  { id: 'cat_pain', name: 'Pain Relief', icon: '💊', slug: 'pain-relief' },
+  { id: 'cat_cold', name: 'Cold & Fever', icon: '🤒', slug: 'cold-fever' },
+  { id: 'cat_diabetes', name: 'Diabetes', icon: '🩸', slug: 'diabetes' },
+  { id: 'cat_heart', name: 'Heart Care', icon: '❤️', slug: 'heart-care' },
+  { id: 'cat_bp', name: 'Blood Pressure', icon: '🩺', slug: 'blood-pressure' },
+  { id: 'cat_vitamins', name: 'Vitamins', icon: '💛', slug: 'vitamins' },
+  { id: 'cat_supplements', name: 'Supplements', icon: '💪', slug: 'supplements' },
+  { id: 'cat_protein', name: 'Protein', icon: '🥤', slug: 'protein' },
+  { id: 'cat_ayurvedic', name: 'Ayurvedic', icon: '🌿', slug: 'ayurvedic' },
+  { id: 'cat_baby', name: 'Baby Care', icon: '👶', slug: 'baby-care' },
+  { id: 'cat_women', name: "Women's Care", icon: '🌸', slug: 'womens-care' },
+  { id: 'cat_men', name: "Men's Care", icon: '🧔', slug: 'mens-care' },
+  { id: 'cat_skin', name: 'Skin Care', icon: '✨', slug: 'skin-care' },
+  { id: 'cat_hair', name: 'Hair Care', icon: '💇', slug: 'hair-care' },
+  { id: 'cat_dental', name: 'Dental Care', icon: '🦷', slug: 'dental-care' },
+  { id: 'cat_eye', name: 'Eye Care', icon: '👁️', slug: 'eye-care' },
+  { id: 'cat_digestive', name: 'Digestive Care', icon: '🫁', slug: 'digestive-care' },
+  { id: 'cat_devices', name: 'Medical Devices', icon: '🏥', slug: 'medical-devices' },
+  { id: 'cat_personal', name: 'Personal Care', icon: '🧴', slug: 'personal-care' },
+  { id: 'cat_covid', name: 'Covid Essentials', icon: '😷', slug: 'covid-essentials' }
 ];
 
-// 7. Popular Medicines
-const popularMedicines = [
-  { id: 'med_101', name: 'Dolo 650mg Tablet (Strip of 15)', price: 32, mrp: 34, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.9', rxRequired: false, pack: '15 Tablets' },
-  { id: 'med_102', name: 'Crocin Advance 500mg (Strip of 20)', price: 28, mrp: 30, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.8', rxRequired: false, pack: '20 Tablets' },
-  { id: 'med_103', name: 'Volini Pain Relief Spray (100g)', price: 215, mrp: 245, image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.9', rxRequired: false, pack: '100g Can' },
-  { id: 'med_104', name: 'Electral ORS Powder (21.8g Sachet)', price: 22, mrp: 22, image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.9', rxRequired: false, pack: '1 Sachet' },
-  { id: 'med_105', name: 'Combiflam Pain Relief Tablet (Strip of 20)', price: 45, mrp: 48, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.8', rxRequired: false, pack: '20 Tablets' },
-  { id: 'med_106', name: 'Vicks Vaporub Relief Balm (50g)', price: 145, mrp: 160, image: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=800&q=80', category: 'Popular Medicines', rating: '4.9', rxRequired: false, pack: '50g Jar' }
+// ===== ALL MEDICINE PRODUCTS (with brand, category, rxRequired) =====
+const allMedicines = [
+  // Pain Relief
+  { id: 'med_101', name: 'Dolo 650mg Tablet', brand: 'Micro Labs', price: 32, mrp: 34, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Pain Relief', rating: '4.9', rxRequired: false, pack: '15 Tablets' },
+  { id: 'med_102', name: 'Combiflam Pain Relief Tablet', brand: 'Sanofi', price: 45, mrp: 48, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Pain Relief', rating: '4.8', rxRequired: false, pack: '20 Tablets' },
+  { id: 'med_103', name: 'Volini Pain Relief Spray', brand: 'Sun Pharma', price: 215, mrp: 245, image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=800&q=80', category: 'Pain Relief', rating: '4.9', rxRequired: false, pack: '100g Can' },
+  { id: 'med_104', name: 'Brufen 400mg Tablet', brand: 'Abbott', price: 35, mrp: 40, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Pain Relief', rating: '4.7', rxRequired: true, pack: '15 Tablets' },
+  { id: 'med_105', name: 'Flexon MR Tablet', brand: 'Aristo Pharma', price: 89, mrp: 99, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Pain Relief', rating: '4.6', rxRequired: true, pack: '10 Tablets' },
+  // Cold & Fever
+  { id: 'med_201', name: 'Crocin Advance 500mg', brand: 'GSK', price: 28, mrp: 30, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Cold & Fever', rating: '4.8', rxRequired: false, pack: '20 Tablets' },
+  { id: 'med_202', name: 'Vicks Vaporub Relief Balm', brand: 'P&G', price: 145, mrp: 160, image: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=800&q=80', category: 'Cold & Fever', rating: '4.9', rxRequired: false, pack: '50g Jar' },
+  { id: 'med_203', name: 'Sinarest New Tablet', brand: 'Centaur Pharma', price: 42, mrp: 48, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Cold & Fever', rating: '4.7', rxRequired: false, pack: '15 Tablets' },
+  { id: 'med_204', name: 'Allegra 120mg Tablet', brand: 'Sanofi', price: 175, mrp: 196, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Cold & Fever', rating: '4.8', rxRequired: true, pack: '10 Tablets' },
+  // Diabetes
+  { id: 'med_301', name: 'Glycomet GP 2 Tablet', brand: 'USV', price: 135, mrp: 150, image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80', category: 'Diabetes', rating: '4.8', rxRequired: true, pack: '15 Tablets' },
+  { id: 'med_302', name: 'Janumet 50/500mg Tablet', brand: 'MSD', price: 285, mrp: 310, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Diabetes', rating: '4.9', rxRequired: true, pack: '7 Tablets' },
+  { id: 'med_303', name: 'Sugar Free Gold Pellets', brand: 'Zydus', price: 125, mrp: 145, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Diabetes', rating: '4.7', rxRequired: false, pack: '500 Pellets' },
+  { id: 'med_304', name: 'Accu-Chek Active Test Strips', brand: 'Roche', price: 899, mrp: 1050, image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80', category: 'Diabetes', rating: '4.9', rxRequired: false, pack: '50 Strips' },
+  // Heart Care
+  { id: 'med_401', name: 'Ecosprin 75mg Tablet', brand: 'USV', price: 12, mrp: 14, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Heart Care', rating: '4.9', rxRequired: true, pack: '14 Tablets' },
+  { id: 'med_402', name: 'Atorva 10mg Tablet', brand: 'Zydus', price: 98, mrp: 110, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Heart Care', rating: '4.8', rxRequired: true, pack: '15 Tablets' },
+  { id: 'med_403', name: 'Clopitab 75mg Tablet', brand: 'Lupin', price: 85, mrp: 95, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Heart Care', rating: '4.8', rxRequired: true, pack: '15 Tablets' },
+  // Blood Pressure
+  { id: 'med_501', name: 'Amlodipine 5mg Tablet', brand: 'Cipla', price: 35, mrp: 42, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Blood Pressure', rating: '4.8', rxRequired: true, pack: '15 Tablets' },
+  { id: 'med_502', name: 'Telma 40mg Tablet', brand: 'Glenmark', price: 195, mrp: 220, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Blood Pressure', rating: '4.9', rxRequired: true, pack: '15 Tablets' },
+  { id: 'med_503', name: 'Losartan 50mg Tablet', brand: 'Torrent', price: 68, mrp: 78, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Blood Pressure', rating: '4.7', rxRequired: true, pack: '15 Tablets' },
+  // Vitamins
+  { id: 'med_601', name: 'Revital H Daily Multivitamin', brand: 'Sun Pharma', price: 495, mrp: 550, image: 'https://images.unsplash.com/photo-1550572017-edf79289989a?auto=format&fit=crop&w=800&q=80', category: 'Vitamins', rating: '4.9', rxRequired: false, pack: '60 Capsules' },
+  { id: 'med_602', name: 'Shelcal 500 Calcium & D3', brand: 'Torrent', price: 118, mrp: 131, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Vitamins', rating: '4.8', rxRequired: false, pack: '15 Tablets' },
+  { id: 'med_603', name: 'Becosules Z Capsules', brand: 'Pfizer', price: 48, mrp: 52, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Vitamins', rating: '4.9', rxRequired: false, pack: '20 Capsules' },
+  { id: 'med_604', name: 'Limcee 500mg Vitamin C Chewable', brand: 'Abbott', price: 24, mrp: 26, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Vitamins', rating: '4.8', rxRequired: false, pack: '15 Tablets' },
+  // Supplements
+  { id: 'med_701', name: 'Ensure Balanced Nutrition Powder', brand: 'Abbott', price: 780, mrp: 850, image: 'https://images.unsplash.com/photo-1550572017-edf79289989a?auto=format&fit=crop&w=800&q=80', category: 'Supplements', rating: '4.9', rxRequired: false, pack: '400g Tin' },
+  { id: 'med_702', name: 'Horlicks Classic Malt', brand: 'HUL', price: 395, mrp: 450, image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=800&q=80', category: 'Supplements', rating: '4.8', rxRequired: false, pack: '500g Jar' },
+  { id: 'med_703', name: 'Protinex Original Powder', brand: 'Danone', price: 545, mrp: 620, image: 'https://images.unsplash.com/photo-1550572017-edf79289989a?auto=format&fit=crop&w=800&q=80', category: 'Supplements', rating: '4.7', rxRequired: false, pack: '400g Tin' },
+  // Protein
+  { id: 'med_801', name: 'MuscleBlaze Whey Gold Protein', brand: 'MuscleBlaze', price: 2399, mrp: 2999, image: 'https://images.unsplash.com/photo-1550572017-edf79289989a?auto=format&fit=crop&w=800&q=80', category: 'Protein', rating: '4.9', rxRequired: false, pack: '1kg Pack' },
+  { id: 'med_802', name: 'Optimum Nutrition Gold Standard', brand: 'ON', price: 4199, mrp: 4899, image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=800&q=80', category: 'Protein', rating: '4.9', rxRequired: false, pack: '2lb Jar' },
+  { id: 'med_803', name: 'GNC Pro Performance Whey', brand: 'GNC', price: 1999, mrp: 2499, image: 'https://images.unsplash.com/photo-1550572017-edf79289989a?auto=format&fit=crop&w=800&q=80', category: 'Protein', rating: '4.8', rxRequired: false, pack: '1kg Pack' },
+  // Ayurvedic
+  { id: 'med_901', name: 'Dabur Chyawanprash Special', brand: 'Dabur', price: 345, mrp: 395, image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=800&q=80', category: 'Ayurvedic', rating: '4.9', rxRequired: false, pack: '1kg Jar' },
+  { id: 'med_902', name: 'Patanjali Giloy Juice', brand: 'Patanjali', price: 125, mrp: 145, image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80', category: 'Ayurvedic', rating: '4.7', rxRequired: false, pack: '500ml Bottle' },
+  { id: 'med_903', name: 'Himalaya Ashvagandha Tablet', brand: 'Himalaya', price: 195, mrp: 220, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Ayurvedic', rating: '4.8', rxRequired: false, pack: '60 Tablets' },
+  // Baby Care
+  { id: 'med_1001', name: 'Pampers All-Round Protection Diapers', brand: 'Pampers', price: 799, mrp: 899, image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.9', rxRequired: false, pack: '48 Diapers (M)' },
+  { id: 'med_1002', name: 'Himalaya Gentle Baby Wipes', brand: 'Himalaya', price: 175, mrp: 195, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.8', rxRequired: false, pack: '72 Wipes' },
+  { id: 'med_1003', name: 'Cerelac Wheat Apple Baby Cereal', brand: 'Nestle', price: 260, mrp: 275, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.9', rxRequired: false, pack: '300g Box' },
+  // Women's Care
+  { id: 'med_1101', name: 'Whisper Ultra Clean Pads', brand: 'P&G', price: 185, mrp: 210, image: 'https://images.unsplash.com/photo-1608248597379-e07543926b11?auto=format&fit=crop&w=800&q=80', category: "Women's Care", rating: '4.9', rxRequired: false, pack: '30 Pads (XL)' },
+  { id: 'med_1102', name: 'i-Know Pregnancy Test Kit', brand: 'Mankind', price: 65, mrp: 75, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: "Women's Care", rating: '4.8', rxRequired: false, pack: '1 Kit' },
+  { id: 'med_1103', name: 'Folic Acid 5mg Tablet', brand: 'USV', price: 18, mrp: 22, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: "Women's Care", rating: '4.9', rxRequired: true, pack: '30 Tablets' },
+  // Men's Care
+  { id: 'med_1201', name: 'Himalaya Tentex Forte Tablet', brand: 'Himalaya', price: 160, mrp: 180, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: "Men's Care", rating: '4.7', rxRequired: false, pack: '10 Tablets' },
+  { id: 'med_1202', name: 'Man Matters Biotin Gummies', brand: 'Man Matters', price: 599, mrp: 699, image: 'https://images.unsplash.com/photo-1550572017-edf79289989a?auto=format&fit=crop&w=800&q=80', category: "Men's Care", rating: '4.6', rxRequired: false, pack: '60 Gummies' },
+  { id: 'med_1203', name: 'Zandu Vigorex Gold Capsules', brand: 'Zandu', price: 225, mrp: 260, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: "Men's Care", rating: '4.5', rxRequired: false, pack: '20 Capsules' },
+  // Skin Care
+  { id: 'med_1301', name: 'Nivea Soft Light Moisturizing Cream', brand: 'Nivea', price: 299, mrp: 340, image: 'https://images.unsplash.com/photo-1608248597379-e07543926b11?auto=format&fit=crop&w=800&q=80', category: 'Skin Care', rating: '4.9', rxRequired: false, pack: '200ml Tub' },
+  { id: 'med_1302', name: 'Cetaphil Gentle Skin Cleanser', brand: 'Galderma', price: 445, mrp: 520, image: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?auto=format&fit=crop&w=800&q=80', category: 'Skin Care', rating: '4.8', rxRequired: false, pack: '250ml Bottle' },
+  { id: 'med_1303', name: 'Bioderma Sensibio H2O Micellar Water', brand: 'Bioderma', price: 750, mrp: 899, image: 'https://images.unsplash.com/photo-1608248597379-e07543926b11?auto=format&fit=crop&w=800&q=80', category: 'Skin Care', rating: '4.9', rxRequired: false, pack: '250ml Bottle' },
+  // Hair Care
+  { id: 'med_1401', name: 'Himalaya Anti-Hair Fall Shampoo', brand: 'Himalaya', price: 199, mrp: 225, image: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?auto=format&fit=crop&w=800&q=80', category: 'Hair Care', rating: '4.7', rxRequired: false, pack: '400ml Bottle' },
+  { id: 'med_1402', name: 'Minoxidil 5% Topical Solution', brand: 'Dr. Reddy', price: 595, mrp: 690, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Hair Care', rating: '4.6', rxRequired: true, pack: '60ml Bottle' },
+  { id: 'med_1403', name: 'Biotique Bio Kelp Protein Shampoo', brand: 'Biotique', price: 225, mrp: 265, image: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?auto=format&fit=crop&w=800&q=80', category: 'Hair Care', rating: '4.7', rxRequired: false, pack: '340ml Bottle' },
+  // Dental Care
+  { id: 'med_1501', name: 'Sensodyne Rapid Relief Toothpaste', brand: 'GSK', price: 210, mrp: 230, image: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?auto=format&fit=crop&w=800&q=80', category: 'Dental Care', rating: '4.9', rxRequired: false, pack: '100g Tube' },
+  { id: 'med_1502', name: 'Listerine Cool Mint Mouthwash', brand: 'J&J', price: 175, mrp: 199, image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80', category: 'Dental Care', rating: '4.8', rxRequired: false, pack: '500ml Bottle' },
+  { id: 'med_1503', name: 'Colgate Visible White Toothpaste', brand: 'Colgate', price: 155, mrp: 175, image: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?auto=format&fit=crop&w=800&q=80', category: 'Dental Care', rating: '4.7', rxRequired: false, pack: '100g Tube' },
+  // Eye Care
+  { id: 'med_1601', name: 'Itone Eye Drops', brand: 'Deys Medical', price: 65, mrp: 75, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Eye Care', rating: '4.7', rxRequired: false, pack: '10ml Drops' },
+  { id: 'med_1602', name: 'Refresh Tears Eye Drops', brand: 'Allergan', price: 199, mrp: 225, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Eye Care', rating: '4.9', rxRequired: false, pack: '10ml Drops' },
+  { id: 'med_1603', name: 'Moxifloxacin Eye Drop', brand: 'Cipla', price: 75, mrp: 88, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Eye Care', rating: '4.8', rxRequired: true, pack: '5ml Drops' },
+  // Digestive Care
+  { id: 'med_1701', name: 'Electral ORS Powder', brand: 'FDC', price: 22, mrp: 22, image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80', category: 'Digestive Care', rating: '4.9', rxRequired: false, pack: '1 Sachet' },
+  { id: 'med_1702', name: 'Digene Acidity & Gas Relief Gel', brand: 'Abbott', price: 95, mrp: 110, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Digestive Care', rating: '4.8', rxRequired: false, pack: '200ml Bottle' },
+  { id: 'med_1703', name: 'Pan D Capsule', brand: 'Alkem', price: 125, mrp: 142, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Digestive Care', rating: '4.8', rxRequired: true, pack: '15 Capsules' },
+  // Medical Devices
+  { id: 'med_1801', name: 'Omron HEM-7120 BP Monitor', brand: 'Omron', price: 1990, mrp: 2480, image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.9', rxRequired: false, pack: '1 Unit' },
+  { id: 'med_1802', name: 'Dr. Morepen Blood Glucose Monitor', brand: 'Dr. Morepen', price: 799, mrp: 1099, image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.8', rxRequired: false, pack: '1 Kit + 50 Strips' },
+  { id: 'med_1803', name: 'Dr. Trust Infrared Thermometer', brand: 'Dr. Trust', price: 1199, mrp: 1599, image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.9', rxRequired: false, pack: '1 Unit' },
+  // Personal Care
+  { id: 'med_1901', name: 'Dettol Antiseptic Liquid', brand: 'Reckitt', price: 212, mrp: 235, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.9', rxRequired: false, pack: '500ml Bottle' },
+  { id: 'med_1902', name: 'Savlon Antiseptic Cream', brand: 'ITC', price: 72, mrp: 80, image: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.8', rxRequired: false, pack: '60g Tube' },
+  { id: 'med_1903', name: 'Band-Aid Flexible Fabric Strips', brand: 'J&J', price: 95, mrp: 110, image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.7', rxRequired: false, pack: '100 Strips' },
+  // Covid Essentials
+  { id: 'med_2001', name: 'N95 Face Mask (Pack of 10)', brand: 'Venus', price: 250, mrp: 350, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Covid Essentials', rating: '4.8', rxRequired: false, pack: '10 Masks' },
+  { id: 'med_2002', name: 'Lifebuoy Hand Sanitizer', brand: 'HUL', price: 125, mrp: 150, image: 'https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=800&q=80', category: 'Covid Essentials', rating: '4.7', rxRequired: false, pack: '500ml Pump' },
+  { id: 'med_2003', name: 'Digital Pulse Oximeter', brand: 'Dr. Trust', price: 999, mrp: 1399, image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80', category: 'Covid Essentials', rating: '4.9', rxRequired: false, pack: '1 Device' }
 ];
 
-// 8. Health & Wellness
-const healthWellnessItems = [
-  { id: 'med_201', name: 'Revital H Daily Multivitamin (60 Capsules)', price: 495, mrp: 550, image: 'https://images.unsplash.com/photo-1550572017-edf79289989a?auto=format&fit=crop&w=800&q=80', category: 'Health & Wellness', rating: '4.9', rxRequired: false, pack: '60 Capsules' },
-  { id: 'med_202', name: 'Shelcal 500 Calcium & D3 (Strip of 15)', price: 118, mrp: 131, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Health & Wellness', rating: '4.8', rxRequired: false, pack: '15 Tablets' },
-  { id: 'med_203', name: 'Becosules Z Multivitamin Capsules (20s)', price: 48, mrp: 52, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Health & Wellness', rating: '4.9', rxRequired: false, pack: '20 Capsules' },
-  { id: 'med_204', name: 'Limcee 500mg Vitamin C Chewable (15s)', price: 24, mrp: 26, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=800&q=80', category: 'Health & Wellness', rating: '4.8', rxRequired: false, pack: '15 Tablets' },
-  { id: 'med_205', name: 'Dabur Chyawanprash Special 1kg Jar', price: 345, mrp: 395, image: 'https://images.unsplash.com/photo-1631549916768-4119b2e5f926?auto=format&fit=crop&w=800&q=80', category: 'Health & Wellness', rating: '4.9', rxRequired: false, pack: '1kg Jar' }
-];
-
-// 9. Personal Care
-const personalCareItems = [
-  { id: 'med_301', name: 'Dettol Antiseptic Liquid (500ml)', price: 212, mrp: 235, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.9', rxRequired: false, pack: '500ml Bottle' },
-  { id: 'med_302', name: 'Savlon Antiseptic Cream (60g)', price: 72, mrp: 80, image: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.8', rxRequired: false, pack: '60g Tube' },
-  { id: 'med_303', name: 'Sensodyne Rapid Relief Toothpaste (100g)', price: 210, mrp: 230, image: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.9', rxRequired: false, pack: '100g Tube' },
-  { id: 'med_304', name: 'Nivea Soft Light Moisturizing Cream (200ml)', price: 299, mrp: 340, image: 'https://images.unsplash.com/photo-1608248597379-e07543926b11?auto=format&fit=crop&w=800&q=80', category: 'Personal Care', rating: '4.9', rxRequired: false, pack: '200ml Tub' }
-];
-
-// 10. Baby Care
-const babyCareItems = [
-  { id: 'med_401', name: 'Pampers All-Round Protection Diapers (M, 48s)', price: 799, mrp: 899, image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.9', rxRequired: false, pack: '48 Diapers' },
-  { id: 'med_402', name: 'Himalaya Gentle Baby Wipes (72 Wipes)', price: 175, mrp: 195, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.8', rxRequired: false, pack: '72 Pack' },
-  { id: 'med_403', name: "Johnson's Baby Powder (400g)", price: 285, mrp: 310, image: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.9', rxRequired: false, pack: '400g Pack' },
-  { id: 'med_404', name: 'Nestle Cerelac Wheat Apple Baby Cereal (300g)', price: 260, mrp: 275, image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80', category: 'Baby Care', rating: '4.9', rxRequired: false, pack: '300g Box' }
-];
-
-// 11. Medical Devices
-const medicalDevicesItems = [
-  { id: 'med_501', name: 'Omron HEM-7120 Fully Automatic BP Monitor', price: 1990, mrp: 2480, image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.9', rxRequired: false, pack: '1 Unit' },
-  { id: 'med_502', name: 'Dr. Morepen BG-03 Blood Glucose Monitor (50 Strips)', price: 799, mrp: 1099, image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.8', rxRequired: false, pack: '1 Kit + 50 Strips' },
-  { id: 'med_503', name: 'Dr. Trust Infrared Digital Thermometer', price: 1199, mrp: 1599, image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.9', rxRequired: false, pack: '1 Unit' },
-  { id: 'med_504', name: 'HealthSense Facial Steamer & Vaporizer', price: 499, mrp: 799, image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80', category: 'Medical Devices', rating: '4.7', rxRequired: false, pack: '1 Device' }
-];
 ---
 
 <!DOCTYPE html>
@@ -698,306 +759,127 @@ const medicalDevicesItems = [
       .rx-submit-btn:active { transform: scale(0.98); }
     </style>
 
-    <!-- ==================== 6. SHOP BY CATEGORY ==================== -->
-    <section class="space-y-3.5 pt-2">
+    <!-- ==================== 6. MEDICINE CATEGORY CHIPS (HORIZONTAL SCROLL) ==================== -->
+    <section class="space-y-3 pt-3">
       <div class="flex items-center justify-between px-1">
-        <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 flex items-center gap-2">
-          <span>🏷️ Shop by Category</span>
+        <h2 class="text-base sm:text-lg font-black font-display text-slate-900 flex items-center gap-2">
+          <span>🏷️</span>
+          <span>Shop by Category</span>
         </h2>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-        {shopCategories.map(cat => (
-          <div 
-            class={`p-4 rounded-3xl border flex flex-col items-center justify-center text-center gap-2 cursor-pointer hover:shadow-lg transition-all ${cat.color} group`}
-            onclick={`window.location.href='/medicine_search?cat=${encodeURIComponent(cat.name)}';`}
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 px-0.5" id="med-category-chips">
+        <button
+          class="med-cat-chip active px-3.5 py-2 rounded-full bg-blueBrand text-white text-xs font-extrabold whitespace-nowrap shrink-0 transition-all active:scale-95 border border-transparent"
+          data-category="all"
+        >
+          All
+        </button>
+        {medicineCategories.map(cat => (
+          <button
+            class="med-cat-chip px-3.5 py-2 rounded-full bg-slate-100 text-slate-700 hover:bg-blueLight hover:text-blueBrand text-xs font-extrabold whitespace-nowrap shrink-0 transition-all active:scale-95 border border-slate-200/80"
+            data-category={cat.name}
           >
-            <span class="text-3xl group-hover:scale-110 transition-transform">{cat.icon}</span>
-            <span class="text-xs font-black">{cat.name}</span>
-          </div>
+            <span class="mr-1">{cat.icon}</span> {cat.name}
+          </button>
         ))}
       </div>
     </section>
 
-    <!-- ==================== 7. POPULAR MEDICINES ==================== -->
-    <section class="space-y-3.5 pt-2" id="sec-popular-medicines">
+    <!-- ==================== 7. ALL MEDICINES PRODUCT GRID ==================== -->
+    <section class="space-y-3.5 pt-2" id="sec-all-medicines">
       <div class="flex items-end justify-between px-1">
         <div>
-          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span>💊 Popular Medicines</span>
+          <h2 class="text-base sm:text-lg font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
+            <span>💊</span>
+            <span id="med-grid-title">All Medicines</span>
           </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Top-selling OTC & daily health medicines ({popularMedicines.length} items)</p>
+          <p class="text-xs text-slate-500 font-medium mt-0.5" id="med-grid-subtitle">Showing {allMedicines.length} products</p>
         </div>
-        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
       </div>
 
-      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
-        {popularMedicines.map(item => (
-          <div 
-            class="med-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer group"
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4" id="med-product-grid">
+        {allMedicines.map(item => (
+          <div
+            class="med-card bg-white rounded-2xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-lg hover:border-blue-200 transition-all cursor-pointer group relative"
             data-id={item.id}
             data-name={item.name}
             data-price={item.price}
+            data-mrp={item.mrp}
             data-img={item.image}
+            data-brand={item.brand}
+            data-category={item.category}
+            data-rx={item.rxRequired ? 'true' : 'false'}
             onclick={`window.location.href='/medicine_details?id=${item.id}';`}
           >
-            <div>
-              <div class="w-full aspect-square bg-slate-50 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative">
-                <span class="absolute top-2 left-2 bg-blueLight text-blueBrand text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-200 uppercase">
-                  {item.pack}
-                </span>
+            {/* Favourite Button */}
+            <button
+              class="med-fav-btn absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:border-rose-200 transition-all z-10 active:scale-90"
+              onclick="event.stopPropagation();"
+              aria-label="Add to Wishlist"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
 
-                <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
-              </div>
-
-              <span class="text-[10px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
-                {item.category}
+            {/* Rx Badge */}
+            {item.rxRequired && (
+              <span class="absolute top-2.5 left-2.5 bg-rose-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-wider z-10 shadow-sm">
+                Rx
               </span>
-              <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem]">
-                {item.name}
-              </h3>
-            </div>
+            )}
 
-            <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
-              <div>
-                <span class="text-[9px] text-slate-400 line-through font-bold">MRP ₹{item.mrp}</span>
-                <span class="text-sm sm:text-base font-black font-display text-slate-900 block">₹{item.price}</span>
-              </div>
-
-              <button 
-                class="btn-add-med px-3.5 py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs"
-                onclick="event.stopPropagation();"
-              >
-                + ADD
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- ==================== 8. HEALTH & WELLNESS ==================== -->
-    <section class="space-y-3.5 pt-2" id="sec-health-wellness">
-      <div class="flex items-end justify-between px-1">
-        <div>
-          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span>💪 Health & Wellness</span>
-          </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Vitamins, daily supplements & immunity boosters ({healthWellnessItems.length} items)</p>
-        </div>
-        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
-      </div>
-
-      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
-        {healthWellnessItems.map(item => (
-          <div 
-            class="med-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer group"
-            data-id={item.id}
-            data-name={item.name}
-            data-price={item.price}
-            data-img={item.image}
-            onclick={`window.location.href='/medicine_details?id=${item.id}';`}
-          >
-            <div>
-              <div class="w-full aspect-square bg-slate-50 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative">
-                <span class="absolute top-2 left-2 bg-blueLight text-blueBrand text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-200 uppercase">
-                  {item.pack}
-                </span>
-
-                <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
-              </div>
-
-              <span class="text-[10px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
-                {item.category}
+            {/* Product Image */}
+            <div class="w-full aspect-square bg-slate-50 rounded-xl p-2 mb-2.5 flex items-center justify-center border border-slate-100/60 overflow-hidden relative">
+              <span class="absolute bottom-1.5 left-1.5 bg-blueLight text-blueBrand text-[8px] font-black px-1.5 py-0.5 rounded-md border border-blue-200/60">
+                {item.pack}
               </span>
-              <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem]">
-                {item.name}
-              </h3>
+              <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" loading="lazy" />
             </div>
 
-            <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
-              <div>
-                <span class="text-[9px] text-slate-400 line-through font-bold">MRP ₹{item.mrp}</span>
-                <span class="text-sm sm:text-base font-black font-display text-slate-900 block">₹{item.price}</span>
-              </div>
+            {/* Brand + Category */}
+            <span class="text-[9px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
+              {item.brand} • {item.category}
+            </span>
 
-              <button 
-                class="btn-add-med px-3.5 py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs"
-                onclick="event.stopPropagation();"
-              >
-                + ADD
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
+            {/* Medicine Name */}
+            <h3 class="text-[11px] sm:text-xs font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.2rem]">
+              {item.name}
+            </h3>
 
-    <!-- ==================== 9. PERSONAL CARE ==================== -->
-    <section class="space-y-3.5 pt-2" id="sec-personal-care">
-      <div class="flex items-end justify-between px-1">
-        <div>
-          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span>🧴 Personal Care</span>
-          </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Antiseptics, oral hygiene & skincare ({personalCareItems.length} items)</p>
-        </div>
-        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
-      </div>
-
-      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
-        {personalCareItems.map(item => (
-          <div 
-            class="med-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer group"
-            data-id={item.id}
-            data-name={item.name}
-            data-price={item.price}
-            data-img={item.image}
-            onclick={`window.location.href='/medicine_details?id=${item.id}';`}
-          >
-            <div>
-              <div class="w-full aspect-square bg-slate-50 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative">
-                <span class="absolute top-2 left-2 bg-blueLight text-blueBrand text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-200 uppercase">
-                  {item.pack}
-                </span>
-
-                <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
-              </div>
-
-              <span class="text-[10px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
-                {item.category}
-              </span>
-              <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem]">
-                {item.name}
-              </h3>
+            {/* Rating */}
+            <div class="flex items-center gap-1 mt-1">
+              <span class="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-100">⭐ {item.rating}</span>
             </div>
 
-            <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
-              <div>
-                <span class="text-[9px] text-slate-400 line-through font-bold">MRP ₹{item.mrp}</span>
-                <span class="text-sm sm:text-base font-black font-display text-slate-900 block">₹{item.price}</span>
+            {/* Price + Add to Cart */}
+            <div class="pt-2 border-t border-slate-100 mt-2.5">
+              <div class="flex items-center gap-1.5 mb-2">
+                <span class="text-sm sm:text-base font-black font-display text-slate-900">₹{item.price}</span>
+                {item.mrp > item.price && (
+                  <span class="text-[9px] text-slate-400 line-through font-bold">₹{item.mrp}</span>
+                )}
+                {item.mrp > item.price && (
+                  <span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded">
+                    {Math.round(((item.mrp - item.price) / item.mrp) * 100)}% OFF
+                  </span>
+                )}
               </div>
 
-              <button 
-                class="btn-add-med px-3.5 py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs"
-                onclick="event.stopPropagation();"
-              >
-                + ADD
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- ==================== 10. BABY CARE ==================== -->
-    <section class="space-y-3.5 pt-2" id="sec-baby-care">
-      <div class="flex items-end justify-between px-1">
-        <div>
-          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span>👶 Baby Care</span>
-          </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Baby diapers, wipes, baby cereal & skincare ({babyCareItems.length} items)</p>
-        </div>
-        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
-      </div>
-
-      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
-        {babyCareItems.map(item => (
-          <div 
-            class="med-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer group"
-            data-id={item.id}
-            data-name={item.name}
-            data-price={item.price}
-            data-img={item.image}
-            onclick={`window.location.href='/medicine_details?id=${item.id}';`}
-          >
-            <div>
-              <div class="w-full aspect-square bg-slate-50 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative">
-                <span class="absolute top-2 left-2 bg-blueLight text-blueBrand text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-200 uppercase">
-                  {item.pack}
-                </span>
-
-                <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
+              {/* Add / Qty Selector */}
+              <div class="med-cart-actions">
+                <button
+                  class="btn-add-med w-full py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-95 transition-all"
+                  onclick="event.stopPropagation();"
+                >
+                  + ADD
+                </button>
+                <div class="med-qty-selector hidden flex items-center justify-between w-full bg-blueBrand rounded-xl overflow-hidden">
+                  <button class="med-qty-minus px-3 py-1.5 text-white text-sm font-black hover:bg-blueDark transition-colors" onclick="event.stopPropagation();">−</button>
+                  <span class="med-qty-count text-white text-xs font-black">1</span>
+                  <button class="med-qty-plus px-3 py-1.5 text-white text-sm font-black hover:bg-blueDark transition-colors" onclick="event.stopPropagation();">+</button>
+                </div>
               </div>
-
-              <span class="text-[10px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
-                {item.category}
-              </span>
-              <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem]">
-                {item.name}
-              </h3>
-            </div>
-
-            <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
-              <div>
-                <span class="text-[9px] text-slate-400 line-through font-bold">MRP ₹{item.mrp}</span>
-                <span class="text-sm sm:text-base font-black font-display text-slate-900 block">₹{item.price}</span>
-              </div>
-
-              <button 
-                class="btn-add-med px-3.5 py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs"
-                onclick="event.stopPropagation();"
-              >
-                + ADD
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- ==================== 11. MEDICAL DEVICES ==================== -->
-    <section class="space-y-3.5 pt-2" id="sec-medical-devices">
-      <div class="flex items-end justify-between px-1">
-        <div>
-          <h2 class="text-lg sm:text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
-            <span>🩺 Medical Devices</span>
-          </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">BP monitors, glucometers, thermometers & steamers ({medicalDevicesItems.length} items)</p>
-        </div>
-        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider shrink-0">Scroll →</span>
-      </div>
-
-      <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
-        {medicalDevicesItems.map(item => (
-          <div 
-            class="med-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-blue-200 transition-all cursor-pointer group"
-            data-id={item.id}
-            data-name={item.name}
-            data-price={item.price}
-            data-img={item.image}
-            onclick={`window.location.href='/medicine_details?id=${item.id}';`}
-          >
-            <div>
-              <div class="w-full aspect-square bg-slate-50 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative">
-                <span class="absolute top-2 left-2 bg-blueLight text-blueBrand text-[9px] font-black px-2 py-0.5 rounded-full border border-blue-200 uppercase">
-                  {item.pack}
-                </span>
-
-                <img src={item.image} alt={item.name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" />
-              </div>
-
-              <span class="text-[10px] font-extrabold text-blueBrand uppercase tracking-wider block mb-0.5 truncate">
-                {item.category}
-              </span>
-              <h3 class="text-xs sm:text-sm font-black font-display text-slate-900 line-clamp-2 leading-snug min-h-[2.4rem]">
-                {item.name}
-              </h3>
-            </div>
-
-            <div class="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-1 mt-3">
-              <div>
-                <span class="text-[9px] text-slate-400 line-through font-bold">MRP ₹{item.mrp}</span>
-                <span class="text-sm sm:text-base font-black font-display text-slate-900 block">₹{item.price}</span>
-              </div>
-
-              <button 
-                class="btn-add-med px-3.5 py-1.5 bg-blueLight text-blueBrand hover:bg-blueBrand hover:text-white border border-blue-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs"
-                onclick="event.stopPropagation();"
-              >
-                + ADD
-              </button>
             </div>
           </div>
         ))}
@@ -1030,10 +912,10 @@ const medicalDevicesItems = [
 
   <Switcher />
 
-  <!-- DYNAMIC CLIENT SCRIPT FOR PRESCRIPTION UPLOAD & STORE TOGGLE -->
+  <!-- DYNAMIC CLIENT SCRIPT -->
   <script is:inline>
     (function() {
-      // 1. File Upload Logic
+      // ========== 1. PRESCRIPTION FILE UPLOAD ==========
       var fileTriggers = document.querySelectorAll('.rx-file-trigger');
       var previewBox = document.getElementById('rx-upload-preview-box');
       var fileNameEl = document.getElementById('rx-file-name');
@@ -1058,7 +940,7 @@ const medicalDevicesItems = [
         });
       }
 
-      // 2. Submit Prescription Order Handler
+      // ========== 2. PRESCRIPTION SUBMIT ==========
       var submitBtn = document.getElementById('btn-submit-prescription-order');
       if (submitBtn) {
         submitBtn.addEventListener('click', function() {
@@ -1070,42 +952,21 @@ const medicalDevicesItems = [
           var storeNameVal = (document.getElementById('rx-store-name-input') || {}).value || '';
           var storeAreaVal = (document.getElementById('rx-store-area-input') || {}).value || '';
 
-          // If store name is blank, source = Nearest Partner Pharmacy
           var storeName = storeNameVal.trim() ? storeNameVal.trim() : 'Nearest Partner Pharmacy';
           var storeArea = storeAreaVal.trim() ? storeAreaVal.trim() : 'Bhusawal Local Area';
           var storeChoice = storeNameVal.trim() ? 'PREFERRED' : 'NEAREST';
 
-          if (!patientName.trim()) {
-            alert('Please enter Patient Name');
-            return;
-          }
-
-          if (!mobile.trim()) {
-            alert('Please enter Mobile Number');
-            return;
-          }
-
-          if (!address.trim()) {
-            alert('Please enter Delivery Address');
-            return;
-          }
+          if (!patientName.trim()) { alert('Please enter Patient Name'); return; }
+          if (!mobile.trim()) { alert('Please enter Mobile Number'); return; }
+          if (!address.trim()) { alert('Please enter Delivery Address'); return; }
 
           var orderId = 'RX-BHU-' + Math.floor(100000 + Math.random() * 900000);
           var rxOrder = {
-            id: orderId,
-            type: 'PRESCRIPTION',
-            patientName: patientName,
-            mobile: mobile,
-            address: address,
-            landmark: landmark,
-            notes: notes,
-            storeChoice: storeChoice,
-            storeName: storeName,
-            storeArea: storeArea,
+            id: orderId, type: 'PRESCRIPTION', patientName: patientName, mobile: mobile,
+            address: address, landmark: landmark, notes: notes, storeChoice: storeChoice,
+            storeName: storeName, storeArea: storeArea,
             fileName: uploadedFileName || 'Prescription_Attached.pdf',
-            total: 0,
-            status: 'Accepted',
-            timestamp: new Date().toISOString()
+            total: 0, status: 'Accepted', timestamp: new Date().toISOString()
           };
 
           try {
@@ -1120,11 +981,46 @@ const medicalDevicesItems = [
         });
       }
 
-      // 4. Cart UI Functions
+      // ========== 3. CATEGORY CHIP FILTERING ==========
+      var chips = document.querySelectorAll('.med-cat-chip');
+      var allCards = document.querySelectorAll('#med-product-grid .med-card');
+      var gridTitle = document.getElementById('med-grid-title');
+      var gridSubtitle = document.getElementById('med-grid-subtitle');
+
+      chips.forEach(function(chip) {
+        chip.addEventListener('click', function() {
+          var cat = chip.getAttribute('data-category');
+
+          // Update active chip styling
+          chips.forEach(function(c) {
+            c.classList.remove('active', 'bg-blueBrand', 'text-white', 'border-transparent');
+            c.classList.add('bg-slate-100', 'text-slate-700', 'border-slate-200/80');
+          });
+          chip.classList.add('active', 'bg-blueBrand', 'text-white', 'border-transparent');
+          chip.classList.remove('bg-slate-100', 'text-slate-700', 'border-slate-200/80');
+
+          // Filter cards
+          var visibleCount = 0;
+          allCards.forEach(function(card) {
+            var cardCat = card.getAttribute('data-category');
+            if (cat === 'all' || cardCat === cat) {
+              card.style.display = '';
+              visibleCount++;
+            } else {
+              card.style.display = 'none';
+            }
+          });
+
+          // Update title
+          if (gridTitle) gridTitle.textContent = cat === 'all' ? 'All Medicines' : cat;
+          if (gridSubtitle) gridSubtitle.textContent = 'Showing ' + visibleCount + ' products';
+        });
+      });
+
+      // ========== 4. CART FUNCTIONS ==========
       function getGlobalCart() {
-        try {
-          return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-        } catch(e) { return []; }
+        try { return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); }
+        catch(e) { return []; }
       }
 
       function saveGlobalCart(cart) {
@@ -1136,8 +1032,8 @@ const medicalDevicesItems = [
 
       function updateAllCartUI() {
         var cart = getGlobalCart();
-        var totalCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        var totalPrice = cart.reduce((sum, item) => sum + (parseFloat(item.price || item.mrp || 0) * (item.quantity || 1)), 0);
+        var totalCount = cart.reduce(function(sum, item) { return sum + (item.quantity || 1); }, 0);
+        var totalPrice = cart.reduce(function(sum, item) { return sum + (parseFloat(item.price || 0) * (item.quantity || 1)); }, 0);
 
         var badge = document.getElementById('med-cart-badge');
         if (badge) badge.textContent = totalCount;
@@ -1150,13 +1046,32 @@ const medicalDevicesItems = [
           if (totalCount > 0) {
             floatBar.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
             if (floatCount) floatCount.textContent = totalCount + (totalCount === 1 ? ' ITEM' : ' ITEMS');
-            if (floatTotal) floatTotal.textContent = '₹' + Math.round(totalPrice);
+            if (floatTotal) floatTotal.textContent = '\u20B9' + Math.round(totalPrice);
           } else {
             floatBar.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
           }
         }
+
+        // Sync qty selectors with cart state
+        allCards.forEach(function(card) {
+          var cid = card.getAttribute('data-id');
+          var cartItem = cart.find(function(c) { return c.id === cid; });
+          var addBtn = card.querySelector('.btn-add-med');
+          var qtySel = card.querySelector('.med-qty-selector');
+          var qtyCount = card.querySelector('.med-qty-count');
+
+          if (cartItem && cartItem.quantity > 0) {
+            if (addBtn) addBtn.classList.add('hidden');
+            if (qtySel) qtySel.classList.remove('hidden');
+            if (qtyCount) qtyCount.textContent = cartItem.quantity;
+          } else {
+            if (addBtn) addBtn.classList.remove('hidden');
+            if (qtySel) qtySel.classList.add('hidden');
+          }
+        });
       }
 
+      // ========== 5. ADD TO CART ==========
       document.addEventListener('click', function(e) {
         var addBtn = e.target.closest('.btn-add-med');
         if (addBtn) {
@@ -1167,7 +1082,9 @@ const medicalDevicesItems = [
           var id = card.getAttribute('data-id');
           var name = card.getAttribute('data-name');
           var price = parseFloat(card.getAttribute('data-price')) || 0;
+          var mrp = parseFloat(card.getAttribute('data-mrp')) || price;
           var img = card.getAttribute('data-img');
+          var brand = card.getAttribute('data-brand') || '';
 
           var cart = getGlobalCart();
           var existing = cart.find(function(c) { return c.id === id; });
@@ -1175,21 +1092,84 @@ const medicalDevicesItems = [
             existing.quantity = (existing.quantity || 1) + 1;
           } else {
             cart.push({
-              id: id,
-              name: name,
-              price: price,
-              mrp: price,
-              image: img,
-              quantity: 1,
-              restaurant: 'Bhusawal Express Pharmacy',
-              cat: 'Medicines'
+              id: id, name: name, price: price, mrp: mrp, image: img,
+              quantity: 1, restaurant: brand || 'Bhusawal Express Pharmacy', cat: 'Medicines'
             });
           }
           saveGlobalCart(cart);
-          alert(name + ' added to your cart!');
         }
       });
 
+      // ========== 6. QUANTITY PLUS / MINUS ==========
+      document.addEventListener('click', function(e) {
+        var plusBtn = e.target.closest('.med-qty-plus');
+        var minusBtn = e.target.closest('.med-qty-minus');
+
+        if (plusBtn) {
+          e.stopPropagation();
+          var card = plusBtn.closest('.med-card');
+          if (!card) return;
+          var id = card.getAttribute('data-id');
+          var cart = getGlobalCart();
+          var item = cart.find(function(c) { return c.id === id; });
+          if (item) { item.quantity = (item.quantity || 1) + 1; saveGlobalCart(cart); }
+        }
+
+        if (minusBtn) {
+          e.stopPropagation();
+          var card = minusBtn.closest('.med-card');
+          if (!card) return;
+          var id = card.getAttribute('data-id');
+          var cart = getGlobalCart();
+          var idx = cart.findIndex(function(c) { return c.id === id; });
+          if (idx > -1) {
+            if (cart[idx].quantity > 1) {
+              cart[idx].quantity -= 1;
+            } else {
+              cart.splice(idx, 1);
+            }
+            saveGlobalCart(cart);
+          }
+        }
+      });
+
+      // ========== 7. FAVOURITE BUTTON ==========
+      document.addEventListener('click', function(e) {
+        var favBtn = e.target.closest('.med-fav-btn');
+        if (favBtn) {
+          e.stopPropagation();
+          var card = favBtn.closest('.med-card');
+          if (!card) return;
+          var id = card.getAttribute('data-id');
+          var name = card.getAttribute('data-name');
+
+          var isFav = favBtn.classList.contains('med-fav-active');
+          if (isFav) {
+            favBtn.classList.remove('med-fav-active', 'text-rose-500', 'border-rose-200');
+            favBtn.classList.add('text-slate-400', 'border-slate-200');
+            favBtn.querySelector('svg').setAttribute('fill', 'none');
+          } else {
+            favBtn.classList.add('med-fav-active', 'text-rose-500', 'border-rose-200');
+            favBtn.classList.remove('text-slate-400', 'border-slate-200');
+            favBtn.querySelector('svg').setAttribute('fill', 'currentColor');
+          }
+
+          // Save to wishlist
+          try {
+            var wishlist = JSON.parse(localStorage.getItem('bhusawal_wishlist') || '[]');
+            if (isFav) {
+              wishlist = wishlist.filter(function(w) { return w.id !== id; });
+            } else {
+              if (!wishlist.find(function(w) { return w.id === id; })) {
+                wishlist.push({ id: id, name: name });
+              }
+            }
+            localStorage.setItem('bhusawal_wishlist', JSON.stringify(wishlist));
+          } catch(ex) {}
+        }
+      });
+
+      // ========== 8. SEARCH ==========
       var searchInput = document.getElementById('med-search-input');
       if (searchInput) {
         searchInput.addEventListener('keydown', function(e) {
@@ -1199,6 +1179,7 @@ const medicalDevicesItems = [
         });
       }
 
+      // Init
       updateAllCartUI();
     })();
   </script>
