@@ -3,25 +3,26 @@ import Switcher from '../components/Switcher.astro';
 import foodCatalog from '../../public/food_catalog.json';
 
 // Food Categories
-const foodCategories = [
+const mainCategories = [
   { id: 'all', name: 'All Foods', icon: '🍽️', kw: '' },
   { id: 'pizza', name: 'Pizza', icon: '🍕', kw: 'pizza' },
   { id: 'burger', name: 'Burger', icon: '🍔', kw: 'burger' },
   { id: 'biryani', name: 'Biryani', icon: '🍲', kw: 'biryani' },
-  { id: 'chinese', name: 'Chinese', icon: '🍜', kw: 'chinese' },
-  { id: 'south_indian', name: 'South Indian', icon: '🥞', kw: 'south' },
-  { id: 'north_indian', name: 'North Indian', icon: '🍱', kw: 'north' },
-  { id: 'veg', name: 'Veg', icon: '🟢', kw: 'veg' },
-  { id: 'non_veg', name: 'Non Veg', icon: '🔴', kw: 'non' },
   { id: 'chicken', name: 'Chicken', icon: '🍗', kw: 'chicken' },
-  { id: 'mutton', name: 'Mutton', icon: '🍖', kw: 'mutton' },
-  { id: 'seafood', name: 'Seafood', icon: '🦐', kw: 'seafood' },
-  { id: 'roti', name: 'Roti', icon: '🫓', kw: 'roti' },
+  { id: 'veg_main', name: 'Veg Main Course', icon: '🥘', kw: 'veg main course' },
+  { id: 'chinese', name: 'Chinese', icon: '🍜', kw: 'chinese' },
+  { id: 'breads', name: 'Breads', icon: '🫓', kw: 'breads' },
+  { id: 'south_indian', name: 'South Indian', icon: '🥞', kw: 'south indian' },
+  { id: 'rolls', name: 'Rolls', icon: '🌯', kw: 'rolls' },
+  { id: 'snacks', name: 'Snacks', icon: '🍿', kw: 'snacks' },
   { id: 'desserts', name: 'Desserts', icon: '🍨', kw: 'desserts' },
-  { id: 'beverages', name: 'Beverages', icon: '🥤', kw: 'shake' }
+  { id: 'beverages', name: 'Beverages', icon: '🥤', kw: 'beverages' },
+  { id: 'thali', name: 'Thali', icon: '🍱', kw: 'thali' },
+  { id: 'mutton', name: 'Mutton', icon: '🍖', kw: 'mutton' },
+  { id: 'seafood', name: 'Seafood', icon: '🦐', kw: 'seafood' }
 ];
 
-// Featured Partner Restaurants (Compact 1 Horizontal Scroll Row)
+// Featured Partner Restaurants (1 Compact Row)
 const featuredPartnerRestaurants = [
   {
     id: 'royal_biryani',
@@ -154,7 +155,7 @@ const featuredPartnerRestaurants = [
     <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md py-2">
       <div class="flex items-center gap-2 bg-slate-100/90 rounded-2xl px-4 py-3 border border-slate-200/80 shadow-inner focus-within:ring-2 focus-within:ring-redBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
-        <input type="text" id="food-search-input" placeholder="Search dishes, biryani, thalis, pizza, burger..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
+        <input type="text" id="food-search-input" placeholder="Search 1,600+ dishes, biryani, thalis, pizza, burger..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
         <button id="clear-food-search" class="hidden text-slate-400 hover:text-slate-600">
           <span class="material-symbols-outlined text-lg">close</span>
         </button>
@@ -207,12 +208,10 @@ const featuredPartnerRestaurants = [
               <img src={rest.cover} alt={rest.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
               <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
               
-              <!-- Verified Partner Badge -->
               <span class="absolute top-2 left-2 px-2 py-0.5 bg-white/95 backdrop-blur-md text-emerald-700 text-[9px] font-black rounded-full uppercase tracking-wider shadow-xs border border-slate-200">
                 ✓ Verified
               </span>
 
-              <!-- Delivery Time -->
               <span class="absolute bottom-2 right-2 px-2 py-0.5 bg-redBrand text-white text-[9px] font-black rounded-full shadow-xs">
                 ⚡ {rest.deliveryTime}
               </span>
@@ -250,7 +249,7 @@ const featuredPartnerRestaurants = [
 
       <!-- HORIZONTAL CATEGORY CHIPS -->
       <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
-        {foodCategories.map((cat, idx) => (
+        {mainCategories.map((cat, idx) => (
           <button 
             class={`food-cat-chip flex items-center gap-2 px-4 py-2 rounded-full font-black text-xs whitespace-nowrap cursor-pointer transition-all active:scale-95 shrink-0 shadow-xs ${
               idx === 0 
@@ -266,19 +265,25 @@ const featuredPartnerRestaurants = [
       </div>
     </section>
 
-    <!-- ==================== SECTION 4: ORDER FOOD DIRECTLY (MAIN PRODUCT GRID) ==================== -->
+    <!-- ==================== SECTION 4: ORDER FOOD DIRECTLY (MAIN PRODUCT GRID & SORTING) ==================== -->
     <section id="order-food-directly" class="space-y-4 pt-4 border-t border-slate-100">
-      <div class="flex items-center justify-between px-1">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-1">
         <div>
           <h2 class="text-xl sm:text-2xl font-black font-display text-slate-900 tracking-tight flex items-center gap-2">
             <span>🍽️</span>
             <span>Order Food Directly</span>
           </h2>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Main section: Order instant dishes directly to cart without opening restaurant pages</p>
+          <p class="text-xs text-slate-500 font-medium mt-0.5" id="catalog-count-subtitle">Browsing complete catalog (1,600+ items)</p>
         </div>
-        <span class="px-3.5 py-1.5 bg-redBrand text-white text-xs font-black rounded-full shadow-sm flex items-center gap-1">
-          <span>⚡ Direct Order</span>
-        </span>
+
+        <!-- Sort by Price & Diet Filters Bar -->
+        <div class="flex items-center gap-2 shrink-0">
+          <select id="food-sort-select" class="bg-slate-100 border border-slate-200/80 text-slate-800 text-xs font-extrabold rounded-xl px-3 py-2 outline-none focus:border-redBrand cursor-pointer">
+            <option value="default">Sort: Default</option>
+            <option value="low-high">Price: Low to High</option>
+            <option value="high-low">Price: High to Low</option>
+          </select>
+        </div>
       </div>
 
       <!-- PRODUCT GRID EXACTLY LIKE GROCERY (2 cols mobile, 3 tablet, 4 lg, 5 xl) -->
@@ -291,7 +296,7 @@ const featuredPartnerRestaurants = [
 
   <Switcher />
 
-  <!-- CLIENT-SIDE CATALOG & CART ENGINE -->
+  <!-- CLIENT-SIDE CATALOG, SEARCH, FILTER & SORT ENGINE -->
   <script is:inline define:vars={{ initialCatalog: foodCatalog }}>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -327,26 +332,70 @@ const featuredPartnerRestaurants = [
         if (badge) badge.textContent = totalQty;
       }
 
+      let activeCatalog = getActiveCatalog();
+      let activeCategoryKw = '';
+      let activeSortMode = 'default';
+
       // Render Food Products Grid (Grocery Style, Zero Restaurant Names)
-      function renderFoodGrid(catalogItems) {
+      function renderFoodGrid() {
         const grid = document.getElementById('direct-food-grid');
+        const countSubtitle = document.getElementById('catalog-count-subtitle');
         if (!grid) return;
 
+        const query = (document.getElementById('food-search-input')?.value || '').trim().toLowerCase();
+
+        // 1. Filter items
+        let filtered = activeCatalog.filter(item => {
+          const name = (item.name || '').toLowerCase();
+          const category = (item.category || '').toLowerCase();
+          const subcategory = (item.subcategory || '').toLowerCase();
+          const keywords = (item.searchKeywords || []).join(' ').toLowerCase();
+
+          const matchesSearch = !query || name.includes(query) || category.includes(query) || subcategory.includes(query) || keywords.includes(query);
+          const matchesCategory = !activeCategoryKw || category.includes(activeCategoryKw) || subcategory.includes(activeCategoryKw) || keywords.includes(activeCategoryKw);
+
+          return matchesSearch && matchesCategory;
+        });
+
+        // 2. Sort items
+        if (activeSortMode === 'low-high') {
+          filtered.sort((a, b) => parseFloat(a.price || 0) - parseFloat(b.price || 0));
+        } else if (activeSortMode === 'high-low') {
+          filtered.sort((a, b) => parseFloat(b.price || 0) - parseFloat(a.price || 0));
+        }
+
+        if (countSubtitle) {
+          countSubtitle.textContent = `Showing ${filtered.length} dishes in catalog`;
+        }
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `
+            <div class="col-span-full bg-white rounded-3xl p-8 text-center space-y-2 border border-slate-100">
+              <span class="material-symbols-outlined text-4xl text-slate-300">search_off</span>
+              <h3 class="text-sm font-black text-slate-800">No food items found matching your search or category filter</h3>
+              <p class="text-xs font-bold text-slate-400">Try searching for Pizza, Biryani, Butter Chicken, Burgers or Sweets.</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Render top 120 items for high performance rendering
+        const displayItems = filtered.slice(0, 120);
+
         let html = '';
-        catalogItems.forEach(item => {
+        displayItems.forEach(item => {
           const id = item.id;
           const name = item.name;
           const category = item.category || 'Food';
           const isVeg = item.isVeg !== false;
           const price = parseFloat(item.price || 0);
+          const prepTime = item.prepTime || '15 mins';
           const image = item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
 
           html += `
             <div 
               class="food-product-card bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative"
               data-id="${id}"
-              data-name="${name.toLowerCase()}"
-              data-category="${category.toLowerCase()}"
             >
               <div>
                 <!-- Large Food Image Container (Square Aspect) -->
@@ -356,6 +405,11 @@ const featuredPartnerRestaurants = [
                   <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
                     <span class="w-2 h-2 rounded-full ${isVeg ? 'bg-emerald-600' : 'bg-rose-600'} shrink-0"></span>
                     <span class="${isVeg ? 'text-emerald-700' : 'text-rose-700'}">${isVeg ? 'VEG' : 'NON-VEG'}</span>
+                  </div>
+
+                  <!-- Prep Time Badge -->
+                  <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-0.5 shadow-xs z-10">
+                    <span>⏱️ ${prepTime}</span>
                   </div>
 
                   <!-- Favourite Heart Button -->
@@ -381,7 +435,7 @@ const featuredPartnerRestaurants = [
               <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
                 <span class="text-xs sm:text-sm font-black text-slate-900">MRP ₹${price}</span>
 
-                <div class="food-direct-action-box" data-id="${id}" data-name="${name}" data-price="${price}" data-img="${image}">
+                <div class="food-direct-action-box" data-id="${id}" data-name="${name.replace(/"/g, '&quot;')}" data-price="${price}" data-img="${image}">
                   <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-[10px] font-black rounded-xl active:scale-90 transition-all shadow-xs">
                     + ADD
                   </button>
@@ -446,7 +500,7 @@ const featuredPartnerRestaurants = [
             if (existing) {
               existing.quantity += 1;
             } else {
-              cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Direct Food Express' });
+              cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Food Express' });
             }
             setCart(cart);
           };
@@ -476,50 +530,35 @@ const featuredPartnerRestaurants = [
       }
 
       // Initialize Grid
-      const catalog = getActiveCatalog();
-      renderFoodGrid(catalog);
+      renderFoodGrid();
       updateCartBadge();
 
-      // Category Chips Filtering
+      // Search Input Listener
       const searchInput = document.getElementById('food-search-input');
       const clearBtn = document.getElementById('clear-food-search');
-      const categoryChips = document.querySelectorAll('.food-cat-chip');
-      let activeKw = '';
-
-      function applyFilters() {
-        const query = (searchInput?.value || '').trim().toLowerCase();
-        const foodCards = document.querySelectorAll('.food-product-card');
-
-        foodCards.forEach(card => {
-          const name = card.dataset.name || '';
-          const category = card.dataset.category || '';
-
-          const matchesSearch = !query || name.includes(query) || category.includes(query);
-          const matchesCategory = !activeKw || category.includes(activeKw) || name.includes(activeKw);
-
-          if (matchesSearch && matchesCategory) {
-            card.classList.remove('hidden');
-          } else {
-            card.classList.add('hidden');
-          }
-        });
-      }
-
       searchInput?.addEventListener('input', (e) => {
         if (e.target.value.length > 0) {
           clearBtn?.classList.remove('hidden');
         } else {
           clearBtn?.classList.add('hidden');
         }
-        applyFilters();
+        renderFoodGrid();
       });
 
       clearBtn?.addEventListener('click', () => {
         searchInput.value = '';
         clearBtn.classList.add('hidden');
-        applyFilters();
+        renderFoodGrid();
       });
 
+      // Sort Select Listener
+      document.getElementById('food-sort-select')?.addEventListener('change', (e) => {
+        activeSortMode = e.target.value;
+        renderFoodGrid();
+      });
+
+      // Category Chips Listener
+      const categoryChips = document.querySelectorAll('.food-cat-chip');
       categoryChips.forEach(chip => {
         chip.addEventListener('click', () => {
           categoryChips.forEach(c => {
@@ -530,8 +569,8 @@ const featuredPartnerRestaurants = [
           chip.classList.remove('bg-slate-100', 'text-slate-700', 'border', 'border-slate-200/80');
           chip.classList.add('bg-redBrand', 'text-white', 'shadow-md', 'ring-2', 'ring-redBrand/30');
 
-          activeKw = chip.dataset.kw || '';
-          applyFilters();
+          activeCategoryKw = chip.dataset.kw || '';
+          renderFoodGrid();
         });
       });
 
