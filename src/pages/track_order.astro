@@ -22,12 +22,15 @@ import Switcher from '../components/Switcher.astro';
   <script src="/assets/google_live_tracker.js" is:inline></script>
   <script src="/assets/realtime_sync.js" is:inline></script>
 
-  <!-- RED & WHITE THEME TAILWIND CONFIGURATION -->
+  <!-- TAILWIND CONFIGURATION -->
   <script is:inline>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
+            blueBrand: '#3B82F6',
+            blueDark: '#2563EB',
+            blueLight: '#EFF6FF',
             redBrand: '#E53935',
             redDark: '#C62828',
             redLight: '#FFEBEE'
@@ -51,7 +54,7 @@ import Switcher from '../components/Switcher.astro';
 
 <body class="bg-slate-50 min-h-screen text-slate-900 pb-20 antialiased">
 
-  <!-- TOP HEADER -->
+  <!-- TOP HEADER WITH SUPPORT BUTTON -->
   <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100 px-4 py-3 shadow-xs">
     <div class="max-w-md mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -64,49 +67,52 @@ import Switcher from '../components/Switcher.astro';
         </div>
       </div>
 
-      <a href="tel:7498071274" class="border border-red-200 text-redBrand bg-redLight hover:bg-red-100 font-extrabold text-xs px-3 py-1.5 rounded-full flex items-center gap-1 transition-all active:scale-95">
+      <!-- SUPPORT BUTTON -->
+      <a href="tel:7498071274" class="border border-blue-200 text-blueBrand bg-blueLight hover:bg-blue-100 font-extrabold text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1 transition-all active:scale-95 shadow-xs">
         <span class="material-symbols-outlined text-sm">headset_mic</span> Support
       </a>
     </div>
   </header>
 
-  <!-- Realtime Toast Banner -->
+  <!-- Realtime Toast Notification Banner -->
   <div id="toast-notification" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-slate-900 text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-3 hidden animate-in slide-in-from-top duration-300">
     <div class="flex items-center gap-2.5 min-w-0">
-      <span class="material-symbols-outlined text-redBrand text-xl" id="toast-icon">local_shipping</span>
-      <p class="text-xs font-extrabold truncate" id="toast-msg">Chef is preparing your food order</p>
+      <span class="material-symbols-outlined text-blueBrand text-xl" id="toast-icon">local_shipping</span>
+      <p class="text-xs font-extrabold truncate" id="toast-msg">Rider is en route to doorstep</p>
     </div>
     <span class="text-[10px] font-black bg-white/20 px-2 py-0.5 rounded-full uppercase">LIVE</span>
   </div>
 
   <main class="max-w-md mx-auto relative">
 
-    <!-- Floating Top Status Pill Card -->
+    <!-- Floating Top Status Pill Card with ETA -->
     <div class="px-4 pt-3 relative z-20 space-y-2">
-      <!-- 300m / 100m Proximity Alert Banner -->
+      <!-- Proximity Alert Banner -->
       <div id="rider-nearby-alert" class="hidden bg-amber-500 text-slate-950 font-black text-xs px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce border border-amber-300">
         <span class="material-symbols-outlined text-lg">notifications_active</span>
-        <span id="nearby-alert-text">Your Bhusawal Connect rider is nearby (&lt;300m). Please be ready to receive your hot food!</span>
+        <span id="nearby-alert-text">Your Bhusawal Connect rider is nearby (&lt;300m). Please be ready to receive your parcel!</span>
       </div>
 
+      <!-- Top Status Card with Live ETA -->
       <div class="bg-white rounded-3xl p-4 shadow-xl border border-slate-100 flex items-center justify-between gap-3 animate-in slide-in-from-top-4 duration-300">
         <div class="flex items-center gap-3 flex-1 min-w-0">
-          <div class="w-12 h-12 rounded-2xl bg-redLight text-redBrand flex items-center justify-center text-2xl shrink-0 border border-red-200/60 shadow-xs">
+          <div class="w-12 h-12 rounded-2xl bg-blueLight text-blueBrand flex items-center justify-center text-2xl shrink-0 border border-blue-200/60 shadow-xs">
             🛵
           </div>
           <div class="min-w-0 flex-1">
-            <h2 id="top-status-title" class="text-sm font-black text-slate-900 truncate">Preparing Food</h2>
-            <p id="top-status-sub" class="text-[11px] font-bold text-slate-500 truncate mt-0.5">Chef is cooking your order at the kitchen</p>
+            <h2 id="top-status-title" class="text-sm font-black text-slate-900 truncate">Order Received</h2>
+            <p id="top-status-sub" class="text-[11px] font-bold text-slate-500 truncate mt-0.5">Order verified & preparing for dispatch</p>
           </div>
         </div>
-        <div id="top-eta-container" class="bg-redLight border border-red-200 text-redBrand px-3 py-2 rounded-2xl text-center shrink-0">
+        <!-- ETA DISPLAY -->
+        <div id="top-eta-container" class="bg-blueLight border border-blue-200 text-blueBrand px-3.5 py-2 rounded-2xl text-center shrink-0">
           <span id="top-eta-mins" class="text-sm font-black block leading-none">18 mins</span>
-          <span class="text-[9px] font-black uppercase tracking-wider block mt-0.5 text-redDark">ETA</span>
+          <span class="text-[9px] font-black uppercase tracking-wider block mt-0.5 text-blueDark">ETA</span>
         </div>
       </div>
     </div>
 
-    <!-- Live Map Container of Bhusawal -->
+    <!-- Live Map Container of Bhusawal (Google Maps / Leaflet System) -->
     <div class="h-[48vh] w-full bg-slate-200 relative mt-3 z-10 overflow-hidden" id="bhusawal-map">
       <!-- Floating Right Controls -->
       <div class="absolute right-4 bottom-10 z-20 flex flex-col gap-2.5">
@@ -121,22 +127,23 @@ import Switcher from '../components/Switcher.astro';
       
       <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-2"></div>
 
-      <!-- STEP-BY-STEP LIVE STATUS BAR -->
+      <!-- STEP-BY-STEP MEDICINE ORDER TIMELINE BAR -->
       <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] font-black text-redBrand uppercase tracking-wider block" id="progress-bar-label">LIVE ORDER PROGRESS</span>
-          <span class="text-[10px] font-extrabold text-slate-500" id="progress-bar-step-num">Step 2 of 7</span>
+          <span class="text-[10px] font-black text-blueBrand uppercase tracking-wider block" id="progress-bar-label">ORDER TIMELINE</span>
+          <span class="text-[10px] font-extrabold text-slate-500" id="progress-bar-step-num">Step 1 of 6</span>
         </div>
         
-        <div class="grid grid-cols-7 gap-1 text-center" id="tracking-steps-bar">
-          <!-- Dynamically Populated for Prescription (7 steps) or Standard Order (6 steps) -->
+        <!-- 6-STEP TIMELINE GRID -->
+        <div class="grid grid-cols-6 gap-1 text-center" id="tracking-steps-bar">
+          <!-- Dynamically Populated for Medicine Order (6 steps) -->
         </div>
       </div>
 
-      <!-- Delivery Partner Card -->
+      <!-- LIVE RIDER CARD (WITH CALL RIDER BUTTON) -->
       <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-redBrand text-white flex items-center justify-center font-black text-xl shadow-md border-2 border-white shrink-0">
+          <div class="w-12 h-12 rounded-full bg-blueBrand text-white flex items-center justify-center font-black text-xl shadow-md border-2 border-white shrink-0">
             👨‍✈️
           </div>
           <div>
@@ -149,23 +156,24 @@ import Switcher from '../components/Switcher.astro';
           </div>
         </div>
 
+        <!-- CALL RIDER & WHATSAPP BUTTONS -->
         <div class="flex items-center gap-2">
           <a id="btn-call-rider" href="tel:7498071274" class="w-10 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center justify-center active:scale-95 transition-all shadow-md" title="Call Rider">
             <span class="material-symbols-outlined text-lg">call</span>
           </a>
-          <a id="btn-chat-rider" href="https://wa.me/917498071274?text=Hi%20Rahul,%20regarding%20my%20Bhusawal%20Connect%20food%20order" target="_blank" class="w-10 h-10 bg-redBrand hover:bg-redDark text-white rounded-xl flex items-center justify-center active:scale-95 transition-all shadow-md" title="Chat on WhatsApp">
+          <a id="btn-chat-rider" href="https://wa.me/917498071274?text=Hi%20Rahul,%20regarding%20my%20Bhusawal%20Connect%20order" target="_blank" class="w-10 h-10 bg-blueBrand hover:bg-blueDark text-white rounded-xl flex items-center justify-center active:scale-95 transition-all shadow-md" title="Chat on WhatsApp">
             <span class="material-symbols-outlined text-lg">chat</span>
           </a>
         </div>
       </div>
 
       <!-- Live ETA Banner -->
-      <div id="bottom-eta-banner" class="bg-redLight border border-red-200/80 rounded-2xl p-3.5 flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-redBrand text-white flex items-center justify-center text-sm font-black shrink-0">
+      <div id="bottom-eta-banner" class="bg-blueLight border border-blue-200/80 rounded-2xl p-3.5 flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-blueBrand text-white flex items-center justify-center text-sm font-black shrink-0">
           ⚡
         </div>
         <p class="text-xs font-bold text-slate-800 leading-snug">
-          Your food order is being prepared and will reach you in <span id="banner-eta-text" class="font-black text-redBrand">18 mins</span>
+          Your order is being processed and will reach you in <span id="banner-eta-text" class="font-black text-blueBrand">18 mins</span>
         </p>
       </div>
 
@@ -175,39 +183,35 @@ import Switcher from '../components/Switcher.astro';
           🎉
         </div>
         <div>
-          <h2 class="text-base font-black">Food Order Delivered Successfully!</h2>
+          <h2 class="text-base font-black">Order Delivered Successfully!</h2>
           <p class="text-xs text-emerald-100 font-bold mt-1">
-            Thank you for ordering with Bhusawal Connect! Enjoy your hot meal.
+            Thank you for ordering with Bhusawal Connect! Your items have been delivered safely.
           </p>
         </div>
-        <a href="/food" class="block w-full bg-white text-emerald-800 font-black text-xs py-3 rounded-2xl shadow-lg hover:bg-emerald-50 active:scale-95 transition-all mt-2">
-          Order More Food 🍔
+        <a href="/medicines" class="block w-full bg-white text-emerald-800 font-black text-xs py-3 rounded-2xl shadow-lg hover:bg-emerald-50 active:scale-95 transition-all mt-2">
+          Order More Medicines 💊
         </a>
       </div>
 
-      <!-- ORDER SUMMARY & DISH BREAKDOWN CARD -->
+      <!-- ORDER SUMMARY & ITEMS BREAKDOWN CARD -->
       <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3" id="order-summary-card">
-        <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-2">Order Items Summary</h4>
+        <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-2">Order Summary</h4>
         <div id="order-summary-items-list" class="space-y-2 text-xs font-bold text-slate-700">
           <!-- Dynamically populated -->
-          <div class="flex items-center justify-between">
-            <span>Bhusawal Special Tarri Poha × 2</span>
-            <span class="font-black">₹80</span>
-          </div>
         </div>
         <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs font-black text-slate-900">
           <span>Total Paid (incl. ₹30 Delivery)</span>
-          <span id="order-summary-total" class="text-redBrand">₹110</span>
+          <span id="order-summary-total" class="text-blueBrand text-sm font-extrabold">₹0</span>
         </div>
       </div>
 
-      <!-- Action Buttons -->
+      <!-- Navigation Action Buttons -->
       <div class="grid grid-cols-2 gap-3 pt-1">
         <a href="/home" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all">
           Back to Home
         </a>
-        <a href="/food" class="w-full bg-redBrand hover:bg-redDark text-white font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all shadow-md">
-          Explore Food 🍲
+        <a href="/medicines" class="w-full bg-blueBrand hover:bg-blueDark text-white font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all shadow-md">
+          Shop Medicines 💊
         </a>
       </div>
 
@@ -218,7 +222,6 @@ import Switcher from '../components/Switcher.astro';
     document.addEventListener('DOMContentLoaded', () => {
       let activeOrder = {};
       try {
-        // Read URL param ?id=... or localStorage active order
         const urlParams = new URLSearchParams(window.location.search);
         const reqId = urlParams.get('id');
         const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
@@ -231,77 +234,70 @@ import Switcher from '../components/Switcher.astro';
         }
       } catch(e) {}
 
-      const isRx = activeOrder.type === 'PRESCRIPTION' || (activeOrder.id || '').startsWith('RX-');
-
       if (activeOrder.id) {
         document.getElementById('header-order-id').textContent = 'Order ID: #' + activeOrder.id;
       }
 
-      // Populate Steps Bar dynamically (7 steps for Prescription, 6 steps for others)
+      // EXACT 6-STEP MEDICINE ORDER TIMELINE AS REQUESTED:
+      // 1. Order Received
+      // 2. Prescription Verified (if required)
+      // 3. Medicines Packed
+      // 4. Picked Up
+      // 5. Out For Delivery
+      // 6. Delivered
+
+      const MED_TIMELINE_STEPS = [
+        { step: 1, label: 'Order Received', icon: '📥' },
+        { step: 2, label: 'Prescription Verified', icon: '✅' },
+        { step: 3, label: 'Medicines Packed', icon: '📦' },
+        { step: 4, label: 'Picked Up', icon: '🛵' },
+        { step: 5, label: 'Out For Delivery', icon: '⚡' },
+        { step: 6, label: 'Delivered', icon: '🎉' }
+      ];
+
       const stepsBar = document.getElementById('tracking-steps-bar');
       const stepNumLabel = document.getElementById('progress-bar-step-num');
       const barLabel = document.getElementById('progress-bar-label');
 
-      const RX_STEPS = [
-        { step: 1, label: 'Uploaded', icon: '📄' },
-        { step: 2, label: 'Verification', icon: '🔍' },
-        { step: 3, label: 'Verified', icon: '✅' },
-        { step: 4, label: 'Packed', icon: '📦' },
-        { step: 5, label: 'Picked Up', icon: '🛵' },
-        { step: 6, label: 'On Way', icon: '⚡' },
-        { step: 7, label: 'Delivered', icon: '🎉' }
-      ];
-
-      const STD_STEPS = [
-        { step: 1, label: 'Accepted', icon: '✓' },
-        { step: 2, label: 'Preparing', icon: '🍳' },
-        { step: 3, label: 'Ready', icon: '📦' },
-        { step: 4, label: 'Picked Up', icon: '🛵' },
-        { step: 5, label: 'On Way', icon: '⚡' },
-        { step: 6, label: 'Delivered', icon: '🎉' }
-      ];
-
-      const activeSteps = isRx ? RX_STEPS : STD_STEPS;
-      if (barLabel) barLabel.textContent = isRx ? "PRESCRIPTION VERIFICATION PROGRESS" : "LIVE ORDER PROGRESS";
+      if (barLabel) barLabel.textContent = "ORDER TIMELINE";
 
       function renderStepBar(currentStep) {
         if (!stepsBar) return;
-        if (stepNumLabel) stepNumLabel.textContent = `Step ${currentStep} of ${activeSteps.length}`;
+        if (stepNumLabel) stepNumLabel.textContent = `Step ${currentStep} of 6`;
 
         let sHtml = '';
-        activeSteps.forEach(s => {
+        MED_TIMELINE_STEPS.forEach(s => {
           const isDone = currentStep >= s.step;
           const isCurrent = currentStep === s.step;
           sHtml += `
             <div class="step-box flex flex-col items-center gap-1 ${isDone ? 'opacity-100' : 'opacity-40'}" data-step="${s.step}">
-              <div class="w-7 h-7 rounded-full ${isCurrent ? 'bg-redBrand text-white font-black animate-pulse ring-2 ring-red-200' : (isDone ? 'bg-emerald-500 text-white font-black' : 'bg-slate-200 text-slate-500')} flex items-center justify-center text-xs shadow-xs">
+              <div class="w-7 h-7 rounded-full ${isCurrent ? 'bg-blueBrand text-white font-black animate-pulse ring-2 ring-blue-200' : (isDone ? 'bg-emerald-500 text-white font-black' : 'bg-slate-200 text-slate-500')} flex items-center justify-center text-xs shadow-xs">
                 ${isDone && !isCurrent ? '✓' : s.icon}
               </div>
-              <span class="text-[8px] sm:text-[9px] ${isCurrent ? 'font-black text-redBrand' : (isDone ? 'font-black text-slate-900' : 'font-bold text-slate-400')} leading-tight">
+              <span class="text-[8px] sm:text-[9px] ${isCurrent ? 'font-black text-blueBrand' : (isDone ? 'font-black text-slate-900' : 'font-bold text-slate-400')} leading-tight">
                 ${s.label}
               </span>
             </div>
           `;
         });
-        stepsBar.className = isRx ? "grid grid-cols-7 gap-1 text-center" : "grid grid-cols-6 gap-1 text-center";
+        stepsBar.className = "grid grid-cols-6 gap-1 text-center";
         stepsBar.innerHTML = sHtml;
       }
 
-      function getRxStep(status) {
-        if (status === 'Prescription Uploaded') return 1;
-        if (status === 'Under Verification') return 2;
-        if (status === 'Verified') return 3;
-        if (status === 'Medicines Packed') return 4;
-        if (status === 'Picked Up') return 5;
-        if (status === 'Out For Delivery' || status === 'Out for Delivery') return 6;
-        if (status === 'Delivered') return 7;
+      function getMedicineStepNum(status) {
+        if (!status || status === 'Order Received' || status === 'Confirmed' || status === 'Prescription Uploaded') return 1;
+        if (status === 'Under Verification' || status === 'Verified' || status === 'Prescription Verified') return 2;
+        if (status === 'Medicines Packed' || status === 'Packed') return 3;
+        if (status === 'Picked Up') return 4;
+        if (status === 'Out For Delivery' || status === 'Out for Delivery') return 5;
+        if (status === 'Delivered') return 6;
         return 2;
       }
 
-      const initialStep = isRx ? getRxStep(activeOrder.status) : 2;
+      const initialStep = getMedicineStepNum(activeOrder.status);
       renderStepBar(initialStep);
 
-      // Render Summary
+      // Render Order Summary
       if (activeOrder.items && Array.isArray(activeOrder.items) && activeOrder.items.length > 0) {
         const listEl = document.getElementById('order-summary-items-list');
         if (listEl) {
@@ -318,12 +314,12 @@ import Switcher from '../components/Switcher.astro';
           });
           listEl.innerHTML = sHtml;
         }
-      } else if (isRx) {
+      } else {
         const listEl = document.getElementById('order-summary-items-list');
         if (listEl) {
           listEl.innerHTML = `
             <div class="text-xs font-bold text-slate-600 bg-blue-50 p-2.5 rounded-xl border border-blue-100">
-              📄 Prescription Document Attached (${activeOrder.fileName || 'Prescription.pdf'})
+              📄 Prescription Document Attached (${activeOrder.fileName || 'Doctor_Prescription.pdf'})
               ${activeOrder.notes ? '<p class="text-[11px] text-slate-500 font-normal mt-0.5">Note: ' + activeOrder.notes + '</p>' : ''}
             </div>
           `;
@@ -350,7 +346,7 @@ import Switcher from '../components/Switcher.astro';
         }
       }
 
-      // Initialize Google Live Tracker Engine
+      // Initialize Google Live Tracker Engine (Shared across Food, Grocery & Medicine)
       const tracker = new window.GoogleLiveTracker('bhusawal-map', {
         storePos: { lat: storeLat, lng: storeLng },
         custPos: { lat: custLat, lng: custLng },
@@ -373,65 +369,35 @@ import Switcher from '../components/Switcher.astro';
           const titleEl = document.getElementById('top-status-title');
           const subEl = document.getElementById('top-status-sub');
           
-          if (isRx) {
-            if (status === 'ACCEPTED' || status === 'Prescription Uploaded') {
-              if (titleEl) titleEl.textContent = "Prescription Uploaded";
-              if (subEl) subEl.textContent = "Waiting for partner pharmacist review";
-              renderStepBar(1);
-            } else if (status === 'PREPARING_FOOD' || status === 'Under Verification') {
-              if (titleEl) titleEl.textContent = "Under Verification";
-              if (subEl) subEl.textContent = "Pharmacist is verifying medicine availability";
-              renderStepBar(2);
-            } else if (status === 'FOOD_READY' || status === 'Verified') {
-              if (titleEl) titleEl.textContent = "Prescription Verified!";
-              if (subEl) subEl.textContent = "Medicines verified by pharmacist";
-              renderStepBar(3);
-            } else if (status === 'Medicines Packed') {
-              if (titleEl) titleEl.textContent = "Medicines Packed";
-              if (subEl) subEl.textContent = "Sealed at pharmacy & ready for rider";
-              renderStepBar(4);
-            } else if (status === 'PICKED_UP') {
-              if (titleEl) titleEl.textContent = "Picked Up";
-              if (subEl) subEl.textContent = "Rider collected medicine parcel";
-              renderStepBar(5);
-            } else if (status === 'OUT_FOR_DELIVERY') {
-              if (titleEl) titleEl.textContent = "Out For Delivery";
-              if (subEl) subEl.textContent = "Rider is delivering to your doorstep";
-              renderStepBar(6);
-            } else if (status === 'DELIVERED') {
-              onDeliveryComplete();
-            }
-          } else {
-            if (status === 'ACCEPTED') {
-              if (titleEl) titleEl.textContent = "Order Accepted";
-              if (subEl) subEl.textContent = "Store accepted your order";
-              renderStepBar(1);
-            } else if (status === 'PREPARING_FOOD' || status === 'REACHED_STORE') {
-              if (titleEl) titleEl.textContent = "Preparing Order";
-              if (subEl) subEl.textContent = "Store is packing your items";
-              renderStepBar(2);
-            } else if (status === 'FOOD_READY') {
-              if (titleEl) titleEl.textContent = "Order Ready!";
-              if (subEl) subEl.textContent = "Packed and waiting for rider";
-              renderStepBar(3);
-            } else if (status === 'PICKED_UP') {
-              if (titleEl) titleEl.textContent = "Order Picked Up!";
-              if (subEl) subEl.textContent = "Rider picked up your parcel";
-              renderStepBar(4);
-            } else if (status === 'OUT_FOR_DELIVERY') {
-              if (titleEl) titleEl.textContent = "Out For Delivery";
-              if (subEl) subEl.textContent = "Rider is en route to your location";
-              renderStepBar(5);
-            } else if (status === 'DELIVERED') {
-              onDeliveryComplete();
-            }
+          if (status === 'ACCEPTED' || status === 'Order Received') {
+            if (titleEl) titleEl.textContent = "Order Received";
+            if (subEl) subEl.textContent = "Partner pharmacy accepted your order";
+            renderStepBar(1);
+          } else if (status === 'PREPARING_FOOD' || status === 'Under Verification' || status === 'Verified' || status === 'Prescription Verified') {
+            if (titleEl) titleEl.textContent = "Prescription Verified";
+            if (subEl) subEl.textContent = "Certified pharmacist verified your prescription";
+            renderStepBar(2);
+          } else if (status === 'FOOD_READY' || status === 'Medicines Packed') {
+            if (titleEl) titleEl.textContent = "Medicines Packed";
+            if (subEl) subEl.textContent = "Sealed at pharmacy & ready for pickup";
+            renderStepBar(3);
+          } else if (status === 'PICKED_UP') {
+            if (titleEl) titleEl.textContent = "Picked Up";
+            if (subEl) subEl.textContent = "Rider collected your medicine parcel";
+            renderStepBar(4);
+          } else if (status === 'OUT_FOR_DELIVERY') {
+            if (titleEl) titleEl.textContent = "Out For Delivery";
+            if (subEl) subEl.textContent = "Rider is delivering to your doorstep";
+            renderStepBar(5);
+          } else if (status === 'DELIVERED') {
+            onDeliveryComplete();
           }
         }
       });
 
       function onDeliveryComplete() {
-        renderStepBar(isRx ? 7 : 6);
-        document.getElementById('top-status-title').textContent = isRx ? "Medicines Delivered!" : "Order Delivered!";
+        renderStepBar(6);
+        document.getElementById('top-status-title').textContent = "Order Delivered!";
         document.getElementById('top-status-sub').textContent = "Rider safely delivered your order to your doorstep";
         document.getElementById('bottom-eta-banner')?.classList.add('hidden');
         document.getElementById('delivery-completed-banner')?.classList.remove('hidden');
