@@ -7,7 +7,7 @@ import Switcher from '../components/Switcher.astro';
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pickup & Drop Bike Ride (Passenger Transport) | Bhusawal Connect</title>
+  <title>🛵 Pickup & Drop (Bike Taxi & Auto Rickshaw) | Bhusawal Connect</title>
   
   <!-- TAILWIND & GOOGLE FONTS -->
   <script is:inline src="https://cdn.tailwindcss.com"></script>
@@ -67,21 +67,136 @@ import Switcher from '../components/Switcher.astro';
       </a>
       <div>
         <h1 class="text-base sm:text-lg font-black font-display text-slate-900 leading-tight flex items-center gap-2">
-          <span>⚡ Pickup & Drop Bike Taxi</span>
-          <span class="bg-yellowLight text-yellowDeep text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-yellowBorder">PASSENGER RIDE</span>
+          <span>🛵 Pickup & Drop Rides</span>
+          <span class="bg-yellowLight text-yellowDeep text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-yellowBorder">BIKE TAXI & AUTO</span>
         </h1>
-        <p class="text-xs text-slate-500 font-medium">Fast, Energetic & Safe Scooter Transport across Bhusawal</p>
+        <p class="text-xs text-slate-500 font-medium">Book Bike Taxi or Auto Rickshaw across Bhusawal</p>
       </div>
     </div>
 
-    <!-- Help & Support -->
-    <a href="tel:+919876543210" class="flex items-center gap-1.5 px-3 py-1.5 bg-yellowLight text-yellowDeep text-xs font-black rounded-full border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all shadow-xs">
-      <span class="material-symbols-outlined text-sm">headset_mic</span>
-      <span class="hidden sm:inline">24x7 Support</span>
-    </a>
+    <div class="flex items-center gap-2">
+      <!-- History Link -->
+      <a href="/parcel_history" class="px-3 py-1.5 bg-yellowLight text-yellowDeep text-xs font-black rounded-xl border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all flex items-center gap-1 shadow-2xs">
+        <span class="material-symbols-outlined text-base">history</span>
+        <span class="hidden sm:inline">Ride History</span>
+      </a>
+
+      <!-- 24/7 Support -->
+      <a href="tel:+919876543210" class="flex items-center gap-1 px-2.5 py-1.5 bg-slate-100 text-slate-700 text-xs font-black rounded-xl hover:bg-slate-200 transition-all">
+        <span class="material-symbols-outlined text-sm">headset_mic</span>
+      </a>
+    </div>
   </header>
 
   <main class="px-4 sm:px-6 py-6 space-y-7">
+
+    <!-- ==================== HERO SECTION (UBER & RAPIDO STYLE) ==================== -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-yellowBrand via-amber-400 to-yellow-500 rounded-3xl p-6 sm:p-10 text-slate-950 shadow-xl border border-yellowDark/20 group">
+      
+      <!-- BACKGROUND ACCENT GLOWS -->
+      <div class="absolute -top-24 -right-24 w-72 h-72 bg-white/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-amber-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- LEFT COLUMN: CONTENT -->
+        <div class="lg:col-span-7 space-y-5 text-center lg:text-left">
+          
+          <!-- TOP BADGE -->
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950 text-yellowBrand text-xs font-black uppercase tracking-wider shadow-md">
+            <span class="w-2 h-2 rounded-full bg-yellowBrand animate-ping"></span>
+            <span>Instant Booking • 24/7 Available</span>
+          </div>
+
+          <!-- HEADLINE -->
+          <h1 class="text-3xl sm:text-5xl font-black font-display tracking-tight text-slate-950 leading-tight sm:leading-none">
+            Ride Anywhere in <span class="underline decoration-slate-950/30 underline-offset-8">Bhusawal</span>
+          </h1>
+
+          <!-- SUBHEADING -->
+          <p class="text-sm sm:text-lg font-bold text-slate-900/90 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Book a Bike Taxi or Auto Rickshaw in Minutes
+          </p>
+
+          <!-- CTA BUTTON -->
+          <div class="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
+            <a 
+              href="#pickup-section-card" 
+              onclick="document.getElementById('pickup-address-input').focus();"
+              class="w-full sm:w-auto px-8 py-4 bg-slate-950 text-yellowBrand hover:bg-slate-900 active:scale-95 transition-all duration-300 rounded-2xl font-black text-base sm:text-lg shadow-2xl flex items-center justify-center gap-3 border border-yellowBrand/30 group/btn"
+            >
+              <span>🛵 Book Ride Now</span>
+              <span class="material-symbols-outlined text-xl group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+            </a>
+          </div>
+
+          <!-- 4 KEY FEATURE HIGHLIGHTS BELOW HERO BUTTON -->
+          <div class="pt-4 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 text-left">
+            
+            <div class="bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/60 shadow-sm flex items-center gap-2.5">
+              <span class="text-xl">⚡</span>
+              <div>
+                <p class="text-xs font-black text-slate-900 leading-tight">Fast Pickup</p>
+                <p class="text-[10px] font-bold text-slate-600">~3-5 Mins ETA</p>
+              </div>
+            </div>
+
+            <div class="bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/60 shadow-sm flex items-center gap-2.5">
+              <span class="text-xl">💰</span>
+              <div>
+                <p class="text-xs font-black text-slate-900 leading-tight">Affordable Fare</p>
+                <p class="text-[10px] font-bold text-slate-600">From ₹25 Only</p>
+              </div>
+            </div>
+
+            <div class="bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/60 shadow-sm flex items-center gap-2.5">
+              <span class="text-xl">📍</span>
+              <div>
+                <p class="text-xs font-black text-slate-900 leading-tight">Live Tracking</p>
+                <p class="text-[10px] font-bold text-slate-600">Real-time GPS</p>
+              </div>
+            </div>
+
+            <div class="bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/60 shadow-sm flex items-center gap-2.5">
+              <span class="text-xl">⭐</span>
+              <div>
+                <p class="text-xs font-black text-slate-900 leading-tight">Verified Drivers</p>
+                <p class="text-[10px] font-bold text-slate-600">100% Safe Rides</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: PREMIUM ILLUSTRATION (BIKE TAXI + AUTO RICKSHAW) -->
+        <div class="lg:col-span-5 relative">
+          <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/80 bg-white group-hover:scale-[1.02] transition-transform duration-300">
+            <img 
+              src="/assets/bike_ride_auto_hero.jpg" 
+              alt="Bike Taxi & Auto Rickshaw Ride in Bhusawal" 
+              class="w-full h-56 sm:h-72 lg:h-80 object-cover"
+              onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80';"
+            />
+            
+            <!-- OVERLAY BADGE -->
+            <div class="absolute bottom-3 left-3 right-3 bg-slate-950/80 backdrop-blur-md p-3 rounded-2xl text-white flex items-center justify-between border border-white/20">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">🛺 🛵</span>
+                <div>
+                  <p class="text-xs font-black text-yellowBrand">Bike & Auto Fleet</p>
+                  <p class="text-[10px] text-slate-300 font-medium">Bhusawal City Coverage</p>
+                </div>
+              </div>
+              <span class="text-[10px] font-black bg-yellowBrand text-slate-950 px-2.5 py-1 rounded-lg uppercase">Active Now</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
 
     <!-- VALIDATION ERROR TOAST BANNER (Hidden by default) -->
     <div id="address-validation-banner" class="hidden bg-rose-500 text-white p-4 rounded-2xl shadow-lg border border-rose-600 flex items-center justify-between gap-3 animate-bounce">
@@ -93,10 +208,10 @@ import Switcher from '../components/Switcher.astro';
     </div>
 
 
-    <!-- ==================== TOP SECTION: ADDRESS SELECTION, MAP & HERO ==================== -->
-    <div class="space-y-5">
+    <!-- ==================== 1. ADDRESS SELECTION (PICKUP & DROP) ==================== -->
+    <div class="space-y-4">
       
-      <!-- ==================== 1. PICKUP LOCATION ==================== -->
+      <!-- PICKUP LOCATION -->
       <section class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-slate-200/80 shadow-sm space-y-4 relative overflow-hidden group hover:border-yellowBrand transition-all" id="pickup-section-card">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div class="flex items-center gap-3">
@@ -108,11 +223,10 @@ import Switcher from '../components/Switcher.astro';
                 <span>📍 Pickup Location</span>
                 <span class="text-[10px] font-extrabold text-yellowDeep bg-yellowLight px-2 py-0.5 rounded-full border border-yellowBorder">Boarding Spot</span>
               </h2>
-              <p class="text-xs text-slate-500 font-medium">Select your current location for captain pickup</p>
+              <p class="text-xs text-slate-500 font-medium">Select where driver collects you</p>
             </div>
           </div>
 
-          <!-- ADDRESS METHOD ACTION BUTTONS -->
           <div class="flex items-center gap-1.5 flex-wrap">
             <button id="btn-pickup-gps" type="button" class="flex items-center gap-1 text-[11px] font-black text-slate-950 bg-yellowBrand hover:bg-yellowDark hover:text-white px-3 py-1.5 rounded-xl border border-yellowBorder transition-all shadow-xs active:scale-95">
               <span class="material-symbols-outlined text-sm">gps_fixed</span>
@@ -126,7 +240,6 @@ import Switcher from '../components/Switcher.astro';
           </div>
         </div>
 
-        <!-- SEARCH AUTOCOMPLETE INPUT -->
         <div class="relative">
           <label for="pickup-address-input" class="text-[11px] font-bold text-slate-600 block mb-1">Search Pickup Address (Google Maps Autocomplete)</label>
           <div class="relative flex items-center">
@@ -142,202 +255,52 @@ import Switcher from '../components/Switcher.astro';
             <button id="clear-pickup-input" type="button" class="absolute right-3 text-slate-400 hover:text-slate-600 hidden text-xs font-bold">✕</button>
           </div>
 
-          <!-- Live Search Suggestions Dropdown -->
           <div id="pickup-search-dropdown" class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl z-30 hidden max-h-48 overflow-y-auto">
-            <!-- Populated dynamically via JS -->
-          </div>
-        </div>
-
-        <!-- PASSENGER DETAILS (NAME & PHONE) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label for="passenger-name" class="text-[11px] font-bold text-slate-600 block mb-1">Passenger Name <span class="text-rose-500">*</span></label>
-            <input 
-              type="text" 
-              id="passenger-name" 
-              value="Rahul Patil" 
-              placeholder="Your Name" 
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-yellowBrand transition-all" 
-            />
-          </div>
-
-          <div>
-            <label for="passenger-phone" class="text-[11px] font-bold text-slate-600 block mb-1">Mobile Number <span class="text-rose-500">*</span></label>
-            <input 
-              type="tel" 
-              id="passenger-phone" 
-              value="9876543210" 
-              placeholder="10-digit mobile number" 
-              class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-yellowBrand transition-all" 
-            />
-          </div>
-        </div>
-
-        <!-- SAVED & RECENT PICKUP CHIPS -->
-        <div class="space-y-2 pt-1 border-t border-slate-100">
-          <div class="flex items-center justify-between text-[11px] font-bold">
-            <span class="text-slate-500">💾 Saved & 🕒 Recent Pickup Locations:</span>
-          </div>
-
-          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-[11px] font-bold" id="pickup-quick-chips">
-            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-yellowLight text-yellowDeep border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Home - Varangaon Road, Bhusawal">
-              🏠 Home (Varangaon Rd)
-            </button>
-            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-yellowLight text-yellowDeep border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Office - Railway Divisional Office, Bhusawal">
-              🏢 Work (Railway Div Office)
-            </button>
-            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-yellowLight hover:text-yellowDeep transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Jamner Road Market, Bhusawal">
-              🕒 Jamner Rd Market
-            </button>
-            <button type="button" class="chip-saved-pickup px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-yellowLight hover:text-yellowDeep transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Bhusawal Station Platform Gate 1">
-              🚉 Railway Station
-            </button>
+            <!-- Populated dynamically -->
           </div>
         </div>
       </section>
 
 
-      <!-- ==================== SWAP LOCATIONS BUTTON ==================== -->
-      <div class="flex items-center justify-center my-[-8px] relative z-20">
-        <button 
-          id="btn-swap-addresses" 
-          type="button" 
-          class="flex items-center gap-2 bg-gradient-to-r from-yellowBrand to-yellowDark text-slate-950 px-5 py-2.5 rounded-full font-black text-xs shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all border-2 border-white cursor-pointer group"
-          title="Swap Pickup and Drop Locations with 1 Click"
-        >
-          <span class="material-symbols-outlined text-base group-hover:rotate-180 transition-transform duration-500">swap_vert</span>
-          <span>Swap Locations</span>
-        </button>
-      </div>
-
-
-      <!-- ==================== 2. DROP LOCATION ==================== -->
+      <!-- DROP LOCATION -->
       <section class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-slate-200/80 shadow-sm space-y-4 relative overflow-hidden group hover:border-yellowBrand transition-all" id="drop-section-card">
         <div class="flex items-center justify-between flex-wrap gap-2">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-slate-900 text-yellowBrand flex items-center justify-center font-black shadow-md shrink-0">
+            <div class="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black shadow-md shrink-0">
               <span class="material-symbols-outlined text-xl">location_on</span>
             </div>
             <div>
               <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
-                <span>📍 Drop Location</span>
-                <span class="text-[10px] font-extrabold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">Destination</span>
+                <span>🏁 Drop Destination</span>
+                <span class="text-[10px] font-extrabold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">Destination</span>
               </h2>
               <p class="text-xs text-slate-500 font-medium">Select your ride destination in Bhusawal</p>
             </div>
           </div>
 
-          <!-- ADDRESS METHOD ACTION BUTTONS -->
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <button id="btn-drop-gps" type="button" class="flex items-center gap-1 text-[11px] font-black text-slate-950 bg-yellowBrand hover:bg-yellowDark hover:text-white px-3 py-1.5 rounded-xl border border-yellowBorder transition-all shadow-xs active:scale-95">
-              <span class="material-symbols-outlined text-sm">gps_fixed</span>
-              <span>GPS Location</span>
-            </button>
-
-            <button id="btn-drop-select-map" type="button" class="flex items-center gap-1 text-[11px] font-black text-slate-900 bg-yellowLight hover:bg-yellowBrand px-3 py-1.5 rounded-xl border border-yellowBorder transition-all shadow-xs active:scale-95">
-              <span class="material-symbols-outlined text-sm">map</span>
-              <span>Select on Map</span>
-            </button>
-          </div>
+          <button id="btn-drop-select-map" type="button" class="flex items-center gap-1 text-[11px] font-black text-slate-900 bg-yellowLight hover:bg-yellowBrand px-3 py-1.5 rounded-xl border border-yellowBorder transition-all shadow-xs active:scale-95">
+            <span class="material-symbols-outlined text-sm">map</span>
+            <span>Select on Map</span>
+          </button>
         </div>
 
-        <!-- SEARCH AUTOCOMPLETE INPUT -->
         <div class="relative">
           <label for="drop-address-input" class="text-[11px] font-bold text-slate-600 block mb-1">Search Drop Address (Google Maps Autocomplete)</label>
           <div class="relative flex items-center">
-            <span class="material-symbols-outlined absolute left-3.5 text-slate-900 text-lg">flag</span>
+            <span class="material-symbols-outlined absolute left-3.5 text-slate-400 text-lg">search</span>
             <input 
               type="text" 
               id="drop-address-input" 
-              value="Jamner Road, Near Ordnance Factory Gate, Bhusawal" 
-              placeholder="Search destination landmark, area or street in Bhusawal..." 
+              value="Jamner Road, Ordnance Factory Gate, Bhusawal" 
+              placeholder="Search drop location, shop or colony..." 
               class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-10 py-2.5 text-xs font-bold text-slate-800 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-yellowBrand transition-all" 
               autocomplete="off"
             />
             <button id="clear-drop-input" type="button" class="absolute right-3 text-slate-400 hover:text-slate-600 hidden text-xs font-bold">✕</button>
           </div>
 
-          <!-- Live Search Suggestions Dropdown -->
           <div id="drop-search-dropdown" class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-2xl shadow-xl z-30 hidden max-h-48 overflow-y-auto">
-            <!-- Populated dynamically via JS -->
-          </div>
-        </div>
-
-        <!-- SAVED & RECENT DROP CHIPS -->
-        <div class="space-y-2 pt-1 border-t border-slate-100">
-          <div class="flex items-center justify-between text-[11px] font-bold">
-            <span class="text-slate-500">💾 Saved & 🕒 Popular Drop Destinations:</span>
-          </div>
-
-          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-[11px] font-bold" id="drop-quick-chips">
-            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-yellowLight text-yellowDeep border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Ordnance Factory Estate, Jamner Road, Bhusawal">
-              🏢 Ordnance Factory
-            </button>
-            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-yellowLight text-yellowDeep border border-yellowBorder hover:bg-yellowBrand hover:text-slate-950 transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Deepnagar Thermal Power Station Colony, Bhusawal">
-              ⚡ Deepnagar Township
-            </button>
-            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-yellowLight hover:text-yellowDeep transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Nahata Arts & Science College Chowk, Bhusawal">
-              🎓 Nahata Chowk
-            </button>
-            <button type="button" class="chip-saved-drop px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 border border-slate-200 hover:bg-yellowLight hover:text-yellowDeep transition-all shrink-0 shadow-2xs active:scale-95" data-addr="Khedi Road, Tapi River Bridge End, Bhusawal">
-              🕒 Khedi Road
-            </button>
-          </div>
-        </div>
-      </section>
-
-
-      <!-- ==================== GOOGLE MAPS ROUTE PREVIEW ==================== -->
-      <section class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm space-y-3">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
-              <span class="text-yellowDark">🗺️</span>
-              <span>Google Maps Route Preview</span>
-            </h2>
-            <p class="text-xs text-slate-500 font-medium">Real-time distance and rider route calculation in Bhusawal</p>
-          </div>
-
-          <div class="flex items-center gap-2 bg-yellowLight border border-yellowBorder px-3 py-1 rounded-xl text-xs font-black text-yellowDeep shadow-xs">
-            <span>⚡ <span id="route-distance-text">3.2 km</span></span>
-            <span class="text-yellowDark/40">•</span>
-            <span>⏱️ <span id="route-time-text">10 mins ETA</span></span>
-          </div>
-        </div>
-
-        <!-- MAP CONTAINER -->
-        <div class="w-full h-56 sm:h-64 rounded-2xl overflow-hidden border border-slate-200 relative shadow-inner z-10" id="route-map">
-          <!-- Leaflet map initialized via JS -->
-        </div>
-      </section>
-
-
-      <!-- ==================== LARGE HERO BANNER SHOWING TWO PEOPLE RIDING A MODERN SCOOTER ==================== -->
-      <section class="bg-gradient-to-r from-yellowBrand via-amber-400 to-yellowDark text-slate-950 rounded-3xl p-6 sm:p-8 shadow-xl overflow-hidden relative group">
-        <div class="absolute -top-12 -right-12 w-56 h-56 bg-white/25 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center relative z-10">
-          <div class="sm:col-span-7 space-y-3 text-center sm:text-left">
-            <span class="px-3 py-1 rounded-full bg-slate-950 text-yellowBrand text-[10px] font-black uppercase tracking-wider shadow-sm">
-              BHUSAWAL BIKE TAXI FLEET
-            </span>
-            <h2 class="text-2xl sm:text-3xl font-black font-display text-slate-950 leading-tight">
-              Fastest Passenger Bike Ride in Bhusawal!
-            </h2>
-            <p class="text-xs sm:text-sm text-slate-900 font-bold leading-relaxed">
-              Beat traffic jams & reach anywhere in Bhusawal in minutes with our verified local scooter captains.
-            </p>
-          </div>
-
-          <div class="sm:col-span-5 flex items-center justify-center">
-            <div class="w-full max-w-[260px] aspect-video sm:aspect-square bg-white rounded-2xl p-2 border-2 border-slate-900/15 shadow-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300">
-              <img 
-                src="/assets/bike_ride_hero.jpg" 
-                alt="Two people riding together on a modern scooter" 
-                class="w-full h-full object-cover rounded-xl"
-                onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&q=80';" 
-              />
-            </div>
+            <!-- Populated dynamically -->
           </div>
         </div>
       </section>
@@ -345,312 +308,170 @@ import Switcher from '../components/Switcher.astro';
     </div>
 
 
-    <!-- ==================== BELOW HERO BANNER: RIDE IN MINUTES & BOOKING ==================== -->
-    <div class="space-y-6 pt-2">
-      
-      <!-- ⚡ RIDE IN MINUTES & VALUE PROP PILLS -->
-      <div class="text-center sm:text-left space-y-2">
-        <h2 class="text-2xl sm:text-3xl font-black font-display text-slate-900 flex items-center justify-center sm:justify-start gap-2">
-          <span class="text-yellowDark">⚡</span>
-          <span>Ride in Minutes</span>
-        </h2>
-
-        <!-- Safe • Fast • Affordable -->
-        <div class="flex items-center justify-center sm:justify-start gap-2 flex-wrap text-xs font-black">
-          <span class="px-3.5 py-1.5 bg-yellowLight text-yellowDeep rounded-full border border-yellowBorder shadow-xs">
-            🔒 Safe
-          </span>
-          <span class="text-slate-300">•</span>
-          <span class="px-3.5 py-1.5 bg-yellowLight text-yellowDeep rounded-full border border-yellowBorder shadow-xs">
-            ⚡ Fast
-          </span>
-          <span class="text-slate-300">•</span>
-          <span class="px-3.5 py-1.5 bg-yellowLight text-yellowDeep rounded-full border border-yellowBorder shadow-xs">
-            💰 Affordable
-          </span>
+    <!-- ==================== 2. TWO PREMIUM RIDE OPTION CARDS ==================== -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between px-1">
+        <div>
+          <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
+            <span>⚡ Select Ride Option</span>
+            <span class="text-[10px] font-black text-yellowDeep bg-yellowLight px-2 py-0.5 rounded-full border border-yellowBorder">PICKUP & DROP</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-medium">Choose Bike Taxi or Auto Rickshaw for your journey</p>
         </div>
       </div>
 
-
-      <!-- NEARBY RIDERS INDICATOR -->
-      <div class="bg-slate-950 text-white rounded-2xl p-4 flex items-center justify-between flex-wrap gap-3 shadow-md border border-slate-800">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-yellowBrand text-slate-950 flex items-center justify-center font-black text-lg shrink-0">
-            ⚡
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        
+        <!-- CARD 1: BIKE TAXI -->
+        <div 
+          id="ride-card-bike"
+          class="ride-option-card active cursor-pointer bg-yellowLight rounded-3xl p-5 border-2 border-yellowBrand shadow-md hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
+          data-type="Bike Taxi"
+          data-base="25"
+          data-perkm="7"
+          data-capacity="1 Passenger"
+          data-speed="Fastest option"
+          data-eta="~3 Mins"
+        >
+          <!-- HIGHLIGHT BADGE -->
+          <div class="absolute top-3 right-3 bg-yellowBrand text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-yellowDark/20 shadow-2xs">
+            RECOMMENDED
           </div>
-          <div>
-            <h4 class="text-xs font-black text-yellowBrand uppercase tracking-wider flex items-center gap-1.5">
-              <span>Nearby Riders Available</span>
-              <span class="w-2 h-2 rounded-full bg-yellowBrand animate-ping"></span>
-            </h4>
-            <p class="text-xs font-extrabold text-slate-200">4 Bike Taxi Captains active near Station Square (~2 min pickup)</p>
+
+          <div class="flex items-start gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-yellowBrand text-slate-950 flex items-center justify-center text-3xl shadow-sm shrink-0 border border-yellowDark/20 group-hover:scale-110 transition-transform">
+              🛵
+            </div>
+
+            <div class="space-y-1 flex-1">
+              <h3 class="text-lg font-black font-display text-slate-900">Bike Taxi</h3>
+              <p class="text-xs font-bold text-yellowDeep">Fastest option • Affordable</p>
+              
+              <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-bold text-slate-700">
+                <span class="bg-white/80 px-2 py-0.5 rounded-lg border border-yellowBorder">👤 1 Passenger</span>
+                <span class="bg-white/80 px-2 py-0.5 rounded-lg border border-yellowBorder">⚡ ~3 Mins Arrival</span>
+              </div>
+
+              <div class="pt-2 flex items-baseline justify-between">
+                <span class="text-[10px] font-black text-slate-500 uppercase">Starting Fare</span>
+                <span class="text-base font-black font-display text-yellowDeep">₹25 <span class="text-xs font-bold text-slate-500">(+₹7/km)</span></span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <span class="text-[10px] font-black bg-yellowBrand/20 text-yellowBrand px-3 py-1 rounded-full border border-yellowBrand/30">
-          Ready to Board
+        <!-- CARD 2: AUTO RICKSHAW -->
+        <div 
+          id="ride-card-auto"
+          class="ride-option-card cursor-pointer bg-white rounded-3xl p-5 border-2 border-slate-200/80 shadow-sm hover:border-yellowBrand hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
+          data-type="Auto Rickshaw"
+          data-base="40"
+          data-perkm="14"
+          data-capacity="Up to 3 Passengers"
+          data-speed="Comfortable ride"
+          data-eta="~5 Mins"
+        >
+          <div class="flex items-start gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center text-3xl shadow-sm shrink-0 border border-amber-200 group-hover:scale-110 transition-transform">
+              🛺
+            </div>
+
+            <div class="space-y-1 flex-1">
+              <h3 class="text-lg font-black font-display text-slate-900">Auto Rickshaw</h3>
+              <p class="text-xs font-bold text-slate-500">Comfortable ride • Luggage space</p>
+              
+              <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-bold text-slate-700">
+                <span class="bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">👥 Up to 3 Passengers</span>
+                <span class="bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">⏱️ ~5 Mins Arrival</span>
+              </div>
+
+              <div class="pt-2 flex items-baseline justify-between">
+                <span class="text-[10px] font-black text-slate-500 uppercase">Starting Fare</span>
+                <span class="text-base font-black font-display text-slate-900">₹40 <span class="text-xs font-bold text-slate-500">(+₹14/km)</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== 3. LIVE ROUTE MAP ==================== -->
+    <section class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-slate-200/80 shadow-sm space-y-4">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
+            <span class="text-yellowDark">🗺️</span>
+            <span>Live Route Map & GPS Navigation</span>
+          </h2>
+          <p class="text-xs text-slate-500 font-medium">Real-time route calculation between pickup and drop points</p>
+        </div>
+
+        <div class="flex items-center gap-2 bg-yellowLight border border-yellowBorder px-3 py-1 rounded-xl text-xs font-black text-yellowDeep shadow-2xs">
+          <span>⚡ <span id="route-distance-text">3.2 km</span></span>
+          <span class="text-yellowDark">•</span>
+          <span>⏱️ <span id="route-time-text">12 mins</span></span>
+        </div>
+      </div>
+
+      <!-- MAP CONTAINER -->
+      <div class="w-full h-56 sm:h-64 rounded-2xl overflow-hidden border border-slate-200 relative shadow-inner z-10" id="route-map">
+        <!-- Leaflet map initialized via JS -->
+      </div>
+    </section>
+
+
+    <!-- ==================== 4. FARE ESTIMATION & BREAKDOWN ==================== -->
+    <section class="bg-gradient-to-br from-yellowLight via-white to-amber-50/60 rounded-3xl p-5 sm:p-6 border border-yellowBorder shadow-sm space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-yellowBrand text-slate-950 flex items-center justify-center font-black shadow-xs">
+            <span class="material-symbols-outlined text-lg">receipt_long</span>
+          </div>
+          <div>
+            <h2 class="text-base font-black font-display text-slate-900">Fare Estimation & Breakdown</h2>
+            <p class="text-xs text-slate-500 font-medium">Transparent pricing based on distance & duration</p>
+          </div>
+        </div>
+
+        <span id="display-selected-type" class="bg-yellowBrand text-slate-950 text-[11px] font-black px-3 py-1 rounded-full border border-yellowDark/20 shadow-2xs">
+          🛵 Bike Taxi Selected
         </span>
       </div>
 
-
-      <!-- RIDE TYPE SELECTION -->
-      <section class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
-        <div>
-          <h3 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
-            <span class="text-yellowDark text-lg">🛵</span>
-            <span>Choose Your Ride Category</span>
-          </h3>
-          <p class="text-xs text-slate-500 font-medium">Select your preferred passenger ride option</p>
+      <div class="bg-white/80 backdrop-blur-md rounded-2xl p-4 border border-yellowBorder space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
+          <span>Base Minimum Fare (Includes 2 km)</span>
+          <span class="font-bold text-slate-800" id="fare-base-amount">₹25</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="ride-type-grid">
-          
-          <!-- Standard Scooter Ride -->
-          <button type="button" class="ride-type-btn active p-4 rounded-2xl border-2 border-yellowBrand bg-yellowLight text-left space-y-2 cursor-pointer transition-all shadow-xs active:scale-95" data-type="Standard Scooter" data-base="20" data-perkm="7">
-            <div class="flex items-center justify-between">
-              <span class="text-2xl">🛵</span>
-              <span class="bg-yellowBrand text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase border border-yellowDark/20">FASTEST</span>
-            </div>
-            <div>
-              <h4 class="text-xs font-black text-slate-900">Standard Scooter Ride</h4>
-              <p class="text-[11px] font-semibold text-slate-600 mt-0.5">Quick single-passenger ride</p>
-            </div>
-            <div class="pt-1 flex items-baseline justify-between border-t border-yellowBorder">
-              <span class="text-xs font-bold text-slate-600">Fare: ₹20 base + ₹7/km</span>
-              <span class="text-sm font-black text-yellowDeep ride-option-fare">₹42</span>
-            </div>
-          </button>
-
-          <!-- Electric EV Scooter Ride -->
-          <button type="button" class="ride-type-btn p-4 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-left space-y-2 cursor-pointer transition-all shadow-xs hover:border-yellowBrand active:scale-95" data-type="Electric EV Ride" data-base="15" data-perkm="6">
-            <div class="flex items-center justify-between">
-              <span class="text-2xl">⚡</span>
-              <span class="bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">ECO FRIENDLY</span>
-            </div>
-            <div>
-              <h4 class="text-xs font-black text-slate-900">Electric EV Ride</h4>
-              <p class="text-[11px] font-semibold text-slate-500 mt-0.5">Silent, zero emission ride</p>
-            </div>
-            <div class="pt-1 flex items-baseline justify-between border-t border-slate-200">
-              <span class="text-xs font-bold text-slate-600">Fare: ₹15 base + ₹6/km</span>
-              <span class="text-sm font-black text-yellowDeep ride-option-fare">₹34</span>
-            </div>
-          </button>
-
-          <!-- Premium Helmet Extra Comfort -->
-          <button type="button" class="ride-type-btn p-4 rounded-2xl border-2 border-slate-200/80 bg-slate-50 text-left space-y-2 cursor-pointer transition-all shadow-xs hover:border-yellowBrand active:scale-95" data-type="Comfort Plus Ride" data-base="25" data-perkm="8">
-            <div class="flex items-center justify-between">
-              <span class="text-2xl">🪖</span>
-              <span class="bg-slate-900 text-yellowBrand text-[9px] font-black px-2 py-0.5 rounded-full uppercase">COMFORT PLUS</span>
-            </div>
-            <div>
-              <h4 class="text-xs font-black text-slate-900">Comfort Plus Ride</h4>
-              <p class="text-[11px] font-semibold text-slate-500 mt-0.5">Fresh visor helmet & padded seat</p>
-            </div>
-            <div class="pt-1 flex items-baseline justify-between border-t border-slate-200">
-              <span class="text-xs font-bold text-slate-600">Fare: ₹25 base + ₹8/km</span>
-              <span class="text-sm font-black text-yellowDeep ride-option-fare">₹50</span>
-            </div>
-          </button>
-
-        </div>
-      </section>
-
-
-      <!-- ESTIMATED FARE & RIDE TIME DISPLAY -->
-      <section class="bg-gradient-to-br from-yellowLight via-white to-amber-50/50 rounded-3xl p-5 sm:p-6 border border-yellowBorder shadow-sm space-y-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-yellowBrand text-slate-950 flex items-center justify-center font-black shadow-xs">
-              <span class="material-symbols-outlined text-lg">receipt_long</span>
-            </div>
-            <div>
-              <h3 class="text-base font-black font-display text-slate-900">Estimated Fare & Time</h3>
-              <p class="text-xs text-slate-500 font-medium">Transparent meter pricing for passenger transport</p>
-            </div>
-          </div>
-
-          <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-black px-2.5 py-1 rounded-full border border-emerald-200">
-            🏷️ ₹10 First Ride Discount
-          </span>
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
+          <span>Distance Charge (<span id="fare-distance-km">3.2 km</span>)</span>
+          <span class="font-bold text-slate-800" id="fare-distance-cost">₹9</span>
         </div>
 
-        <!-- FARE BREAKDOWN CARD -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs space-y-2.5">
-          <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
-            <span>Base Ride Fare</span>
-            <span class="font-bold text-slate-800" id="fare-base-cost">₹20</span>
-          </div>
-
-          <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
-            <span>Distance Charge (<span id="fare-distance-km">3.2 km</span>)</span>
-            <span class="font-bold text-slate-800" id="fare-distance-cost">₹22</span>
-          </div>
-
-          <div class="flex items-center justify-between text-xs font-semibold text-emerald-600 pt-1 border-t border-slate-100">
-            <span>First Ride Discount</span>
-            <span class="font-bold">-₹10</span>
-          </div>
-
-          <div class="flex items-center justify-between text-base font-black font-display text-slate-900 pt-2 border-t border-slate-200">
-            <span>Total Fare Payable</span>
-            <span class="text-xl text-yellowDeep font-black" id="total-fare-display">₹32</span>
-          </div>
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
+          <span>Estimated Duration</span>
+          <span class="font-bold text-slate-800" id="fare-duration-text">12 Mins</span>
         </div>
-      </section>
 
-    </div>
+        <div class="flex items-center justify-between text-xs font-semibold text-emerald-600 pt-1 border-t border-slate-100">
+          <span>Welcome Pass Discount</span>
+          <span class="font-bold">-₹5</span>
+        </div>
+
+        <div class="flex items-center justify-between text-base font-black font-display text-slate-900 pt-2 border-t border-slate-200">
+          <span>Total Fare Payable</span>
+          <span class="text-xl text-yellowDeep" id="total-fare-display">₹29</span>
+        </div>
+      </div>
+    </section>
 
   </main>
 
 
-  <!-- ==================== RIDER SEARCHING & ASSIGNED OVERLAY MODAL ==================== -->
-  <div id="rider-search-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300">
-    <div class="bg-white w-full max-w-lg rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl space-y-0 border border-slate-100 flex flex-col animate-in fade-in slide-in-from-bottom-6 duration-300">
-      
-      <!-- PHASE 1: SEARCHING FOR NEARBY RIDERS -->
-      <div id="search-phase-view" class="p-6 sm:p-8 text-center space-y-6">
-        
-        <!-- RADAR RIPPLE ANIMATION WITH BIKE ICON -->
-        <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
-          <div class="absolute inset-0 rounded-full bg-yellowBrand/30 animate-ping"></div>
-          <div class="absolute inset-2 rounded-full bg-yellowBrand/40 animate-pulse"></div>
-          <div class="relative z-10 w-20 h-20 rounded-full bg-yellowBrand text-slate-950 flex items-center justify-center text-4xl shadow-xl border-2 border-white">
-            🛵
-          </div>
-        </div>
-
-        <!-- TEXT STATUS -->
-        <div class="space-y-1.5">
-          <h3 class="text-xl font-black font-display text-slate-900 animate-pulse">Searching Nearby Riders...</h3>
-          <p class="text-xs font-extrabold text-slate-500">Contacting 4 active Bike Taxi Captains near Station Square</p>
-        </div>
-
-        <!-- METRICS INFO PILLS -->
-        <div class="grid grid-cols-2 gap-3 pt-2">
-          <div class="bg-yellowLight rounded-2xl p-3 border border-yellowBorder text-center">
-            <span class="text-[10px] font-black text-yellowDeep uppercase tracking-wider block">Active Captains</span>
-            <span class="text-sm font-black text-slate-900">⚡ 4 Available</span>
-          </div>
-          <div class="bg-yellowLight rounded-2xl p-3 border border-yellowBorder text-center">
-            <span class="text-[10px] font-black text-yellowDeep uppercase tracking-wider block">Estimated Pickup</span>
-            <span class="text-sm font-black text-slate-900">⏱️ ~2 Mins</span>
-          </div>
-        </div>
-
-        <!-- CANCEL SEARCH BUTTON -->
-        <button id="btn-cancel-search" type="button" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black rounded-xl transition-all active:scale-95">
-          Cancel Search
-        </button>
-      </div>
-
-
-      <!-- PHASE 2: RIDER MATCHED & ACCEPTED (Revealed after 3.5s animation) -->
-      <div id="match-phase-view" class="hidden p-6 sm:p-8 space-y-5 animate-in fade-in zoom-in-95 duration-500">
-        
-        <!-- SUCCESS BANNER -->
-        <div class="bg-emerald-50 text-emerald-800 p-3.5 rounded-2xl border border-emerald-200 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-emerald-600 text-xl animate-bounce">check_circle</span>
-            <div>
-              <h4 class="text-xs font-black">Rider Accepted Your Request!</h4>
-              <p class="text-[10px] font-bold text-emerald-600">Captain is arriving in 2 minutes</p>
-            </div>
-          </div>
-          <span class="bg-emerald-600 text-white text-[9px] font-black px-2.5 py-0.5 rounded-full uppercase">ON THE WAY</span>
-        </div>
-
-        <!-- RIDER CARD HEADER -->
-        <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-200/80">
-          <div class="flex items-center gap-3">
-            <!-- Rider Photo Avatar -->
-            <div class="relative">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80" alt="Captain Karan Sharma" class="w-14 h-14 rounded-2xl object-cover border-2 border-yellowBrand shadow-md" />
-              <span class="absolute -bottom-1 -right-1 bg-yellowBrand text-slate-950 w-5 h-5 rounded-full flex items-center justify-center text-[10px] shadow-xs">⚡</span>
-            </div>
-
-            <div>
-              <div class="flex items-center gap-1.5">
-                <h3 class="text-base font-black text-slate-900">Karan Sharma</h3>
-                <span class="inline-flex items-center gap-0.5 bg-yellowLight text-yellowDeep text-[9px] font-black px-1.5 py-0.5 rounded border border-yellowBorder" title="Verified Driver">
-                  <span class="material-symbols-outlined text-[11px]">verified</span> Verified Rider
-                </span>
-              </div>
-
-              <!-- Rating & Rides -->
-              <div class="flex items-center gap-2 text-xs font-bold text-slate-600 mt-0.5">
-                <span class="flex items-center gap-0.5 text-amber-500">
-                  ⭐ <span>4.9</span>
-                </span>
-                <span class="text-slate-300">•</span>
-                <span>1,240+ completed rides</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Scooter Plate Badge -->
-          <div class="text-right">
-            <span class="bg-yellowBrand text-slate-950 text-xs font-black px-2.5 py-1 rounded-lg border border-yellowDark/20 shadow-2xs block font-mono">
-              MH 19 BJ 4820
-            </span>
-            <span class="text-[10px] text-slate-500 font-bold block mt-0.5">Yellow Scooter</span>
-          </div>
-        </div>
-
-        <!-- SAFETY & HELMET BADGES -->
-        <div class="flex items-center justify-between text-xs font-bold bg-yellowLight/60 p-3 rounded-xl border border-yellowBorder">
-          <div class="flex items-center gap-1.5 text-yellowDeep">
-            <span class="material-symbols-outlined text-base">verified_user</span>
-            <span>Sanitized Helmet Provided</span>
-          </div>
-          <span class="bg-white text-emerald-700 text-[10px] font-black px-2 py-0.5 rounded-md border border-emerald-200">
-            ✓ Mask & Sanitizer Ready
-          </span>
-        </div>
-
-        <!-- RIDE SUMMARY DETAILS -->
-        <div class="bg-slate-50 rounded-xl p-3 space-y-1.5 text-xs border border-slate-200/80">
-          <div class="flex justify-between font-semibold text-slate-600">
-            <span>Pickup Location:</span>
-            <span class="font-bold text-slate-900 truncate max-w-[200px]" id="matched-pickup-text">Station Square</span>
-          </div>
-          <div class="flex justify-between font-semibold text-slate-600">
-            <span>Destination:</span>
-            <span class="font-bold text-slate-900 truncate max-w-[200px]" id="matched-drop-text">Jamner Road</span>
-          </div>
-          <div class="flex justify-between font-black text-slate-900 pt-1 border-t border-slate-200">
-            <span>Total Payable Fare:</span>
-            <span class="text-yellowDeep text-sm font-black" id="matched-fare-text">₹32</span>
-          </div>
-        </div>
-
-        <!-- ACTION BUTTONS: CALL, CHAT, CANCEL RIDE -->
-        <div class="grid grid-cols-3 gap-2.5 pt-1">
-          <!-- Call -->
-          <a href="tel:+919876543210" class="py-3 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white text-xs font-black rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95">
-            <span class="material-symbols-outlined text-base">call</span>
-            <span>Call Rider</span>
-          </a>
-
-          <!-- Chat -->
-          <button id="btn-chat-rider" type="button" class="py-3 bg-slate-900 hover:bg-slate-800 text-white text-xs font-black rounded-xl shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95">
-            <span class="material-symbols-outlined text-base">chat</span>
-            <span>Chat</span>
-          </button>
-
-          <!-- Cancel Ride -->
-          <button id="btn-cancel-assigned-ride" type="button" class="py-3 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-black rounded-xl transition-all active:scale-95">
-            Cancel Ride
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
-
-
-  <!-- ==================== SELECT ON MAP PICKER MODAL ==================== -->
+  <!-- ==================== MAP PICKER MODAL ==================== -->
   <div id="map-picker-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl space-y-0 flex flex-col max-h-[90vh]">
       
@@ -676,10 +497,10 @@ import Switcher from '../components/Switcher.astro';
         </div>
       </div>
 
-      <!-- SELECTED LOCATION FOOTER -->
+      <!-- FOOTER -->
       <div class="p-4 bg-white border-t border-slate-100 space-y-3">
         <div>
-          <span class="text-[10px] font-black text-yellowDeep uppercase tracking-wider block">Selected Location</span>
+          <span class="text-[10px] font-black text-yellowDark uppercase tracking-wider block">Selected Location</span>
           <p class="text-xs font-bold text-slate-800 truncate" id="picker-address-text">Varangaon Road, Bhusawal</p>
         </div>
 
@@ -692,26 +513,127 @@ import Switcher from '../components/Switcher.astro';
   </div>
 
 
-  <!-- ==================== LARGE YELLOW "BOOK RIDE" BUTTON (FIXED BOTTOM BAR) ==================== -->
+  <!-- ==================== 2-PHASE RIDER / DRIVER SEARCH MODAL ==================== -->
+  <div id="partner-search-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-slate-100 text-center space-y-0 relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- CLOSE MODAL BUTTON -->
+      <button id="btn-close-partner-search-modal" class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-all">
+        <span class="material-symbols-outlined text-lg">close</span>
+      </button>
+
+      <!-- PHASE 1: SEARCHING RADAR ANIMATION -->
+      <div id="partner-searching-phase" class="p-6 sm:p-8 space-y-5">
+        <div class="relative w-28 h-28 mx-auto flex items-center justify-center my-2">
+          <!-- Pulse Rings -->
+          <div class="absolute inset-0 bg-yellowBrand/20 rounded-full animate-ping"></div>
+          <div class="absolute inset-2 bg-yellowBrand/30 rounded-full animate-pulse"></div>
+          
+          <div class="w-20 h-20 rounded-full bg-yellowBrand text-slate-950 flex items-center justify-center text-4xl shadow-xl relative z-10 border-4 border-white">
+            <span id="searching-icon-emoji">🛵</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <h3 class="text-xl font-black font-display text-slate-900" id="searching-title-text">Searching Nearby Captains...</h3>
+          <p class="text-xs font-bold text-slate-500">Connecting your pickup request with nearby drivers in Bhusawal</p>
+        </div>
+
+        <div class="bg-yellowLight rounded-2xl p-3 border border-yellowBorder flex items-center justify-around text-xs font-black text-yellowDeep">
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">near_me</span>
+            <span>5 Active Drivers</span>
+          </div>
+          <div class="w-px h-4 bg-yellowBorder"></div>
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-base">schedule</span>
+            <span>~3 Mins ETA</span>
+          </div>
+        </div>
+
+        <button id="btn-cancel-search" type="button" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all">
+          Cancel Request
+        </button>
+      </div>
+
+      <!-- PHASE 2: PARTNER ACCEPTED DETAILS -->
+      <div id="partner-accepted-phase" class="hidden p-6 sm:p-8 space-y-5 text-left bg-gradient-to-b from-yellowLight/50 to-white">
+        
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+            <span class="text-xs font-black text-emerald-700 uppercase tracking-wider">Ride Accepted 🎉</span>
+          </div>
+          <span class="text-xs font-black text-yellowDeep bg-yellowLight px-2.5 py-0.5 rounded-full border border-yellowBorder" id="modal-accepted-ride-type">🛵 Bike Taxi</span>
+        </div>
+
+        <!-- DRIVER PROFILE CARD -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3.5">
+          <div class="relative">
+            <img id="modal-driver-avatar" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Driver" class="w-14 h-14 rounded-full object-cover border-2 border-yellowBrand shadow-xs" />
+            <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-black">✓</span>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5">
+              <h4 class="text-base font-black font-display text-slate-900 truncate" id="modal-driver-name">Vikram Patil</h4>
+              <span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase">VERIFIED</span>
+            </div>
+            <p class="text-xs font-bold text-slate-500" id="modal-driver-rating">4.9 ⭐ • 850+ Rides Completed</p>
+            <p class="text-xs font-black text-yellowDeep mt-0.5" id="modal-vehicle-plate">EV Bike • MH 19 BJ 5921</p>
+          </div>
+        </div>
+
+        <!-- TRIP METRICS -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 grid grid-cols-2 gap-2 text-xs">
+          <div>
+            <span class="text-[10px] font-black text-slate-400 uppercase block">Boarding OTP</span>
+            <span class="text-base font-black font-mono text-slate-900" id="modal-trip-otp">4892</span>
+          </div>
+          <div>
+            <span class="text-[10px] font-black text-slate-400 uppercase block">Arrival Time</span>
+            <span class="text-sm font-black text-emerald-700">3 Mins</span>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <a href="tel:+919876543210" class="py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-base">call</span>
+            <span>Call Driver</span>
+          </a>
+
+          <button id="btn-track-live-ride" type="button" class="py-3 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-base">near_me</span>
+            <span>Track Live Ride</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== FIXED BOTTOM ACTION BAR ==================== -->
   <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3.5 shadow-2xl">
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
       
       <div>
         <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Estimated Fare</span>
         <div class="flex items-baseline gap-1.5">
-          <span class="text-xl sm:text-2xl font-black font-display text-yellowDeep" id="bar-fare-total">₹32</span>
-          <span class="text-xs text-slate-400 line-through font-bold">₹42</span>
+          <span class="text-xl sm:text-2xl font-black font-display text-yellowDeep" id="bar-fare-total">₹29</span>
+          <span class="text-xs text-slate-400 line-through font-bold">₹40</span>
         </div>
       </div>
 
-      <!-- LARGE YELLOW "BOOK RIDE" BUTTON -->
       <button 
-        id="btn-book-bike-ride" 
+        id="btn-confirm-ride-booking" 
         type="button" 
-        class="flex-1 sm:flex-none px-8 sm:px-12 py-4 bg-gradient-to-r from-yellowBrand to-amber-400 text-slate-950 hover:bg-yellowDark text-base font-black rounded-2xl shadow-xl hover:shadow-2xl active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer border border-yellowDark/20"
+        class="flex-1 sm:flex-none px-6 sm:px-8 py-3.5 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white text-sm font-black rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all border border-yellowDark/20 flex items-center justify-center gap-2 cursor-pointer"
       >
-        <span>Book Ride</span>
-        <span class="material-symbols-outlined text-xl">arrow_forward</span>
+        <span>Confirm & Book Ride</span>
+        <span class="material-symbols-outlined text-lg">arrow_forward</span>
       </button>
 
     </div>
@@ -723,504 +645,299 @@ import Switcher from '../components/Switcher.astro';
   <!-- ==================== CLIENT DYNAMIC SCRIPT ==================== -->
   <script is:inline>
     (function() {
-      // 1. STATE VARIABLES
-      var selectedRideType = 'Standard Scooter';
-      var baseFare = 20;
+      // STATE VARIABLES
+      var selectedRideType = 'Bike Taxi';
+      var baseFare = 25;
       var perKmFare = 7;
       var distanceKm = 3.2;
-      var matchTimer = null;
 
-      // Coordinate state
       var pickupCoords = [21.0455, 75.7893];
       var dropCoords = [21.0385, 75.8050];
-      var activePickerTarget = 'pickup';
 
-      // Predefined Bhusawal Landmark Database for Autocomplete
-      var bhusawalLocations = [
-        { name: 'Varangaon Road, Near Station Square, Bhusawal', lat: 21.0455, lng: 75.7893 },
-        { name: 'Bhusawal Railway Station Platform Gate 1', lat: 21.0480, lng: 75.7850 },
-        { name: 'Jamner Road Market, Near Railway Overbridge, Bhusawal', lat: 21.0385, lng: 75.8050 },
-        { name: 'Ordnance Factory Estate, Jamner Road, Bhusawal', lat: 21.0290, lng: 75.8120 },
-        { name: 'Deepnagar Thermal Power Station Colony, Bhusawal', lat: 21.0620, lng: 75.8250 },
-        { name: 'Nahata Arts & Science College Chowk, Bhusawal', lat: 21.0410, lng: 75.7920 },
-        { name: 'Khedi Road, Tapi River Bridge End, Bhusawal', lat: 21.0550, lng: 75.7780 },
-        { name: 'Pandurang Talkies Chowk, Main Road, Bhusawal', lat: 21.0440, lng: 75.7880 },
-        { name: 'Municipal Council Office, Subhash Chowk, Bhusawal', lat: 21.0465, lng: 75.7910 }
+      var sampleBhusawalPoints = [
+        { name: 'Varangaon Road, Near Station Square, Bhusawal', coords: [21.0455, 75.7893] },
+        { name: 'Jamner Road, Ordnance Factory Gate, Bhusawal', coords: [21.0385, 75.8050] },
+        { name: 'Khadka Road, ZP School, Bhusawal', coords: [21.0512, 75.7920] },
+        { name: 'Main Market, Cloth Market Square, Bhusawal', coords: [21.0480, 75.7845] },
+        { name: 'Railway Colony, Quarter 42, Bhusawal', coords: [21.0420, 75.7980] },
+        { name: 'Tapti Nagar, Block C, Bhusawal', coords: [21.0550, 75.8110] }
       ];
 
-      // 2. LEAFLET ROUTE MAP INITIALIZATION
-      var map, pickupMarker, dropMarker, routePolyline;
-      function initRouteMap() {
+      // RIDE CARDS SELECTION LISTENERS
+      var cardBike = document.getElementById('ride-card-bike');
+      var cardAuto = document.getElementById('ride-card-auto');
+      var displayTypeBadge = document.getElementById('display-selected-type');
+
+      function selectRideType(type) {
+        selectedRideType = type;
+        if (type === 'Bike Taxi') {
+          baseFare = 25;
+          perKmFare = 7;
+          if (cardBike) {
+            cardBike.classList.add('bg-yellowLight', 'border-yellowBrand', 'shadow-md', 'active');
+            cardBike.classList.remove('bg-white', 'border-slate-200/80', 'shadow-sm');
+          }
+          if (cardAuto) {
+            cardAuto.classList.remove('bg-yellowLight', 'border-yellowBrand', 'shadow-md', 'active');
+            cardAuto.classList.add('bg-white', 'border-slate-200/80', 'shadow-sm');
+          }
+          if (displayTypeBadge) displayTypeBadge.textContent = '🛵 Bike Taxi Selected';
+        } else {
+          baseFare = 40;
+          perKmFare = 14;
+          if (cardAuto) {
+            cardAuto.classList.add('bg-yellowLight', 'border-yellowBrand', 'shadow-md', 'active');
+            cardAuto.classList.remove('bg-white', 'border-slate-200/80', 'shadow-sm');
+          }
+          if (cardBike) {
+            cardBike.classList.remove('bg-yellowLight', 'border-yellowBrand', 'shadow-md', 'active');
+            cardBike.classList.add('bg-white', 'border-slate-200/80', 'shadow-sm');
+          }
+          if (displayTypeBadge) displayTypeBadge.textContent = '🛺 Auto Rickshaw Selected';
+        }
+        recalculateFare();
+      }
+
+      if (cardBike) cardBike.addEventListener('click', function() { selectRideType('Bike Taxi'); });
+      if (cardAuto) cardAuto.addEventListener('click', function() { selectRideType('Auto Rickshaw'); });
+
+      // FARE CALCULATION
+      function recalculateFare() {
+        var extraDist = Math.max(0, distanceKm - 2);
+        var distCost = Math.round(extraDist * perKmFare);
+        var total = baseFare + distCost - 5; // ₹5 promo discount
+        if (total < baseFare) total = baseFare;
+
+        var elBase = document.getElementById('fare-base-amount');
+        var elDistKm = document.getElementById('fare-distance-km');
+        var elDistCost = document.getElementById('fare-distance-cost');
+        var elTotalDisplay = document.getElementById('total-fare-display');
+        var elBarTotal = document.getElementById('bar-fare-total');
+        var elRouteDist = document.getElementById('route-distance-text');
+        var elRouteTime = document.getElementById('route-time-text');
+        var elDurationText = document.getElementById('fare-duration-text');
+
+        var mins = Math.round(distanceKm * 4);
+        if (mins < 8) mins = 8;
+
+        if (elBase) elBase.textContent = '₹' + baseFare;
+        if (elDistKm) elDistKm.textContent = distanceKm.toFixed(1) + ' km';
+        if (elDistCost) elDistCost.textContent = '₹' + distCost;
+        if (elTotalDisplay) elTotalDisplay.textContent = '₹' + total;
+        if (elBarTotal) elBarTotal.textContent = '₹' + total;
+        if (elRouteDist) elRouteDist.textContent = distanceKm.toFixed(1) + ' km';
+        if (elRouteTime) elRouteTime.textContent = mins + ' mins';
+        if (elDurationText) elDurationText.textContent = mins + ' Mins';
+      }
+
+      // INITIALIZE LEAFLET ROUTE MAP
+      var map, routePolyline, pickupMarker, dropMarker;
+
+      function initMap() {
         var mapContainer = document.getElementById('route-map');
         if (!mapContainer || typeof L === 'undefined') return;
 
-        map = L.map('route-map', {
-          zoomControl: false,
-          scrollWheelZoom: false
-        }).setView([21.0420, 75.7970], 13);
-
+        map = L.map('route-map', { zoomControl: false }).setView(pickupCoords, 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 18,
-          attribution: '© OpenStreetMap'
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap'
         }).addTo(map);
 
-        var pickupIcon = L.divIcon({
-          className: 'custom-pin-icon',
-          html: '<div style="background:#FACC15;color:#000;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #000;">📍</div>',
-          iconSize: [32, 32]
+        var yellowIcon = L.divIcon({
+          className: 'custom-yellow-pin',
+          html: '<div style="background:#FACC15;color:#000;padding:4px 8px;border-radius:12px;font-weight:900;font-size:11px;border:2px solid #CA8A04;">📍 Pickup</div>',
+          iconSize: [60, 30]
         });
 
         var dropIcon = L.divIcon({
-          className: 'custom-pin-icon',
-          html: '<div style="background:#0F172A;color:#FACC15;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 4px 10px rgba(0,0,0,0.3);border:2px solid #FACC15;">🏁</div>',
-          iconSize: [32, 32]
+          className: 'custom-drop-pin',
+          html: '<div style="background:#0F172A;color:#FFF;padding:4px 8px;border-radius:12px;font-weight:900;font-size:11px;border:2px solid #334155;">🏁 Drop</div>',
+          iconSize: [60, 30]
         });
 
-        pickupMarker = L.marker(pickupCoords, { icon: pickupIcon }).addTo(map).bindPopup('<b>Passenger Pickup</b>');
-        dropMarker = L.marker(dropCoords, { icon: dropIcon }).addTo(map).bindPopup('<b>Drop Destination</b>');
+        pickupMarker = L.marker(pickupCoords, { icon: yellowIcon }).addTo(map);
+        dropMarker = L.marker(dropCoords, { icon: dropIcon }).addTo(map);
 
-        updateRoutePolyline();
+        routePolyline = L.polyline([pickupCoords, dropCoords], {
+          color: '#CA8A04',
+          weight: 5,
+          opacity: 0.8,
+          dashArray: '10, 10'
+        }).addTo(map);
+
+        map.fitBounds(routePolyline.getBounds(), { padding: [30, 30] });
       }
 
-      function updateRoutePolyline() {
-        if (!map) return;
-        if (routePolyline) map.removeLayer(routePolyline);
+      setTimeout(initMap, 500);
 
-        var lat1 = pickupCoords[0], lon1 = pickupCoords[1];
-        var lat2 = dropCoords[0], lon2 = dropCoords[1];
-        var R = 6371;
-        var dLat = (lat2 - lat1) * Math.PI / 180;
-        var dLon = (lon2 - lon1) * Math.PI / 180;
-        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        var rawDist = R * c * 1.35;
-        distanceKm = Math.max(1.0, parseFloat(rawDist.toFixed(1)));
-
-        if (pickupMarker) pickupMarker.setLatLng(pickupCoords);
-        if (dropMarker) dropMarker.setLatLng(dropCoords);
-
-        var latlngs = [pickupCoords, [(pickupCoords[0]+dropCoords[0])/2, (pickupCoords[1]+dropCoords[1])/2], dropCoords];
-        routePolyline = L.polyline(latlngs, { color: '#CA8A04', weight: 4, dashArray: '8, 8' }).addTo(map);
-        map.fitBounds(routePolyline.getBounds(), { padding: [35, 35] });
-
-        var estMins = Math.max(5, Math.round(distanceKm * 3));
-        var distTxt = document.getElementById('route-distance-text');
-        var timeTxt = document.getElementById('route-time-text');
-        if (distTxt) distTxt.textContent = distanceKm + ' km';
-        if (timeTxt) timeTxt.textContent = estMins + ' mins ETA';
-
-        calculateFare();
-        validateAddresses();
-      }
-
-      if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        setTimeout(initRouteMap, 300);
-      } else {
-        document.addEventListener('DOMContentLoaded', function() { setTimeout(initRouteMap, 300); });
-      }
-
-      // 3. FARE CALCULATOR
-      function calculateFare() {
-        var distanceCost = Math.round(distanceKm * perKmFare);
-        var totalBeforeDiscount = baseFare + distanceCost;
-        var discount = 10;
-        var finalTotal = Math.max(15, totalBeforeDiscount - discount);
-
-        var baseCostEl = document.getElementById('fare-base-cost');
-        var distKmEl = document.getElementById('fare-distance-km');
-        var distCostEl = document.getElementById('fare-distance-cost');
-        var fareDisplayEl = document.getElementById('total-fare-display');
-        var barFareTotalEl = document.getElementById('bar-fare-total');
-
-        if (baseCostEl) baseCostEl.textContent = '₹' + baseFare;
-        if (distKmEl) distKmEl.textContent = distanceKm + ' km';
-        if (distCostEl) distCostEl.textContent = '₹' + distanceCost;
-        if (fareDisplayEl) fareDisplayEl.textContent = '₹' + finalTotal;
-        if (barFareTotalEl) barFareTotalEl.textContent = '₹' + finalTotal;
-
-        var optionBtns = document.querySelectorAll('.ride-type-btn');
-        optionBtns.forEach(function(btn) {
-          var bFare = parseInt(btn.getAttribute('data-base') || '20');
-          var pFare = parseInt(btn.getAttribute('data-perkm') || '7');
-          var optTotal = Math.max(15, (bFare + Math.round(distanceKm * pFare)) - discount);
-          var fareLabel = btn.querySelector('.ride-option-fare');
-          if (fareLabel) fareLabel.textContent = '₹' + optTotal;
-        });
-
-        return finalTotal;
-      }
-
-      // 4. ADDRESS VALIDATION
-      function validateAddresses() {
-        var pickupInput = document.getElementById('pickup-address-input');
-        var dropInput = document.getElementById('drop-address-input');
-        var pickupVal = pickupInput ? pickupInput.value.trim().toLowerCase() : '';
-        var dropVal = dropInput ? dropInput.value.trim().toLowerCase() : '';
-
-        var banner = document.getElementById('address-validation-banner');
-        var bannerText = document.getElementById('validation-banner-text');
-        var bookBtn = document.getElementById('btn-book-bike-ride');
-
-        var isValid = true;
-        var errorMsg = '';
-
-        if (!pickupVal) {
-          isValid = false;
-          errorMsg = 'Please select a valid Pickup Location!';
-        } else if (!dropVal) {
-          isValid = false;
-          errorMsg = 'Please select a valid Drop Destination!';
-        } else if (pickupVal === dropVal) {
-          isValid = false;
-          errorMsg = 'Pickup and Drop locations must be different!';
-        }
-
-        if (!isValid) {
-          if (bookBtn) {
-            bookBtn.disabled = true;
-            bookBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            bookBtn.classList.remove('active:scale-95', 'hover:shadow-xl');
-          }
-        } else {
-          if (banner) banner.classList.add('hidden');
-          if (bookBtn) {
-            bookBtn.disabled = false;
-            bookBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            bookBtn.classList.add('active:scale-95', 'hover:shadow-xl');
-          }
-        }
-        return { isValid: isValid, errorMsg: errorMsg };
-      }
-
-      // 5. ONE-BUTTON SWAP
-      var swapBtn = document.getElementById('btn-swap-addresses');
-      if (swapBtn) {
-        swapBtn.addEventListener('click', function() {
-          var pickupInput = document.getElementById('pickup-address-input');
-          var dropInput = document.getElementById('drop-address-input');
-
-          var tempAddr = pickupInput.value;
-          pickupInput.value = dropInput.value;
-          dropInput.value = tempAddr;
-
-          var tempCoords = pickupCoords;
-          pickupCoords = dropCoords;
-          dropCoords = tempCoords;
-
-          updateRoutePolyline();
-        });
-      }
-
-      // 6. AUTOCOMPLETE SEARCH FOR PICKUP & DROP
-      function setupAutocomplete(inputId, dropdownId, targetType) {
+      // AUTOCOMPLETE DROPDOWNS
+      function setupAutocomplete(inputId, dropdownId, onSelect) {
         var input = document.getElementById(inputId);
         var dropdown = document.getElementById(dropdownId);
         if (!input || !dropdown) return;
 
         input.addEventListener('input', function() {
-          var query = input.value.trim().toLowerCase();
-          if (query.length < 2) {
+          var val = input.value.toLowerCase().trim();
+          if (val.length < 2) {
             dropdown.classList.add('hidden');
             return;
           }
 
-          var matches = bhusawalLocations.filter(function(loc) {
-            return loc.name.toLowerCase().includes(query);
+          var matches = sampleBhusawalPoints.filter(function(p) {
+            return p.name.toLowerCase().indexOf(val) !== -1;
           });
 
           if (matches.length === 0) {
-            dropdown.innerHTML = '<div class="p-3 text-xs text-slate-400 font-semibold">No landmark match. Enter full street address.</div>';
-          } else {
-            dropdown.innerHTML = matches.map(function(loc) {
-              return '<div class="p-3 hover:bg-yellowLight cursor-pointer text-xs font-bold text-slate-800 border-b border-slate-100 flex items-center gap-2 suggestion-item" data-name="' + loc.name + '" data-lat="' + loc.lat + '" data-lng="' + loc.lng + '">' +
-                '<span class="material-symbols-outlined text-yellowDark text-sm">location_on</span>' +
-                '<span>' + loc.name + '</span>' +
-              '</div>';
-            }).join('');
-          }
-          dropdown.classList.remove('hidden');
-        });
-
-        dropdown.addEventListener('click', function(e) {
-          var item = e.target.closest('.suggestion-item');
-          if (item) {
-            var name = item.getAttribute('data-name');
-            var lat = parseFloat(item.getAttribute('data-lat'));
-            var lng = parseFloat(item.getAttribute('data-lng'));
-
-            input.value = name;
             dropdown.classList.add('hidden');
-
-            if (targetType === 'pickup') pickupCoords = [lat, lng];
-            else dropCoords = [lat, lng];
-
-            updateRoutePolyline();
+            return;
           }
-        });
 
-        document.addEventListener('click', function(e) {
-          if (!input.contains(e.target) && !dropdown.contains(e.target)) {
-            dropdown.classList.add('hidden');
-          }
-        });
-      }
-
-      setupAutocomplete('pickup-address-input', 'pickup-search-dropdown', 'pickup');
-      setupAutocomplete('drop-address-input', 'drop-search-dropdown', 'drop');
-
-      // 7. SELECT ON MAP MODAL PICKER SYSTEM
-      var pickerMap;
-      var modal = document.getElementById('map-picker-modal');
-      var closeModalBtn = document.getElementById('close-map-modal');
-      var confirmPickerBtn = document.getElementById('btn-confirm-map-picker');
-      var modalTitle = document.getElementById('modal-map-title');
-      var pickerAddrTxt = document.getElementById('picker-address-text');
-      var pickerPinEmoji = document.getElementById('picker-pin-emoji');
-
-      function openMapPicker(target) {
-        activePickerTarget = target;
-        if (modal) modal.classList.remove('hidden');
-
-        if (modalTitle) modalTitle.textContent = target === 'pickup' ? 'Select Pickup Location on Map' : 'Select Drop Destination on Map';
-        if (pickerPinEmoji) pickerPinEmoji.textContent = target === 'pickup' ? '📍' : '🏁';
-
-        setTimeout(function() {
-          if (!pickerMap && typeof L !== 'undefined') {
-            pickerMap = L.map('picker-map-container', { zoomControl: true }).setView(target === 'pickup' ? pickupCoords : dropCoords, 15);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(pickerMap);
-
-            pickerMap.on('moveend', function() {
-              var center = pickerMap.getCenter();
-              if (pickerAddrTxt) pickerAddrTxt.textContent = 'Selected Spot: ' + center.lat.toFixed(4) + ', ' + center.lng.toFixed(4) + ' (Bhusawal)';
-            });
-          } else if (pickerMap) {
-            pickerMap.invalidateSize();
-            pickerMap.setView(target === 'pickup' ? pickupCoords : dropCoords, 15);
-          }
-        }, 200);
-      }
-
-      var pickupMapBtn = document.getElementById('btn-pickup-select-map');
-      if (pickupMapBtn) pickupMapBtn.addEventListener('click', function() { openMapPicker('pickup'); });
-
-      var dropMapBtn = document.getElementById('btn-drop-select-map');
-      if (dropMapBtn) dropMapBtn.addEventListener('click', function() { openMapPicker('drop'); });
-
-      if (closeModalBtn) closeModalBtn.addEventListener('click', function() { if (modal) modal.classList.add('hidden'); });
-
-      if (confirmPickerBtn) {
-        confirmPickerBtn.addEventListener('click', function() {
-          if (pickerMap) {
-            var center = pickerMap.getCenter();
-            var lat = center.lat, lng = center.lng;
-            var formattedAddr = 'Map Location (' + lat.toFixed(4) + ', ' + lng.toFixed(4) + '), Bhusawal';
-
-            if (activePickerTarget === 'pickup') {
-              pickupCoords = [lat, lng];
-              var input = document.getElementById('pickup-address-input');
-              if (input) input.value = formattedAddr;
-            } else {
-              dropCoords = [lat, lng];
-              var input = document.getElementById('drop-address-input');
-              if (input) input.value = formattedAddr;
-            }
-            updateRoutePolyline();
-          }
-          if (modal) modal.classList.add('hidden');
-        });
-      }
-
-      // 8. GPS AUTO-DETECT BUTTONS
-      function handleGPS(targetType, btnId, inputId) {
-        var btn = document.getElementById(btnId);
-        if (!btn) return;
-        btn.addEventListener('click', function() {
-          if (navigator.geolocation) {
-            btn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">sync</span> Locating...';
-            navigator.geolocation.getCurrentPosition(function(pos) {
-              var lat = pos.coords.latitude;
-              var lng = pos.coords.longitude;
-              var addr = 'GPS Location (' + lat.toFixed(4) + ', ' + lng.toFixed(4) + '), Bhusawal';
-              
-              var input = document.getElementById(inputId);
-              if (input) input.value = addr;
-
-              if (targetType === 'pickup') pickupCoords = [lat, lng];
-              else dropCoords = [lat, lng];
-
-              updateRoutePolyline();
-
-              btn.innerHTML = '<span class="material-symbols-outlined text-sm text-slate-950">check_circle</span> Located!';
-              setTimeout(function() {
-                btn.innerHTML = '<span class="material-symbols-outlined text-sm">gps_fixed</span> <span>GPS Location</span>';
-              }, 2000);
-            }, function() {
-              alert('GPS Permission denied or unavailable. Using Bhusawal default.');
-              btn.innerHTML = '<span class="material-symbols-outlined text-sm">gps_fixed</span> <span>GPS Location</span>';
-            });
-          }
-        });
-      }
-
-      handleGPS('pickup', 'btn-pickup-gps', 'pickup-address-input');
-      handleGPS('drop', 'btn-drop-gps', 'drop-address-input');
-
-      // 9. SAVED & RECENT CHIPS HANDLERS
-      var savedPickups = document.querySelectorAll('.chip-saved-pickup');
-      savedPickups.forEach(function(chip) {
-        chip.addEventListener('click', function() {
-          var addr = chip.getAttribute('data-addr');
-          var input = document.getElementById('pickup-address-input');
-          if (input) input.value = addr;
-          updateRoutePolyline();
-        });
-      });
-
-      var savedDrops = document.querySelectorAll('.chip-saved-drop');
-      savedDrops.forEach(function(chip) {
-        chip.addEventListener('click', function() {
-          var addr = chip.getAttribute('data-addr');
-          var input = document.getElementById('drop-address-input');
-          if (input) input.value = addr;
-          updateRoutePolyline();
-        });
-      });
-
-      // 10. RIDE TYPE PICKER HANDLER
-      var rideTypeBtns = document.querySelectorAll('.ride-type-btn');
-      rideTypeBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          rideTypeBtns.forEach(function(b) {
-            b.classList.remove('active', 'border-yellowBrand', 'bg-yellowLight');
-            b.classList.add('border-slate-200/80', 'bg-slate-50');
+          var html = '';
+          matches.forEach(function(m, idx) {
+            html += `<div class="p-3 hover:bg-yellowLight cursor-pointer border-b border-slate-100 flex items-center gap-2 text-xs font-bold text-slate-800 dropdown-item-${inputId}" data-idx="${idx}">
+              <span class="material-symbols-outlined text-yellowDark text-base">location_on</span>
+              <span>${m.name}</span>
+            </div>`;
           });
-          btn.classList.add('active', 'border-yellowBrand', 'bg-yellowLight');
-          btn.classList.remove('border-slate-200/80', 'bg-slate-50');
 
-          selectedRideType = btn.getAttribute('data-type');
-          baseFare = parseInt(btn.getAttribute('data-base') || '20');
-          perKmFare = parseInt(btn.getAttribute('data-perkm') || '7');
+          dropdown.innerHTML = html;
+          dropdown.classList.remove('hidden');
 
-          calculateFare();
+          dropdown.querySelectorAll(`.dropdown-item-${inputId}`).forEach(function(item) {
+            item.addEventListener('click', function() {
+              var idx = item.getAttribute('data-idx');
+              var match = matches[idx];
+              input.value = match.name;
+              dropdown.classList.add('hidden');
+              onSelect(match.coords);
+            });
+          });
         });
+      }
+
+      setupAutocomplete('pickup-address-input', 'pickup-search-dropdown', function(coords) {
+        pickupCoords = coords;
+        if (pickupMarker) pickupMarker.setLatLng(pickupCoords);
+        updatePolyline();
       });
 
-      // 11. ENHANCED RIDER SEARCH & MATCH ANIMATION ENGINE
-      var searchModal = document.getElementById('rider-search-modal');
-      var searchPhaseView = document.getElementById('search-phase-view');
-      var matchPhaseView = document.getElementById('match-phase-view');
-      var bookBtn = document.getElementById('btn-book-bike-ride');
-      var cancelSearchBtn = document.getElementById('btn-cancel-search');
-      var cancelAssignedBtn = document.getElementById('btn-cancel-assigned-ride');
-      var chatBtn = document.getElementById('btn-chat-rider');
+      setupAutocomplete('drop-address-input', 'drop-search-dropdown', function(coords) {
+        dropCoords = coords;
+        if (dropMarker) dropMarker.setLatLng(dropCoords);
+        updatePolyline();
+      });
 
-      if (bookBtn) {
-        bookBtn.addEventListener('click', function() {
-          var valRes = validateAddresses();
-          if (!valRes.isValid) {
+      function updatePolyline() {
+        if (routePolyline) routePolyline.setLatLngs([pickupCoords, dropCoords]);
+        if (map) map.fitBounds(routePolyline.getBounds(), { padding: [30, 30] });
+
+        // Calculate approximate distance
+        var lat1 = pickupCoords[0], lon1 = pickupCoords[1];
+        var lat2 = dropCoords[0], lon2 = dropCoords[1];
+        var dLat = (lat2 - lat1) * Math.PI / 180;
+        var dLon = (lon2 - lon1) * Math.PI / 180;
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        distanceKm = Math.round((6371 * c * 1.3) * 10) / 10;
+        if (distanceKm < 1.5) distanceKm = 2.4;
+
+        recalculateFare();
+      }
+
+      // CONFIRM & BOOK RIDE CLICK HANDLER
+      var btnConfirm = document.getElementById('btn-confirm-ride-booking');
+      var searchModal = document.getElementById('partner-search-modal');
+      var searchPhase1 = document.getElementById('partner-searching-phase');
+      var searchPhase2 = document.getElementById('partner-accepted-phase');
+
+      if (btnConfirm) {
+        btnConfirm.addEventListener('click', function() {
+          var pickVal = (document.getElementById('pickup-address-input') || {}).value || 'Varangaon Road, Bhusawal';
+          var dropVal = (document.getElementById('drop-address-input') || {}).value || 'Jamner Road, Bhusawal';
+
+          if (pickVal === dropVal) {
             var banner = document.getElementById('address-validation-banner');
-            var bannerText = document.getElementById('validation-banner-text');
-            if (bannerText) bannerText.textContent = valRes.errorMsg;
             if (banner) banner.classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
           }
 
-          var pickupAddr = (document.getElementById('pickup-address-input') || {}).value || '';
-          var dropAddr = (document.getElementById('drop-address-input') || {}).value || '';
-          var passengerName = (document.getElementById('passenger-name') || {}).value || '';
-          var passengerPhone = (document.getElementById('passenger-phone') || {}).value || '';
-
-          if (!passengerName.trim() || !passengerPhone.trim()) {
-            alert('Please enter Passenger Name and Mobile Number');
-            return;
-          }
-
-          var finalFare = calculateFare();
-          var orderId = 'RIDE-BHU-' + Math.floor(100000 + Math.random() * 900000);
-
-          var rideOrder = {
-            id: orderId,
-            type: 'BIKE_RIDE',
-            rideType: selectedRideType,
-            passengerName: passengerName,
-            passengerPhone: passengerPhone,
-            pickupAddress: pickupAddr,
-            dropAddress: dropAddr,
-            distance: distanceKm + ' km',
-            total: finalFare,
-            status: 'Captain Assigned',
-            captain: 'Karan Sharma (Fleet Captain)',
-            rating: '4.9 ⭐',
-            bikeNumber: 'MH 19 BJ 4820 (Yellow Scooter)',
-            timestamp: new Date().toISOString()
-          };
-
-          try {
-            localStorage.setItem('bhusawal_active_order', JSON.stringify(rideOrder));
-            var orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
-            orders.unshift(rideOrder);
-            localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
-          } catch(e) {}
-
-          var pTxt = document.getElementById('matched-pickup-text');
-          var dTxt = document.getElementById('matched-drop-text');
-          var fTxt = document.getElementById('matched-fare-text');
-          if (pTxt) pTxt.textContent = pickupAddr;
-          if (dTxt) dTxt.textContent = dropAddr;
-          if (fTxt) fTxt.textContent = '₹' + finalTotalFare();
-
+          // Open 2-Phase Searching Modal
           if (searchModal) {
             searchModal.classList.remove('hidden');
-            if (searchPhaseView) searchPhaseView.classList.remove('hidden');
-            if (matchPhaseView) matchPhaseView.classList.add('hidden');
-          }
+            if (searchPhase1) searchPhase1.classList.remove('hidden');
+            if (searchPhase2) searchPhase2.classList.add('hidden');
 
-          if (matchTimer) clearTimeout(matchTimer);
-          matchTimer = setTimeout(function() {
-            if (searchPhaseView) searchPhaseView.classList.add('hidden');
-            if (matchPhaseView) {
-              matchPhaseView.classList.remove('hidden');
-              matchPhaseView.classList.add('animate-in', 'fade-in', 'zoom-in-95');
+            var emojiEl = document.getElementById('searching-icon-emoji');
+            var titleEl = document.getElementById('searching-title-text');
+
+            if (selectedRideType === 'Bike Taxi') {
+              if (emojiEl) emojiEl.textContent = '🛵';
+              if (titleEl) titleEl.textContent = 'Searching Nearby Captains...';
+            } else {
+              if (emojiEl) emojiEl.textContent = '🛺';
+              if (titleEl) titleEl.textContent = 'Searching Nearby Auto Rickshaws...';
             }
-          }, 3500);
-        });
-      }
 
-      function finalTotalFare() {
-        var distanceCost = Math.round(distanceKm * perKmFare);
-        var totalBeforeDiscount = baseFare + distanceCost;
-        return Math.max(15, totalBeforeDiscount - 10);
-      }
+            // Phase 2 transition after 3 seconds
+            setTimeout(function() {
+              if (searchPhase1) searchPhase1.classList.add('hidden');
+              if (searchPhase2) searchPhase2.classList.remove('hidden');
 
-      if (cancelSearchBtn) {
-        cancelSearchBtn.addEventListener('click', function() {
-          if (matchTimer) clearTimeout(matchTimer);
-          if (searchModal) searchModal.classList.add('hidden');
-        });
-      }
+              var rideTypeBadge = document.getElementById('modal-accepted-ride-type');
+              var driverName = document.getElementById('modal-driver-name');
+              var vehiclePlate = document.getElementById('modal-vehicle-plate');
 
-      if (cancelAssignedBtn) {
-        cancelAssignedBtn.addEventListener('click', function() {
-          if (confirm('Are you sure you want to cancel this ride request?')) {
-            if (searchModal) searchModal.classList.add('hidden');
-            alert('Ride request cancelled.');
+              if (selectedRideType === 'Bike Taxi') {
+                if (rideTypeBadge) rideTypeBadge.textContent = '🛵 Bike Taxi Accepted';
+                if (driverName) driverName.textContent = 'Vikram Patil';
+                if (vehiclePlate) vehiclePlate.textContent = 'EV Bike • MH 19 BJ 5921';
+              } else {
+                if (rideTypeBadge) rideTypeBadge.textContent = '🛺 Auto Rickshaw Accepted';
+                if (driverName) driverName.textContent = 'Ramesh Kale';
+                if (vehiclePlate) vehiclePlate.textContent = 'Bajaj RE Auto • MH 19 CZ 3912';
+              }
+
+              // SAVE ACTIVE ORDER IN LOCALSTORAGE
+              var activeOrder = {
+                id: 'RIDE-BHU-' + Math.floor(100000 + Math.random() * 900000),
+                type: 'BIKE_RIDE',
+                rideType: selectedRideType,
+                pickupAddress: pickVal,
+                dropAddress: dropVal,
+                total: document.getElementById('total-fare-display').textContent.replace('₹', ''),
+                status: 'Request Accepted',
+                rider: selectedRideType === 'Bike Taxi' ? 'Vikram Patil' : 'Ramesh Kale',
+                vehicle: selectedRideType === 'Bike Taxi' ? 'EV Bike (MH 19 BJ 5921)' : 'Bajaj RE Auto (MH 19 CZ 3912)',
+                otp: '4892',
+                otpVerified: false,
+                timestamp: new Date().toISOString()
+              };
+
+              try {
+                localStorage.setItem('bhusawal_active_order', JSON.stringify(activeOrder));
+                var existing = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+                existing.unshift(activeOrder);
+                localStorage.setItem('bhusawal_orders', JSON.stringify(existing));
+              } catch(e) {}
+
+            }, 3000);
           }
         });
       }
 
-      if (chatBtn) {
-        chatBtn.addEventListener('click', function() {
-          alert('💬 Captain Karan Sharma: "Hello! I am on my way to your pickup location. Reaching in 2 minutes."');
+      // MODAL CLOSE & TRACK LIVE RIDE BUTTONS
+      var btnCloseModal = document.getElementById('btn-close-partner-search-modal');
+      var btnCancelSearch = document.getElementById('btn-cancel-search');
+      var btnTrackRide = document.getElementById('btn-track-live-ride');
+
+      if (btnCloseModal) btnCloseModal.addEventListener('click', function() { if (searchModal) searchModal.classList.add('hidden'); });
+      if (btnCancelSearch) btnCancelSearch.addEventListener('click', function() { if (searchModal) searchModal.classList.add('hidden'); });
+
+      if (btnTrackRide) {
+        btnTrackRide.addEventListener('click', function() {
+          window.location.href = '/track_order';
         });
       }
-
-      var pIn = document.getElementById('pickup-address-input');
-      var dIn = document.getElementById('drop-address-input');
-      if (pIn) pIn.addEventListener('input', validateAddresses);
-      if (dIn) dIn.addEventListener('input', validateAddresses);
 
     })();
   </script>
