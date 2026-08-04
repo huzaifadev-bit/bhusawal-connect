@@ -186,9 +186,9 @@ const verifiedPartnerStores = [
                 <span class="text-lg">🏪</span>
                 <span>Partner Shops</span>
               </a>
-              <a href="/auto" class="p-2.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-100 flex items-center gap-2 text-xs font-extrabold text-slate-800">
-                <span class="text-lg">🛺</span>
-                <span>Auto Booking</span>
+              <a href="/bike_ride" class="p-2.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-100 flex items-center gap-2 text-xs font-extrabold text-slate-800">
+                <span class="text-lg">🛵</span>
+                <span>Pickup & Drop</span>
               </a>
               <a href="/parcel" class="p-2.5 rounded-2xl bg-slate-50 hover:bg-purple-50 border border-slate-100 flex items-center gap-2 text-xs font-extrabold text-slate-800">
                 <span class="text-lg">📦</span>
@@ -219,7 +219,7 @@ const verifiedPartnerStores = [
       </div>
     </div>
 
-    <!-- 4. SERVICES SECTION (EXACTLY 7 SERVICES WITH 3D ILLUSTRATIONS) -->
+    <!-- 4. SERVICES SECTION (6 SERVICES WITH 3D ILLUSTRATIONS) -->
     <section class="space-y-4">
       <div class="flex items-center justify-between px-1">
         <div>
@@ -232,11 +232,12 @@ const verifiedPartnerStores = [
         </a>
       </div>
 
-      <!-- 7-Card Responsive Scroll Grid -->
-      <div class="flex gap-3.5 overflow-x-auto no-scrollbar pb-3 snap-x snap-mandatory">
+      <!-- 6-Card Responsive Grid -->
+      <div class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-3.5 pb-3">
 
         <!-- 1. Grocery -->
-        <a href="/grocery" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+        <!-- 1. Grocery -->
+        <a href="/grocery" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-3 overflow-hidden">
             <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_grocery.jpg" alt="Grocery" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
@@ -250,7 +251,8 @@ const verifiedPartnerStores = [
         </a>
 
         <!-- 2. Medicine -->
-        <a href="/medicines" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+        <!-- 2. Medicine -->
+        <a href="/medicines" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-blue-50 to-cyan-100 flex items-center justify-center p-3 overflow-hidden">
             <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_medicine.jpg" alt="Medicine" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
@@ -264,7 +266,8 @@ const verifiedPartnerStores = [
         </a>
 
         <!-- 3. Food Delivery -->
-        <a href="/food" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+        <!-- 3. Food Delivery -->
+        <a href="/food" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-orange-50 to-red-100 flex items-center justify-center p-3 overflow-hidden">
             <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_food.jpg" alt="Food Delivery" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
@@ -277,36 +280,23 @@ const verifiedPartnerStores = [
           </div>
         </a>
 
-        <!-- 4. Auto Booking -->
-        <a href="/auto" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+        <!-- 4. Pickup & Drop -->
+        <a href="/bike_ride" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-yellow-50 to-amber-100 flex items-center justify-center p-3 overflow-hidden">
-            <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_auto.jpg" alt="Auto Booking" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
-          </div>
-          <div class="p-3">
-            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-yellow-100 to-amber-200 flex items-center justify-center shadow-xs">
-              <span class="material-symbols-outlined text-amber-700 text-lg">local_taxi</span>
-            </div>
-            <h4 class="text-xs font-black text-slate-900">Auto Booking</h4>
-            <p class="text-[10px] font-bold text-amber-600 mt-0.5 leading-tight">Book Auto in Minutes</p>
-          </div>
-        </a>
-
-        <!-- 5. Pickup & Drop -->
-        <a href="/auto" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
-          <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-teal-50 to-emerald-100 flex items-center justify-center p-3 overflow-hidden">
             <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_pickup_drop.jpg" alt="Pickup & Drop" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
           <div class="p-3">
-            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-teal-100 to-emerald-200 flex items-center justify-center shadow-xs">
-              <span class="material-symbols-outlined text-teal-700 text-lg">two_wheeler</span>
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-yellow-100 to-amber-200 flex items-center justify-center shadow-xs">
+              <span class="material-symbols-outlined text-amber-700 text-lg">two_wheeler</span>
             </div>
             <h4 class="text-xs font-black text-slate-900">Pickup & Drop</h4>
-            <p class="text-[10px] font-bold text-teal-600 mt-0.5 leading-tight">Fast bike rides across Bhusawal.</p>
+            <p class="text-[10px] font-bold text-amber-600 mt-0.5 leading-tight">Instant Bike Taxi Rides</p>
           </div>
         </a>
 
         <!-- 6. Parcel Delivery -->
-        <a href="/parcel" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+        <!-- 5. Parcel Delivery -->
+        <a href="/parcel" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center p-3 overflow-hidden">
             <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_parcel.jpg" alt="Parcel Delivery" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
@@ -320,7 +310,8 @@ const verifiedPartnerStores = [
         </a>
 
         <!-- 7. Local Shops -->
-        <a href="/shops" class="service-card flex-shrink-0 w-[145px] sm:w-[160px] bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+        <!-- 6. Local Shops -->
+        <a href="/shops" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center p-3 overflow-hidden">
             <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_local_shops.jpg" alt="Local Shops" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
