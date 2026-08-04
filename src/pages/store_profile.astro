@@ -1,0 +1,611 @@
+---
+import fs from 'fs';
+import path from 'path';
+import Switcher from '../components/Switcher.astro';
+
+// Read master grocery catalog at build time
+const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
+let catalog = [];
+try {
+  catalog = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+} catch (err) {
+  console.error("Failed to read catalog at build time", err);
+}
+
+// Initial server-rendered products
+const initialProducts = catalog.slice(0, 48);
+---
+
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partner Store Profile | Bhusawal Connect</title>
+  
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
+  <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
+  <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
+  <script is:inline>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            purpleBrand: '#7c3aed',
+            purpleDark: '#6d28d9',
+            purpleLight: '#f3e8ff'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Outfit', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+
+<body class="pb-28 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased">
+
+  <!-- TOP STICKY HEADER -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3 shadow-xs flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a href="/grocery" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+        <span class="material-symbols-outlined text-xl">arrow_back</span>
+      </a>
+      <div>
+        <div class="flex items-center gap-1.5">
+          <span class="px-2 py-0.5 rounded-md bg-purple-100 text-purpleBrand text-[10px] font-black uppercase tracking-wider">VERIFIED PARTNER STORE</span>
+        </div>
+        <h1 id="header-store-name" class="text-base font-black font-display text-slate-900 leading-tight">Partner Store</h1>
+      </div>
+    </div>
+
+    <a href="/billing" class="relative w-10 h-10 rounded-full bg-purple-100 text-purpleBrand flex items-center justify-center font-bold hover:bg-purple-200 transition-colors">
+      <span class="material-symbols-outlined text-xl">shopping_bag</span>
+      <span id="cart-badge-header" class="absolute -top-1 -right-1 bg-purpleBrand text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
+    </a>
+  </header>
+
+  <!-- STORE HERO COVER BANNER -->
+  <div class="relative w-full h-52 sm:h-64 bg-slate-900 overflow-hidden">
+    <img id="store-cover-img" src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1200&q=80" alt="Store Cover" class="w-full h-full object-cover opacity-60" />
+    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+    
+    <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-20">
+      <a href="/grocery" class="px-3 py-1.5 rounded-2xl bg-white/90 backdrop-blur-md text-slate-800 text-xs font-black flex items-center gap-1 shadow-lg hover:bg-white transition-all active:scale-95">
+        <span class="material-symbols-outlined text-sm">arrow_back</span>
+        <span>Back to Grocery Marketplace</span>
+      </a>
+
+      <span id="store-badge-top" class="px-3 py-1 bg-amber-400 text-slate-950 text-xs font-black rounded-full shadow-md uppercase tracking-wider">
+        TOP RATED SUPERSTORE
+      </span>
+    </div>
+  </div>
+
+  <!-- STORE DETAILS CARD (Overlapping Hero) -->
+  <div class="max-w-7xl mx-auto px-4 -mt-16 sm:-mt-20 relative z-20 space-y-5">
+    <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-xl border border-slate-100 space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+        
+        <!-- Logo & Store Name -->
+        <div class="flex items-start gap-4">
+          <div id="store-logo-box" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-purple-100 text-purpleBrand shadow-md flex items-center justify-center text-3xl sm:text-4xl shrink-0 border-2 border-white">
+            🏬
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 id="store-title" class="text-xl sm:text-2xl font-black font-display text-slate-900 leading-tight">Sai Jeevan Super Mall</h1>
+              <span class="material-symbols-outlined text-purpleBrand text-xl" title="Verified Partner">verified</span>
+            </div>
+            <p id="store-tagline" class="text-xs font-bold text-slate-500 mt-0.5">Premium Supermarket & Daily Needs Mart</p>
+            
+            <div class="flex items-center gap-2.5 mt-2 flex-wrap">
+              <span id="store-rating" class="px-2.5 py-0.5 bg-amber-100 text-amber-900 text-xs font-black rounded-lg flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs text-amber-600">star</span>
+                4.8 ★ (1,420+ reviews)
+              </span>
+              <span class="text-slate-300">•</span>
+              <span class="text-xs font-bold text-emerald-600 flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Open Today
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery By Badge -->
+        <div class="bg-purple-50 rounded-2xl p-3.5 border border-purple-100 flex items-center gap-3 shrink-0">
+          <div class="w-10 h-10 rounded-xl bg-purpleBrand text-white flex items-center justify-center shadow-xs">
+            <span class="material-symbols-outlined text-xl">electric_bolt</span>
+          </div>
+          <div>
+            <p class="text-[10px] font-extrabold text-purple-700 uppercase tracking-wider">Delivery By</p>
+            <p id="store-delivery-by" class="text-sm font-black text-purpleBrand font-display">Bhusawal Connect</p>
+            <p class="text-[10px] font-bold text-slate-500">⚡ Express 10 MINS Delivery</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Store Contact & Meta Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-bold text-slate-600">
+        
+        <!-- Address -->
+        <div class="flex items-center gap-2.5 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+          <span class="material-symbols-outlined text-purpleBrand text-lg shrink-0">location_on</span>
+          <div class="overflow-hidden">
+            <span class="text-[10px] text-slate-400 font-extrabold uppercase block">Address</span>
+            <span id="store-address" class="text-slate-800 truncate block">Shop 1-5, Sai Jeevan Complex, Station Road, Bhusawal</span>
+          </div>
+        </div>
+
+        <!-- Opening Hours -->
+        <div class="flex items-center gap-2.5 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+          <span class="material-symbols-outlined text-purpleBrand text-lg shrink-0">schedule</span>
+          <div>
+            <span class="text-[10px] text-slate-400 font-extrabold uppercase block">Opening Hours</span>
+            <span id="store-hours" class="text-slate-800">8:00 AM - 10:00 PM (Open Today)</span>
+          </div>
+        </div>
+
+        <!-- Phone Number -->
+        <div class="flex items-center gap-2.5 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+          <span class="material-symbols-outlined text-purpleBrand text-lg shrink-0">call</span>
+          <div>
+            <span class="text-[10px] text-slate-400 font-extrabold uppercase block">Phone Number</span>
+            <a id="store-phone-link" href="tel:+919823045678" class="text-purpleBrand font-black hover:underline">+91 98230 45678</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SEARCH INSIDE THIS STORE & CATEGORIES FILTER -->
+    <div class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-100 shadow-sm space-y-3">
+      
+      <!-- Search Inside Store -->
+      <div class="flex items-center gap-2 bg-slate-100 rounded-2xl px-4 py-3 border border-slate-200/80 focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
+        <span class="material-symbols-outlined text-slate-400">search</span>
+        <input type="text" id="store-search-input" placeholder="Search items inside this store..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
+        <button id="clear-store-search-btn" class="hidden text-slate-400 hover:text-slate-600">
+          <span class="material-symbols-outlined text-lg">close</span>
+        </button>
+      </div>
+
+      <!-- Categories Pills -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1" id="store-categories-list">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+
+    <!-- MAIN PRODUCT LISTINGS -->
+    <main class="space-y-4 pt-2">
+      <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">
+        <h2 id="store-catalog-title" class="text-lg font-black font-display text-slate-900">Store Products</h2>
+        <span id="store-product-count" class="text-xs font-bold text-slate-400">Loading store inventory...</span>
+      </div>
+
+      <!-- Products Grid -->
+      <div id="store-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4.5">
+        {initialProducts.map(p => {
+          const id = p["Product ID"] || p.ProductID || p.id || '';
+          const name = p["Product Name"] || '';
+          const brand = p["Brand Name"] || p.brand || 'Store Fresh';
+          const cat = p.Category || 'Grocery';
+          const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
+          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 0);
+          const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
+          const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
+          const nameSafe = name.replace(/"/g, '&quot;');
+
+          return (
+            <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-3" data-id={id} data-name={nameSafe} data-price={mrp} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
+
+              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
+                {isOutOfStock && (
+                  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
+                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
+                  </div>
+                )}
+
+                <img src={img} alt={name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+
+                <div class="absolute bottom-2 left-2 z-10">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
+                    ⚡ 10 MINS
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex flex-col flex-1 px-0.5">
+                <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">{brand}</span>
+                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">{name}</h3>
+                <p class="text-[11px] font-semibold text-slate-400 mb-2">{pack}</p>
+
+                <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
+                  <span class="text-sm font-black text-slate-900">MRP ₹{mrp}</span>
+
+                  <div class="cart-action-container" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
+                    <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
+                      + ADD
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- LOAD MORE CONTAINER -->
+      <div id="store-load-more-container" class="py-8 text-center space-y-2">
+        <button id="store-load-more-btn" class="px-8 py-3 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all">
+          Load More Store Items
+        </button>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- FLOATING CART BAR -->
+  <div id="floating-cart-bar" class="hidden fixed bottom-6 left-4 right-4 max-w-xl mx-auto bg-purpleBrand text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between z-50 animate-in fade-in slide-in-from-bottom-2">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-black text-sm" id="cart-count-badge">
+        0
+      </div>
+      <div>
+        <p class="text-xs font-black text-white" id="cart-total-text">₹0</p>
+        <p class="text-[10px] text-purple-200">View items in cart</p>
+      </div>
+    </div>
+    <a href="/billing" class="bg-white text-purpleBrand font-black text-xs px-5 py-2.5 rounded-xl flex items-center gap-1.5 shadow-md hover:bg-purple-50 active:scale-95 transition-all">
+      <span>Proceed to Checkout</span>
+      <span class="material-symbols-outlined text-sm">arrow_forward</span>
+    </a>
+  </div>
+
+  <Switcher />
+
+  <!-- CLIENT-SIDE STORE PROFILE LOGIC -->
+  <script is:inline>
+    const storeRegistry = {
+      'sai-jeevan': {
+        id: 'sai-jeevan',
+        name: 'Sai Jeevan Super Mall',
+        tagline: 'Premium Supermarket & Daily Needs Mart',
+        rating: '4.8 ★ (1,420+ reviews)',
+        address: 'Shop 1-5, Sai Jeevan Complex, Station Road, Bhusawal - 425201',
+        hours: '8:00 AM - 10:00 PM (Open Today)',
+        phone: '+91 98230 45678',
+        deliveryBy: 'Bhusawal Connect',
+        logo: '🏬',
+        cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1200&q=80',
+        badge: 'TOP RATED SUPERSTORE',
+        categories: ['Fruits & Vegetables', 'Dairy & Breakfast', 'Grocery Staples', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
+      },
+      'central-supermarket': {
+        id: 'central-supermarket',
+        name: 'Bhusawal Central Supermarket',
+        tagline: 'Staples, Snacks, Household & Beverages Mart',
+        rating: '4.8 ★ (980+ reviews)',
+        address: 'Plot 42, Central Plaza, Station Road, Bhusawal - 425201',
+        hours: '8:30 AM - 9:30 PM (Open Today)',
+        phone: '+91 94222 18901',
+        deliveryBy: 'Bhusawal Connect',
+        logo: '🏬',
+        cover: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
+        badge: 'FEATURED PARTNER',
+        categories: ['Grocery Staples', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
+      },
+      'fresh-green-mart': {
+        id: 'fresh-green-mart',
+        name: 'Fresh Green Mart & Organics',
+        tagline: 'Farm-fresh Fruits, Vegetables & Organic Dairy',
+        rating: '4.7 ★ (850+ reviews)',
+        address: 'Near Municipal High School, Jamner Road, Bhusawal - 425201',
+        hours: '7:00 AM - 9:00 PM (Open Today)',
+        phone: '+91 97654 32109',
+        deliveryBy: 'Bhusawal Connect',
+        logo: '🥦',
+        cover: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1200&q=80',
+        badge: 'FARM FRESH',
+        categories: ['Fruits & Vegetables', 'Dairy & Breakfast', 'Grocery Staples']
+      },
+      'dinshaws-dairy-hub': {
+        id: 'dinshaws-dairy-hub',
+        name: "Dinshaw's Dairy & Bakery Hub",
+        tagline: 'Fresh Milk, Cheese, Bakery & Ice Creams',
+        rating: '4.9 ★ (1,150+ reviews)',
+        address: 'Opp. Railway Hospital, Varangaon Road, Bhusawal - 425201',
+        hours: '6:30 AM - 10:30 PM (Open Today)',
+        phone: '+91 91580 99887',
+        deliveryBy: 'Bhusawal Connect',
+        logo: '🥛',
+        cover: 'https://images.unsplash.com/photo-1528751014936-863e6e7a319c?auto=format&fit=crop&w=1200&q=80',
+        badge: 'DAIRY SPECIALIST',
+        categories: ['Dairy & Breakfast', 'Instant & Frozen Foods', 'Beverages']
+      },
+      'khandesh-agro-spices': {
+        id: 'khandesh-agro-spices',
+        name: 'Khandesh Agro & Spices Store',
+        tagline: 'Pure Traditional Grains, Spices, Pulses & Oils',
+        rating: '4.6 ★ (640+ reviews)',
+        address: 'Shop 88, Main Cloth Market, Bhusawal - 425201',
+        hours: '9:00 AM - 8:30 PM (Open Today)',
+        phone: '+91 98901 23456',
+        deliveryBy: 'Bhusawal Connect',
+        logo: '🌾',
+        cover: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=80',
+        badge: 'LOCAL TRADITIONAL',
+        categories: ['Grocery Staples', 'Instant & Frozen Foods']
+      },
+      'city-organic-daily': {
+        id: 'city-organic-daily',
+        name: 'City Organic & Daily Needs',
+        tagline: 'Personal Care, Baby Hygiene & Health Care',
+        rating: '4.8 ★ (790+ reviews)',
+        address: 'Near SBI Bank, Civil Lines, Bhusawal - 425201',
+        hours: '8:00 AM - 9:30 PM (Open Today)',
+        phone: '+91 93700 11223',
+        deliveryBy: 'Bhusawal Connect',
+        logo: '✨',
+        cover: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=80',
+        badge: 'HEALTH & ESSENTIALS',
+        categories: ['Personal Care', 'Home Cleaning & Household', 'Baby, Health & Specialty', 'Snacks & Confectionery']
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const storeIdParam = urlParams.get('store') || 'sai-jeevan';
+      const store = storeRegistry[storeIdParam] || storeRegistry['sai-jeevan'];
+
+      // Fill Store Metadata
+      document.getElementById('header-store-name').textContent = store.name;
+      document.getElementById('store-title').textContent = store.name;
+      document.getElementById('store-tagline').textContent = store.tagline;
+      document.getElementById('store-rating').innerHTML = `<span class="material-symbols-outlined text-xs text-amber-600">star</span> ${store.rating}`;
+      document.getElementById('store-address').textContent = store.address;
+      document.getElementById('store-hours').textContent = store.hours;
+      const phoneLink = document.getElementById('store-phone-link');
+      if (phoneLink) {
+        phoneLink.textContent = store.phone;
+        phoneLink.href = `tel:${store.phone}`;
+      }
+      document.getElementById('store-delivery-by').textContent = store.deliveryBy;
+      document.getElementById('store-badge-top').textContent = store.badge;
+      document.getElementById('store-logo-box').textContent = store.logo;
+      document.getElementById('store-cover-img').src = store.cover;
+      document.getElementById('store-search-input').placeholder = `Search items inside ${store.name}...`;
+
+      // Render Store Categories
+      const categoriesContainer = document.getElementById('store-categories-list');
+      if (categoriesContainer) {
+        const cats = ['All Products', ...store.categories];
+        categoriesContainer.innerHTML = cats.map((cat, idx) => `
+          <button class="store-cat-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-black transition-all ${idx === 0 ? 'bg-purpleBrand text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}" data-cat="${cat}">
+            ${cat}
+          </button>
+        `).join('');
+      }
+
+      // Fetch Catalog and Filter EXCLUSIVELY for this store
+      let allCatalog = [];
+      try {
+        const res = await fetch('/grocery_catalog.json');
+        allCatalog = await res.json();
+      } catch(e) {
+        console.error("Failed to load catalog", e);
+      }
+
+      // Filter catalog STRICTLY for this store's categories! Zero products from other stores!
+      let storeCatalog = allCatalog.filter(p => {
+        const cat = p.Category || 'Grocery';
+        return store.categories.includes(cat);
+      });
+
+      let currentQuery = '';
+      let activeCategory = 'All Products';
+      let limit = 48;
+      const BATCH_SIZE = 48;
+
+      function renderStoreProducts() {
+        const grid = document.getElementById('store-products-grid');
+        const countLabel = document.getElementById('store-product-count');
+        const loadMoreBtn = document.getElementById('store-load-more-btn');
+
+        let filtered = storeCatalog;
+
+        // Search Query inside store
+        if (currentQuery) {
+          filtered = filtered.filter(p => {
+            const name = (p["Product Name"] || '').toLowerCase();
+            const cat = (p.Category || '').toLowerCase();
+            const brand = (p["Brand Name"] || '').toLowerCase();
+            return name.includes(currentQuery) || cat.includes(currentQuery) || brand.includes(currentQuery);
+          });
+        }
+
+        // Category Filter
+        if (activeCategory && activeCategory !== 'All Products') {
+          const target = activeCategory.toLowerCase();
+          filtered = filtered.filter(p => (p.Category || '').toLowerCase() === target);
+        }
+
+        if (countLabel) {
+          countLabel.textContent = `Showing ${Math.min(limit, filtered.length).toLocaleString()} of ${filtered.length.toLocaleString()} items in ${store.name}`;
+        }
+
+        if (!filtered || filtered.length === 0) {
+          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No products found matching inside ${store.name}.</div>`;
+          if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
+          return;
+        }
+
+        const visible = filtered.slice(0, limit);
+        grid.innerHTML = visible.map(p => {
+          const id = p["Product ID"] || p.ProductID || p.id || '';
+          const name = (p["Product Name"] || p.name || '').split(" (Batch")[0];
+          const brand = p["Brand Name"] || p.brand || store.name;
+          const cat = p.Category || 'Grocery';
+          const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
+          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50);
+          const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const nameSafe = name.replace(/"/g, '&quot;');
+
+          return `
+            <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-3" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-brand="${brand}">
+
+              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
+                <img src="${img}" alt="${nameSafe}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+
+                <div class="absolute bottom-2 left-2 z-10">
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
+                    ⚡ 10 MINS
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex flex-col flex-1 px-0.5">
+                <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">${brand}</span>
+                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">${name}</h3>
+                <p class="text-[11px] font-semibold text-slate-400 mb-2">${pack}</p>
+
+                <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
+                  <span class="text-sm font-black text-slate-900">MRP ₹${mrp}</span>
+
+                  <div class="cart-action-container" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
+                    <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
+                      + ADD
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          `;
+        }).join('');
+
+        if (limit < filtered.length) {
+          if (loadMoreBtn) {
+            loadMoreBtn.classList.remove('hidden');
+            loadMoreBtn.textContent = `Load More Items (${(filtered.length - limit).toLocaleString()} remaining)`;
+          }
+        } else {
+          if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
+        }
+
+        attachCartListeners();
+      }
+
+      // Cart bar & Add to Cart
+      function updateCartBar() {
+        try {
+          const cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+          const bar = document.getElementById('floating-cart-bar');
+          const countBadge = document.getElementById('cart-count-badge');
+          const headerBadge = document.getElementById('cart-badge-header');
+          const totalText = document.getElementById('cart-total-text');
+
+          const totalQty = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
+          const totalPrice = cart.reduce((sum, i) => sum + (parseFloat(i.price || 0) * (i.quantity || 1)), 0);
+
+          if (countBadge) countBadge.textContent = totalQty;
+          if (headerBadge) headerBadge.textContent = totalQty;
+          if (totalText) totalText.textContent = '₹' + Math.round(totalPrice);
+
+          if (cart.length > 0) {
+            bar?.classList.remove('hidden');
+          } else {
+            bar?.classList.add('hidden');
+          }
+        } catch(e) {}
+      }
+      updateCartBar();
+
+      function attachCartListeners() {
+        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.id;
+            const name = btn.dataset.name;
+            const price = btn.dataset.price;
+            const img = btn.dataset.img;
+            let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+            const existing = cart.find(i => i.id === id);
+            if (existing) {
+              existing.quantity = (existing.quantity || 1) + 1;
+            } else {
+              cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Grocery', store: store.name });
+            }
+            localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+            updateCartBar();
+          };
+        });
+      }
+
+      // Search Inside Store Input Listener
+      const searchInput = document.getElementById('store-search-input');
+      const clearSearchBtn = document.getElementById('clear-store-search-btn');
+
+      searchInput?.addEventListener('input', (e) => {
+        currentQuery = e.target.value.trim().toLowerCase();
+        if (currentQuery) {
+          clearSearchBtn?.classList.remove('hidden');
+        } else {
+          clearSearchBtn?.classList.add('hidden');
+        }
+        renderStoreProducts();
+      });
+
+      clearSearchBtn?.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        currentQuery = '';
+        clearSearchBtn?.classList.add('hidden');
+        renderStoreProducts();
+      });
+
+      // Category Pill Listeners
+      document.querySelectorAll('.store-cat-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          document.querySelectorAll('.store-cat-pill').forEach(p => {
+            p.classList.remove('bg-purpleBrand', 'text-white', 'shadow-xs');
+            p.classList.add('bg-slate-100', 'text-slate-700');
+          });
+          pill.classList.remove('bg-slate-100', 'text-slate-700');
+          pill.classList.add('bg-purpleBrand', 'text-white', 'shadow-xs');
+
+          activeCategory = pill.dataset.cat || 'All Products';
+          renderStoreProducts();
+        });
+      });
+
+      // Load More Button
+      document.getElementById('store-load-more-btn')?.addEventListener('click', () => {
+        limit += BATCH_SIZE;
+        renderStoreProducts();
+      });
+
+      renderStoreProducts();
+    });
+  </script>
+</body>
+</html>
