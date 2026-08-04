@@ -79,7 +79,7 @@ const storeCategories = [
 
 <body class="pb-28 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased">
 
-  <!-- TOP STICKY HEADER (IDENTICAL TO GROCERY PAGE) -->
+  <!-- TOP STICKY HEADER -->
   <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3.5 shadow-xs flex items-center justify-between">
     <div class="flex items-center gap-3">
       <a href="/grocery" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
@@ -166,8 +166,6 @@ const storeCategories = [
 
       <!-- Store Contact & Meta Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-bold text-slate-600">
-        
-        <!-- Address -->
         <div class="flex items-center gap-2.5 bg-slate-50 p-3 rounded-2xl border border-slate-100">
           <span class="material-symbols-outlined text-purpleBrand text-lg shrink-0">location_on</span>
           <div class="overflow-hidden">
@@ -176,7 +174,6 @@ const storeCategories = [
           </div>
         </div>
 
-        <!-- Opening Hours -->
         <div class="flex items-center gap-2.5 bg-slate-50 p-3 rounded-2xl border border-slate-100">
           <span class="material-symbols-outlined text-purpleBrand text-lg shrink-0">schedule</span>
           <div>
@@ -185,7 +182,6 @@ const storeCategories = [
           </div>
         </div>
 
-        <!-- Phone Number -->
         <div class="flex items-center gap-2.5 bg-slate-50 p-3 rounded-2xl border border-slate-100">
           <span class="material-symbols-outlined text-purpleBrand text-lg shrink-0">call</span>
           <div>
@@ -193,20 +189,36 @@ const storeCategories = [
             <a id="store-phone-link" href="tel:+919823045678" class="text-purpleBrand font-black hover:underline">+91 98230 45678</a>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- STICKY SEARCH & SORTING BAR (IDENTICAL TO GROCERY PAGE) -->
-    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md p-4 rounded-3xl border border-slate-100 shadow-sm space-y-3">
+    <!-- ==================== DEDICATED STORE SEARCH BAR ==================== -->
+    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md p-4 rounded-3xl border border-slate-100 shadow-md space-y-3">
       
-      <!-- Search Inside Store -->
-      <div class="flex items-center gap-2 bg-slate-100 rounded-2xl px-4 py-2.5 border border-slate-200/80 focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
-        <span class="material-symbols-outlined text-slate-400">search</span>
-        <input type="text" id="store-search-input" placeholder="Search items inside this store..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
-        <button id="clear-store-search-btn" class="hidden text-slate-400 hover:text-slate-600">
-          <span class="material-symbols-outlined text-lg">close</span>
+      <!-- Store Search Label Header -->
+      <div class="flex items-center justify-between text-xs font-black text-slate-700">
+        <div class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-purpleBrand animate-ping"></span>
+          <span id="store-search-label-name" class="uppercase tracking-wider text-purpleBrand">Searching ONLY inside Sai Jeevan Super Mall</span>
+        </div>
+        <span class="text-[10px] text-slate-400 font-bold hidden sm:inline">Instant Real-time Filter • No Reload</span>
+      </div>
+
+      <!-- Dedicated Search Input Box -->
+      <div class="relative flex items-center gap-2 bg-slate-100 rounded-2xl px-4 py-3 border-2 border-purple-100 focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white focus-within:border-purpleBrand transition-all">
+        <span class="material-symbols-outlined text-purpleBrand text-xl">search</span>
+        <input type="text" id="store-search-input" placeholder="Search items inside this store (e.g. Milk, Oil, Atta, Rice)..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-900 placeholder-slate-400" autocomplete="off" />
+        
+        <button id="clear-store-search-btn" class="hidden px-2 py-1 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-black transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm">close</span>
+          <span>Clear</span>
         </button>
+      </div>
+
+      <!-- Live Search Results Feedback Banner -->
+      <div id="store-search-feedback" class="hidden flex items-center justify-between bg-purple-50 border border-purple-200 px-3.5 py-2 rounded-2xl text-xs font-extrabold text-purple-900 animate-in fade-in">
+        <span id="store-search-feedback-text">Searching inside store...</span>
+        <button id="store-search-feedback-clear" class="text-purpleBrand hover:underline text-[11px] font-black">Reset Search</button>
       </div>
 
       <!-- Filter Pills & Sorting Dropdown -->
@@ -228,7 +240,7 @@ const storeCategories = [
       </div>
     </div>
 
-    <!-- MAIN STORE CATALOG LAYOUT (IDENTICAL TO GROCERY PAGE WITH SIDEBAR & GRID) -->
+    <!-- MAIN STORE CATALOG LAYOUT -->
     <div class="py-2 md:flex md:gap-6">
       
       <!-- Mobile Categories Horizontal Bar -->
@@ -277,11 +289,10 @@ const storeCategories = [
             const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
             const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
             const stockQty = p.stock || 24;
-            const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
             const nameSafe = name.replace(/"/g, '&quot;');
 
             return (
-              <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden p-3" data-id={id} data-name={nameSafe} data-price={sp} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
+              <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden p-3" data-id={id} data-name={nameSafe} data-price={sp} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand}>
 
                 <!-- FAVOURITE BUTTON -->
                 <button class="fav-btn absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 flex items-center justify-center text-slate-400 hover:text-red-500 hover:scale-110 active:scale-95 transition-all shadow-xs" data-id={id} title="Add to Favourites">
@@ -374,7 +385,7 @@ const storeCategories = [
 
   <Switcher />
 
-  <!-- CLIENT-SIDE STORE PROFILE LOGIC -->
+  <!-- CLIENT-SIDE DEDICATED STORE SEARCH LOGIC -->
   <script is:inline>
     const storeRegistry = {
       'sai-jeevan': {
@@ -388,7 +399,8 @@ const storeCategories = [
         deliveryBy: 'Bhusawal Connect',
         logo: '🏬',
         cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1200&q=80',
-        badge: 'TOP RATED SUPERSTORE'
+        badge: 'TOP RATED SUPERSTORE',
+        categories: ['Fruits & Vegetables', 'Dairy & Breakfast', 'Grocery Staples', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
       },
       'central-supermarket': {
         id: 'central-supermarket',
@@ -401,7 +413,8 @@ const storeCategories = [
         deliveryBy: 'Bhusawal Connect',
         logo: '🏬',
         cover: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
-        badge: 'FEATURED PARTNER'
+        badge: 'FEATURED PARTNER',
+        categories: ['Grocery Staples', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
       },
       'fresh-green-mart': {
         id: 'fresh-green-mart',
@@ -414,7 +427,8 @@ const storeCategories = [
         deliveryBy: 'Bhusawal Connect',
         logo: '🥦',
         cover: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1200&q=80',
-        badge: 'FARM FRESH'
+        badge: 'FARM FRESH',
+        categories: ['Fruits & Vegetables', 'Dairy & Breakfast', 'Grocery Staples']
       },
       'dinshaws-dairy-hub': {
         id: 'dinshaws-dairy-hub',
@@ -427,7 +441,8 @@ const storeCategories = [
         deliveryBy: 'Bhusawal Connect',
         logo: '🥛',
         cover: 'https://images.unsplash.com/photo-1528751014936-863e6e7a319c?auto=format&fit=crop&w=1200&q=80',
-        badge: 'DAIRY SPECIALIST'
+        badge: 'DAIRY SPECIALIST',
+        categories: ['Dairy & Breakfast', 'Instant & Frozen Foods', 'Beverages']
       },
       'khandesh-agro-spices': {
         id: 'khandesh-agro-spices',
@@ -440,7 +455,8 @@ const storeCategories = [
         deliveryBy: 'Bhusawal Connect',
         logo: '🌾',
         cover: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=80',
-        badge: 'LOCAL TRADITIONAL'
+        badge: 'LOCAL TRADITIONAL',
+        categories: ['Grocery Staples', 'Instant & Frozen Foods']
       },
       'city-organic-daily': {
         id: 'city-organic-daily',
@@ -453,7 +469,8 @@ const storeCategories = [
         deliveryBy: 'Bhusawal Connect',
         logo: '✨',
         cover: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=80',
-        badge: 'HEALTH & ESSENTIALS'
+        badge: 'HEALTH & ESSENTIALS',
+        categories: ['Personal Care', 'Home Cleaning & Household', 'Baby, Health & Specialty', 'Snacks & Confectionery']
       }
     };
 
@@ -496,9 +513,18 @@ const storeCategories = [
       document.getElementById('store-badge-top').textContent = store.badge;
       document.getElementById('store-logo-box').textContent = store.logo;
       document.getElementById('store-cover-img').src = store.cover;
-      document.getElementById('store-search-input').placeholder = `Search complete catalog inside ${store.name}...`;
 
-      // Fetch Full Store Catalog Data
+      const searchLabelName = document.getElementById('store-search-label-name');
+      if (searchLabelName) {
+        searchLabelName.textContent = `SEARCHING ONLY INSIDE ${store.name.toUpperCase()}`;
+      }
+
+      const storeSearchInput = document.getElementById('store-search-input');
+      if (storeSearchInput) {
+        storeSearchInput.placeholder = `Search items inside ${store.name} (e.g. Milk, Oil, Atta, Rice)...`;
+      }
+
+      // Fetch Full Catalog Data
       let allCatalog = [];
       try {
         const res = await fetch('/grocery_catalog.json');
@@ -507,7 +533,18 @@ const storeCategories = [
         console.error("Failed to load catalog", e);
       }
 
-      let storeCatalog = allCatalog; // Full store catalog
+      // Scope catalog strictly to this store
+      let storeCatalog = allCatalog;
+      if (store.categories && store.categories.length > 0) {
+        const allowedCats = store.categories.map(c => c.toLowerCase());
+        const scoped = allCatalog.filter(p => {
+          const cat = (p.Category || '').toLowerCase();
+          return allowedCats.some(ac => cat.includes(ac) || ac.includes(cat));
+        });
+        if (scoped.length > 100) {
+          storeCatalog = scoped;
+        }
+      }
 
       let currentQuery = '';
       let activeCategory = 'All Products';
@@ -535,18 +572,35 @@ const storeCategories = [
         const grid = document.getElementById('store-products-grid');
         const countLabel = document.getElementById('store-product-count');
         const loadMoreBtn = document.getElementById('store-load-more-btn');
+        const feedbackBox = document.getElementById('store-search-feedback');
+        const feedbackText = document.getElementById('store-search-feedback-text');
+        const clearBtn = document.getElementById('clear-store-search-btn');
         const wishlist = getWishlist();
 
         let filtered = storeCatalog;
 
-        // Search Query inside store
+        // INSTANT SEARCH QUERY INSIDE THIS STORE ONLY
         if (currentQuery) {
+          const queryTerms = currentQuery.split(/\s+/).filter(Boolean);
+          
           filtered = filtered.filter(p => {
             const name = (p["Product Name"] || '').toLowerCase();
             const cat = (p.Category || '').toLowerCase();
             const brand = (p["Brand Name"] || '').toLowerCase();
-            return name.includes(currentQuery) || cat.includes(currentQuery) || brand.includes(currentQuery);
+            const fullText = `${name} ${cat} ${brand}`;
+
+            // Check if every search term matches inside this store item
+            return queryTerms.every(term => fullText.includes(term));
           });
+
+          if (feedbackBox && feedbackText) {
+            feedbackBox.classList.remove('hidden');
+            feedbackText.innerHTML = `Showing results for <span class="text-purpleBrand font-black">"${currentQuery}"</span> in <span class="font-black text-slate-900">${store.name}</span> (${filtered.length} item${filtered.length === 1 ? '' : 's'})`;
+          }
+          if (clearBtn) clearBtn.classList.remove('hidden');
+        } else {
+          if (feedbackBox) feedbackBox.classList.add('hidden');
+          if (clearBtn) clearBtn.classList.add('hidden');
         }
 
         // Granular Category Filter
@@ -597,7 +651,25 @@ const storeCategories = [
         }
 
         if (!filtered || filtered.length === 0) {
-          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No products found matching inside ${store.name}.</div>`;
+          grid.innerHTML = `
+            <div class="col-span-full py-16 text-center space-y-3 bg-white rounded-3xl border border-slate-100 p-8 shadow-xs">
+              <div class="w-16 h-16 rounded-full bg-purple-50 text-purpleBrand flex items-center justify-center mx-auto text-3xl">
+                🔍
+              </div>
+              <h3 class="text-base font-black text-slate-900 font-display">No items found for "${currentQuery}"</h3>
+              <p class="text-xs font-bold text-slate-500 max-w-md mx-auto">No products matching "${currentQuery}" were found inside ${store.name}. Try searching for "Milk", "Oil", "Atta", or "Rice".</p>
+              <button id="reset-empty-search-btn" class="px-5 py-2.5 bg-purpleBrand text-white font-black text-xs rounded-xl shadow-md hover:bg-purpleDark transition-all">
+                Reset Store Search
+              </button>
+            </div>
+          `;
+
+          document.getElementById('reset-empty-search-btn')?.addEventListener('click', () => {
+            if (storeSearchInput) storeSearchInput.value = '';
+            currentQuery = '';
+            renderStoreProducts();
+          });
+
           if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
           return;
         }
@@ -819,24 +891,24 @@ const storeCategories = [
         });
       }
 
-      // Search Input Listener
-      const searchInput = document.getElementById('store-search-input');
+      // INSTANT REALTIME INPUT EVENT LISTENERS (NO PAGE RELOAD)
       const clearSearchBtn = document.getElementById('clear-store-search-btn');
+      const feedbackClear = document.getElementById('store-search-feedback-clear');
 
-      searchInput?.addEventListener('input', (e) => {
+      storeSearchInput?.addEventListener('input', (e) => {
         currentQuery = e.target.value.trim().toLowerCase();
-        if (currentQuery) {
-          clearSearchBtn?.classList.remove('hidden');
-        } else {
-          clearSearchBtn?.classList.add('hidden');
-        }
         renderStoreProducts();
       });
 
       clearSearchBtn?.addEventListener('click', () => {
-        if (searchInput) searchInput.value = '';
+        if (storeSearchInput) storeSearchInput.value = '';
         currentQuery = '';
-        clearSearchBtn?.classList.add('hidden');
+        renderStoreProducts();
+      });
+
+      feedbackClear?.addEventListener('click', () => {
+        if (storeSearchInput) storeSearchInput.value = '';
+        currentQuery = '';
         renderStoreProducts();
       });
 
