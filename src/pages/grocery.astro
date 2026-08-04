@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Switcher from '../components/Switcher.astro';
 
-// Read restored original database at build-time
+// Read master grocery catalog at build time
 const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
 let catalog = [];
 try {
@@ -29,17 +29,17 @@ const categoriesList = [
 // Featured Partner Stores in Bhusawal Marketplace
 const partnerStores = [
   {
-    id: 'all',
-    name: 'All Stores & Catalog',
-    tagline: 'Bhusawal Connect Direct Superstore',
-    location: 'Express Delivery Across Bhusawal',
-    badge: 'MASTER CATALOG',
-    rating: '4.9 ★',
+    id: 'sai-jeevan',
+    name: 'Sai Jeevan Super Mall',
+    tagline: 'Premium Supermarket & Daily Needs Mart',
+    location: 'Station Road, Bhusawal',
+    badge: 'TOP RATED SUPERSTORE',
+    rating: '4.8 ★',
     eta: '10 MINS',
-    icon: '🛒',
+    icon: '🏬',
     image: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=500&q=80',
     color: 'border-purpleBrand bg-purple-50 text-purpleBrand',
-    categories: ['all']
+    categories: ['Fruits & Vegetables', 'Dairy & Breakfast', 'Grocery Staples', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
   },
   {
     id: 'central-supermarket',
@@ -117,7 +117,7 @@ const initialProducts = catalog.slice(0, 48);
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bhusawal Connect | Grocery Marketplace & Superstore</title>
+  <title>Bhusawal Connect | Grocery Marketplace & Partner Superstores</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
   <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
@@ -218,7 +218,7 @@ const initialProducts = catalog.slice(0, 48);
       <div class="relative z-10 max-w-xl space-y-1">
         <span class="px-2.5 py-0.5 bg-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-wider rounded-full inline-block mb-1">BHUSAWAL MARKETPLACE</span>
         <h2 class="text-xl sm:text-2xl font-black font-display leading-tight">25,500+ Items from Local Partner Stores</h2>
-        <p class="text-xs text-purple-100 font-semibold">Shop from top Bhusawal partner supermarkets or order directly from master catalog</p>
+        <p class="text-xs text-purple-100 font-semibold">Shop from top Bhusawal partner superstores or order directly from master catalog</p>
       </div>
     </div>
   </div>
@@ -231,25 +231,17 @@ const initialProducts = catalog.slice(0, 48);
           <span>🏬 Featured Partner Stores</span>
           <span class="text-[10px] font-black text-purpleBrand bg-purple-100 px-2 py-0.5 rounded-full border border-purple-200 uppercase">Bhusawal Marketplace</span>
         </h2>
-        <p class="text-xs text-slate-500 font-medium">Browse products directly from your favorite local partner store</p>
+        <p class="text-xs text-slate-500 font-medium">Click any store card to open its dedicated store profile and storefront</p>
       </div>
-      <button id="reset-store-filter-btn" class="hidden text-xs font-black text-purpleBrand hover:text-purpleDark flex items-center gap-1 bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-200 transition-all active:scale-95">
-        <span class="material-symbols-outlined text-sm">storefront</span>
-        <span>Show All Stores</span>
-      </button>
     </div>
 
     <!-- CAROUSEL CONTAINER -->
     <div class="flex gap-3.5 overflow-x-auto no-scrollbar pb-2 pt-1 scroll-smooth" id="partner-stores-carousel">
       {partnerStores.map(store => (
-        <div 
+        <a 
+          href={`/store_profile?store=${store.id}`}
           class="partner-store-card flex-shrink-0 w-64 sm:w-72 bg-white rounded-3xl p-3.5 border-2 border-slate-100 shadow-xs hover:shadow-xl hover:border-purpleBrand transition-all duration-300 cursor-pointer relative group flex flex-col justify-between"
           data-store-id={store.id}
-          data-store-name={store.name}
-          data-store-tagline={store.tagline}
-          data-store-location={store.location}
-          data-store-icon={store.icon}
-          data-store-categories={JSON.stringify(store.categories)}
         >
           <!-- Store Image & Badge Header -->
           <div class="relative w-full h-28 rounded-2xl overflow-hidden mb-3 bg-slate-100">
@@ -289,36 +281,12 @@ const initialProducts = catalog.slice(0, 48);
               <span>{store.eta} ETA</span>
             </span>
 
-            <button type="button" class="store-browse-btn px-3 py-1 bg-purple-50 group-hover:bg-purpleBrand text-purpleBrand group-hover:text-white text-[10px] font-black rounded-xl border border-purple-200 transition-all">
-              Browse Store →
-            </button>
+            <span class="store-browse-btn px-3 py-1 bg-purple-50 group-hover:bg-purpleBrand text-purpleBrand group-hover:text-white text-[10px] font-black rounded-xl border border-purple-200 transition-all">
+              View Store Profile →
+            </span>
           </div>
-        </div>
+        </a>
       ))}
-    </div>
-  </div>
-
-  <!-- ACTIVE PARTNER STORE CONTEXT BANNER (Appears when a store is selected) -->
-  <div id="active-store-banner" class="hidden px-4 pt-4">
-    <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-950 text-white rounded-3xl p-4 sm:p-5 shadow-lg border border-purple-700/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md text-white flex items-center justify-center text-2xl shrink-0 border border-white/20" id="active-store-icon">
-          🏬
-        </div>
-        <div class="space-y-0.5">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded uppercase tracking-wider">ACTIVE MARKETPLACE STORE</span>
-            <span class="text-xs text-purple-200 font-bold" id="active-store-location">Bhusawal</span>
-          </div>
-          <h2 class="text-lg font-black font-display text-white" id="active-store-title">Store Name</h2>
-          <p class="text-xs text-purple-200 font-medium" id="active-store-subtitle">Showing products exclusively available from this partner store</p>
-        </div>
-      </div>
-
-      <button id="clear-active-store-btn" type="button" class="px-4 py-2.5 bg-white text-purpleBrand hover:bg-purple-50 text-xs font-black rounded-2xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 shrink-0 border border-white/30">
-        <span class="material-symbols-outlined text-sm">storefront</span>
-        <span>View All Stores Catalog</span>
-      </button>
     </div>
   </div>
 
@@ -354,7 +322,7 @@ const initialProducts = catalog.slice(0, 48);
     <!-- Product Grid Section -->
     <main class="flex-1 space-y-4">
       <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">
-        <h2 id="active-category-title" class="text-lg font-black font-display text-slate-900">All Products</h2>
+        <h2 id="active-category-title" class="text-lg font-black font-display text-slate-900">All Products Catalog</h2>
         <span id="product-count-label" class="text-xs font-bold text-slate-400">Loading catalog...</span>
       </div>
 
@@ -375,17 +343,12 @@ const initialProducts = catalog.slice(0, 48);
           return (
             <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-3" data-id={id} data-name={nameSafe} data-price={mrp} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
 
-              <!-- Image Frame -->
               <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
                 {isOutOfStock && (
                   <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
                     <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
                   </div>
                 )}
-
-                <button class="fav-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
-                  <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
-                </button>
 
                 <img src={img} alt={name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
 
@@ -396,7 +359,6 @@ const initialProducts = catalog.slice(0, 48);
                 </div>
               </div>
 
-              <!-- Product Details -->
               <div class="flex flex-col flex-1 px-0.5">
                 <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">{brand}</span>
                 <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">{name}</h3>
@@ -405,15 +367,11 @@ const initialProducts = catalog.slice(0, 48);
                 <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
                   <span class="text-sm font-black text-slate-900">MRP ₹{mrp}</span>
 
-                  {isOutOfStock ? (
-                    <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[10px] font-extrabold rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
-                  ) : (
-                    <div class="cart-action-container" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
-                      <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
-                        + ADD
-                      </button>
-                    </div>
-                  )}
+                  <div class="cart-action-container" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
+                    <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
+                      + ADD
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -422,24 +380,13 @@ const initialProducts = catalog.slice(0, 48);
         })}
       </div>
 
-      <!-- LOAD MORE & INFINITE SCROLL OBSERVER -->
+      <!-- LOAD MORE -->
       <div id="load-more-container" class="py-8 text-center space-y-2">
         <button id="load-more-btn" class="px-8 py-3 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all">
           Load More Products
         </button>
         <p id="pagination-status-text" class="text-xs font-bold text-slate-400"></p>
       </div>
-
-      <!-- RECENTLY VIEWED PRODUCTS SECTION -->
-      <section id="recently-viewed-section" class="hidden pt-6 border-t border-slate-200/80 space-y-3">
-        <div class="flex items-center justify-between">
-          <h3 class="text-base font-black font-display text-slate-900">Recently Viewed Items</h3>
-          <span class="text-xs font-bold text-slate-400">History</span>
-        </div>
-        <div id="recently-viewed-grid" class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
-          <!-- Dynamically populated -->
-        </div>
-      </section>
 
     </main>
   </div>
@@ -461,35 +408,6 @@ const initialProducts = catalog.slice(0, 48);
     </a>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL -->
-  <div id="product-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto relative animate-in fade-in slide-in-from-bottom-4">
-      <button id="close-modal-btn" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-
-      <div class="h-56 w-full bg-slate-50 rounded-2xl flex items-center justify-center p-4 border border-slate-100">
-        <img loading="lazy" id="modal-img" src="" alt="" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-      </div>
-
-      <div class="space-y-1">
-        <span id="modal-cat" class="text-xs font-black text-purpleBrand uppercase tracking-wider">Category</span>
-        <h3 id="modal-title" class="text-lg font-black font-display text-slate-900">Product Title</h3>
-        <p id="modal-unit" class="text-xs font-bold text-slate-500">Unit Size</p>
-        <p id="modal-desc" class="text-xs text-slate-600 pt-2 leading-relaxed border-t border-slate-100 mt-2">Description</p>
-      </div>
-
-      <div class="flex items-center justify-between pt-3 border-t border-slate-100">
-        <div>
-          <span class="text-xl font-black text-slate-900" id="modal-price">₹0</span>
-        </div>
-        <button id="modal-add-btn" class="px-6 py-2.5 bg-purpleBrand text-white font-black text-sm rounded-xl shadow-md hover:bg-purpleDark active:scale-95 transition-all">
-          + ADD TO CART
-        </button>
-      </div>
-    </div>
-  </div>
-
   <Switcher />
 
   <!-- CLIENT-SIDE CATALOG ENGINE -->
@@ -503,7 +421,6 @@ const initialProducts = catalog.slice(0, 48);
         console.error("Failed to load grocery catalog", e);
       }
 
-      // 1. Cart Bar State
       function updateCartBar() {
         try {
           const cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
@@ -526,10 +443,8 @@ const initialProducts = catalog.slice(0, 48);
           }
         } catch(e) {}
       }
-
       updateCartBar();
 
-      // 2. Quantity & Cart Controller
       function syncCartActionButtons() {
         let cart = [];
         try { cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); } catch(e) {}
@@ -561,7 +476,6 @@ const initialProducts = catalog.slice(0, 48);
           }
         });
 
-        // Add Handlers
         document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
@@ -582,7 +496,6 @@ const initialProducts = catalog.slice(0, 48);
           };
         });
 
-        // Plus Handlers
         document.querySelectorAll('.qty-plus-btn').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
@@ -600,7 +513,6 @@ const initialProducts = catalog.slice(0, 48);
           };
         });
 
-        // Minus Handlers
         document.querySelectorAll('.qty-minus-btn').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
@@ -621,147 +533,18 @@ const initialProducts = catalog.slice(0, 48);
         });
       }
 
-      function attachAddToCartListeners() {
-        syncCartActionButtons();
-      }
-      attachAddToCartListeners();
-
-      // 3. Recently Viewed System
-      function trackRecentlyViewed(item) {
-        let history = [];
-        try { history = JSON.parse(localStorage.getItem('bhusawal_recently_viewed') || '[]'); } catch(e) {}
-        history = history.filter(i => i.id !== item.id);
-        history.unshift(item);
-        if (history.length > 10) history = history.slice(0, 10);
-        localStorage.setItem('bhusawal_recently_viewed', JSON.stringify(history));
-        renderRecentlyViewed();
-      }
-
-      function renderRecentlyViewed() {
-        let history = [];
-        try { history = JSON.parse(localStorage.getItem('bhusawal_recently_viewed') || '[]'); } catch(e) {}
-        const section = document.getElementById('recently-viewed-section');
-        const grid = document.getElementById('recently-viewed-grid');
-
-        if (!history || history.length === 0) {
-          section?.classList.add('hidden');
-          return;
-        }
-
-        section?.classList.remove('hidden');
-        grid.innerHTML = history.map(item => `
-          <div class="flex-shrink-0 w-36 bg-white rounded-2xl p-2.5 border border-slate-100 shadow-xs hover:border-purple-200 transition-all cursor-pointer" onclick="window.openModalById('${item.id}')">
-            <div class="w-full h-24 bg-slate-50 rounded-xl p-1 flex items-center justify-center overflow-hidden mb-1.5">
-              <img loading="lazy" src="${item.img}" alt="${item.name}" class="max-h-full max-w-full object-contain" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-            </div>
-            <h4 class="text-xs font-bold text-slate-800 truncate">${item.name}</h4>
-            <p class="text-xs font-black text-slate-900 mt-0.5">MRP ₹${item.mrp}</p>
-          </div>
-        `).join('');
-      }
-
-      renderRecentlyViewed();
-
-      // 4. Product Detail Modal
-      const modal = document.getElementById('product-modal');
-      const modalImg = document.getElementById('modal-img');
-      const modalTitle = document.getElementById('modal-title');
-      const modalCat = document.getElementById('modal-cat');
-      const modalUnit = document.getElementById('modal-unit');
-      const modalDesc = document.getElementById('modal-desc');
-      const modalPrice = document.getElementById('modal-price');
-      const modalAddBtn = document.getElementById('modal-add-btn');
-
-      window.openModalById = function(id) {
-        const p = catalogData.find(i => (i["Product ID"] || i.ProductID || i.id) === id);
-        if (p) {
-          openProductModal({
-            id: id,
-            name: (p["Product Name"] || p.name).split(" (Batch")[0],
-            mrp: parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50),
-            img: p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg',
-            pack: p["Pack Size"] || p.pack || '1 Unit',
-            cat: p.Category || 'Grocery',
-            desc: p.desc || p.Description || 'Fresh high-quality item sourced directly from trusted Bhusawal suppliers.'
-          });
-        }
-      };
-
-      function openProductModal(item) {
-        trackRecentlyViewed(item);
-
-        modalImg.src = item.img;
-        modalTitle.textContent = item.name;
-        modalCat.textContent = item.cat;
-        modalUnit.textContent = item.pack;
-        modalDesc.textContent = item.desc;
-        modalPrice.textContent = 'MRP ₹' + item.mrp;
-
-        modalAddBtn.onclick = () => {
-          let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-          const existing = cart.find(i => i.id === item.id);
-          if (existing) {
-            existing.quantity = (existing.quantity || 1) + 1;
-          } else {
-            cart.push({ id: item.id, name: item.name, price: item.mrp, mrp: item.mrp, image: item.img, quantity: 1, cat: 'Grocery' });
-          }
-          localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-          updateCartBar();
-          syncCartActionButtons();
-          modal.classList.add('hidden');
-        };
-
-        modal.classList.remove('hidden');
-      }
-
-      function attachModalClickListeners() {
-        document.querySelectorAll('.product-card').forEach(card => {
-          card.onclick = (e) => {
-            if (e.target.closest('.add-to-cart-btn') || e.target.closest('.qty-minus-btn') || e.target.closest('.qty-plus-btn') || e.target.closest('.fav-btn')) {
-              return;
-            }
-            openProductModal({
-              id: card.dataset.id,
-              name: card.dataset.name,
-              mrp: card.dataset.price,
-              img: card.dataset.img,
-              pack: card.dataset.unit,
-              cat: card.dataset.cat,
-              desc: card.dataset.desc || 'Fresh high-quality item sourced directly from trusted Bhusawal suppliers.'
-            });
-          };
-        });
-      }
-      attachModalClickListeners();
-
-      document.getElementById('close-modal-btn')?.addEventListener('click', () => {
-        modal.classList.add('hidden');
-      });
-
-      // 5. Client Search, Category, Store Marketplace, Filter, Sorting & Infinite Scroll Engine
       const searchInput = document.getElementById('grocery-search-input');
       const clearBtn = document.getElementById('clear-search-btn');
       const grid = document.getElementById('grocery-products-grid');
       const countLabel = document.getElementById('product-count-label');
       const titleLabel = document.getElementById('active-category-title');
       const loadMoreBtn = document.getElementById('load-more-btn');
-      const paginationStatusText = document.getElementById('pagination-status-text');
       const sortSelect = document.getElementById('sort-select');
-
-      const activeStoreBanner = document.getElementById('active-store-banner');
-      const activeStoreTitle = document.getElementById('active-store-title');
-      const activeStoreLocation = document.getElementById('active-store-location');
-      const activeStoreSubtitle = document.getElementById('active-store-subtitle');
-      const activeStoreIcon = document.getElementById('active-store-icon');
-      const clearActiveStoreBtn = document.getElementById('clear-active-store-btn');
-      const resetStoreFilterBtn = document.getElementById('reset-store-filter-btn');
 
       let currentQuery = '';
       let currentCategory = 'All Products';
       let currentFilter = 'all';
       let currentSort = 'popular';
-      let currentStore = 'all';
-      let currentStoreCategories = ['all'];
 
       let currentFiltered = [];
       let currentLimit = 48;
@@ -769,18 +552,16 @@ const initialProducts = catalog.slice(0, 48);
 
       function renderProducts() {
         if (!currentFiltered || currentFiltered.length === 0) {
-          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No products found matching your search or store criteria.</div>`;
+          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No products found.</div>`;
           if (countLabel) countLabel.textContent = '0 Products';
           if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
-          if (paginationStatusText) paginationStatusText.textContent = '';
           return;
         }
 
         const visibleItems = currentFiltered.slice(0, currentLimit);
         
         if (countLabel) {
-          const storeTag = currentStore !== 'all' ? ` (${activeStoreTitle.textContent})` : '';
-          countLabel.textContent = `Showing ${visibleItems.length.toLocaleString()} of ${currentFiltered.length.toLocaleString()} Products${storeTag}`;
+          countLabel.textContent = `Showing ${visibleItems.length.toLocaleString()} of ${currentFiltered.length.toLocaleString()} Products (${catalogData.length.toLocaleString()} Total)`;
         }
 
         grid.innerHTML = visibleItems.map(p => {
@@ -791,7 +572,6 @@ const initialProducts = catalog.slice(0, 48);
           const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
           const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50);
           const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-          const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
           const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
           const nameSafe = name.replace(/"/g, '&quot;');
 
@@ -799,16 +579,6 @@ const initialProducts = catalog.slice(0, 48);
             <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-3" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-brand="${brand}" data-desc="${descSafe}">
 
               <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
-                ${isOutOfStock ? `
-                  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
-                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
-                  </div>
-                ` : ''}
-
-                <button class="fav-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 hover:border-rose-200 active:scale-90 transition-all z-10 shadow-xs" onclick="event.stopPropagation(); this.classList.toggle('text-rose-500'); this.classList.toggle('bg-rose-50'); this.classList.toggle('text-slate-400'); this.querySelector('span').textContent = this.classList.contains('text-rose-500') ? 'favorite' : 'favorite_border';">
-                  <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">favorite_border</span>
-                </button>
-
                 <img src="${img}" alt="${nameSafe}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
 
                 <div class="absolute bottom-2 left-2 z-10">
@@ -826,15 +596,11 @@ const initialProducts = catalog.slice(0, 48);
                 <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
                   <span class="text-sm font-black text-slate-900">MRP ₹${mrp}</span>
 
-                  ${isOutOfStock ? `
-                    <button disabled class="px-3 py-1.5 bg-slate-100 text-slate-400 text-[10px] font-extrabold rounded-xl border border-slate-200 cursor-not-allowed">UNAVAILABLE</button>
-                  ` : `
-                    <div class="cart-action-container" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
-                      <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
-                        + ADD
-                      </button>
-                    </div>
-                  `}
+                  <div class="cart-action-container" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
+                    <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
+                      + ADD
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -845,68 +611,32 @@ const initialProducts = catalog.slice(0, 48);
         if (currentLimit < currentFiltered.length) {
           if (loadMoreBtn) {
             loadMoreBtn.classList.remove('hidden');
-            const remaining = currentFiltered.length - currentLimit;
-            loadMoreBtn.textContent = `Load More (${Math.min(BATCH_SIZE, remaining).toLocaleString()} more)`;
-          }
-          if (paginationStatusText) {
-            paginationStatusText.textContent = `Showing ${visibleItems.length.toLocaleString()} of ${currentFiltered.length.toLocaleString()} products`;
+            loadMoreBtn.textContent = `Load More (${(currentFiltered.length - currentLimit).toLocaleString()} remaining)`;
           }
         } else {
           if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
-          if (paginationStatusText) {
-            paginationStatusText.textContent = currentFiltered.length > 0 
-              ? `All ${currentFiltered.length.toLocaleString()} matching products loaded`
-              : '';
-          }
         }
 
-        attachAddToCartListeners();
-        attachModalClickListeners();
+        syncCartActionButtons();
       }
 
       function filterCatalog() {
         if (!catalogData || catalogData.length === 0) return;
-
         let res = catalogData;
 
-        # 1. Partner Store Filter
-        if (currentStore && currentStore !== 'all' && currentStoreCategories && !currentStoreCategories.includes('all')) {
-          res = res.filter(p => {
-            const cat = p.Category || 'Grocery';
-            return currentStoreCategories.includes(cat);
-          });
-        }
-
-        // 2. Search Query
         if (currentQuery) {
           const q = currentQuery;
           res = res.filter(p => {
             const name = (p["Product Name"] || '').toLowerCase();
             const cat = (p.Category || '').toLowerCase();
             const brand = (p["Brand Name"] || '').toLowerCase();
-            const kw = (p["Search Keywords"] || '').toLowerCase();
-            return name.includes(q) || cat.includes(q) || brand.includes(q) || kw.includes(q);
+            return name.includes(q) || cat.includes(q) || brand.includes(q);
           });
         }
 
-        // 3. Category Filter
         if (currentCategory && currentCategory !== 'All Products') {
           const target = currentCategory.toLowerCase();
           res = res.filter(p => (p.Category || '').toLowerCase() === target);
-        }
-
-        // 4. In Stock Filter
-        if (currentFilter === 'instock') {
-          res = res.filter(p => !(p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock'));
-        }
-
-        // 5. Sorting
-        if (currentSort === 'low-high') {
-          res.sort((a, b) => parseFloat(a.MRP || a.mrp || 50) - parseFloat(b.MRP || b.mrp || 50));
-        } else if (currentSort === 'high-low') {
-          res.sort((a, b) => parseFloat(b.MRP || b.mrp || 50) - parseFloat(a.MRP || a.mrp || 50));
-        } else if (currentSort === 'name') {
-          res.sort((a, b) => (a["Product Name"] || '').localeCompare(b["Product Name"] || ''));
         }
 
         currentFiltered = res;
@@ -914,176 +644,29 @@ const initialProducts = catalog.slice(0, 48);
         renderProducts();
       }
 
-      // Partner Store Selection System
-      function selectPartnerStore(storeCard) {
-        const storeId = storeCard.dataset.storeId;
-        const storeName = storeCard.dataset.storeName;
-        const storeTagline = storeCard.dataset.storeTagline;
-        const storeLocation = storeCard.dataset.storeLocation;
-        const storeIcon = storeCard.dataset.storeIcon;
-        
-        try {
-          currentStoreCategories = JSON.parse(storeCard.dataset.storeCategories || '["all"]');
-        } catch(e) {
-          currentStoreCategories = ['all'];
-        }
-
-        currentStore = storeId;
-
-        // Highlight Store Card in Carousel
-        document.querySelectorAll('.partner-store-card').forEach(card => {
-          if (card.dataset.storeId === storeId) {
-            card.classList.add('border-purpleBrand', 'ring-2', 'ring-purpleBrand/30', 'scale-[1.02]');
-            card.classList.remove('border-slate-100');
-          } else {
-            card.classList.remove('border-purpleBrand', 'ring-2', 'ring-purpleBrand/30', 'scale-[1.02]');
-            card.classList.add('border-slate-100');
-          }
-        });
-
-        if (storeId === 'all') {
-          activeStoreBanner?.classList.add('hidden');
-          resetStoreFilterBtn?.classList.add('hidden');
-          if (titleLabel) titleLabel.textContent = currentCategory;
-        } else {
-          activeStoreBanner?.classList.remove('hidden');
-          resetStoreFilterBtn?.classList.remove('hidden');
-          if (activeStoreTitle) activeStoreTitle.textContent = storeName;
-          if (activeStoreLocation) activeStoreLocation.textContent = storeLocation;
-          if (activeStoreSubtitle) activeStoreSubtitle.textContent = storeTagline;
-          if (activeStoreIcon) activeStoreIcon.textContent = storeIcon;
-          if (titleLabel) titleLabel.textContent = `${storeName} Products`;
-        }
-
-        filterCatalog();
-      }
-
-      // Event Listeners for Partner Store Cards
-      document.querySelectorAll('.partner-store-card').forEach(card => {
-        card.addEventListener('click', () => {
-          selectPartnerStore(card);
-        });
-      });
-
-      clearActiveStoreBtn?.addEventListener('click', () => {
-        const allCard = document.querySelector('.partner-store-card[data-store-id="all"]');
-        if (allCard) selectPartnerStore(allCard);
-      });
-
-      resetStoreFilterBtn?.addEventListener('click', () => {
-        const allCard = document.querySelector('.partner-store-card[data-store-id="all"]');
-        if (allCard) selectPartnerStore(allCard);
-      });
-
-      // Load More Button Event
-      loadMoreBtn?.addEventListener('click', () => {
-        currentLimit += BATCH_SIZE;
-        renderProducts();
-      });
-
-      // Infinite Scroll Observer
-      if (loadMoreBtn) {
-        const observer = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting && currentLimit < currentFiltered.length) {
-            currentLimit += BATCH_SIZE;
-            renderProducts();
-          }
-        }, { rootMargin: '300px' });
-        observer.observe(loadMoreBtn);
-      }
-
-      // Search Inputs
       searchInput?.addEventListener('input', (e) => {
         currentQuery = e.target.value.trim().toLowerCase();
-        if (currentQuery) {
-          clearBtn.classList.remove('hidden');
-        } else {
-          clearBtn.classList.add('hidden');
-        }
+        if (currentQuery) clearBtn?.classList.remove('hidden');
+        else clearBtn?.classList.add('hidden');
         filterCatalog();
       });
 
       clearBtn?.addEventListener('click', () => {
-        searchInput.value = '';
+        if (searchInput) searchInput.value = '';
         currentQuery = '';
-        clearBtn.classList.add('hidden');
+        clearBtn?.classList.add('hidden');
         filterCatalog();
       });
 
-      // Sorting Listener
-      sortSelect?.addEventListener('change', (e) => {
-        currentSort = e.target.value;
-        filterCatalog();
-      });
-
-      // Highlight active category button
-      function setActiveCategoryBtn(activeCategory) {
-        document.querySelectorAll('.desktop-cat-btn').forEach(b => {
-          if (b.dataset.category === activeCategory) {
-            b.classList.add('bg-purple-50', 'text-purpleBrand', 'border-purpleBrand');
-          } else {
-            b.classList.remove('bg-purple-50', 'text-purpleBrand', 'border-purpleBrand');
-          }
-        });
-        document.querySelectorAll('.mobile-cat-btn').forEach(b => {
-          if (b.dataset.category === activeCategory) {
-            b.classList.add('bg-purpleBrand', 'text-white', 'border-purpleBrand');
-            b.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
-          } else {
-            b.classList.remove('bg-purpleBrand', 'text-white', 'border-purpleBrand');
-            b.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
-          }
-        });
-      }
-
-      // Category Click Handlers
       document.querySelectorAll('.desktop-cat-btn, .mobile-cat-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           currentCategory = btn.dataset.category || 'All Products';
-          titleLabel.textContent = currentStore !== 'all' ? `${activeStoreTitle.textContent} (${currentCategory})` : currentCategory;
-          setActiveCategoryBtn(currentCategory);
+          if (titleLabel) titleLabel.textContent = currentCategory;
           filterCatalog();
         });
       });
-
-      // Diet Filter Buttons
-      document.querySelectorAll('.diet-filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.querySelectorAll('.diet-filter-btn').forEach(b => {
-            b.classList.replace('bg-purpleBrand', 'bg-slate-100');
-            b.classList.replace('text-white', 'text-slate-700');
-          });
-          btn.classList.replace('bg-slate-100', 'bg-purpleBrand');
-          btn.classList.replace('text-slate-700', 'text-white');
-
-          currentFilter = btn.dataset.filter || 'all';
-          filterCatalog();
-        });
-      });
-
-      // URL Search Param Auto-fill
-      const urlParams = new URLSearchParams(window.location.search);
-      const searchParam = urlParams.get('search');
-      const catParam = urlParams.get('category');
-      const storeParam = urlParams.get('store');
-      
-      if (searchParam && searchInput) {
-        searchInput.value = searchParam;
-        currentQuery = searchParam.toLowerCase();
-        clearBtn.classList.remove('hidden');
-      }
-      if (catParam) {
-        currentCategory = catParam;
-        titleLabel.textContent = catParam;
-        setActiveCategoryBtn(catParam);
-      }
-      if (storeParam) {
-        const targetStoreCard = document.querySelector(`.partner-store-card[data-store-id="${storeParam}"]`);
-        if (targetStoreCard) selectPartnerStore(targetStoreCard);
-      }
 
       filterCatalog();
-      setActiveCategoryBtn(currentCategory);
     });
   </script>
 </body>
