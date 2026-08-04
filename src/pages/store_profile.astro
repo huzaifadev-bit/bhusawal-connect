@@ -14,6 +14,24 @@ try {
 
 // Initial server-rendered products
 const initialProducts = catalog.slice(0, 48);
+
+// Granular categories matching exact user requirements
+const storeCategories = [
+  { id: 'all', name: 'All Products', icon: '⚡' },
+  { id: 'atta', name: 'Atta & Flours', icon: '🌾' },
+  { id: 'rice', name: 'Rice & Grains', icon: '🍚' },
+  { id: 'oil', name: 'Oils & Ghee', icon: '🛢️' },
+  { id: 'dal', name: 'Dal & Pulses', icon: '🫘' },
+  { id: 'masala', name: 'Masala & Spices', icon: '🌶️' },
+  { id: 'snacks', name: 'Snacks & Namkeen', icon: '🍿' },
+  { id: 'drinks', name: 'Cold Drinks & Juices', icon: '🥤' },
+  { id: 'milk', name: 'Milk & Dairy', icon: '🥛' },
+  { id: 'icecream', name: 'Ice Cream & Desserts', icon: '🍦' },
+  { id: 'cleaning', name: 'Cleaning & Household', icon: '🧹' },
+  { id: 'personal', name: 'Personal Care', icon: '✨' },
+  { id: 'baby', name: 'Baby Care', icon: '👶' },
+  { id: 'stationery', name: 'Stationery & Supplies', icon: '✏️' },
+];
 ---
 
 <!DOCTYPE html>
@@ -21,7 +39,7 @@ const initialProducts = catalog.slice(0, 48);
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Partner Store Profile | Bhusawal Connect</title>
+  <title>Partner Store Catalog & Profile | Bhusawal Connect</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
   <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
@@ -61,8 +79,8 @@ const initialProducts = catalog.slice(0, 48);
 
 <body class="pb-28 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased">
 
-  <!-- TOP STICKY HEADER -->
-  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3 shadow-xs flex items-center justify-between">
+  <!-- TOP STICKY HEADER (IDENTICAL TO GROCERY PAGE) -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3.5 shadow-xs flex items-center justify-between">
     <div class="flex items-center gap-3">
       <a href="/grocery" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
         <span class="material-symbols-outlined text-xl">arrow_back</span>
@@ -70,8 +88,11 @@ const initialProducts = catalog.slice(0, 48);
       <div>
         <div class="flex items-center gap-1.5">
           <span class="px-2 py-0.5 rounded-md bg-purple-100 text-purpleBrand text-[10px] font-black uppercase tracking-wider">VERIFIED PARTNER STORE</span>
+          <h1 id="header-store-name" class="text-base font-black font-display text-slate-900 leading-tight">Partner Store</h1>
         </div>
-        <h1 id="header-store-name" class="text-base font-black font-display text-slate-900 leading-tight">Partner Store</h1>
+        <p id="header-store-location" class="text-[11px] text-slate-500 font-bold truncate max-w-[200px] sm:max-w-xs">
+          Bhusawal Marketplace • Express 10 MINS Delivery
+        </p>
       </div>
     </div>
 
@@ -87,7 +108,7 @@ const initialProducts = catalog.slice(0, 48);
     <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
     
     <div class="absolute top-4 left-4 right-4 flex items-center justify-between z-20">
-      <a href="/grocery" class="px-3 py-1.5 rounded-2xl bg-white/90 backdrop-blur-md text-slate-800 text-xs font-black flex items-center gap-1 shadow-lg hover:bg-white transition-all active:scale-95">
+      <a href="/grocery" class="px-3.5 py-1.5 rounded-2xl bg-white/90 backdrop-blur-md text-slate-800 text-xs font-black flex items-center gap-1.5 shadow-lg hover:bg-white transition-all active:scale-95">
         <span class="material-symbols-outlined text-sm">arrow_back</span>
         <span>Back to Grocery Marketplace</span>
       </a>
@@ -176,11 +197,11 @@ const initialProducts = catalog.slice(0, 48);
       </div>
     </div>
 
-    <!-- SEARCH INSIDE THIS STORE & CATEGORIES FILTER -->
-    <div class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-100 shadow-sm space-y-3">
+    <!-- STICKY SEARCH & SORTING BAR (IDENTICAL TO GROCERY PAGE) -->
+    <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md p-4 rounded-3xl border border-slate-100 shadow-sm space-y-3">
       
       <!-- Search Inside Store -->
-      <div class="flex items-center gap-2 bg-slate-100 rounded-2xl px-4 py-3 border border-slate-200/80 focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
+      <div class="flex items-center gap-2 bg-slate-100 rounded-2xl px-4 py-2.5 border border-slate-200/80 focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
         <span class="material-symbols-outlined text-slate-400">search</span>
         <input type="text" id="store-search-input" placeholder="Search items inside this store..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
         <button id="clear-store-search-btn" class="hidden text-slate-400 hover:text-slate-600">
@@ -188,80 +209,149 @@ const initialProducts = catalog.slice(0, 48);
         </button>
       </div>
 
-      <!-- Categories Pills -->
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1" id="store-categories-list">
-        <!-- Populated via JS -->
+      <!-- Filter Pills & Sorting Dropdown -->
+      <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-1">
+        <div class="flex items-center gap-2">
+          <button class="store-stock-filter-btn px-3 py-1.5 rounded-xl bg-purpleBrand text-white text-xs font-black shadow-xs transition-all" data-filter="all">All Store Items</button>
+          <button class="store-stock-filter-btn px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold transition-all" data-filter="instock">In Stock Only</button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label for="store-sort-select" class="text-xs font-bold text-slate-400 hidden sm:inline">Sort:</label>
+          <select id="store-sort-select" class="bg-slate-100 border border-slate-200 text-slate-800 text-xs font-extrabold rounded-xl px-3 py-1.5 outline-none cursor-pointer hover:bg-slate-200 transition-colors">
+            <option value="popular">Popularity</option>
+            <option value="low-high">Price: Low to High</option>
+            <option value="high-low">Price: High to Low</option>
+            <option value="name">Name: A to Z</option>
+          </select>
+        </div>
       </div>
     </div>
 
-    <!-- MAIN PRODUCT LISTINGS -->
-    <main class="space-y-4 pt-2">
-      <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">
-        <h2 id="store-catalog-title" class="text-lg font-black font-display text-slate-900">Store Products</h2>
-        <span id="store-product-count" class="text-xs font-bold text-slate-400">Loading store inventory...</span>
+    <!-- MAIN STORE CATALOG LAYOUT (IDENTICAL TO GROCERY PAGE WITH SIDEBAR & GRID) -->
+    <div class="py-2 md:flex md:gap-6">
+      
+      <!-- Mobile Categories Horizontal Bar -->
+      <div class="md:hidden flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-3 border-b border-slate-100" id="store-mobile-categories-bar">
+        {storeCategories.map(cat => (
+          <button class="store-cat-pill flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-slate-200 text-xs font-extrabold text-slate-700 hover:border-purpleBrand transition-all" data-category={cat.name}>
+            <span>{cat.icon}</span>
+            <span>{cat.name}</span>
+          </button>
+        ))}
       </div>
 
-      <!-- Products Grid -->
-      <div id="store-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4.5">
-        {initialProducts.map(p => {
-          const id = p["Product ID"] || p.ProductID || p.id || '';
-          const name = p["Product Name"] || '';
-          const brand = p["Brand Name"] || p.brand || 'Store Fresh';
-          const cat = p.Category || 'Grocery';
-          const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
-          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 0);
-          const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-          const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
-          const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
-          const nameSafe = name.replace(/"/g, '&quot;');
-
-          return (
-            <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-3" data-id={id} data-name={nameSafe} data-price={mrp} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
-
-              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
-                {isOutOfStock && (
-                  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
-                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
-                  </div>
-                )}
-
-                <img src={img} alt={name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-
-                <div class="absolute bottom-2 left-2 z-10">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
-                    ⚡ 10 MINS
-                  </span>
-                </div>
+      <!-- Desktop Category Sidebar -->
+      <aside class="hidden md:block w-64 flex-shrink-0 space-y-2 sticky top-44 h-fit">
+        <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider px-3 mb-2">Store Categories</h3>
+        <div class="bg-white rounded-3xl p-2.5 border border-slate-100 shadow-sm space-y-1" id="store-desktop-categories-sidebar">
+          {storeCategories.map(cat => (
+            <button class="store-cat-pill w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold text-slate-700 hover:bg-purple-50 hover:text-purpleBrand transition-all" data-category={cat.name}>
+              <div class="flex items-center gap-2.5">
+                <span class="text-base">{cat.icon}</span>
+                <span>{cat.name}</span>
               </div>
+              <span class="material-symbols-outlined text-sm text-slate-300">chevron_right</span>
+            </button>
+          ))}
+        </div>
+      </aside>
 
-              <div class="flex flex-col flex-1 px-0.5">
-                <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">{brand}</span>
-                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">{name}</h3>
-                <p class="text-[11px] font-semibold text-slate-400 mb-2">{pack}</p>
+      <!-- Products Grid Section -->
+      <main class="flex-1 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">
+          <h2 id="store-catalog-title" class="text-lg font-black font-display text-slate-900">Complete Store Catalog</h2>
+          <span id="store-product-count" class="text-xs font-bold text-slate-400">Loading store inventory...</span>
+        </div>
 
-                <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
-                  <span class="text-sm font-black text-slate-900">MRP ₹{mrp}</span>
+        <!-- Products Grid (REUSING EXACT GROCERY PRODUCT CARD DESIGN) -->
+        <div id="store-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4.5">
+          {initialProducts.map(p => {
+            const id = p["Product ID"] || p.ProductID || p.id || '';
+            const name = p["Product Name"] || '';
+            const brand = p["Brand Name"] || p.brand || 'Store Fresh';
+            const cat = p.Category || 'Grocery';
+            const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
+            const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 0);
+            const sp = parseFloat(p["Selling Price"] || p.sp || p.MRP || p.mrp || 0);
+            const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+            const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
+            const stockQty = p.stock || 24;
+            const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
+            const nameSafe = name.replace(/"/g, '&quot;');
 
-                  <div class="cart-action-container" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
-                    <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
-                      + ADD
-                    </button>
+            return (
+              <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden p-3" data-id={id} data-name={nameSafe} data-price={sp} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
+
+                <!-- FAVOURITE BUTTON -->
+                <button class="fav-btn absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 flex items-center justify-center text-slate-400 hover:text-red-500 hover:scale-110 active:scale-95 transition-all shadow-xs" data-id={id} title="Add to Favourites">
+                  <span class="material-symbols-outlined text-lg">favorite</span>
+                </button>
+
+                <!-- PRODUCT IMAGE -->
+                <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
+                  {isOutOfStock && (
+                    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
+                      <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
+                    </div>
+                  )}
+
+                  <img src={img} alt={name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+
+                  <div class="absolute bottom-2 left-2 z-10">
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
+                      ⚡ 10 MINS
+                    </span>
                   </div>
                 </div>
+
+                <!-- PRODUCT DETAILS -->
+                <div class="flex flex-col flex-1 px-0.5 space-y-1">
+                  <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate">{brand}</span>
+                  <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">{name}</h3>
+                  
+                  <div class="flex items-center justify-between text-[10px] font-bold">
+                    <span class="text-slate-400">{pack}</span>
+                    <span class="px-1.5 py-0.2 rounded bg-emerald-50 text-emerald-700 font-extrabold border border-emerald-100 flex items-center gap-0.5">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      In Stock ({stockQty})
+                    </span>
+                  </div>
+
+                  <!-- PRICING (MRP & SELLING PRICE) -->
+                  <div class="flex items-baseline gap-1.5 pt-1">
+                    <span class="text-sm sm:text-base font-black text-slate-900">₹{sp}</span>
+                    {mrp > sp ? (
+                      <span class="text-[11px] font-bold text-slate-400 line-through">MRP ₹{mrp}</span>
+                    ) : (
+                      <span class="text-[10px] font-bold text-slate-400">MRP ₹{mrp}</span>
+                    )}
+                  </div>
+
+                  <!-- ADD TO CART & QUANTITY SELECTOR -->
+                  <div class="pt-2 border-t border-slate-100 mt-auto">
+                    <div class="cart-action-container" data-id={id} data-name={nameSafe} data-price={sp} data-mrp={mrp} data-img={img}>
+                      <button class="add-to-cart-btn w-full py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-xs font-black rounded-xl active:scale-90 transition-all flex items-center justify-center gap-1" data-id={id} data-name={nameSafe} data-price={sp} data-mrp={mrp} data-img={img}>
+                        <span>+ ADD</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
               </div>
+            );
+          })}
+        </div>
 
-            </div>
-          );
-        })}
-      </div>
+        <!-- LOAD MORE CONTAINER -->
+        <div id="store-load-more-container" class="py-8 text-center space-y-2">
+          <button id="store-load-more-btn" class="px-8 py-3 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all">
+            Load More Store Items
+          </button>
+        </div>
+      </main>
 
-      <!-- LOAD MORE CONTAINER -->
-      <div id="store-load-more-container" class="py-8 text-center space-y-2">
-        <button id="store-load-more-btn" class="px-8 py-3 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all">
-          Load More Store Items
-        </button>
-      </div>
-    </main>
+    </div>
 
   </div>
 
@@ -298,8 +388,7 @@ const initialProducts = catalog.slice(0, 48);
         deliveryBy: 'Bhusawal Connect',
         logo: '🏬',
         cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=1200&q=80',
-        badge: 'TOP RATED SUPERSTORE',
-        categories: ['Fruits & Vegetables', 'Dairy & Breakfast', 'Grocery Staples', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
+        badge: 'TOP RATED SUPERSTORE'
       },
       'central-supermarket': {
         id: 'central-supermarket',
@@ -312,8 +401,7 @@ const initialProducts = catalog.slice(0, 48);
         deliveryBy: 'Bhusawal Connect',
         logo: '🏬',
         cover: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=80',
-        badge: 'FEATURED PARTNER',
-        categories: ['Grocery Staples', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
+        badge: 'FEATURED PARTNER'
       },
       'fresh-green-mart': {
         id: 'fresh-green-mart',
@@ -326,8 +414,7 @@ const initialProducts = catalog.slice(0, 48);
         deliveryBy: 'Bhusawal Connect',
         logo: '🥦',
         cover: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=1200&q=80',
-        badge: 'FARM FRESH',
-        categories: ['Fruits & Vegetables', 'Dairy & Breakfast', 'Grocery Staples']
+        badge: 'FARM FRESH'
       },
       'dinshaws-dairy-hub': {
         id: 'dinshaws-dairy-hub',
@@ -340,8 +427,7 @@ const initialProducts = catalog.slice(0, 48);
         deliveryBy: 'Bhusawal Connect',
         logo: '🥛',
         cover: 'https://images.unsplash.com/photo-1528751014936-863e6e7a319c?auto=format&fit=crop&w=1200&q=80',
-        badge: 'DAIRY SPECIALIST',
-        categories: ['Dairy & Breakfast', 'Instant & Frozen Foods', 'Beverages']
+        badge: 'DAIRY SPECIALIST'
       },
       'khandesh-agro-spices': {
         id: 'khandesh-agro-spices',
@@ -354,8 +440,7 @@ const initialProducts = catalog.slice(0, 48);
         deliveryBy: 'Bhusawal Connect',
         logo: '🌾',
         cover: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1200&q=80',
-        badge: 'LOCAL TRADITIONAL',
-        categories: ['Grocery Staples', 'Instant & Frozen Foods']
+        badge: 'LOCAL TRADITIONAL'
       },
       'city-organic-daily': {
         id: 'city-organic-daily',
@@ -368,9 +453,25 @@ const initialProducts = catalog.slice(0, 48);
         deliveryBy: 'Bhusawal Connect',
         logo: '✨',
         cover: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=80',
-        badge: 'HEALTH & ESSENTIALS',
-        categories: ['Personal Care', 'Home Cleaning & Household', 'Baby, Health & Specialty', 'Snacks & Confectionery']
+        badge: 'HEALTH & ESSENTIALS'
       }
+    };
+
+    // Category Keyword Mappings for Granular Filtering
+    const categoryKeywords = {
+      'atta': ['atta', 'flour', 'maida', 'suji', 'besan', 'wheat flour', 'multigrain'],
+      'rice': ['rice', 'basmati', 'poha', 'paddy', 'grain', 'dalia'],
+      'oil': ['oil', 'ghee', 'mustard oil', 'sunflower', 'groundnut', 'olive oil'],
+      'dal': ['dal', 'pulse', 'moong', 'toor', 'chana', 'urad', 'masoor', 'rajma', 'chole'],
+      'masala': ['masala', 'spice', 'chilli', 'turmeric', 'coriander', 'cumin', 'hing', 'garam masala', 'salt', 'pepper'],
+      'snacks': ['snack', 'namkeen', 'biscuit', 'chip', 'wafer', 'kurkure', 'chocolate', 'toast', 'rusk', 'noodle', 'pasta'],
+      'drinks': ['drink', 'juice', 'soda', 'coke', 'pepsi', 'sprite', 'cold drink', 'beverage', 'water', 'energy drink'],
+      'milk': ['milk', 'curd', 'paneer', 'butter', 'cheese', 'yogurt', 'dairy', 'cream'],
+      'icecream': ['ice cream', 'dessert', 'kulfi', 'scoop', 'cone', 'cassatta', 'amul ice'],
+      'cleaning': ['clean', 'detergent', 'soap', 'dishwash', 'harpic', 'surf', 'rin', 'floor cleaner', 'tissue'],
+      'personal': ['shampoo', 'soap', 'toothpaste', 'brush', 'lotion', 'face wash', 'cream', 'deodorant', 'hair oil'],
+      'baby': ['baby', 'diaper', 'pampers', 'cerelac', 'wipes', 'baby soap', 'johnson'],
+      'stationery': ['pen', 'pencil', 'notebook', 'paper', 'stapler', 'tape', 'marker', 'eraser', 'folder', 'file']
     };
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -380,6 +481,7 @@ const initialProducts = catalog.slice(0, 48);
 
       // Fill Store Metadata
       document.getElementById('header-store-name').textContent = store.name;
+      document.getElementById('header-store-location').textContent = `${store.address.split(',')[1] || 'Bhusawal'} • Express 10 MINS`;
       document.getElementById('store-title').textContent = store.name;
       document.getElementById('store-tagline').textContent = store.tagline;
       document.getElementById('store-rating').innerHTML = `<span class="material-symbols-outlined text-xs text-amber-600">star</span> ${store.rating}`;
@@ -394,20 +496,9 @@ const initialProducts = catalog.slice(0, 48);
       document.getElementById('store-badge-top').textContent = store.badge;
       document.getElementById('store-logo-box').textContent = store.logo;
       document.getElementById('store-cover-img').src = store.cover;
-      document.getElementById('store-search-input').placeholder = `Search items inside ${store.name}...`;
+      document.getElementById('store-search-input').placeholder = `Search complete catalog inside ${store.name}...`;
 
-      // Render Store Categories
-      const categoriesContainer = document.getElementById('store-categories-list');
-      if (categoriesContainer) {
-        const cats = ['All Products', ...store.categories];
-        categoriesContainer.innerHTML = cats.map((cat, idx) => `
-          <button class="store-cat-pill flex-shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-black transition-all ${idx === 0 ? 'bg-purpleBrand text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}" data-cat="${cat}">
-            ${cat}
-          </button>
-        `).join('');
-      }
-
-      // Fetch Catalog and Filter EXCLUSIVELY for this store
+      // Fetch Full Store Catalog Data
       let allCatalog = [];
       try {
         const res = await fetch('/grocery_catalog.json');
@@ -416,21 +507,35 @@ const initialProducts = catalog.slice(0, 48);
         console.error("Failed to load catalog", e);
       }
 
-      // Filter catalog STRICTLY for this store's categories! Zero products from other stores!
-      let storeCatalog = allCatalog.filter(p => {
-        const cat = p.Category || 'Grocery';
-        return store.categories.includes(cat);
-      });
+      let storeCatalog = allCatalog; // Full store catalog
 
       let currentQuery = '';
       let activeCategory = 'All Products';
+      let activeStockFilter = 'all';
+      let currentSort = 'popular';
       let limit = 48;
       const BATCH_SIZE = 48;
+
+      function getWishlist() {
+        try { return JSON.parse(localStorage.getItem('bhusawal_wishlist') || '[]'); } catch(e) { return []; }
+      }
+
+      function toggleWishlist(id) {
+        let wish = getWishlist();
+        if (wish.includes(id)) {
+          wish = wish.filter(i => i !== id);
+        } else {
+          wish.push(id);
+        }
+        localStorage.setItem('bhusawal_wishlist', JSON.stringify(wish));
+        renderStoreProducts();
+      }
 
       function renderStoreProducts() {
         const grid = document.getElementById('store-products-grid');
         const countLabel = document.getElementById('store-product-count');
         const loadMoreBtn = document.getElementById('store-load-more-btn');
+        const wishlist = getWishlist();
 
         let filtered = storeCatalog;
 
@@ -444,10 +549,47 @@ const initialProducts = catalog.slice(0, 48);
           });
         }
 
-        // Category Filter
+        // Granular Category Filter
         if (activeCategory && activeCategory !== 'All Products') {
           const target = activeCategory.toLowerCase();
-          filtered = filtered.filter(p => (p.Category || '').toLowerCase() === target);
+          
+          let matchedKeys = [];
+          if (target.includes('atta')) matchedKeys = categoryKeywords['atta'];
+          else if (target.includes('rice')) matchedKeys = categoryKeywords['rice'];
+          else if (target.includes('oil')) matchedKeys = categoryKeywords['oil'];
+          else if (target.includes('dal')) matchedKeys = categoryKeywords['dal'];
+          else if (target.includes('masala')) matchedKeys = categoryKeywords['masala'];
+          else if (target.includes('snack')) matchedKeys = categoryKeywords['snacks'];
+          else if (target.includes('drink')) matchedKeys = categoryKeywords['drinks'];
+          else if (target.includes('milk')) matchedKeys = categoryKeywords['milk'];
+          else if (target.includes('ice cream')) matchedKeys = categoryKeywords['icecream'];
+          else if (target.includes('clean')) matchedKeys = categoryKeywords['cleaning'];
+          else if (target.includes('personal')) matchedKeys = categoryKeywords['personal'];
+          else if (target.includes('baby')) matchedKeys = categoryKeywords['baby'];
+          else if (target.includes('stationery')) matchedKeys = categoryKeywords['stationery'];
+
+          if (matchedKeys.length > 0) {
+            filtered = filtered.filter(p => {
+              const text = `${p["Product Name"] || ''} ${p.Category || ''} ${p["Brand Name"] || ''}`.toLowerCase();
+              return matchedKeys.some(k => text.includes(k));
+            });
+          } else {
+            filtered = filtered.filter(p => (p.Category || '').toLowerCase() === target);
+          }
+        }
+
+        // In Stock Filter
+        if (activeStockFilter === 'instock') {
+          filtered = filtered.filter(p => p.stock !== 0 && p.outOfStock !== true && p.status !== 'out_of_stock');
+        }
+
+        // Sorting
+        if (currentSort === 'low-high') {
+          filtered.sort((a, b) => parseFloat(a["Selling Price"] || a.sp || a.MRP || 0) - parseFloat(b["Selling Price"] || b.sp || b.MRP || 0));
+        } else if (currentSort === 'high-low') {
+          filtered.sort((a, b) => parseFloat(b["Selling Price"] || b.sp || b.MRP || 0) - parseFloat(a["Selling Price"] || a.sp || a.MRP || 0));
+        } else if (currentSort === 'name') {
+          filtered.sort((a, b) => (a["Product Name"] || '').localeCompare(b["Product Name"] || ''));
         }
 
         if (countLabel) {
@@ -468,13 +610,29 @@ const initialProducts = catalog.slice(0, 48);
           const cat = p.Category || 'Grocery';
           const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
           const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50);
+          const sp = parseFloat(p["Selling Price"] || p.sp || p.MRP || p.mrp || mrp);
           const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
+          const stockQty = p.stock || (Math.floor(Math.random() * 30) + 10);
           const nameSafe = name.replace(/"/g, '&quot;');
+          const isFav = wishlist.includes(id);
 
           return `
-            <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-3" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-brand="${brand}">
+            <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden p-3" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-brand="${brand}">
 
+              <!-- FAVOURITE BUTTON -->
+              <button class="fav-btn absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/80 flex items-center justify-center text-slate-400 hover:text-red-500 hover:scale-110 active:scale-95 transition-all shadow-xs" data-id="${id}" title="Add to Favourites">
+                <span class="material-symbols-outlined text-lg ${isFav ? 'text-red-500 fill-1 font-black' : ''}">favorite</span>
+              </button>
+
+              <!-- PRODUCT IMAGE -->
               <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
+                ${isOutOfStock ? `
+                  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
+                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
+                  </div>
+                ` : ''}
+
                 <img src="${img}" alt="${nameSafe}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
 
                 <div class="absolute bottom-2 left-2 z-10">
@@ -484,17 +642,34 @@ const initialProducts = catalog.slice(0, 48);
                 </div>
               </div>
 
-              <div class="flex flex-col flex-1 px-0.5">
-                <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">${brand}</span>
+              <!-- PRODUCT DETAILS -->
+              <div class="flex flex-col flex-1 px-0.5 space-y-1">
+                <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate">${brand}</span>
                 <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">${name}</h3>
-                <p class="text-[11px] font-semibold text-slate-400 mb-2">${pack}</p>
+                
+                <div class="flex items-center justify-between text-[10px] font-bold">
+                  <span class="text-slate-400">${pack}</span>
+                  <span class="px-1.5 py-0.2 rounded bg-emerald-50 text-emerald-700 font-extrabold border border-emerald-100 flex items-center gap-0.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    In Stock (${stockQty})
+                  </span>
+                </div>
 
-                <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
-                  <span class="text-sm font-black text-slate-900">MRP ₹${mrp}</span>
+                <!-- PRICING (MRP & SELLING PRICE) -->
+                <div class="flex items-baseline gap-1.5 pt-1">
+                  <span class="text-sm sm:text-base font-black text-slate-900">₹${sp}</span>
+                  ${mrp > sp ? `
+                    <span class="text-[11px] font-bold text-slate-400 line-through">MRP ₹${mrp}</span>
+                  ` : `
+                    <span class="text-[10px] font-bold text-slate-400">MRP ₹${mrp}</span>
+                  `}
+                </div>
 
-                  <div class="cart-action-container" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
-                    <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
-                      + ADD
+                <!-- ADD TO CART & QUANTITY SELECTOR -->
+                <div class="pt-2 border-t border-slate-100 mt-auto">
+                  <div class="cart-action-container" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-mrp="${mrp}" data-img="${img}">
+                    <button class="add-to-cart-btn w-full py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-xs font-black rounded-xl active:scale-90 transition-all flex items-center justify-center gap-1" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-mrp="${mrp}" data-img="${img}">
+                      <span>+ ADD</span>
                     </button>
                   </div>
                 </div>
@@ -542,27 +717,109 @@ const initialProducts = catalog.slice(0, 48);
       updateCartBar();
 
       function attachCartListeners() {
+        let cart = [];
+        try { cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); } catch(e) {}
+
+        // Sync Action Containers
+        document.querySelectorAll('.cart-action-container').forEach(container => {
+          const id = container.dataset.id;
+          const name = container.dataset.name;
+          const price = container.dataset.price;
+          const mrp = container.dataset.mrp;
+          const img = container.dataset.img;
+          if (!id) return;
+
+          const cartItem = cart.find(i => i.id === id);
+          const qty = cartItem ? (cartItem.quantity || 1) : 0;
+
+          if (qty > 0) {
+            container.innerHTML = `
+              <div class="flex items-center justify-between bg-purpleBrand text-white font-extrabold text-xs rounded-xl overflow-hidden shadow-xs">
+                <button class="qty-minus-btn px-3 py-1.5 hover:bg-purpleDark active:scale-90 transition-all" data-id="${id}">-</button>
+                <span class="px-2 text-xs font-black min-w-[1.4rem] text-center">${qty}</span>
+                <button class="qty-plus-btn px-3 py-1.5 hover:bg-purpleDark active:scale-90 transition-all" data-id="${id}" data-name="${name ? name.replace(/"/g, '&quot;') : ''}" data-price="${price}" data-mrp="${mrp}" data-img="${img}">+</button>
+              </div>
+            `;
+          } else {
+            container.innerHTML = `
+              <button class="add-to-cart-btn w-full py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-xs font-black rounded-xl active:scale-90 transition-all flex items-center justify-center gap-1" data-id="${id}" data-name="${name ? name.replace(/"/g, '&quot;') : ''}" data-price="${price}" data-mrp="${mrp}" data-img="${img}">
+                <span>+ ADD</span>
+              </button>
+            `;
+          }
+        });
+
+        // Add Button
         document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
           btn.onclick = (e) => {
             e.stopPropagation();
             const id = btn.dataset.id;
             const name = btn.dataset.name;
             const price = btn.dataset.price;
+            const mrp = btn.dataset.mrp;
             const img = btn.dataset.img;
-            let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-            const existing = cart.find(i => i.id === id);
+            let currentCart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+            const existing = currentCart.find(i => i.id === id);
             if (existing) {
               existing.quantity = (existing.quantity || 1) + 1;
             } else {
-              cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Grocery', store: store.name });
+              currentCart.push({ id, name, price, mrp, image: img, quantity: 1, cat: 'Grocery', store: store.name });
             }
-            localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
+            localStorage.setItem('bhusawal_cart', JSON.stringify(currentCart));
             updateCartBar();
+            attachCartListeners();
+          };
+        });
+
+        // Plus Button
+        document.querySelectorAll('.qty-plus-btn').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.id;
+            let currentCart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+            const existing = currentCart.find(i => i.id === id);
+            if (existing) {
+              existing.quantity = (existing.quantity || 1) + 1;
+            } else {
+              currentCart.push({ id, name: btn.dataset.name, price: btn.dataset.price, mrp: btn.dataset.mrp, image: btn.dataset.img, quantity: 1, cat: 'Grocery', store: store.name });
+            }
+            localStorage.setItem('bhusawal_cart', JSON.stringify(currentCart));
+            updateCartBar();
+            attachCartListeners();
+          };
+        });
+
+        // Minus Button
+        document.querySelectorAll('.qty-minus-btn').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.id;
+            let currentCart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+            const existingIndex = currentCart.findIndex(i => i.id === id);
+            if (existingIndex > -1) {
+              if (currentCart[existingIndex].quantity > 1) {
+                currentCart[existingIndex].quantity -= 1;
+              } else {
+                currentCart.splice(existingIndex, 1);
+              }
+            }
+            localStorage.setItem('bhusawal_cart', JSON.stringify(currentCart));
+            updateCartBar();
+            attachCartListeners();
+          };
+        });
+
+        // Wishlist Favourite Buttons
+        document.querySelectorAll('.fav-btn').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.id;
+            if (id) toggleWishlist(id);
           };
         });
       }
 
-      // Search Inside Store Input Listener
+      // Search Input Listener
       const searchInput = document.getElementById('store-search-input');
       const clearSearchBtn = document.getElementById('clear-store-search-btn');
 
@@ -583,6 +840,27 @@ const initialProducts = catalog.slice(0, 48);
         renderStoreProducts();
       });
 
+      // Stock Filter Buttons
+      document.querySelectorAll('.store-stock-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.store-stock-filter-btn').forEach(b => {
+            b.classList.remove('bg-purpleBrand', 'text-white', 'shadow-xs');
+            b.classList.add('bg-slate-100', 'text-slate-700');
+          });
+          btn.classList.remove('bg-slate-100', 'text-slate-700');
+          btn.classList.add('bg-purpleBrand', 'text-white', 'shadow-xs');
+
+          activeStockFilter = btn.dataset.filter || 'all';
+          renderStoreProducts();
+        });
+      });
+
+      // Sort Select
+      document.getElementById('store-sort-select')?.addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        renderStoreProducts();
+      });
+
       // Category Pill Listeners
       document.querySelectorAll('.store-cat-pill').forEach(pill => {
         pill.addEventListener('click', () => {
@@ -593,7 +871,9 @@ const initialProducts = catalog.slice(0, 48);
           pill.classList.remove('bg-slate-100', 'text-slate-700');
           pill.classList.add('bg-purpleBrand', 'text-white', 'shadow-xs');
 
-          activeCategory = pill.dataset.cat || 'All Products';
+          activeCategory = pill.dataset.category || 'All Products';
+          const title = document.getElementById('store-catalog-title');
+          if (title) title.textContent = activeCategory === 'All Products' ? `Complete Store Catalog` : `${activeCategory} in ${store.name}`;
           renderStoreProducts();
         });
       });
