@@ -1,50 +1,123 @@
 ---
 import fs from 'fs';
 import path from 'path';
-// Read existing catalog database at build-time
-const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
+
 let catalog = [];
 try {
+  const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
   catalog = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
 } catch (err) {
-  console.error("Failed to read catalog at build time", err);
+  console.error("Failed to read grocery catalog at build time", err);
 }
 
-// Deduplication helper
-function dedupProducts(arr) {
-  const seen = new Set();
-  return arr.filter(p => {
-    const name = (p["Product Name"] || "").trim().toLowerCase();
-    if (seen.has(name)) return false;
-    seen.add(name);
-    return true;
-  });
-}
+let foodCatalog = [];
+try {
+  const foodPath = path.join(process.cwd(), 'public/food_catalog.json');
+  foodCatalog = JSON.parse(fs.readFileSync(foodPath, 'utf8'));
+} catch (err) {}
 
-// Product sections from catalog
-const trendingKws = ['lays', 'pringles', 'kurkure', 'coca', 'pepsi', 'sprite', 'red bull', 'dairy milk', 'kitkat', 'nutella', 'oreo', 'good day', 'maggi', 'nivea', 'dettol'];
-let trendingProducts = [];
-const seenTrending = new Set();
-for (const kw of trendingKws) {
-  const matches = catalog.filter(p => (p["Product Name"] || "").toLowerCase().includes(kw));
-  for (const p of matches) {
-    const cleanName = (p["Product Name"] || "").split(" (Batch")[0];
-    if (!seenTrending.has(cleanName)) {
-      trendingProducts.push(p);
-      seenTrending.add(cleanName);
-      if (trendingProducts.length >= 12) break;
-    }
+const sponsoredPartners = [
+  {
+    id: 'sai-jeevan',
+    name: 'Sai Jeevan Super Mall',
+    type: 'Grocery Store',
+    tagline: 'Premium Supermarket, Daily Essentials & Household Goods',
+    location: 'Station Road, Bhusawal',
+    rating: '4.8',
+    time: '10 min',
+    status: 'Open Now',
+    cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=800&q=80',
+    logo: '🏬',
+    link: '/store_profile?store=sai-jeevan'
+  },
+  {
+    id: 'royal-biryani',
+    name: 'Royal Biryani & Caterers',
+    type: 'Restaurant',
+    tagline: 'Authentic Hyderabadi & Mughlai Dum Biryani',
+    location: 'Station Road, Bhusawal',
+    rating: '4.8',
+    time: '20 min',
+    status: 'Open Now',
+    cover: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80',
+    logo: '🍔',
+    link: '/store_profile?store=royal-biryani'
+  },
+  {
+    id: 'apollo-pharmacy',
+    name: 'Apollo Pharmacy 24x7',
+    type: 'Medical Store',
+    tagline: 'Essential Prescription Medicines & Healthcare Supplies',
+    location: 'Station Road, Bhusawal',
+    rating: '4.9',
+    time: '10 min',
+    status: 'Open 24/7',
+    cover: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&w=800&q=80',
+    logo: '💊',
+    link: '/store_profile?store=apollo-pharmacy'
+  },
+  {
+    id: 'khandesh-matching',
+    name: 'Khandesh Fashion & Matching',
+    type: 'Local Shop',
+    tagline: 'Traditional Sarees, Fabrics & Designer Wear',
+    location: 'Main Market, Bhusawal',
+    rating: '4.7',
+    time: '30 min',
+    status: 'Open Now',
+    cover: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80',
+    logo: '🏪',
+    link: '/shops'
+  },
+  {
+    id: 'balaji-mart',
+    name: 'Balaji Mart',
+    type: 'Grocery Store',
+    tagline: 'Staples, Flours, Rice & Spices Superstore',
+    location: 'Jalgaon Road, Bhusawal',
+    rating: '4.7',
+    time: '12 min',
+    status: 'Open Now',
+    cover: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80',
+    logo: '🛒',
+    link: '/store_profile?store=balaji-mart'
+  },
+  {
+    id: 'khandeshi-zaika',
+    name: 'Khandeshi Zaika Restaurant',
+    type: 'Restaurant',
+    tagline: 'Spicy Khandeshi Shev Bhaji & Special Local Thali',
+    location: 'Jalgaon Road, Bhusawal',
+    rating: '4.9',
+    time: '18 min',
+    status: 'Open Now',
+    cover: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
+    logo: '🍽️',
+    link: '/store_profile?store=khandeshi-zaika'
   }
-  if (trendingProducts.length >= 12) break;
-}
+];
 
-// Verified Partner Stores Data
-const verifiedPartnerStores = [
-  { id: 'express_superstore', name: 'Bhusawal Express Superstore', tag: 'Supermarket • 25,500+ Items', rating: '4.9', count: '1,240+ ratings', time: '10-15 min', cover: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=800&q=80', logo: '🏬' },
-  { id: 'royal_biryani', name: 'Royal Biryani & Caterers', tag: 'Mughlai & North Indian', rating: '4.8', count: '850+ ratings', time: '20-25 min', cover: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80', logo: '🍲' },
-  { id: 'modern_pharmacy', name: 'Modern Pharmacy & Wellness', tag: 'Essential Medicines & Healthcare', rating: '4.9', count: '920+ ratings', time: '10-15 min', cover: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?auto=format&fit=crop&w=800&q=80', logo: '💊' },
-  { id: 'shiv_dairy', name: 'Shiv Dairy & Sweets', tag: 'Fresh Milk, Paneer & Sweets', rating: '4.9', count: '1,500+ ratings', time: '10-15 min', cover: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?auto=format&fit=crop&w=800&q=80', logo: '🥛' },
-  { id: 'kwality_hub', name: "Kwality Wall's Ice Cream Hub", tag: 'Ice Creams & Shakes', rating: '4.7', count: '610+ ratings', time: '12-18 min', cover: 'https://images.unsplash.com/photo-1560008511-11c63416e52d?auto=format&fit=crop&w=800&q=80', logo: '🍦' }
+const popularGroceryProducts = catalog.slice(0, 16);
+const popularFoodItems = foodCatalog.slice(0, 16);
+
+const popularMedicines = [
+  { id: 'BC-MED-001', name: 'Dolo 650mg Paracetamol', pack: '15 Tablets', price: 32, mrp: 35, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'Paracetamol 650mg' },
+  { id: 'BC-MED-002', name: 'Crocin 650 Advance', pack: '15 Tablets', price: 30, mrp: 34, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'Fast Acting Pain Relief' },
+  { id: 'BC-MED-003', name: 'Limcee Vitamin C 500mg', pack: '15 Chewable Tablets', price: 25, mrp: 28, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'Immunity Booster' },
+  { id: 'BC-MED-004', name: 'Volini Pain Relief Spray', pack: '100g Spray', price: 245, mrp: 275, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'Instant Pain Relief' },
+  { id: 'BC-MED-005', name: 'Becosules Z Multivitamin', pack: '20 Capsules', price: 48, mrp: 55, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'B-Complex & Zinc' },
+  { id: 'BC-MED-006', name: 'Shelcal 500 Calcium', pack: '15 Tablets', price: 118, mrp: 135, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'Calcium & Vitamin D3' },
+  { id: 'BC-MED-007', name: 'Vicks Vaporub Balm', pack: '50g Jar', price: 140, mrp: 155, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'Cough & Cold Relief' },
+  { id: 'BC-MED-008', name: 'Digene Acidity Gel Mint', pack: '200ml Mint', price: 135, mrp: 150, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'Antacid Gel' },
+  { id: 'BC-MED-009', name: 'Revital H Daily Health', pack: '30 Capsules', price: 310, mrp: 350, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'Ginseng & Minerals' },
+  { id: 'BC-MED-010', name: 'Electral Oral Electrolytes', pack: '21.8g Sachet', price: 22, mrp: 24, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'ORS Electrolyte' },
+  { id: 'BC-MED-011', name: 'Cetzine 10mg Anti-Allergy', pack: '10 Tablets', price: 18, mrp: 21, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'Cetirizine HCl' },
+  { id: 'BC-MED-012', name: 'Otrivin Adult Nasal Spray', pack: '10ml Spray', price: 98, mrp: 110, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'Nasal Spray' }
+];
+
+const popularSearches = [
+  'Amul Gold Milk', 'Aashirvaad Atta', 'Fortune Oil', 'Dolo 650',
+  'Chicken Biryani', 'Sai Jeevan Super Mall', 'Apollo Pharmacy', 'Shiv Dairy', 'Crocin'
 ];
 ---
 
@@ -53,17 +126,14 @@ const verifiedPartnerStores = [
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bhusawal Connect | Super App for Bhusawal</title>
+  <title>Bhusawal Connect - Fast Local Delivery</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
-  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
-  <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
-  <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
-  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  
   <script is:inline src="/bhusawal_master_db.js"></script>
   <script is:inline src="/bhusawal_backend.js"></script>
   <script is:inline src="/bhusawal_notifications.js"></script>
@@ -130,23 +200,22 @@ const verifiedPartnerStores = [
         </button>
       </div>
 
-      <!-- Live Global Search Dropdown Overlay -->
-      <div id="search-results-dropdown" class="hidden absolute top-14 left-0 right-0 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden max-h-[80vh] overflow-y-auto z-50">
+      <!-- Live Search Overlay Dropdown -->
+      <div id="search-results-dropdown" class="hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden max-h-[80vh] overflow-y-auto z-50">
         
-        <!-- INITIAL DEFAULT STATE: RECENT & POPULAR SEARCHES -->
-        <div id="search-default-view" class="p-5 space-y-5">
-          
-          <!-- Recent Searches Section -->
-          <div id="recent-searches-box" class="space-y-2">
+        <!-- DEFAULT: POPULAR SEARCHES & CATEGORIES -->
+        <div id="search-default-view" class="p-4 space-y-4">
+          <!-- Recent Searches (Dynamic from LocalStorage) -->
+          <div id="recent-searches-box" class="hidden space-y-2">
             <div class="flex items-center justify-between">
               <span class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                <span class="material-symbols-outlined text-sm">history</span>
+                <span class="material-symbols-outlined text-sm">schedule</span>
                 Recent Searches
               </span>
-              <button id="clear-recent-btn" class="text-[10px] font-black text-rose-500 hover:underline">Clear History</button>
+              <button id="clear-recent-btn" class="text-[10px] font-black text-red-500 hover:underline">Clear History</button>
             </div>
             <div id="recent-searches-list" class="flex flex-wrap gap-2 pt-1">
-              <!-- Dynamically populated -->
+              <!-- Dynamically populated tags -->
             </div>
           </div>
 
@@ -251,7 +320,6 @@ const verifiedPartnerStores = [
         </a>
 
         <!-- 2. Medicine -->
-        <!-- 2. Medicine -->
         <a href="/medicines" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-blue-50 to-cyan-100 flex items-center justify-center p-3 overflow-hidden">
             <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_medicine.jpg" alt="Medicine" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
@@ -265,7 +333,6 @@ const verifiedPartnerStores = [
           </div>
         </a>
 
-        <!-- 3. Food Delivery -->
         <!-- 3. Food Delivery -->
         <a href="/food" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-orange-50 to-red-100 flex items-center justify-center p-3 overflow-hidden">
@@ -283,7 +350,13 @@ const verifiedPartnerStores = [
         <!-- 4. Pickup & Drop -->
         <a href="/bike_ride" class="service-card bg-yellow-50/80 rounded-[22px] border border-yellow-200/90 shadow-md hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 flex items-center justify-center p-2.5 overflow-hidden">
-            <img onerror="this.onerror=null;this.src='/assets/services/service_bike_taxi.jpg';" loading="lazy" src="/assets/services/service_bike_taxi.jpg?v=3" alt="Pickup & Drop - Fast Bike Taxi Across Bhusawal" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+            <img 
+              onerror="this.onerror=null;this.src='/assets/service_bike_taxi_v2.jpg';" 
+              loading="lazy" 
+              src="/assets/services/service_bike_taxi_v2.jpg?v=20260902" 
+              alt="Pickup & Drop - Fast Bike Taxi Across Bhusawal" 
+              class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" 
+            />
           </div>
           <div class="p-3 bg-yellow-50/90">
             <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-yellow-100 to-amber-200 flex items-center justify-center shadow-xs">
@@ -300,442 +373,173 @@ const verifiedPartnerStores = [
             <img onerror="this.onerror=null;this.src='/assets/services/service_parcel_hero.jpg';" loading="lazy" src="/assets/services/service_parcel_hero.jpg?v=3" alt="Send Parcels Anywhere in Bhusawal" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
           <div class="p-3 bg-orange-50/90">
-            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-orange-100 to-amber-200 flex items-center justify-center shadow-xs">
-              <span class="material-symbols-outlined text-orange-800 text-lg">package_2</span>
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-orange-100 to-red-200 flex items-center justify-center shadow-xs">
+              <span class="material-symbols-outlined text-orange-700 text-lg">local_shipping</span>
             </div>
-            <h4 class="text-xs font-black text-slate-900">Parcel Delivery</h4>
-            <p class="text-[10px] font-bold text-orange-800 mt-0.5 leading-tight">Send Parcels Anywhere in Bhusawal</p>
+            <h4 class="text-xs font-black text-slate-900">Send Parcel</h4>
+            <p class="text-[10px] font-bold text-orange-800 mt-0.5 leading-tight">Fast City Courier</p>
           </div>
         </a>
 
-        <!-- 7. Local Shops -->
         <!-- 6. Local Shops -->
         <a href="/shops" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
-          <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center p-3 overflow-hidden">
-            <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_local_shops.jpg" alt="Local Shops" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+          <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-purple-50 to-indigo-100 flex items-center justify-center p-3 overflow-hidden">
+            <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_shops.jpg" alt="Local Shops" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
           <div class="p-3">
-            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-purple-100 to-pink-200 flex items-center justify-center shadow-xs">
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-purple-100 to-indigo-200 flex items-center justify-center shadow-xs">
               <span class="material-symbols-outlined text-purple-700 text-lg">storefront</span>
             </div>
             <h4 class="text-xs font-black text-slate-900">Local Shops</h4>
-            <p class="text-[10px] font-bold text-purple-600 mt-0.5 leading-tight">Trusted Bhusawal Retailers</p>
+            <p class="text-[10px] font-bold text-purple-600 mt-0.5 leading-tight">Explore Local Businesses</p>
           </div>
         </a>
 
       </div>
     </section>
 
-    <!-- 5. FEATURED PARTNER STORES SECTION -->
-    <section class="space-y-4">
+    <!-- 5. SPONSORED PARTNERS CAROUSEL -->
+    <section class="space-y-3 pt-2">
       <div class="flex items-center justify-between px-1">
         <div>
-          <h3 class="text-xl font-black font-display text-slate-900 tracking-tight">Featured Partner Stores</h3>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Top verified merchants in Bhusawal</p>
+          <h3 class="text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-1.5">
+            <span>⭐</span> Sponsored Partners
+          </h3>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Top trusted brands in Bhusawal</p>
         </div>
-        <a href="/shops" class="text-xs font-bold text-purpleBrand hover:underline flex items-center gap-0.5">
-          View All Stores
-          <span class="material-symbols-outlined text-sm">chevron_right</span>
-        </a>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {verifiedPartnerStores.map(store => (
-          <a href={`/shops?id=${store.id}`} class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all duration-300 overflow-hidden group cursor-pointer flex flex-col">
-            <div class="h-36 bg-slate-100 relative overflow-hidden">
-              <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src={store.cover} alt={store.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+      <div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+        {sponsoredPartners.map(p => (
+          <a href={p.link} class="flex-shrink-0 w-72 sm:w-80 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all overflow-hidden group cursor-pointer">
+            <div class="h-36 w-full relative overflow-hidden bg-slate-100">
+              <img src={p.cover} alt={p.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
-              
-              <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-emerald-700 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider flex items-center gap-1 shadow-xs">
-                <span>✓ Verified Partner Store</span>
-              </div>
-
-              <div class="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-[10px] font-black flex items-center gap-1 shadow-xs">
-                <span class="material-symbols-outlined text-xs">schedule</span>
-                <span>{store.time}</span>
-              </div>
+              <span class="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-wider">
+                Sponsored
+              </span>
+              <span class="absolute bottom-3 right-3 px-2.5 py-0.5 rounded-full bg-slate-900/80 text-white text-[10px] font-bold backdrop-blur-md">
+                ⚡ {p.time}
+              </span>
             </div>
-
-            <div class="p-4 space-y-2 flex-1 flex flex-col justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purpleBrand flex items-center justify-center text-xl shrink-0 border border-purple-100 shadow-xs">
-                  {store.logo}
-                </div>
-                <div>
-                  <h4 class="text-base font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors">{store.name}</h4>
-                  <p class="text-xs font-bold text-slate-400 mt-0.5">{store.tag}</p>
-                </div>
+            <div class="p-4 space-y-1">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-black text-purpleBrand uppercase">{p.type}</span>
+                <span class="text-[10px] font-bold text-amber-500">⭐ {p.rating}</span>
               </div>
-              <div class="flex items-center justify-between text-xs font-black text-slate-700 pt-2 border-t border-slate-100">
-                <span class="flex items-center gap-1 text-amber-600">
-                  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                  {store.rating} <span class="text-[10px] text-slate-400 font-semibold">({store.count})</span>
-                </span>
-                <span class="text-purpleBrand font-extrabold">Open Now</span>
-              </div>
+              <h4 class="text-sm font-black text-slate-900 truncate group-hover:text-purpleBrand transition-colors">{p.name}</h4>
+              <p class="text-xs text-slate-400 font-medium truncate">{p.tagline}</p>
             </div>
           </a>
         ))}
       </div>
     </section>
 
-    <!-- 6. TRENDING ESSENTIALS CATALOG GRID -->
-    <section class="space-y-4 pt-2">
+    <!-- 6. POPULAR GROCERY STAPLES -->
+    <section class="space-y-3 pt-2">
       <div class="flex items-center justify-between px-1">
         <div>
-          <h3 class="text-xl font-black font-display text-slate-900 tracking-tight">Trending Essentials in Bhusawal</h3>
-          <p class="text-xs text-slate-500 font-medium mt-0.5">Top ordered items with 10-Min doorstep delivery</p>
+          <h3 class="text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-1.5">
+            <span>🛒</span> Popular Grocery Staples
+          </h3>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Top daily essentials delivered fast</p>
         </div>
-        <a href="/grocery" class="text-xs font-bold text-purpleBrand hover:underline">View Store</a>
+        <a href="/grocery" class="text-xs font-bold text-purpleBrand hover:underline">View All →</a>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
-        {trendingProducts.map(p => {
-          const id = p["Product ID"] || p.ProductID || p.id;
-          const name = p.displayName || p.name || p["Product Name"] || p.originalName || "";
-          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50);
-          const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-          const pack = p["Pack Size"] || p.pack || '1 Unit';
-
-          return (
-            <div class="bg-white rounded-2xl p-3 border border-slate-100 shadow-xs hover:shadow-lg hover:border-purple-200 transition-all flex flex-col justify-between group">
-              <div>
-                <div class="w-full aspect-square bg-slate-50 rounded-xl p-1.5 mb-2 flex items-center justify-center border border-slate-100 overflow-hidden">
-                  <img loading="lazy" src={img} alt={name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-                </div>
-                <h4 class="text-xs font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem]">{name}</h4>
-                <p class="text-[10px] font-semibold text-slate-400 mt-0.5">{pack}</p>
-              </div>
-
-              <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-1 mt-2">
-                <span class="text-xs font-black text-slate-900">MRP ₹{mrp}</span>
-                <button class="add-home-cart-btn px-2.5 py-1 bg-purple-50 text-purpleBrand hover:bg-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id={id} data-name={name.replace(/"/g, '&quot;')} data-price={mrp} data-img={img}>
-                  + ADD
-                </button>
-              </div>
+      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+        {popularGroceryProducts.map(item => (
+          <div class="flex-shrink-0 w-36 sm:w-40 bg-white rounded-2xl border border-slate-100 p-2.5 flex flex-col justify-between hover:shadow-lg transition-all group">
+            <a href={`/product/${encodeURIComponent(item.id || item.ProductID || 'BC-000001')}`} class="h-28 w-full bg-slate-50 rounded-xl flex items-center justify-center p-2 mb-2">
+              <img src={item.img || item['Product Image URL']} alt={item.name || item['Product Name']} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+            </a>
+            <span class="text-[8px] font-black text-purpleBrand uppercase truncate">{item.brand || item['Brand Name'] || 'Bhusawal Fresh'}</span>
+            <a href={`/product/${encodeURIComponent(item.id || item.ProductID || 'BC-000001')}`} class="text-xs font-bold text-slate-900 line-clamp-2 leading-tight hover:text-purpleBrand">{item.name || item['Product Name']}</a>
+            <p class="text-[10px] text-slate-400 font-medium truncate">{item.pack || item.Unit || '1 Unit'}</p>
+            <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-50">
+              <span class="text-xs font-black text-slate-900">₹{item.sp || item['Selling Price'] || item.mrp || 50}</span>
+              <button class="px-2 py-1 bg-purple-50 text-purpleBrand hover:bg-purpleBrand hover:text-white rounded-lg text-[10px] font-black transition-colors" onclick={`window.BHUSAWAL_BACKEND.cart.addItem({ id: '${item.id || item.ProductID}', name: '${(item.name || item['Product Name'] || '').replace(/'/g, "\\'")}', price: ${item.sp || item.mrp || 50}, img: '${item.img || item['Product Image URL']}' }, 1); window.BHUSAWAL_NOTIFICATIONS.success('Added to cart!');`}>
+                + ADD
+              </button>
             </div>
-          );
-        })}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 7. POPULAR FOOD & DISHES -->
+    <section class="space-y-3 pt-2">
+      <div class="flex items-center justify-between px-1">
+        <div>
+          <h3 class="text-xl font-black font-display text-slate-900 tracking-tight flex items-center gap-1.5">
+            <span>🍔</span> Popular Restaurant Food
+          </h3>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">Hot delicious meals from top restaurants</p>
+        </div>
+        <a href="/food" class="text-xs font-bold text-purpleBrand hover:underline">View All →</a>
+      </div>
+
+      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+        {popularFoodItems.map(item => (
+          <div class="flex-shrink-0 w-36 sm:w-40 bg-white rounded-2xl border border-slate-100 p-2.5 flex flex-col justify-between hover:shadow-lg transition-all group">
+            <a href={`/product/${encodeURIComponent(item.id || 'food_1')}`} class="h-28 w-full bg-slate-50 rounded-xl overflow-hidden mb-2">
+              <img src={item.image || item.img} alt={item.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+            </a>
+            <span class="text-[8px] font-black text-orange-600 uppercase truncate">{item.restaurant || 'Bhusawal Dine'}</span>
+            <a href={`/product/${encodeURIComponent(item.id || 'food_1')}`} class="text-xs font-bold text-slate-900 line-clamp-2 leading-tight hover:text-purpleBrand">{item.name}</a>
+            <p class="text-[10px] text-slate-400 font-medium truncate">Fresh & Hot</p>
+            <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-50">
+              <span class="text-xs font-black text-slate-900">₹{item.price || 120}</span>
+              <button class="px-2 py-1 bg-amber-50 text-amber-700 hover:bg-amber-600 hover:text-white rounded-lg text-[10px] font-black transition-colors" onclick={`window.BHUSAWAL_BACKEND.cart.addItem({ id: '${item.id || 'food_1'}', name: '${(item.name || '').replace(/'/g, "\\'")}', price: ${item.price || 120}, img: '${item.image || item.img}' }, 1); window.BHUSAWAL_NOTIFICATIONS.success('Added to cart!');`}>
+                + ADD
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
 
   </main>
-<!-- CLIENT-SIDE GLOBAL SEARCH ENGINE -->
+
+  <!-- BOTTOM NAVIGATION BAR -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-100 py-2 px-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-around">
+      <a href="/home" class="flex flex-col items-center gap-0.5 text-purpleBrand">
+        <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">home</span>
+        <span class="text-[9px] font-black">Home</span>
+      </a>
+      <a href="/grocery" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-purpleBrand transition-colors">
+        <span class="material-symbols-outlined text-xl">local_grocery_store</span>
+        <span class="text-[9px] font-bold">Grocery</span>
+      </a>
+      <a href="/orders" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-purpleBrand transition-colors">
+        <span class="material-symbols-outlined text-xl">receipt_long</span>
+        <span class="text-[9px] font-bold">Orders</span>
+      </a>
+      <a href="/profile" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-purpleBrand transition-colors">
+        <span class="material-symbols-outlined text-xl">person</span>
+        <span class="text-[9px] font-bold">Account</span>
+      </a>
+    </div>
+  </nav>
+
   <script is:inline>
-    document.addEventListener('DOMContentLoaded', async () => {
-
-      let fullCatalog = [];
-      try {
-        const res = await fetch('/grocery_catalog.json');
-        fullCatalog = await res.json();
-      } catch(e) {
-        console.error("Failed to load search catalog", e);
-      }
-
-      // Sample Stores & Food Datasets for Cross-Domain Search
-      const STORES_LIST = [
-        { name: 'Bhusawal Express Superstore', tag: 'Supermarket • 25,500+ Items', link: '/grocery', icon: '🏬' },
-        { name: 'Royal Biryani & Caterers', tag: 'Mughlai & North Indian', link: '/food', icon: '🍲' },
-        { name: 'Modern Pharmacy & Wellness', tag: 'Essential Medicines', link: '/medicines', icon: '💊' },
-        { name: 'Shiv Dairy & Sweets', tag: 'Fresh Milk & Paneer', link: '/shops', icon: '🥛' },
-        { name: "Kwality Wall's Ice Cream Hub", tag: 'Ice Creams & Shakes', link: '/shops', icon: '🍦' }
-      ];
-
-      const MEDICINES_LIST = [
-        { name: 'Paracetamol 500mg Tablet', desc: 'Fever & Pain Relief', price: 15, link: '/medicines' },
-        { name: 'Dolo 650mg Anti-Pyretic', desc: 'High Fever Relief', price: 30, link: '/medicines' },
-        { name: 'Crocin Pain Relief 650', desc: 'Headache & Body Pain', price: 24, link: '/medicines' },
-        { name: 'Gelusil Antacid Syrup (200ml)', desc: 'Acidity & Gas Relief', price: 110, link: '/medicines' },
-        { name: 'Vicks Vaporub (50g)', desc: 'Cold & Cough Balm', price: 145, link: '/medicines' },
-        { name: 'ORAL REHYDRATION SALTS ORS', desc: 'Dehydration Solution', price: 20, link: '/medicines' }
-      ];
-
-      const FOOD_ITEMS_LIST = [
-        { name: 'Royal Chicken Dum Biryani', desc: 'Aromatic Basmati Rice & Tender Spiced Chicken', price: 180, link: '/food' },
-        { name: 'Paneer Butter Masala', desc: 'Rich Tomato Butter Gravy with Fresh Cottage Cheese', price: 160, link: '/food' },
-        { name: 'Butter Tandoori Roti (4 Pcs)', desc: 'Whole Wheat Clay Oven Bread', price: 40, link: '/food' },
-        { name: 'Special Bhusawal Banana Halwa', desc: 'Traditional Local Sweet', price: 90, link: '/food' }
-      ];
-
-      const CATEGORIES_LIST = [
-        { name: 'Fruits & Vegetables', link: '/grocery?category=Fruits%20%26%20Vegetables' },
-        { name: 'Dairy & Breakfast', link: '/grocery?category=Dairy%20%26%20Breakfast' },
-        { name: 'Grocery Staples', link: '/grocery?category=Grocery%20Staples' },
-        { name: 'Snacks & Confectionery', link: '/grocery?category=Snacks%20%26%20Confectionery' },
-        { name: 'Beverages', link: '/grocery?category=Beverages' },
-        { name: 'Personal Care', link: '/grocery?category=Personal%20Care' }
-      ];
-
-      // Recent Searches LocalStorage System
-      function getRecentSearches() {
-        try {
-          return JSON.parse(localStorage.getItem('bhusawal_recent_searches') || '[]');
-        } catch(e) { return []; }
-      }
-
-      function addRecentSearch(query) {
-        if (!query || query.trim().length < 2) return;
-        let list = getRecentSearches();
-        list = list.filter(q => q.toLowerCase() !== query.toLowerCase());
-        list.unshift(query);
-        if (list.length > 6) list = list.slice(0, 6);
-        localStorage.setItem('bhusawal_recent_searches', JSON.stringify(list));
-        renderRecentSearches();
-      }
-
-      function renderRecentSearches() {
-        const box = document.getElementById('recent-searches-box');
-        const listEl = document.getElementById('recent-searches-list');
-        const recent = getRecentSearches();
-
-        if (!recent || recent.length === 0) {
-          box?.classList.add('hidden');
-          return;
-        }
-
-        box?.classList.remove('hidden');
-        listEl.innerHTML = recent.map(q => `
-          <button class="recent-search-tag px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-purple-100 text-slate-700 hover:text-purpleBrand text-xs font-bold transition-all flex items-center gap-1" data-query="${q.replace(/"/g, '&quot;')}">
-            <span class="material-symbols-outlined text-xs text-slate-400">history</span>
-            <span>${q}</span>
-          </button>
-        `).join('');
-
-        listEl.querySelectorAll('.recent-search-tag').forEach(btn => {
-          btn.onclick = () => {
-            const query = btn.dataset.query;
-            searchInput.value = query;
-            performGlobalSearch(query);
-          };
-        });
-      }
-
-      document.getElementById('clear-recent-btn')?.addEventListener('click', () => {
-        localStorage.removeItem('bhusawal_recent_searches');
-        renderRecentSearches();
-      });
-
-      renderRecentSearches();
-
-      // Input & Dropdown Handlers
+    // Simple Search input listener to redirect or show drop
+    document.addEventListener('DOMContentLoaded', () => {
       const searchInput = document.getElementById('main-search-input');
       const dropdown = document.getElementById('search-results-dropdown');
-      const defaultView = document.getElementById('search-default-view');
-      const activeResults = document.getElementById('search-active-results');
-
-      searchInput?.addEventListener('focus', () => {
-        dropdown?.classList.remove('hidden');
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!e.target.closest('#main-search-input') && !e.target.closest('#search-results-dropdown')) {
-          dropdown?.classList.add('hidden');
-        }
-      });
-
-      // Popular Searches Tags Handler
-      document.querySelectorAll('.pop-search-tag').forEach(tag => {
-        tag.addEventListener('click', () => {
-          const query = tag.textContent.trim();
-          searchInput.value = query;
-          performGlobalSearch(query);
+      
+      if (searchInput && dropdown) {
+        searchInput.addEventListener('focus', () => {
+          dropdown.classList.remove('hidden');
         });
-      });
 
-      // Voice Search Support
-      const micBtn = document.getElementById('mic-search-btn');
-      if (micBtn && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-IN';
-        
-        micBtn.onclick = () => {
-          micBtn.classList.add('animate-pulse', 'text-rose-500');
-          recognition.start();
-        };
-
-        recognition.onresult = (event) => {
-          const transcript = event.results[0][0].transcript;
-          searchInput.value = transcript;
-          micBtn.classList.remove('animate-pulse', 'text-rose-500');
-          performGlobalSearch(transcript);
-        };
-
-        recognition.onerror = () => {
-          micBtn.classList.remove('animate-pulse', 'text-rose-500');
-        };
-      }
-
-      // Fast Global Search Algorithm across Products, Stores, Medicines, Food, Categories, Brands
-      function performGlobalSearch(query) {
-        if (!query || query.trim().length === 0) {
-          defaultView?.classList.remove('hidden');
-          activeResults?.classList.add('hidden');
-          return;
-        }
-
-        const q = query.trim().toLowerCase();
-        addRecentSearch(query.trim());
-
-        defaultView?.classList.add('hidden');
-        activeResults?.classList.remove('hidden');
-
-        // 1. Search Stores
-        const matchingStores = STORES_LIST.filter(s => s.name.toLowerCase().includes(q) || s.tag.toLowerCase().includes(q));
-
-        // 2. Search Medicines
-        const matchingMedicines = MEDICINES_LIST.filter(m => m.name.toLowerCase().includes(q) || m.desc.toLowerCase().includes(q));
-
-        // 3. Search Food
-        const matchingFood = FOOD_ITEMS_LIST.filter(f => f.name.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q));
-
-        // 4. Search Categories
-        const matchingCategories = CATEGORIES_LIST.filter(c => c.name.toLowerCase().includes(q));
-
-        // 5. Search Products from 25,500+ Database
-        const matchingProducts = fullCatalog.filter(p => {
-          const name = (p["Product Name"] || '').toLowerCase();
-          const brand = (p["Brand Name"] || '').toLowerCase();
-          const cat = (p.Category || '').toLowerCase();
-          return name.includes(q) || brand.includes(q) || cat.includes(q);
-        }).slice(0, 15);
-
-        let html = '';
-
-        // Render Stores Matches
-        if (matchingStores.length > 0) {
-          html += `
-            <div class="py-2">
-              <span class="text-[10px] font-black text-purpleBrand uppercase tracking-wider block px-2 mb-1">🏬 Partner Stores</span>
-              ${matchingStores.map(s => `
-                <a href="${s.link}" class="flex items-center justify-between p-2 hover:bg-purple-50 rounded-2xl transition-all">
-                  <div class="flex items-center gap-2">
-                    <span class="text-lg">${s.icon}</span>
-                    <div>
-                      <h4 class="text-xs font-black text-slate-900">${s.name}</h4>
-                      <p class="text-[10px] font-bold text-slate-400">${s.tag}</p>
-                    </div>
-                  </div>
-                  <span class="text-xs font-black text-purpleBrand">Visit Store →</span>
-                </a>
-              `).join('')}
-            </div>
-          `;
-        }
-
-        // Render Medicine Matches
-        if (matchingMedicines.length > 0) {
-          html += `
-            <div class="py-2">
-              <span class="text-[10px] font-black text-blue-600 uppercase tracking-wider block px-2 mb-1">💊 Medicines & Healthcare</span>
-              ${matchingMedicines.map(m => `
-                <a href="/medicines" class="flex items-center justify-between p-2 hover:bg-blue-50 rounded-2xl transition-all">
-                  <div>
-                    <h4 class="text-xs font-black text-slate-900">${m.name}</h4>
-                    <p class="text-[10px] font-bold text-slate-400">${m.desc}</p>
-                  </div>
-                  <span class="text-xs font-black text-slate-900">MRP ₹${m.price}</span>
-                </a>
-              `).join('')}
-            </div>
-          `;
-        }
-
-        // Render Food Matches
-        if (matchingFood.length > 0) {
-          html += `
-            <div class="py-2">
-              <span class="text-[10px] font-black text-orange-600 uppercase tracking-wider block px-2 mb-1">🍔 Restaurant Food</span>
-              ${matchingFood.map(f => `
-                <a href="/food" class="flex items-center justify-between p-2 hover:bg-orange-50 rounded-2xl transition-all">
-                  <div>
-                    <h4 class="text-xs font-black text-slate-900">${f.name}</h4>
-                    <p class="text-[10px] font-bold text-slate-400">${f.desc}</p>
-                  </div>
-                  <span class="text-xs font-black text-slate-900">₹${f.price}</span>
-                </a>
-              `).join('')}
-            </div>
-          `;
-        }
-
-        // Render Products Matches
-        if (matchingProducts.length > 0) {
-          html += `
-            <div class="py-2">
-              <span class="text-[10px] font-black text-emerald-600 uppercase tracking-wider block px-2 mb-1">🛒 Products (${matchingProducts.length} results)</span>
-              ${matchingProducts.map(p => {
-                const name = (p["Product Name"] || '').split(" (Batch")[0];
-                const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || 50);
-                const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-                return `
-                  <a href="/grocery?search=${encodeURIComponent(name)}" class="flex items-center justify-between p-2 hover:bg-emerald-50 rounded-2xl transition-all">
-                    <div class="flex items-center gap-2 min-w-0">
-                      <img loading="lazy" src="${img}" alt="${name}" class="w-8 h-8 object-contain rounded-lg bg-slate-50 border p-0.5 shrink-0" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-                      <div class="min-w-0">
-                        <h4 class="text-xs font-black text-slate-900 truncate">${name}</h4>
-                        <p class="text-[10px] font-bold text-slate-400">${p.Category || 'Grocery'}</p>
-                      </div>
-                    </div>
-                    <span class="text-xs font-black text-slate-900 shrink-0">MRP ₹${mrp}</span>
-                  </a>
-                `;
-              }).join('')}
-            </div>
-          `;
-        }
-
-        if (html === '') {
-          activeResults.innerHTML = `
-            <div class="py-8 text-center space-y-2">
-              <span class="material-symbols-outlined text-3xl text-slate-300">search_off</span>
-              <p class="text-xs font-bold text-slate-500">No exact matches found for "${query}".</p>
-              <a href="/grocery?search=${encodeURIComponent(query)}" class="inline-block px-4 py-2 bg-purpleBrand text-white text-xs font-black rounded-xl shadow-xs">
-                Search full 25,500+ Grocery Catalog →
-              </a>
-            </div>
-          `;
-        } else {
-          activeResults.innerHTML = html;
-        }
-      }
-
-      searchInput?.addEventListener('input', (e) => {
-        performGlobalSearch(e.target.value);
-      });
-
-      // Add to Cart Buttons
-      document.querySelectorAll('.add-home-cart-btn').forEach(btn => {
-        btn.onclick = () => {
-          const id = btn.dataset.id;
-          const name = btn.dataset.name;
-          const price = parseFloat(btn.dataset.price);
-          const img = btn.dataset.img;
-
-          let cart = [];
-          try {
-            cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-          } catch(e) {}
-
-          const existing = cart.find(i => i.id === id);
-          if (existing) {
-            existing.quantity = (existing.quantity || 1) + 1;
-          } else {
-            cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Home Item' });
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('#main-search-input') && !e.target.closest('#search-results-dropdown')) {
+            dropdown.classList.add('hidden');
           }
-
-          localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-          btn.textContent = '✓ ADDED';
-          btn.classList.replace('bg-purple-50', 'bg-emerald-600');
-          btn.classList.replace('text-purpleBrand', 'text-white');
-          setTimeout(() => {
-            btn.textContent = '+ ADD';
-            btn.classList.replace('bg-emerald-600', 'bg-purple-50');
-            btn.classList.replace('text-white', 'text-purpleBrand');
-          }, 1200);
-        };
-      });
-
+        });
+      }
     });
   </script>
 </body>
