@@ -1,0 +1,710 @@
+---
+// Bhusawal Connect - Official Delivery Partner Application
+---
+
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bhusawal Connect | Delivery Partner Dashboard</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <script is:inline>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            riderPrimary: '#2563EB',
+            riderPrimaryDark: '#1D4ED8',
+            riderPrimaryLight: '#EFF6FF',
+            riderSuccess: '#16A34A',
+            riderWarning: '#F59E0B',
+            riderError: '#DC2626'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+  <script is:inline src="/assets/smart_assignment_engine.js"></script>
+  <script is:inline src="/assets/delivery_workflow_engine.js"></script>
+  <script is:inline src="/assets/rider_push_notifications.js"></script>
+  <script is:inline src="/assets/google_navigation_engine.js"></script>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_dispatch_engine.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #F8FAFC;
+      color: #0F172A;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between selection:bg-blue-100 selection:text-blue-700">
+
+  <!-- ==================== TOP RIDER APP HEADER ==================== -->
+  <header class="bg-blue-600 text-white sticky top-0 z-50 border-b border-blue-700 shadow-md">
+    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 bg-white text-blue-600 rounded-xl flex items-center justify-center font-extrabold shadow-sm">
+          <span class="material-symbols-outlined text-2xl">two_wheeler</span>
+        </div>
+        <div>
+          <h1 class="text-base font-extrabold leading-tight tracking-tight">Bhusawal Connect</h1>
+          <p class="text-[11px] font-semibold text-blue-100 flex items-center gap-1">
+            <span>Delivery Fleet Console</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          </p>
+        </div>
+      </div>
+
+      <div id="header-status-badge" class="hidden flex items-center gap-2">
+        <span id="duty-indicator-pill" class="px-2.5 py-1 bg-blue-700 border border-blue-500 text-white text-[11px] font-bold rounded-lg flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-slate-300" id="duty-indicator-dot"></span>
+          <span id="duty-indicator-text">OFFLINE</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN RIDER VIEW CONTAINER ==================== -->
+  <main class="max-w-md mx-auto w-full flex-1 px-4 py-4 space-y-5">
+
+    <!-- ------------------ VIEW 1: LOGIN (MOBILE NUMBER) ------------------ -->
+    <section id="view-login" class="space-y-6">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+        <div class="space-y-1">
+          <span class="px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-[11px] font-extrabold uppercase tracking-wider">Official Partner Portal</span>
+          <h2 class="text-xl font-extrabold text-slate-900 pt-1">Delivery Partner Registration</h2>
+          <p class="text-xs font-semibold text-slate-500 leading-relaxed">Enter your registered mobile number to access your delivery fleet account.</p>
+        </div>
+
+        <form id="form-login" class="space-y-4" onsubmit="return false;">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">Mobile Number <span class="text-red-500">*</span></label>
+            <div class="relative flex items-center">
+              <span class="absolute left-3.5 text-sm font-extrabold text-slate-500 border-r border-slate-200 pr-2.5">+91</span>
+              <input
+                type="tel"
+                id="input-login-mobile"
+                maxlength="10"
+                placeholder="Enter 10-digit mobile number"
+                class="w-full pl-16 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-base font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+                required
+              />
+            </div>
+            <p id="error-login-mobile" class="hidden text-xs font-bold text-red-600 mt-1 flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">error</span> Enter a valid 10-digit mobile number
+            </p>
+          </div>
+
+          <button
+            type="submit"
+            id="btn-send-otp"
+            class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold text-sm rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Send OTP Verification</span>
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </button>
+        </form>
+      </div>
+
+      <div class="bg-blue-50/80 rounded-2xl p-4 border border-blue-200 space-y-2.5">
+        <div class="flex items-center gap-2 text-blue-900">
+          <span class="material-symbols-outlined text-blue-600">hub</span>
+          <h3 class="text-xs font-extrabold uppercase tracking-wider">One Fleet • 5 Service Orders</h3>
+        </div>
+        <p class="text-xs font-medium text-slate-600 leading-relaxed">
+          Bhusawal Connect operates a single unified delivery fleet. Registered partners receive orders across:
+        </p>
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <div class="bg-white p-2 rounded-xl border border-blue-100 flex items-center gap-2 text-xs font-bold text-slate-700 shadow-2xs">
+            <span class="text-base">🛒</span> Grocery (Max 2)
+          </div>
+          <div class="bg-white p-2 rounded-xl border border-blue-100 flex items-center gap-2 text-xs font-bold text-slate-700 shadow-2xs">
+            <span class="text-base">🍽️</span> Food (Max 2)
+          </div>
+          <div class="bg-white p-2 rounded-xl border border-blue-100 flex items-center gap-2 text-xs font-bold text-slate-700 shadow-2xs">
+            <span class="text-base">💊</span> Medicines (Max 2)
+          </div>
+          <div class="bg-white p-2 rounded-xl border border-blue-100 flex items-center gap-2 text-xs font-bold text-slate-700 shadow-2xs">
+            <span class="text-base">🏪</span> Local Shops (Max 2)
+          </div>
+          <div class="bg-white p-2 rounded-xl border border-blue-100 flex items-center gap-2 text-xs font-bold text-slate-700 shadow-2xs col-span-2">
+            <span class="text-base">📦</span> Parcel (Strict Max 1)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------ VIEW 2: OTP VERIFICATION ------------------ -->
+    <section id="view-otp" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <button id="btn-back-to-login" class="text-xs font-bold text-blue-600 flex items-center gap-1 hover:underline">
+            <span class="material-symbols-outlined text-sm">arrow_back</span> Change Number
+          </button>
+          <span class="text-xs font-bold text-slate-400">Step 2 of 4</span>
+        </div>
+
+        <div class="space-y-1">
+          <h2 class="text-xl font-extrabold text-slate-900">OTP Verification</h2>
+          <p class="text-xs font-semibold text-slate-500">
+            Enter the 4-digit code sent to <strong id="display-otp-mobile" class="text-slate-900">+91 9876543210</strong>
+          </p>
+        </div>
+
+        <form id="form-otp" class="space-y-4" onsubmit="return false;">
+          <div class="flex justify-between gap-2.5 max-w-xs mx-auto py-2">
+            <input type="tel" maxlength="1" class="otp-box w-12 h-14 bg-slate-50 border-2 border-slate-300 rounded-xl text-center text-xl font-black text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none" required />
+            <input type="tel" maxlength="1" class="otp-box w-12 h-14 bg-slate-50 border-2 border-slate-300 rounded-xl text-center text-xl font-black text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none" required />
+            <input type="tel" maxlength="1" class="otp-box w-12 h-14 bg-slate-50 border-2 border-slate-300 rounded-xl text-center text-xl font-black text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none" required />
+            <input type="tel" maxlength="1" class="otp-box w-12 h-14 bg-slate-50 border-2 border-slate-300 rounded-xl text-center text-xl font-black text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none" required />
+          </div>
+
+          <p id="error-otp" class="hidden text-xs font-bold text-red-600 text-center flex items-center justify-center gap-1">
+            <span class="material-symbols-outlined text-sm">error</span> Invalid OTP. Please try again.
+          </p>
+
+          <div class="flex items-center justify-between text-xs pt-1">
+            <span class="text-slate-500 font-medium">Auto-reading SMS...</span>
+            <button type="button" id="btn-resend-otp" class="font-bold text-blue-600 hover:underline">Resend OTP</button>
+          </div>
+
+          <button
+            type="submit"
+            id="btn-verify-otp"
+            class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold text-sm rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>Verify & Continue Registration</span>
+            <span class="material-symbols-outlined text-base">check_circle</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ------------------ VIEW 3: ONBOARDING & PERSONAL DETAILS ------------------ -->
+    <section id="view-onboarding" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5">
+        <div class="space-y-1 border-b border-slate-100 pb-3">
+          <span class="px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-[11px] font-extrabold uppercase tracking-wider">Step 3 of 4</span>
+          <h2 class="text-xl font-extrabold text-slate-900 pt-1">Partner Personal Profile</h2>
+          <p class="text-xs font-semibold text-slate-500">Provide personal, vehicle, and work availability details.</p>
+        </div>
+
+        <form id="form-onboarding" class="space-y-4" onsubmit="return false;">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Full Name <span class="text-red-500">*</span></label>
+            <input
+              type="text"
+              id="input-full-name"
+              placeholder="e.g. Rahul Ramesh Patil"
+              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+              required
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Emergency Contact <span class="text-red-500">*</span></label>
+              <input
+                type="tel"
+                id="input-emergency-phone"
+                maxlength="10"
+                placeholder="10-digit mobile"
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">City <span class="text-red-500">*</span></label>
+              <input
+                type="text"
+                id="input-city"
+                value="Bhusawal"
+                readonly
+                class="w-full px-3.5 py-2.5 bg-slate-100 border border-slate-300 rounded-xl text-sm font-extrabold text-slate-700 cursor-not-allowed"
+              />
+            </div>
+          </div>
+
+          <!-- TWO-WHEELER AUTOMATIC SELECTION (Bhusawal Connect supports Two-Wheelers only) -->
+          <div class="bg-blue-50/70 p-3 rounded-xl border border-blue-200 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-blue-600 text-lg">two_wheeler</span>
+              <div>
+                <span class="font-extrabold text-slate-900 block">Two-Wheeler Fleet (Bike / Scooter)</span>
+                <span class="text-[10px] text-slate-500 font-semibold block">Default fleet vehicle type</span>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 bg-blue-600 text-white rounded text-[10px] font-black uppercase">Standard</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Vehicle Registration Number <span class="text-slate-400 font-normal">(Optional)</span></label>
+            <input
+              type="text"
+              id="input-bike-no"
+              placeholder="e.g. MH 19 AX 4892"
+              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white uppercase"
+            />
+          </div>
+
+          <button
+            type="submit"
+            id="btn-save-onboarding"
+            class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold text-sm rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer mt-2"
+          >
+            <span>Proceed to Document Upload</span>
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ------------------ VIEW 4: DOCUMENTATION & KYC UPLOAD ------------------ -->
+    <section id="view-kyc" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5">
+        <div class="space-y-1 border-b border-slate-100 pb-3">
+          <span class="px-2.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-md text-[11px] font-extrabold uppercase tracking-wider">Step 4 of 4</span>
+          <h2 class="text-xl font-extrabold text-slate-900 pt-1">Document Upload & Payout Setup</h2>
+          <p class="text-xs font-semibold text-slate-500">Upload profile photo, verification documents, and bank details for Admin review.</p>
+        </div>
+
+        <form id="form-kyc" class="space-y-4" onsubmit="return false;">
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-blue-600 text-base">account_circle</span> Profile Photo <span class="text-red-500">*</span>
+              </span>
+              <span id="badge-photo-status" class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Required</span>
+            </div>
+            <input type="file" id="file-photo" accept="image/*" class="w-full text-xs font-semibold text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-extrabold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" required />
+            <div id="preview-photo" class="hidden h-24 bg-white rounded-lg border border-slate-200 overflow-hidden flex items-center justify-center p-1">
+              <img id="img-preview-photo" src="" alt="Profile Photo Preview" class="max-h-full object-contain rounded-lg" />
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-blue-600 text-base">fingerprint</span> Aadhaar Card <span class="text-red-500">*</span>
+              </span>
+              <span id="badge-aadhaar-status" class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Required</span>
+            </div>
+            <input
+              type="text"
+              id="input-aadhaar-no"
+              maxlength="12"
+              placeholder="Enter 12-digit Aadhaar Number"
+              class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              required
+            />
+            <input type="file" id="file-aadhaar" accept="image/*" class="w-full text-xs font-semibold text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-extrabold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" required />
+          </div>
+
+          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
+            <span class="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-blue-600 text-base">description</span> RC Book / Vehicle Document <span class="text-slate-400 font-normal">(Optional)</span>
+            </span>
+            <input type="file" id="file-rc" accept="image/*" class="w-full text-xs font-semibold text-slate-600 file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:text-[11px] file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
+          </div>
+
+          <div class="border-t border-slate-100 pt-3 space-y-3">
+            <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-emerald-600 text-base">account_balance</span> Bank Account & UPI ID <span class="text-red-500">*</span>
+            </h3>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">UPI ID (Google Pay / PhonePe / Paytm) <span class="text-red-500">*</span></label>
+              <input
+                type="text"
+                id="input-upi-id"
+                placeholder="e.g. 9876543210@paytm"
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+                required
+              />
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Bank Account No. <span class="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  id="input-bank-acc"
+                  placeholder="30894218942"
+                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+                  required
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">IFSC Code <span class="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  id="input-bank-ifsc"
+                  placeholder="SBIN0000324"
+                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white uppercase"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            id="btn-submit-kyc"
+            class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-extrabold text-sm rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer mt-2"
+          >
+            <span>Submit Registration for Admin Approval</span>
+            <span class="material-symbols-outlined text-base">verified_user</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ------------------ VIEW 5: FULL RIDER DASHBOARD ------------------ -->
+    <section id="view-dashboard" class="hidden space-y-4">
+
+      <!-- PENDING APPROVAL WARNING BANNER (STRICT DUTY GATING) -->
+      <div id="pending-approval-card" class="bg-amber-50 rounded-2xl p-4 border-2 border-amber-300 space-y-2.5 shadow-sm">
+        <div class="flex items-center gap-2 text-amber-900">
+          <span class="material-symbols-outlined text-amber-600 text-2xl">pending_actions</span>
+          <div>
+            <h3 class="text-sm font-black uppercase tracking-wider">Account Status: PENDING ADMIN APPROVAL</h3>
+            <p class="text-[11px] font-bold text-amber-700">Registration & KYC documents submitted</p>
+          </div>
+        </div>
+        <p class="text-xs font-medium text-amber-900 leading-relaxed bg-white p-3 rounded-xl border border-amber-200">
+          🔒 <strong>Online Duty Disabled:</strong> All partner documents must be approved by Bhusawal Connect Admin before activation. Pending partners cannot turn online or receive orders.
+        </p>
+
+        <!-- ADMIN SIMULATION BUTTON -->
+        <div class="pt-1 flex items-center justify-between">
+          <span class="text-[10px] font-bold text-amber-700 uppercase tracking-wider">Admin Simulator:</span>
+          <button id="btn-admin-toggle-approve" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-black rounded-lg transition-colors flex items-center gap-1 shadow-xs cursor-pointer">
+            <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+            <span id="btn-admin-toggle-text">Simulate Admin Approval</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ACTIVE APPROVED STATUS BANNER -->
+      <div id="active-approval-card" class="hidden bg-emerald-50 rounded-2xl p-3.5 border border-emerald-200 flex items-start gap-3">
+        <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-xl">verified</span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-black text-emerald-900 uppercase tracking-wider">Status: APPROVED & ACTIVE</h3>
+            <span class="text-[10px] font-extrabold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">Fleet Partner</span>
+          </div>
+          <p class="text-xs font-semibold text-emerald-800 mt-0.5 leading-snug">
+            Your documents are approved. Toggle duty ON to start accepting delivery orders across Bhusawal.
+          </p>
+          <button id="btn-admin-revoke" class="mt-1 text-[10px] font-bold text-red-600 underline hover:text-red-800">
+            (Simulate Admin Revocation)
+          </button>
+        </div>
+      </div>
+
+      <!-- HIGH-VISIBILITY DUTY TOGGLE CARD -->
+      <div id="duty-card-container" class="bg-white rounded-2xl p-4 border-2 border-slate-200 shadow-md transition-colors opacity-75">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Duty Status</span>
+            <h2 id="duty-title" class="text-2xl font-black text-slate-900 tracking-tight">YOU ARE OFFLINE</h2>
+          </div>
+          <div id="duty-icon-box" class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center text-2xl font-black shadow-inner">
+            <span class="material-symbols-outlined text-3xl">power_settings_new</span>
+          </div>
+        </div>
+
+        <button
+          id="btn-toggle-duty"
+          disabled
+          class="w-full py-4 bg-slate-300 text-slate-500 font-black text-lg rounded-xl shadow-none transition-all flex items-center justify-center gap-2 cursor-not-allowed"
+        >
+          <span class="material-symbols-outlined text-2xl">lock</span>
+          <span id="btn-duty-text">APPROVAL PENDING</span>
+        </button>
+
+        <p id="duty-help-text" class="text-[11px] font-bold text-amber-600 text-center mt-2.5 flex items-center justify-center gap-1">
+          <span class="material-symbols-outlined text-sm">lock</span> Admin verification required before going online
+        </p>
+      </div>
+
+      <!-- MODULE 1: PROFILE SUMMARY CARD -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-blue-600 text-white font-black flex items-center justify-center text-xl shadow-md overflow-hidden" id="dash-avatar">
+              RP
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 id="dash-driver-name" class="text-base font-extrabold text-slate-900">Rahul Ramesh Patil</h3>
+                <span class="bg-amber-100 text-amber-800 text-[10px] font-black px-2 py-0.5 rounded flex items-center gap-0.5">
+                  ★ <span id="dash-rating-val">4.9</span>
+                </span>
+              </div>
+              <p id="dash-driver-id" class="text-xs font-bold text-blue-600">ID: BHU-RIDER-8942 • <span id="dash-vehicle-summary">⚡ EV Scooter</span></p>
+            </div>
+          </div>
+          <button id="btn-edit-kyc" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-extrabold rounded-xl transition-colors">
+            Edit
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Phone Number</span>
+            <span id="dash-phone" class="font-extrabold text-slate-800">+91 9876543210</span>
+          </div>
+          <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Bike Number</span>
+            <span id="dash-bike-no" class="font-extrabold text-slate-800">MH 19 AX 4892</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE 2: METRICS KPI GRID -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-2xl p-3.5 shadow-md flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-black uppercase tracking-wider text-emerald-100">Today's Earnings</span>
+            <span class="material-symbols-outlined text-emerald-200 text-lg">payments</span>
+          </div>
+          <div class="mt-2">
+            <span id="kpi-earnings-today" class="text-2xl font-black font-display tracking-tight">₹0</span>
+            <span class="text-[10px] block text-emerald-100 font-bold mt-0.5" id="kpi-payout-subtitle">0 Delivered Today</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400">
+            <span class="text-[10px] font-black uppercase tracking-wider">Completed</span>
+            <span class="material-symbols-outlined text-blue-600 text-lg">task_alt</span>
+          </div>
+          <div class="mt-2">
+            <span id="kpi-completed-today" class="text-2xl font-black text-slate-900 tracking-tight">0</span>
+            <span class="text-[10px] block text-slate-400 font-bold mt-0.5">Fleet Trips</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400">
+            <span class="text-[10px] font-black uppercase tracking-wider">Acceptance</span>
+            <span class="material-symbols-outlined text-amber-500 text-lg">speed</span>
+          </div>
+          <div class="mt-2">
+            <span id="kpi-acceptance-rate" class="text-2xl font-black text-slate-900 tracking-tight">98%</span>
+            <span class="text-[10px] block text-slate-400 font-bold mt-0.5">High Performance</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between text-slate-400">
+            <span class="text-[10px] font-black uppercase tracking-wider">Active Tasks</span>
+            <span class="material-symbols-outlined text-purple-600 text-lg">local_shipping</span>
+          </div>
+          <div class="mt-2">
+            <span id="kpi-active-tasks-count" class="text-2xl font-black text-blue-600 tracking-tight">0</span>
+            <span class="text-[10px] block text-slate-400 font-bold mt-0.5">In Progress</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE 3: ACTIVE DELIVERY ORDERS CONTAINER -->
+      <div id="active-orders-section" class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-blue-600 text-lg">route</span>
+            <span>Current Delivery Route & Orders</span>
+          </h3>
+          <span id="active-task-badge" class="px-2.5 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-black rounded-full uppercase">
+            Idle / Ready
+          </span>
+        </div>
+
+        <div id="active-orders-list" class="space-y-3">
+          <!-- Dynamically populated active order workflow card -->
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 text-center space-y-2 shadow-sm">
+            <span class="text-3xl">🛵</span>
+            <h4 class="text-sm font-extrabold text-slate-800">No active delivery assignments</h4>
+            <p class="text-xs text-slate-400 font-medium">Turn Duty ON to receive instant orders across Bhusawal.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- BOTTOM FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-3 px-4 text-center text-xs font-semibold text-slate-400 max-w-md mx-auto w-full">
+    Bhusawal Connect Delivery Partner Network • Helpline: +91 98765 00000
+  </footer>
+
+  <script is:inline>
+    // Rider App State Management
+    (function() {
+      const RIDER_AUTH_KEY = 'bhusawal_rider_auth';
+      
+      let riderAuth = {
+        isLoggedIn: false,
+        mobile: '',
+        name: 'Rahul Ramesh Patil',
+        isApproved: false,
+        isOnline: false,
+        activeOrders: []
+      };
+
+      try {
+        const saved = localStorage.getItem(RIDER_AUTH_KEY);
+        if (saved) {
+          riderAuth = Object.assign(riderAuth, JSON.parse(saved));
+        }
+      } catch (e) {}
+
+      function saveRiderAuth() {
+        localStorage.setItem(RIDER_AUTH_KEY, JSON.stringify(riderAuth));
+      }
+
+      function updateUI() {
+        const viewLogin = document.getElementById('view-login');
+        const viewOtp = document.getElementById('view-otp');
+        const viewOnboarding = document.getElementById('view-onboarding');
+        const viewKyc = document.getElementById('view-kyc');
+        const viewDashboard = document.getElementById('view-dashboard');
+        const headerBadge = document.getElementById('header-status-badge');
+
+        if (!riderAuth.isLoggedIn) {
+          viewLogin.classList.remove('hidden');
+          viewOtp.classList.add('hidden');
+          viewOnboarding.classList.add('hidden');
+          viewKyc.classList.add('hidden');
+          viewDashboard.classList.add('hidden');
+          headerBadge.classList.add('hidden');
+        } else {
+          viewLogin.classList.add('hidden');
+          viewOtp.classList.add('hidden');
+          viewOnboarding.classList.add('hidden');
+          viewKyc.classList.add('hidden');
+          viewDashboard.classList.remove('hidden');
+          headerBadge.classList.remove('hidden');
+          renderDashboard();
+        }
+      }
+
+      function renderDashboard() {
+        const pendingCard = document.getElementById('pending-approval-card');
+        const activeCard = document.getElementById('active-approval-card');
+        const btnToggle = document.getElementById('btn-toggle-duty');
+        const btnDutyText = document.getElementById('btn-duty-text');
+        const dutyTitle = document.getElementById('duty-title');
+        const dutyCard = document.getElementById('duty-card-container');
+        const indicatorText = document.getElementById('duty-indicator-text');
+        const indicatorDot = document.getElementById('duty-indicator-dot');
+
+        if (riderAuth.isApproved) {
+          pendingCard.classList.add('hidden');
+          activeCard.classList.remove('hidden');
+          btnToggle.disabled = false;
+          btnToggle.classList.remove('cursor-not-allowed', 'bg-slate-300', 'text-slate-500');
+
+          if (riderAuth.isOnline) {
+            btnToggle.className = 'w-full py-4 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-black text-lg rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
+            btnDutyText.innerText = 'GO OFFLINE';
+            dutyTitle.innerText = 'YOU ARE ONLINE';
+            dutyCard.classList.remove('opacity-75');
+            dutyCard.classList.add('border-emerald-500', 'bg-emerald-50/20');
+            indicatorText.innerText = 'ONLINE';
+            indicatorDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+          } else {
+            btnToggle.className = 'w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-lg rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
+            btnDutyText.innerText = 'GO ONLINE (START DUTY)';
+            dutyTitle.innerText = 'YOU ARE OFFLINE';
+            dutyCard.classList.remove('border-emerald-500', 'bg-emerald-50/20');
+            indicatorText.innerText = 'OFFLINE';
+            indicatorDot.className = 'w-2 h-2 rounded-full bg-slate-300';
+          }
+        } else {
+          pendingCard.classList.remove('hidden');
+          activeCard.classList.add('hidden');
+          btnToggle.disabled = true;
+          btnToggle.className = 'w-full py-4 bg-slate-300 text-slate-500 font-black text-lg rounded-xl shadow-none transition-all flex items-center justify-center gap-2 cursor-not-allowed';
+          btnDutyText.innerText = 'APPROVAL PENDING';
+          dutyTitle.innerText = 'YOU ARE OFFLINE';
+          dutyCard.classList.add('opacity-75');
+          indicatorText.innerText = 'PENDING';
+          indicatorDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+        }
+
+        document.getElementById('dash-driver-name').innerText = riderAuth.name || 'Rahul Ramesh Patil';
+        document.getElementById('dash-phone').innerText = riderAuth.mobile ? '+91 ' + riderAuth.mobile : '+91 9876543210';
+      }
+
+      // Login form submission
+      document.getElementById('form-login').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const mobile = document.getElementById('input-login-mobile').value.trim();
+        if (mobile.length === 10) {
+          riderAuth.mobile = mobile;
+          document.getElementById('display-otp-mobile').innerText = '+91 ' + mobile;
+          document.getElementById('view-login').classList.add('hidden');
+          document.getElementById('view-otp').classList.remove('hidden');
+        }
+      });
+
+      // OTP Verification
+      document.getElementById('form-otp').addEventListener('submit', (e) => {
+        e.preventDefault();
+        riderAuth.isLoggedIn = true;
+        saveRiderAuth();
+        updateUI();
+      });
+
+      // Duty toggle
+      document.getElementById('btn-toggle-duty').addEventListener('click', () => {
+        if (!riderAuth.isApproved) return;
+        riderAuth.isOnline = !riderAuth.isOnline;
+        saveRiderAuth();
+        renderDashboard();
+      });
+
+      // Admin simulate approval
+      document.getElementById('btn-admin-toggle-approve').addEventListener('click', () => {
+        riderAuth.isApproved = true;
+        saveRiderAuth();
+        renderDashboard();
+      });
+
+      // Admin simulate revoke
+      document.getElementById('btn-admin-revoke').addEventListener('click', () => {
+        riderAuth.isApproved = false;
+        riderAuth.isOnline = false;
+        saveRiderAuth();
+        renderDashboard();
+      });
+
+      // Initialize
+      updateUI();
+    })();
+  </script>
+</body>
+</html>
