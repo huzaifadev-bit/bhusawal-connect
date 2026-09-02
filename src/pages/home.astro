@@ -2,7 +2,6 @@
 import fs from 'fs';
 import path from 'path';
 
-// Read catalog databases at build-time for lightweight homepage rendering
 let catalog = [];
 try {
   const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
@@ -17,7 +16,6 @@ try {
   foodCatalog = JSON.parse(fs.readFileSync(foodPath, 'utf8'));
 } catch (err) {}
 
-// ==================== SPONSORED PARTNERS DATASET ====================
 const sponsoredPartners = [
   {
     id: 'sai-jeevan',
@@ -99,13 +97,9 @@ const sponsoredPartners = [
   }
 ];
 
-// Popular Grocery Products (16 Items)
 const popularGroceryProducts = catalog.slice(0, 16);
-
-// Popular Food Items (16 Items)
 const popularFoodItems = foodCatalog.slice(0, 16);
 
-// Popular Medicines (12 OTC Items)
 const popularMedicines = [
   { id: 'BC-MED-001', name: 'Dolo 650mg Paracetamol', pack: '15 Tablets', price: 32, mrp: 35, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'Paracetamol 650mg' },
   { id: 'BC-MED-002', name: 'Crocin 650 Advance', pack: '15 Tablets', price: 30, mrp: 34, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'Fast Acting Pain Relief' },
@@ -114,7 +108,7 @@ const popularMedicines = [
   { id: 'BC-MED-005', name: 'Becosules Z Multivitamin', pack: '20 Capsules', price: 48, mrp: 55, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'B-Complex & Zinc' },
   { id: 'BC-MED-006', name: 'Shelcal 500 Calcium', pack: '15 Tablets', price: 118, mrp: 135, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'Calcium & Vitamin D3' },
   { id: 'BC-MED-007', name: 'Vicks Vaporub Balm', pack: '50g Jar', price: 140, mrp: 155, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'Cough & Cold Relief' },
-  { id: 'BC-MED-008', name: 'Digene Acidity Gel Mint', pack: '200ml Mint', price: 135, mrp: 150, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'Antacid Gel' },
+  { id: 'BC-MED-008', name: 'Digene Acidity Gel Mint', pack: '200ml Mint', price: 135, mrp: 150, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'Antacid Gel' },
   { id: 'BC-MED-009', name: 'Revital H Daily Health', pack: '30 Capsules', price: 310, mrp: 350, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'Ginseng & Minerals' },
   { id: 'BC-MED-010', name: 'Electral Oral Electrolytes', pack: '21.8g Sachet', price: 22, mrp: 24, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80', desc: 'ORS Electrolyte' },
   { id: 'BC-MED-011', name: 'Cetzine 10mg Anti-Allergy', pack: '10 Tablets', price: 18, mrp: 21, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&q=80', desc: 'Cetirizine HCl' },
@@ -366,7 +360,13 @@ const popularSearches = [
         <!-- 4. Bike Taxi -->
         <a href="/bike_ride" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-yellow-50 to-amber-100 flex items-center justify-center p-3 overflow-hidden">
-            <img onerror="this.onerror=null;this.src='/assets/services/service_bike_taxi.jpg';" loading="lazy" src="/assets/services/service_bike_taxi.jpg" alt="Bike Taxi" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+            <img 
+              onerror="this.onerror=null;this.src='/assets/service_bike_taxi_v2.jpg';" 
+              loading="lazy" 
+              src="/assets/services/service_bike_taxi_v2.jpg?v=20260902" 
+              alt="Bike Ride" 
+              class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" 
+            />
           </div>
           <div class="p-3">
             <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-yellow-100 to-amber-200 flex items-center justify-center shadow-xs">
@@ -546,8 +546,7 @@ const popularSearches = [
                 <span class="material-symbols-outlined text-base">favorite</span>
               </button>
 
-              {hasValidLink ? (
-                <a href={productHref} class="relative w-full h-32 sm:h-36 bg-gradient-to-b from-green-50/30 to-slate-50/50 rounded-xl sm:rounded-2xl flex items-center justify-center p-1.5 mb-2 overflow-hidden group-hover:scale-105 transition-transform duration-300 shrink-0">
+              {hasValidLink ? (\n                <a href={productHref} class="relative w-full h-32 sm:h-36 bg-gradient-to-b from-green-50/30 to-slate-50/50 rounded-xl sm:rounded-2xl flex items-center justify-center p-1.5 mb-2 overflow-hidden group-hover:scale-105 transition-transform duration-300 shrink-0">
                   {hasDiscount && (
                     <span class="absolute top-1 left-1 px-1.5 py-0.5 bg-red-600 text-white text-[8px] font-black rounded uppercase">SALE</span>
                   )}
@@ -695,7 +694,7 @@ const popularSearches = [
               <div class="flex items-center justify-between pt-1.5 border-t border-slate-100 mt-auto">
                 <div class="flex items-baseline gap-1">
                   <span class="text-xs sm:text-sm font-black text-slate-900">₹{mPrice}</span>
-                  <span class="text-[9px] font-bold text-slate-400 line-through">₹{mMrp}</span>
+                  {hasDiscount && <span class="text-[9px] font-bold text-slate-400 line-through">₹{mMrp}</span>}
                 </div>
                 <div class="home-cart-action-area shrink-0">
                   <button 
@@ -740,693 +739,420 @@ const popularSearches = [
     </div>
   </nav>
 
-  <!-- ==================== UNIVERSAL SEARCH & CLIENT SCRIPTS ==================== -->
-  <script is:inline define:vars={{ serverGroceryCatalog: catalog, serverFoodCatalog: foodCatalog }}>
-    // Expose Recent Search helper globally
-    const RECENT_KEY = 'bhusawal_universal_recent_searches';
-    window.saveRecentSearch = function(term) {
-      if (!term || term.trim().length < 2) return;
-      let list = [];
-      try { list = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch(e) {}
-      const clean = term.trim();
-      list = list.filter(item => item.toLowerCase() !== clean.toLowerCase());
-      list.unshift(clean);
-      if (list.length > 8) list = list.slice(0, 8);
-      try { localStorage.setItem(RECENT_KEY, JSON.stringify(list)); } catch(e) {}
-    };
+  <!-- ==================== UNIVERSAL SEARCH & CLIENT SCRIPT ==================== -->
+  <script is:inline>
+    // Universal Global Search Implementation
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('main-search-input');
+      const clearSearchBtn = document.getElementById('clear-universal-search');
+      const micBtn = document.getElementById('mic-search-btn');
+      const searchDropdown = document.getElementById('search-results-dropdown');
+      const searchDefaultView = document.getElementById('search-default-view');
+      const searchActiveResults = document.getElementById('search-active-results');
+      const recentBox = document.getElementById('recent-searches-box');
+      const recentList = document.getElementById('recent-searches-list');
+      const clearRecentBtn = document.getElementById('clear-recent-btn');
 
-    (function initHomepageSystem() {
-      const groceryCatalog = serverGroceryCatalog || [];
-      const foodCatalog = serverFoodCatalog || [];
+      // Populate Quick Popular Grids inside Dropdown
+      const popProductsGrid = document.getElementById('dropdown-popular-products-grid');
+      const popRestaurantsGrid = document.getElementById('dropdown-popular-restaurants-grid');
+      const popStoresGrid = document.getElementById('dropdown-popular-stores-grid');
 
-      // Desktop Carousel Scrolling Controls
-      const track = document.getElementById('sponsored-carousel-track');
-      document.getElementById('sponsored-prev-btn')?.addEventListener('click', () => {
-        track?.scrollBy({ left: -320, behavior: 'smooth' });
-      });
-      document.getElementById('sponsored-next-btn')?.addEventListener('click', () => {
-        track?.scrollBy({ left: 320, behavior: 'smooth' });
-      });
-
-      // Cart Storage Helpers
-      function getCart() {
-        try { return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); } catch(e) { return []; }
-      }
-      function saveCart(cart) { localStorage.setItem('bhusawal_cart', JSON.stringify(cart)); }
-
-      function addToCart(id, name, price, img) {
-        let cart = getCart();
-        const existing = cart.find(i => i.id === id);
-        if (existing) existing.quantity = (existing.quantity || 1) + 1;
-        else cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Home Item' });
-        saveCart(cart);
-        refreshHomeProductButtons();
-      }
-
-      function changeQty(id, delta) {
-        let cart = getCart();
-        const idx = cart.findIndex(i => i.id === id);
-        if (idx > -1) {
-          cart[idx].quantity = (cart[idx].quantity || 1) + delta;
-          if (cart[idx].quantity <= 0) cart.splice(idx, 1);
-        }
-        saveCart(cart);
-        refreshHomeProductButtons();
-      }
-
-      // Wishlist Helpers
-      const WISHLIST_KEY = 'bhusawal_wishlist';
-      function getWishlist() {
-        try { return JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]'); } catch(e) { return []; }
-      }
-      function toggleWishlist(id, name, price, img, brand, pack) {
-        let list = getWishlist();
-        const idx = list.findIndex(i => (i.id || i["Product ID"]) === id);
-        if (idx > -1) list.splice(idx, 1);
-        else list.push({ id, name, price, mrp: price, image: img, brand, pack, cat: 'Grocery' });
-        localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
-        refreshHomeWishlistButtons();
-      }
-
-      function refreshHomeWishlistButtons() {
-        const wishlist = getWishlist();
-        const wishIds = new Set(wishlist.map(i => i.id || i["Product ID"]));
-
-        document.querySelectorAll('.home-wishlist-btn').forEach(btn => {
-          const id = btn.dataset.id;
-          const isW = wishIds.has(id);
-          const icon = btn.querySelector('.material-symbols-outlined');
-          if (isW) {
-            btn.classList.add('text-red-500', 'bg-red-50');
-            btn.classList.remove('text-slate-400');
-            if (icon) icon.style.fontVariationSettings = "'FILL' 1";
-          } else {
-            btn.classList.remove('text-red-500', 'bg-red-50');
-            btn.classList.add('text-slate-400');
-            if (icon) icon.style.fontVariationSettings = "'FILL' 0";
-          }
-        });
-      }
-
-      function refreshHomeProductButtons() {
-        const cart = getCart();
-        document.querySelectorAll('.home-cart-action-area').forEach(area => {
-          if (!area.dataset.originalHtml) {
-            area.dataset.originalHtml = area.innerHTML;
-          }
-          const card = area.closest('[data-product-id]');
-          if (!card) return;
-          const id = card.dataset.productId;
-          const btn = area.querySelector('[data-name]');
-          let name = '', price = 0, img = '';
-          if (btn) { name = btn.dataset.name; price = parseFloat(btn.dataset.price || 0); img = btn.dataset.img; }
-
-          const cartItem = cart.find(i => i.id === id);
-          const qty = cartItem ? (cartItem.quantity || 1) : 0;
-
-          if (qty > 0) {
-            area.innerHTML = `<div class="flex items-center bg-purpleBrand text-white font-extrabold text-[10px] rounded-lg overflow-hidden shadow-2xs">
-              <button class="qty-btn px-2 py-1 hover:bg-purpleDark active:scale-90" data-action="minus" data-id="${id}">−</button>
-              <span class="px-1 font-black text-center min-w-[1rem]">${qty}</span>
-              <button class="qty-btn px-2 py-1 hover:bg-purpleDark active:scale-90" data-action="plus" data-id="${id}" data-name="${name}" data-price="${price}" data-img="${img}">+</button>
-            </div>`;
-          } else if (area.dataset.originalHtml) {
-            area.innerHTML = area.dataset.originalHtml;
-          }
-        });
-      }
-
-      // Event Listeners for Add Buttons & Wishlist
-      document.body.addEventListener('click', (e) => {
-        const addBtn = e.target.closest('.home-add-btn');
-        if (addBtn) {
-          e.stopPropagation();
-          addToCart(addBtn.dataset.id, addBtn.dataset.name, parseFloat(addBtn.dataset.price), addBtn.dataset.img);
-          return;
+      if (window.BHUSAWAL_DB) {
+        // Render 4 top grocery
+        if (popProductsGrid) {
+          const topG = window.BHUSAWAL_DB.grocery.slice(0, 4);
+          popProductsGrid.innerHTML = topG.map(item => `
+            <a href="/product/${encodeURIComponent(item.id)}" class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-purple-50 transition-colors">
+              <img src="${item.img}" class="w-8 h-8 rounded-lg object-contain bg-slate-50 border border-slate-100" />
+              <div class="min-w-0 flex-1">
+                <p class="text-[11px] font-extrabold text-slate-800 truncate">${item.displayName || item.name}</p>
+                <p class="text-[9px] font-black text-purpleBrand">₹${item.sp || item.mrp}</p>
+              </div>
+            </a>
+          `).join('');
         }
 
-        const qtyBtn = e.target.closest('.qty-btn');
-        if (qtyBtn) {
-          e.stopPropagation();
-          if (qtyBtn.dataset.action === 'plus') {
-            addToCart(qtyBtn.dataset.id, qtyBtn.dataset.name, parseFloat(qtyBtn.dataset.price), qtyBtn.dataset.img);
-          } else {
-            changeQty(qtyBtn.dataset.id, -1);
-          }
-          return;
+        // Render 2 top restaurants
+        if (popRestaurantsGrid) {
+          const topR = window.BHUSAWAL_DB.stores.filter(s => s.type === 'Restaurant').slice(0, 2);
+          popRestaurantsGrid.innerHTML = topR.map(r => `
+            <a href="${r.link}" class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-purple-50 transition-colors">
+              <span class="text-xl">🍔</span>
+              <div class="min-w-0 flex-1">
+                <p class="text-[11px] font-extrabold text-slate-800 truncate">${r.name}</p>
+                <p class="text-[9px] font-bold text-slate-400 truncate">${r.location}</p>
+              </div>
+            </a>
+          `).join('');
         }
 
-        const wishBtn = e.target.closest('.home-wishlist-btn');
-        if (wishBtn) {
-          e.stopPropagation();
-          toggleWishlist(
-            wishBtn.dataset.id,
-            wishBtn.dataset.name,
-            parseFloat(wishBtn.dataset.price),
-            wishBtn.dataset.img,
-            wishBtn.dataset.brand,
-            wishBtn.dataset.pack
-          );
-          return;
+        // Render 2 top stores
+        if (popStoresGrid) {
+          const topS = window.BHUSAWAL_DB.stores.filter(s => s.type !== 'Restaurant').slice(0, 2);
+          popStoresGrid.innerHTML = topS.map(s => `
+            <a href="${s.link}" class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-purple-50 transition-colors">
+              <span class="text-xl">${s.logo}</span>
+              <div class="min-w-0 flex-1">
+                <p class="text-[11px] font-extrabold text-slate-800 truncate">${s.name}</p>
+                <p class="text-[9px] font-bold text-slate-400 truncate">${s.location}</p>
+              </div>
+            </a>
+          `).join('');
         }
-      });
-
-      // Medicines Master Dataset
-      const medicinesCatalog = [
-        { id: 'BC-MED-001', name: 'Dolo 650', brand: 'Micro Labs', category: 'Medicines', price: 32, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&q=80', desc: 'Fever & Pain Relief' },
-        { id: 'BC-MED-002', name: 'Crocin 650', brand: 'GSK', category: 'Medicines', price: 30, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&q=80', desc: 'Optizorb Pain Relief' },
-        { id: 'BC-MED-003', name: 'Vitamin C', brand: 'Limcee', category: 'Medicines', price: 25, img: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=300&q=80', desc: 'Immunity Booster' },
-        { id: 'BC-MED-004', name: 'Volini Spray', brand: 'Sun Pharma', category: 'Medicines', price: 245, img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&q=80', desc: 'Instant Pain Relief' }
-      ];
-
-      const groceryStoresList = [
-        { id: 'sai-jeevan', name: 'Sai Jeevan Super Mall', tag: 'Station Road, Bhusawal', rating: '4.8', img: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=300&q=80', link: '/store_profile?store=sai-jeevan' },
-        { id: 'shiv-dairy', name: 'Shiv Dairy', tag: 'Station Road, Bhusawal', rating: '4.9', img: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=300&q=80', link: '/store_profile?store=shiv-dairy' },
-        { id: 'balaji-mart', name: 'Balaji Mart', tag: 'Jalgaon Road, Bhusawal', rating: '4.7', img: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=300&q=80', link: '/store_profile?store=balaji-mart' }
-      ];
-
-      const restaurantsList = [
-        { id: 'royal-biryani', name: 'Royal Biryani', tag: 'Station Road, Bhusawal', rating: '4.8', img: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300&q=80', link: '/store_profile?store=royal-biryani' },
-        { id: 'hotel-sagar-grand', name: 'Hotel Sagar Grand', tag: 'Highway Touch, Bhusawal', rating: '4.7', img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=300&q=80', link: '/store_profile?store=hotel-sagar-grand' }
-      ];
-
-      const medicalStoresList = [
-        { id: 'wellness-forever', name: 'Wellness Forever', tag: 'Jalgaon Road, Bhusawal', rating: '4.8', img: 'https://images.unsplash.com/photo-1576602976047-174e57a47881?w=300&q=80', link: '/store_profile?store=wellness-forever' },
-        { id: 'apollo-pharmacy', name: 'Apollo Pharmacy', tag: 'Station Road, Bhusawal', rating: '4.9', img: 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=300&q=80', link: '/store_profile?store=apollo-pharmacy' }
-      ];
-
-      // UNIVERSAL INDEXING DATASET
-      const UNIVERSAL_INDEX = [];
-
-      function pField(p, key) {
-        const map = {
-          id: ['Product ID','ProductID','id'],
-          name: ['Product Name','name'],
-          brand: ['Brand Name','brand'],
-          cat: ['Category'],
-          subcat: ['Subcategory'],
-          pack: ['Pack Size','pack','Unit'],
-          mrp: ['MRP','mrp'],
-          sp: ['Selling Price','sp'],
-          img: ['Product Image URL','img','image'],
-          kw: ['Search Keywords','kw']
-        };
-        const keys = map[key] || [key];
-        for (const k of keys) { if (p[k] !== undefined && p[k] !== '') return p[k]; }
-        return '';
       }
 
-      function buildIndex() {
-        groceryCatalog.forEach(p => {
-          const id = pField(p, 'id');
-          const name = pField(p, 'name');
-          const brand = pField(p, 'brand') || 'Bhusawal Fresh';
-          const cat = pField(p, 'cat') || 'Grocery';
-          const subcat = pField(p, 'subcat') || '';
-          const kw = pField(p, 'kw') || '';
-          const sp = parseFloat(pField(p, 'sp') || pField(p, 'mrp') || 50);
-          const img = pField(p, 'img') || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-
-          UNIVERSAL_INDEX.push({
-            type: 'grocery',
-            id, name, brand, cat, subcat, price: sp, img,
-            fullText: `${name} ${brand} ${cat} ${subcat} ${kw}`.toLowerCase(),
-            link: `/product/${encodeURIComponent(id)}`
-          });
-        });
-
-        foodCatalog.forEach(f => {
-          const id = f.id || ('food_1');
-          const name = f.name || '';
-          const brand = f.restaurant || 'Bhusawal Food Express';
-          const cat = f.category || 'Food';
-          const price = parseFloat(f.price || 120);
-          const img = f.image || 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=300&q=80';
-
-          UNIVERSAL_INDEX.push({
-            type: 'food',
-            id, name, brand, cat, price, img,
-            fullText: `${name} ${brand} ${cat} ${f.description || ''}`.toLowerCase(),
-            link: `/product/${encodeURIComponent(id)}`
-          });
-        });
-
-        medicinesCatalog.forEach(m => {
-          UNIVERSAL_INDEX.push({
-            type: 'medicine',
-            id: m.id, name: m.name, brand: m.brand, cat: m.category, price: m.price, img: m.img,
-            fullText: `${m.name} ${m.brand} ${m.category} ${m.desc}`.toLowerCase(),
-            link: `/medicine_details?id=${encodeURIComponent(m.id)}&name=${encodeURIComponent(m.name)}`
-          });
-        });
-
-        groceryStoresList.forEach(s => {
-          UNIVERSAL_INDEX.push({
-            type: 'grocery_store',
-            id: s.id, name: s.name, tag: s.tag, rating: s.rating, img: s.img,
-            fullText: `${s.name} ${s.tag}`.toLowerCase(),
-            link: `/store_profile?store=${encodeURIComponent(s.id)}`
-          });
-        });
-
-        restaurantsList.forEach(r => {
-          UNIVERSAL_INDEX.push({
-            type: 'restaurant',
-            id: r.id, name: r.name, tag: r.tag, rating: r.rating, img: r.img,
-            fullText: `${r.name} ${r.tag}`.toLowerCase(),
-            link: `/store_profile?store=${encodeURIComponent(r.id)}`
-          });
-        });
-
-        medicalStoresList.forEach(m => {
-          UNIVERSAL_INDEX.push({
-            type: 'medical_store',
-            id: m.id, name: m.name, tag: m.tag, rating: m.rating, img: m.img,
-            fullText: `${m.name} ${m.tag}`.toLowerCase(),
-            link: `/store_profile?store=${encodeURIComponent(m.id)}`
-          });
-        });
-      }
-
-      buildIndex();
-
+      // Recent Searches LocalStorage Handler
       function getRecentSearches() {
-        try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch(e) { return []; }
+        try {
+          return JSON.parse(localStorage.getItem('bc_recent_searches') || '[]');
+        } catch {
+          return [];
+        }
       }
 
-      function clearRecentSearches() {
-        localStorage.removeItem(RECENT_KEY);
+      function addRecentSearch(query) {
+        if (!query || query.trim().length === 0) return;
+        let recent = getRecentSearches().filter(q => q.toLowerCase() !== query.toLowerCase());
+        recent.unshift(query.trim());
+        recent = recent.slice(0, 8);
+        localStorage.setItem('bc_recent_searches', JSON.stringify(recent));
         renderRecentSearches();
       }
 
       function renderRecentSearches() {
-        const box = document.getElementById('recent-searches-box');
-        const listEl = document.getElementById('recent-searches-list');
-        const items = getRecentSearches();
-
-        if (!items || items.length === 0) {
-          box?.classList.add('hidden');
-          return;
-        }
-
-        box?.classList.remove('hidden');
-        if (listEl) {
-          listEl.innerHTML = items.map(term => `
-            <button class="universal-recent-tag px-3 py-1 bg-slate-100 hover:bg-purpleBrand text-slate-700 hover:text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 group" data-query="${term.replace(/"/g, '&quot;')}">
-              <span>${term}</span>
-              <span class="text-[10px] text-slate-400 group-hover:text-white">✕</span>
+        const recent = getRecentSearches();
+        if (recent.length === 0) {
+          recentBox.classList.add('hidden');
+        } else {
+          recentBox.classList.remove('hidden');
+          recentList.innerHTML = recent.map(term => `
+            <button class="recent-search-tag px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition-all" data-query="${term}">
+              ${term}
             </button>
           `).join('');
         }
       }
 
-      function populateDefaultSections() {
-        const popProductsGrid = document.getElementById('dropdown-popular-products-grid');
-        const popRestGrid = document.getElementById('dropdown-popular-restaurants-grid');
-        const popStoresGrid = document.getElementById('dropdown-popular-stores-grid');
+      renderRecentSearches();
 
-        const popProducts = UNIVERSAL_INDEX.filter(i => i.type === 'grocery' || i.type === 'food').slice(0, 4);
-        if (popProductsGrid) {
-          popProductsGrid.innerHTML = popProducts.map(p => `
-            <a href="${p.link}" data-href="${p.link}" class="search-item-link flex items-center gap-2.5 p-2.5 rounded-2xl hover:bg-purple-50 border border-slate-100 transition-colors cursor-pointer">
-              <img src="${p.img}" alt="${p.name}" class="w-10 h-10 object-contain rounded-xl bg-slate-50 p-1 shrink-0" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-              <div class="min-w-0 flex-1">
-                <h4 class="text-xs font-extrabold text-slate-900 truncate leading-tight">${p.name}</h4>
-                <p class="text-[10px] font-semibold text-slate-400 truncate">${p.brand} • ₹${p.price}</p>
-              </div>
-            </a>
-          `).join('');
-        }
-
-        if (popRestGrid) {
-          popRestGrid.innerHTML = restaurantsList.slice(0, 2).map(r => `
-            <a href="${r.link}" data-href="${r.link}" class="search-item-link flex items-center gap-2.5 p-2.5 rounded-2xl hover:bg-orange-50 border border-slate-100 transition-colors cursor-pointer">
-              <img src="${r.img}" alt="${r.name}" class="w-10 h-10 object-cover rounded-xl shrink-0" loading="lazy" />
-              <div class="min-w-0 flex-1">
-                <h4 class="text-xs font-extrabold text-slate-900 truncate leading-tight">${r.name}</h4>
-                <p class="text-[10px] font-semibold text-slate-400 truncate">⭐ ${r.rating} • ${r.tag}</p>
-              </div>
-            </a>
-          `).join('');
-        }
-
-        if (popStoresGrid) {
-          popStoresGrid.innerHTML = groceryStoresList.slice(0, 2).map(s => `
-            <a href="${s.link}" data-href="${s.link}" class="search-item-link flex items-center gap-2.5 p-2.5 rounded-2xl hover:bg-emerald-50 border border-slate-100 transition-colors cursor-pointer">
-              <img src="${s.img}" alt="${s.name}" class="w-10 h-10 object-cover rounded-xl shrink-0" loading="lazy" />
-              <div class="min-w-0 flex-1">
-                <h4 class="text-xs font-extrabold text-slate-900 truncate leading-tight">${s.name}</h4>
-                <p class="text-[10px] font-semibold text-slate-400 truncate">⭐ ${s.rating} • ${s.tag}</p>
-              </div>
-            </a>
-          `).join('');
-        }
+      if (clearRecentBtn) {
+        clearRecentBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          localStorage.removeItem('bc_recent_searches');
+          renderRecentSearches();
+        });
       }
 
-      function setupSearchLogic() {
-        populateDefaultSections();
-        refreshHomeProductButtons();
-        refreshHomeWishlistButtons();
+      // Show dropdown on focus
+      searchInput.addEventListener('focus', () => {
+        searchDropdown.classList.remove('hidden');
+      });
 
-        const searchInput = document.getElementById('main-search-input');
-        const clearBtn = document.getElementById('clear-universal-search');
-        const dropdown = document.getElementById('search-results-dropdown');
-        const defaultView = document.getElementById('search-default-view');
-        const activeResults = document.getElementById('search-active-results');
+      // Trending tag clicks
+      document.querySelectorAll('.universal-trending-tag').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const q = btn.getAttribute('data-query');
+          searchInput.value = q;
+          searchInput.focus();
+          executeSearch(q);
+        });
+      });
 
-        function performUniversalSearch(rawQuery) {
-          const query = rawQuery.trim().toLowerCase();
+      // Recent tag clicks
+      document.addEventListener('click', (e) => {
+        const tag = e.target.closest('.recent-search-tag');
+        if (tag) {
+          const q = tag.getAttribute('data-query');
+          searchInput.value = q;
+          searchInput.focus();
+          executeSearch(q);
+        }
+      });
 
-          if (!query) {
-            clearBtn?.classList.add('hidden');
-            defaultView?.classList.remove('hidden');
-            activeResults?.classList.add('hidden');
-            renderRecentSearches();
-            return;
-          }
+      // Close dropdown on outside click
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#main-search-input') && !e.target.closest('#search-results-dropdown')) {
+          searchDropdown.classList.add('hidden');
+        }
+      });
 
-          clearBtn?.classList.remove('hidden');
-          defaultView?.classList.add('hidden');
-          activeResults?.classList.remove('hidden');
-
-          const tokens = query.split(/\s+/).filter(Boolean);
-
-          const groceryMatches = [];
-          const foodMatches = [];
-          const medicineMatches = [];
-          const groceryStoreMatches = [];
-          const restaurantMatches = [];
-          const medicalStoreMatches = [];
-
-          for (let i = 0; i < UNIVERSAL_INDEX.length; i++) {
-            const item = UNIVERSAL_INDEX[i];
-            let matchesAll = true;
-
-            for (let t = 0; t < tokens.length; t++) {
-              if (!item.fullText.includes(tokens[t])) {
-                matchesAll = false;
-                break;
-              }
-            }
-
-            if (!matchesAll) continue;
-
-            if (item.type === 'grocery' && groceryMatches.length < 5) groceryMatches.push(item);
-            else if (item.type === 'food' && foodMatches.length < 4) foodMatches.push(item);
-            else if (item.type === 'medicine' && medicineMatches.length < 4) medicineMatches.push(item);
-            else if (item.type === 'grocery_store' && groceryStoreMatches.length < 3) groceryStoreMatches.push(item);
-            else if (item.type === 'restaurant' && restaurantMatches.length < 3) restaurantMatches.push(item);
-            else if (item.type === 'medical_store' && medicalStoreMatches.length < 3) medicalStoreMatches.push(item);
-          }
-
-          let sectionBlocks = [];
-
-          function hl(str) {
-            if (!str) return '';
-            const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-            return str.replace(re, '<span class="search-match-hl">$1</span>');
-          }
-
-          // 1. 🛒 GROCERY PRODUCTS SECTION
-          if (groceryMatches.length > 0) {
-            sectionBlocks.push(`
-              <div class="py-2 space-y-2">
-                <h3 class="text-sm font-black text-slate-900 flex items-center gap-1.5 font-display">
-                  <span>🛒</span> Grocery Products
-                </h3>
-                <div class="space-y-1">
-                  ${groceryMatches.map(p => `
-                    <a href="${p.link}" data-href="${p.link}" class="search-item-link flex items-center justify-between gap-3 p-2.5 hover:bg-green-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-green-200">
-                      <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                        <img src="${p.img}" alt="${p.name}" class="w-10 h-10 object-contain rounded-xl bg-slate-50 p-1 shrink-0 border border-slate-100" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-                        <div class="min-w-0 flex-1">
-                          <h4 class="text-xs font-black text-slate-900 truncate leading-tight">${hl(p.name)}</h4>
-                          <p class="text-[10px] font-semibold text-slate-400 truncate">${hl(p.brand)} • ${p.cat}</p>
-                        </div>
-                      </div>
-                      <span class="text-xs font-black text-slate-900 shrink-0">₹${p.price}</span>
-                    </a>
-                  `).join('')}
-                </div>
-              </div>
-            `);
-          }
-
-          // 2. 🍔 FOOD SECTION
-          if (foodMatches.length > 0) {
-            sectionBlocks.push(`
-              <div class="py-2 space-y-2 border-t border-slate-100">
-                <h3 class="text-sm font-black text-slate-900 flex items-center gap-1.5 font-display">
-                  <span>🍔</span> Food
-                </h3>
-                <div class="space-y-1">
-                  ${foodMatches.map(f => `
-                    <a href="${f.link}" data-href="${f.link}" class="search-item-link flex items-center justify-between gap-3 p-2.5 hover:bg-amber-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-amber-200">
-                      <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                        <img src="${f.img}" alt="${f.name}" class="w-10 h-10 object-cover rounded-xl shrink-0 border border-slate-100" loading="lazy" />
-                        <div class="min-w-0 flex-1">
-                          <h4 class="text-xs font-black text-slate-900 truncate leading-tight">${hl(f.name)}</h4>
-                          <p class="text-[10px] font-semibold text-slate-400 truncate">${hl(f.brand)} • ${f.cat}</p>
-                        </div>
-                      </div>
-                      <span class="text-xs font-black text-slate-900 shrink-0">₹${f.price}</span>
-                    </a>
-                  `).join('')}
-                </div>
-              </div>
-            `);
-          }
-
-          // 3. 💊 MEDICINES SECTION (Medicine -> Medicine Details)
-          if (medicineMatches.length > 0) {
-            sectionBlocks.push(`
-              <div class="py-2 space-y-2 border-t border-slate-100">
-                <h3 class="text-sm font-black text-slate-900 flex items-center gap-1.5 font-display">
-                  <span>💊</span> Medicines
-                </h3>
-                <div class="space-y-1">
-                  ${medicineMatches.map(m => `
-                    <a href="${m.link}" data-href="${m.link}" class="search-item-link flex items-center justify-between gap-3 p-2.5 hover:bg-blue-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-blue-200">
-                      <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                        <img src="${m.img}" alt="${m.name}" class="w-10 h-10 object-contain rounded-xl bg-slate-50 p-1 shrink-0 border border-slate-100" loading="lazy" />
-                        <div class="min-w-0 flex-1">
-                          <h4 class="text-xs font-black text-slate-900 truncate leading-tight">${hl(m.name)}</h4>
-                          <p class="text-[10px] font-semibold text-slate-400 truncate">${hl(m.brand)} • ${m.cat}</p>
-                        </div>
-                      </div>
-                      <span class="text-xs font-black text-slate-900 shrink-0">₹${m.price}</span>
-                    </a>
-                  `).join('')}
-                </div>
-              </div>
-            `);
-          }
-
-          // 4. 🏪 GROCERY STORES SECTION
-          if (groceryStoreMatches.length > 0) {
-            sectionBlocks.push(`
-              <div class="py-2 space-y-2 border-t border-slate-100">
-                <h3 class="text-sm font-black text-slate-900 flex items-center gap-1.5 font-display">
-                  <span>🏪</span> Grocery Stores
-                </h3>
-                <div class="space-y-1">
-                  ${groceryStoreMatches.map(s => `
-                    <a href="${s.link}" data-href="${s.link}" class="search-item-link flex items-center justify-between gap-3 p-2.5 hover:bg-purple-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-purple-200">
-                      <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                        <img src="${s.img}" alt="${s.name}" class="w-10 h-10 object-cover rounded-xl shrink-0 border border-slate-100" loading="lazy" />
-                        <div class="min-w-0 flex-1">
-                          <h4 class="text-xs font-black text-slate-900 truncate leading-tight">${hl(s.name)}</h4>
-                          <p class="text-[10px] font-semibold text-slate-400 truncate">⭐ ${s.rating} • ${s.tag}</p>
-                        </div>
-                      </div>
-                      <span class="text-xs font-black text-purpleBrand shrink-0">Visit Store →</span>
-                    </a>
-                  `).join('')}
-                </div>
-              </div>
-            `);
-          }
-
-          // 5. 🍽 RESTAURANTS SECTION
-          if (restaurantMatches.length > 0) {
-            sectionBlocks.push(`
-              <div class="py-2 space-y-2 border-t border-slate-100">
-                <h3 class="text-sm font-black text-slate-900 flex items-center gap-1.5 font-display">
-                  <span>🍽</span> Restaurants
-                </h3>
-                <div class="space-y-1">
-                  ${restaurantMatches.map(r => `
-                    <a href="${r.link}" data-href="${r.link}" class="search-item-link flex items-center justify-between gap-3 p-2.5 hover:bg-orange-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-orange-200">
-                      <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                        <img src="${r.img}" alt="${r.name}" class="w-10 h-10 object-cover rounded-xl shrink-0 border border-slate-100" loading="lazy" />
-                        <div class="min-w-0 flex-1">
-                          <h4 class="text-xs font-black text-slate-900 truncate leading-tight">${hl(r.name)}</h4>
-                          <p class="text-[10px] font-semibold text-slate-400 truncate">⭐ ${r.rating} • ${r.tag}</p>
-                        </div>
-                      </div>
-                      <span class="text-xs font-black text-orange-700 shrink-0">View Menu →</span>
-                    </a>
-                  `).join('')}
-                </div>
-              </div>
-            `);
-          }
-
-          // 6. 💊 MEDICAL STORES SECTION
-          if (medicalStoreMatches.length > 0) {
-            sectionBlocks.push(`
-              <div class="py-2 space-y-2 border-t border-slate-100">
-                <h3 class="text-sm font-black text-slate-900 flex items-center gap-1.5 font-display">
-                  <span>💊</span> Medical Stores
-                </h3>
-                <div class="space-y-1">
-                  ${medicalStoreMatches.map(m => `
-                    <a href="${m.link}" data-href="${m.link}" class="search-item-link flex items-center justify-between gap-3 p-2.5 hover:bg-blue-50 rounded-2xl transition-colors cursor-pointer border border-transparent hover:border-blue-200">
-                      <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                        <img src="${m.img}" alt="${m.name}" class="w-10 h-10 object-cover rounded-xl shrink-0 border border-slate-100" loading="lazy" />
-                        <div class="min-w-0 flex-1">
-                          <h4 class="text-xs font-black text-slate-900 truncate leading-tight">${hl(m.name)}</h4>
-                          <p class="text-[10px] font-semibold text-slate-400 truncate">⭐ ${m.rating} • ${m.tag}</p>
-                        </div>
-                      </div>
-                      <span class="text-xs font-black text-blue-700 shrink-0">Visit Store →</span>
-                    </a>
-                  `).join('')}
-                </div>
-              </div>
-            `);
-          }
-
-          // NO MATCHING RESULTS FOUND FALLBACK
-          if (sectionBlocks.length === 0) {
-            activeResults.innerHTML = `
-              <div class="py-8 text-center space-y-4">
-                <div class="w-14 h-14 bg-purple-50 text-purpleBrand rounded-full flex items-center justify-center mx-auto text-2xl">🔍</div>
-                <div>
-                  <h3 class="text-sm font-black text-slate-900 font-display">No matching results found</h3>
-                  <p class="text-xs text-slate-500 font-semibold mt-0.5">We couldn't find any direct matches for "${rawQuery}". Try popular alternatives below:</p>
-                </div>
-                <div class="flex flex-wrap justify-center gap-1.5 pt-1">
-                  <button class="fallback-tag px-3 py-1.5 bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand rounded-xl text-xs font-extrabold transition-all" data-query="Amul Gold Milk">Amul Milk</button>
-                  <button class="fallback-tag px-3 py-1.5 bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand rounded-xl text-xs font-extrabold transition-all" data-query="Fortune Oil">Fortune Oil</button>
-                  <button class="fallback-tag px-3 py-1.5 bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand rounded-xl text-xs font-extrabold transition-all" data-query="Chicken Biryani">Chicken Biryani</button>
-                  <button class="fallback-tag px-3 py-1.5 bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand rounded-xl text-xs font-extrabold transition-all" data-query="Dolo 650">Dolo 650</button>
-                  <button class="fallback-tag px-3 py-1.5 bg-purple-50 hover:bg-purpleBrand hover:text-white text-purpleBrand rounded-xl text-xs font-extrabold transition-all" data-query="Sai Jeevan Super Mall">Sai Jeevan Store</button>
-                </div>
-              </div>
-            `;
-          } else {
-            activeResults.innerHTML = sectionBlocks.join('');
-          }
+      // Input change typing listener with Debounce
+      let searchTimeout;
+      searchInput.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (val.length > 0) {
+          clearSearchBtn.classList.remove('hidden');
+        } else {
+          clearSearchBtn.classList.add('hidden');
         }
 
-        // Direct Global Click Event Delegation across Search Overlay
-        dropdown?.addEventListener('click', (e) => {
-          const itemLink = e.target.closest('.search-item-link');
-          if (itemLink) {
-            e.preventDefault();
-            e.stopPropagation();
-            const rawQuery = searchInput?.value.trim();
-            if (rawQuery) window.saveRecentSearch(rawQuery);
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          executeSearch(val);
+        }, 150);
+      });
 
-            const targetUrl = itemLink.dataset.href || itemLink.getAttribute('href');
-            if (targetUrl) {
-              window.location.href = targetUrl;
-            }
+      // Clear button
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        clearSearchBtn.classList.add('hidden');
+        searchDefaultView.classList.remove('hidden');
+        searchActiveResults.classList.add('hidden');
+        searchInput.focus();
+      });
+
+      // Search executor across Master DB
+      function executeSearch(query) {
+        const q = (query || '').trim().toLowerCase();
+        if (!q) {
+          searchDefaultView.classList.remove('hidden');
+          searchActiveResults.classList.add('hidden');
+          return;
+        }
+
+        searchDefaultView.classList.add('hidden');
+        searchActiveResults.classList.remove('hidden');
+
+        if (!window.BHUSAWAL_DB) {
+          searchActiveResults.innerHTML = '<p class="text-center text-slate-400 py-4 text-xs font-bold">Searching database...</p>';
+          return;
+        }
+
+        const results = window.BHUSAWAL_DB.universalSearch(q);
+        const totalFound = results.grocery.length + results.food.length + results.medicines.length + results.stores.length;
+
+        if (totalFound === 0) {
+          searchActiveResults.innerHTML = `
+            <div class="text-center py-8 space-y-2">
+              <span class="text-3xl">🔍</span>
+              <p class="text-sm font-black text-slate-700">No matching items found in Bhusawal for "${query}"</p>
+              <p class="text-xs text-slate-400">Try searching with popular terms like Milk, Biryani, Dolo, Atta</p>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '';
+
+        // Highlight matching substring
+        function highlightMatch(text, queryText) {
+          if (!text) return '';
+          const regex = new RegExp(`(${queryText.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi');
+          return text.replace(regex, '<span class="search-match-hl">$1</span>');
+        }
+
+        // Section: Stores & Restaurants
+        if (results.stores.length > 0) {
+          html += `
+            <div class="space-y-1.5 pb-2 border-b border-slate-100">
+              <span class="text-[10px] font-black text-purpleBrand uppercase tracking-wider">🏬 Stores & Restaurants (${results.stores.length})</span>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                ${results.stores.map(s => `
+                  <a href="${s.link}" class="flex items-center gap-2 p-2 rounded-xl bg-purple-50/50 hover:bg-purple-100/70 border border-purple-100 transition-all group">
+                    <span class="text-xl">${s.logo || '🏬'}</span>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center justify-between">
+                        <p class="text-xs font-extrabold text-slate-900 truncate group-hover:text-purpleBrand">${highlightMatch(s.name, q)}</p>
+                        <span class="text-[9px] font-bold text-amber-600 shrink-0">⭐ ${s.rating}</span>
+                      </div>
+                      <p class="text-[10px] text-slate-500 truncate">${highlightMatch(s.tagline || s.location, q)}</p>
+                    </div>
+                  </a>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        // Section: Grocery (Daily Needs)
+        if (results.grocery.length > 0) {
+          html += `
+            <div class="space-y-1.5 pb-2 border-b border-slate-100">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-black text-emerald-700 uppercase tracking-wider">🛒 Daily Needs Products (${results.grocery.length})</span>
+                <a href="/grocery?search=${encodeURIComponent(q)}" class="text-[10px] font-black text-emerald-700 hover:underline">View in Grocery →</a>
+              </div>
+              <div class="divide-y divide-slate-100">
+                ${results.grocery.slice(0, 6).map(item => `
+                  <div class="flex items-center justify-between py-2 gap-3 hover:bg-slate-50 px-1 rounded-xl">
+                    <a href="/product/${encodeURIComponent(item.id)}" class="flex items-center gap-2.5 min-w-0 flex-1">
+                      <img src="${item.img}" class="w-10 h-10 rounded-xl object-contain bg-emerald-50/40 p-1 border border-slate-100 shrink-0" onerror="this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                      <div class="min-w-0">
+                        <p class="text-xs font-extrabold text-slate-900 truncate">${highlightMatch(item.displayName || item.name, q)}</p>
+                        <p class="text-[10px] text-slate-400 font-semibold">${item.pack} • <span class="text-emerald-700 font-bold">${item.brand}</span></p>
+                      </div>
+                    </a>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <span class="text-xs font-black text-slate-900">₹${item.sp || item.mrp}</span>
+                      <button class="universal-add-cart-btn px-2.5 py-1 bg-green-50 hover:bg-green-600 text-green-700 hover:text-white border border-green-200 text-[10px] font-black rounded-lg active:scale-90 transition-all" data-id="${item.id}" data-name="${(item.displayName || item.name).replace(/"/g, '&quot;')}" data-price="${item.sp || item.mrp}" data-img="${item.img}">
+                        + ADD
+                      </button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        // Section: Medicines (Pharmacy)
+        if (results.medicines.length > 0) {
+          html += `
+            <div class="space-y-1.5 pb-2 border-b border-slate-100">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-black text-blue-700 uppercase tracking-wider">💊 Pharmacy & OTC Medicines (${results.medicines.length})</span>
+                <a href="/medicines" class="text-[10px] font-black text-blue-700 hover:underline">View in Pharmacy →</a>
+              </div>
+              <div class="divide-y divide-slate-100">
+                ${results.medicines.slice(0, 5).map(m => `
+                  <div class="flex items-center justify-between py-2 gap-3 hover:bg-slate-50 px-1 rounded-xl">
+                    <a href="/medicine_details?id=${encodeURIComponent(m.id)}&name=${encodeURIComponent(m.name)}" class="flex items-center gap-2.5 min-w-0 flex-1">
+                      <img src="${m.img}" class="w-10 h-10 rounded-xl object-contain bg-blue-50/40 p-1 border border-slate-100 shrink-0" onerror="this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                      <div class="min-w-0">
+                        <p class="text-xs font-extrabold text-slate-900 truncate">${highlightMatch(m.name, q)}</p>
+                        <p class="text-[10px] text-blue-600 font-bold">${m.pack} • ${m.desc || 'OTC Healthcare'}</p>
+                      </div>
+                    </a>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <span class="text-xs font-black text-slate-900">₹${m.sp || m.price}</span>
+                      <button class="universal-add-cart-btn px-2.5 py-1 bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white border border-blue-200 text-[10px] font-black rounded-lg active:scale-90 transition-all" data-id="${m.id}" data-name="${m.name.replace(/"/g, '&quot;')}" data-price="${m.sp || m.price}" data-img="${m.img}">
+                        + ADD
+                      </button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        // Section: Food & Dishes
+        if (results.food.length > 0) {
+          html += `
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-black text-amber-700 uppercase tracking-wider">🍔 Restaurant Dishes (${results.food.length})</span>
+                <a href="/food" class="text-[10px] font-black text-amber-700 hover:underline">View in Food →</a>
+              </div>
+              <div class="divide-y divide-slate-100">
+                ${results.food.slice(0, 5).map(f => `
+                  <div class="flex items-center justify-between py-2 gap-3 hover:bg-slate-50 px-1 rounded-xl">
+                    <a href="/product/${encodeURIComponent(f.id)}" class="flex items-center gap-2.5 min-w-0 flex-1">
+                      <img src="${f.image || f.img}" class="w-10 h-10 rounded-xl object-cover bg-amber-50/40 border border-slate-100 shrink-0" onerror="this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                      <div class="min-w-0">
+                        <p class="text-xs font-extrabold text-slate-900 truncate">${highlightMatch(f.name, q)}</p>
+                        <p class="text-[10px] text-amber-700 font-bold">${f.restaurant || 'Bhusawal Restaurant'}</p>
+                      </div>
+                    </a>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <span class="text-xs font-black text-slate-900">₹${f.price}</span>
+                      <button class="universal-add-cart-btn px-2.5 py-1 bg-amber-50 hover:bg-amber-600 text-amber-700 hover:text-white border border-amber-200 text-[10px] font-black rounded-lg active:scale-90 transition-all" data-id="${f.id}" data-name="${f.name.replace(/"/g, '&quot;')}" data-price="${f.price}" data-img="${f.image || f.img}">
+                        + ADD
+                      </button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        searchActiveResults.innerHTML = html;
+      }
+
+      // Enter key in search box triggers first search tag save
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const val = searchInput.value.trim();
+          if (val) {
+            addRecentSearch(val);
           }
-        });
+        }
+      });
 
-        searchInput?.addEventListener('focus', () => {
-          dropdown?.classList.remove('hidden');
-          if (!searchInput.value.trim()) renderRecentSearches();
-        });
-
-        searchInput?.addEventListener('input', (e) => {
-          performUniversalSearch(e.target.value);
-        });
-
-        searchInput?.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            const query = searchInput.value.trim();
-            if (query) {
-              window.saveRecentSearch(query);
-              window.location.href = `/grocery?search=${encodeURIComponent(query)}`;
-            }
-          }
-        });
-
-        clearBtn?.addEventListener('click', () => {
-          searchInput.value = '';
-          performUniversalSearch('');
-        });
-
-        document.addEventListener('click', (e) => {
-          const trendingTag = e.target.closest('.universal-trending-tag');
-          if (trendingTag) {
-            const q = trendingTag.dataset.query;
-            if (searchInput) searchInput.value = q;
-            performUniversalSearch(q);
-            return;
-          }
-
-          const recentTag = e.target.closest('.universal-recent-tag');
-          if (recentTag) {
-            const q = recentTag.dataset.query;
-            if (searchInput) searchInput.value = q;
-            performUniversalSearch(q);
-            return;
-          }
-
-          const fallbackTag = e.target.closest('.fallback-tag');
-          if (fallbackTag) {
-            const q = fallbackTag.dataset.query;
-            if (searchInput) searchInput.value = q;
-            performUniversalSearch(q);
-            return;
-          }
-
-          if (!e.target.closest('#main-search-input') && !e.target.closest('#search-results-dropdown')) {
-            dropdown?.classList.add('hidden');
-          }
-        });
-
-        document.getElementById('clear-recent-btn')?.addEventListener('click', (e) => {
+      // Universal Cart Quick Add from Search Results
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.universal-add-cart-btn');
+        if (btn) {
+          e.preventDefault();
           e.stopPropagation();
-          clearRecentSearches();
-        });
+          const id = btn.getAttribute('data-id');
+          const name = btn.getAttribute('data-name');
+          const price = parseFloat(btn.getAttribute('data-price')) || 0;
+          const img = btn.getAttribute('data-img');
 
-        // Voice Search Support
-        const micBtn = document.getElementById('mic-search-btn');
-        if (micBtn && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+          if (window.BHUSAWAL_BACKEND && window.BHUSAWAL_BACKEND.cart) {
+            window.BHUSAWAL_BACKEND.cart.addItem({
+              id,
+              name,
+              price,
+              mrp: price,
+              img,
+              category: 'search'
+            }, 1);
+            if (window.BHUSAWAL_NOTIFICATIONS) {
+              window.BHUSAWAL_NOTIFICATIONS.success(`Added ${name} to cart!`);
+            }
+            btn.innerText = '✓ ADDED';
+            btn.classList.add('bg-purpleBrand', 'text-white');
+            setTimeout(() => {
+              btn.innerText = '+ ADD';
+              btn.classList.remove('bg-purpleBrand', 'text-white');
+            }, 1200);
+          }
+        }
+      });
+
+      // Voice Search with Web Speech API
+      if (micBtn) {
+        micBtn.addEventListener('click', () => {
+          if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert('Voice search is not supported in this browser. Please use Chrome or Edge.');
+            return;
+          }
           const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
           const recognition = new SpeechRecognition();
           recognition.lang = 'en-IN';
-          
-          micBtn.onclick = () => {
-            micBtn.classList.add('animate-pulse', 'text-red-500');
-            recognition.start();
-          };
+          recognition.interimResults = false;
+
+          micBtn.classList.add('animate-pulse', 'text-red-500');
 
           recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
-            if (searchInput) searchInput.value = transcript;
-            micBtn.classList.remove('animate-pulse', 'text-red-500');
-            performUniversalSearch(transcript);
+            searchInput.value = transcript;
+            clearSearchBtn.classList.remove('hidden');
+            searchDropdown.classList.remove('hidden');
+            addRecentSearch(transcript);
+            executeSearch(transcript);
           };
 
           recognition.onerror = () => {
             micBtn.classList.remove('animate-pulse', 'text-red-500');
           };
-        }
+
+          recognition.onend = () => {
+            micBtn.classList.remove('animate-pulse', 'text-red-500');
+          };
+
+          recognition.start();
+        });
       }
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupSearchLogic);
-      } else {
-        setupSearchLogic();
+      // Sponsored Carousel Navigation Buttons
+      const track = document.getElementById('sponsored-carousel-track');
+      const prevBtn = document.getElementById('sponsored-prev-btn');
+      const nextBtn = document.getElementById('sponsored-next-btn');
+
+      if (track && prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', () => {
+          track.scrollBy({ left: -320, behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', () => {
+          track.scrollBy({ left: 320, behavior: 'smooth' });
+        });
       }
-    })();
+    });
   </script>
 </body>
 </html>
