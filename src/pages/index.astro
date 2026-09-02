@@ -1,8 +1,6 @@
 ---
 import fs from 'fs';
 import path from 'path';
-import Switcher from '../components/Switcher.astro';
-
 // Read existing catalog database at build-time
 const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
 let catalog = [];
@@ -66,6 +64,9 @@ const verifiedPartnerStores = [
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
   
   <script is:inline>
     tailwind.config = {
@@ -235,22 +236,20 @@ const verifiedPartnerStores = [
       <!-- 6-Card Responsive Grid -->
       <div class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-3.5 pb-3">
 
-        <!-- 1. Grocery -->
-        <!-- 1. Grocery -->
+        <!-- 1. Daily Needs -->
         <a href="/grocery" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center p-3 overflow-hidden">
-            <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_grocery.jpg" alt="Grocery" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+            <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_grocery.jpg" alt="Daily Needs" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
           <div class="p-3">
             <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-green-100 to-emerald-200 flex items-center justify-center shadow-xs">
               <span class="material-symbols-outlined text-emerald-700 text-lg">shopping_basket</span>
             </div>
-            <h4 class="text-xs font-black text-slate-900">Grocery</h4>
+            <h4 class="text-xs font-black text-slate-900">Daily Needs</h4>
             <p class="text-[10px] font-bold text-emerald-600 mt-0.5 leading-tight">25,000+ Fresh Essentials</p>
           </div>
         </a>
 
-        <!-- 2. Medicine -->
         <!-- 2. Medicine -->
         <a href="/medicines" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-blue-50 to-cyan-100 flex items-center justify-center p-3 overflow-hidden">
@@ -265,7 +264,6 @@ const verifiedPartnerStores = [
           </div>
         </a>
 
-        <!-- 3. Food Delivery -->
         <!-- 3. Food Delivery -->
         <a href="/food" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-orange-50 to-red-100 flex items-center justify-center p-3 overflow-hidden">
@@ -283,33 +281,31 @@ const verifiedPartnerStores = [
         <!-- 4. Pickup & Drop -->
         <a href="/bike_ride" class="service-card bg-yellow-50/80 rounded-[22px] border border-yellow-200/90 shadow-md hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 flex items-center justify-center p-2.5 overflow-hidden">
-            <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/service_pickup_drop.jpg" alt="Pickup & Drop (Bike Taxi & Auto Rickshaw)" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+            <img onerror="this.onerror=null;this.src='/assets/services/service_bike_taxi.jpg';" loading="lazy" src="/assets/services/service_bike_taxi.jpg?v=3" alt="Pickup & Drop - Fast Bike Taxi Across Bhusawal" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
           <div class="p-3 bg-yellow-50/90">
             <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-yellow-100 to-amber-200 flex items-center justify-center shadow-xs">
               <span class="material-symbols-outlined text-amber-800 text-lg">two_wheeler</span>
             </div>
             <h4 class="text-xs font-black text-slate-900">Pickup & Drop</h4>
-            <p class="text-[10px] font-bold text-amber-800 mt-0.5 leading-tight">Bike Taxi & Auto Rickshaw</p>
+            <p class="text-[10px] font-bold text-amber-800 mt-0.5 leading-tight">Fast Bike Taxi Across Bhusawal</p>
           </div>
         </a>
 
-        <!-- 6. Parcel Delivery -->
         <!-- 5. Parcel Delivery -->
-        <a href="/parcel" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
-          <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-indigo-50 to-blue-100 flex items-center justify-center p-3 overflow-hidden">
-            <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src="/assets/services/service_parcel.jpg" alt="Parcel Delivery" class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300 rounded-xl" />
+        <a href="/parcel" class="service-card bg-orange-50/80 rounded-[22px] border border-orange-200/90 shadow-md hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
+          <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-orange-50 via-amber-50 to-orange-100 flex items-center justify-center p-2.5 overflow-hidden">
+            <img onerror="this.onerror=null;this.src='/assets/services/service_parcel_hero.jpg';" loading="lazy" src="/assets/services/service_parcel_hero.jpg?v=3" alt="Send Parcels Anywhere in Bhusawal" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300 rounded-xl" />
           </div>
-          <div class="p-3">
-            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-indigo-100 to-blue-200 flex items-center justify-center shadow-xs">
-              <span class="material-symbols-outlined text-indigo-700 text-lg">package_2</span>
+          <div class="p-3 bg-orange-50/90">
+            <div class="w-9 h-9 mx-auto mb-1.5 rounded-xl bg-gradient-to-br from-orange-100 to-amber-200 flex items-center justify-center shadow-xs">
+              <span class="material-symbols-outlined text-orange-800 text-lg">package_2</span>
             </div>
             <h4 class="text-xs font-black text-slate-900">Parcel Delivery</h4>
-            <p class="text-[10px] font-bold text-indigo-600 mt-0.5 leading-tight">Send parcels anywhere in Bhusawal.</p>
+            <p class="text-[10px] font-bold text-orange-800 mt-0.5 leading-tight">Send Parcels Anywhere in Bhusawal</p>
           </div>
         </a>
 
-        <!-- 7. Local Shops -->
         <!-- 6. Local Shops -->
         <a href="/shops" class="service-card bg-white rounded-[22px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:scale-105 active:scale-95 transition-all duration-300 overflow-hidden group text-center cursor-pointer">
           <div class="h-[120px] sm:h-[135px] bg-gradient-to-br from-purple-50 to-pink-100 flex items-center justify-center p-3 overflow-hidden">
@@ -342,7 +338,7 @@ const verifiedPartnerStores = [
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {verifiedPartnerStores.map(store => (
-          <a href="/shops" class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all duration-300 overflow-hidden group cursor-pointer flex flex-col">
+          <a href={`/shops?id=${store.id}`} class="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-purple-200 transition-all duration-300 overflow-hidden group cursor-pointer flex flex-col">
             <div class="h-36 bg-slate-100 relative overflow-hidden">
               <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src={store.cover} alt={store.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
@@ -393,7 +389,7 @@ const verifiedPartnerStores = [
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
         {trendingProducts.map(p => {
           const id = p["Product ID"] || p.ProductID || p.id;
-          const name = (p["Product Name"] || p.name || '').split(" (Batch")[0];
+          const name = p.displayName || p.name || p["Product Name"] || p.originalName || "";
           const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50);
           const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
           const pack = p["Pack Size"] || p.pack || '1 Unit';
@@ -422,8 +418,6 @@ const verifiedPartnerStores = [
 
   </main>
 
-  <Switcher />
-
   <!-- CLIENT-SIDE GLOBAL SEARCH ENGINE -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', async () => {
@@ -442,7 +436,7 @@ const verifiedPartnerStores = [
         { name: 'Royal Biryani & Caterers', tag: 'Mughlai & North Indian', link: '/food', icon: '🍲' },
         { name: 'Modern Pharmacy & Wellness', tag: 'Essential Medicines', link: '/medicines', icon: '💊' },
         { name: 'Shiv Dairy & Sweets', tag: 'Fresh Milk & Paneer', link: '/shops', icon: '🥛' },
-        { name: 'Kwality Wall's Ice Cream Hub', tag: 'Ice Creams & Shakes', link: '/shops', icon: '🍦' }
+        { name: "Kwality Wall's Ice Cream Hub", tag: 'Ice Creams & Shakes', link: '/shops', icon: '🍦' }
       ];
 
       const MEDICINES_LIST = [
