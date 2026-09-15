@@ -1,6 +1,15 @@
 ---
-import Switcher from '../components/Switcher.astro';
+// Server-side: read MSG91 widget credentials from environment
+const rawWidgetId = import.meta.env.MSG91_WIDGET_ID || process.env.MSG91_WIDGET_ID || '';
+const rawWidgetTokenAuth = import.meta.env.MSG91_WIDGET_TOKEN_AUTH || process.env.MSG91_WIDGET_TOKEN_AUTH || '';
+const serverAuthKey = import.meta.env.MSG91_AUTH_KEY || process.env.MSG91_AUTH_KEY || '';
+
+// SAFETY GUARD: Never leak master MSG91_AUTH_KEY to client HTML!
+// If MSG91_WIDGET_TOKEN_AUTH is identical to MSG91_AUTH_KEY, block it from client injection.
+const widgetId = rawWidgetId;
+const widgetTokenAuth = (rawWidgetTokenAuth && rawWidgetTokenAuth !== serverAuthKey) ? rawWidgetTokenAuth : '';
 ---
+
 
 <!DOCTYPE html>
 <html lang="en" class="light">
@@ -14,6 +23,9 @@ import Switcher from '../components/Switcher.astro';
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
   
   <script is:inline>
     tailwind.config = {
@@ -61,7 +73,7 @@ import Switcher from '../components/Switcher.astro';
     <!-- STEP 1: MOBILE NUMBER INPUT SCREEN -->
     <div id="step-mobile-screen" class="space-y-5 animate-in fade-in duration-300">
       
-      <!-- HERO ILLUSTRATION CONTAINER (SOFT BLUE GRADIENT WITH RIDER & DELIVERIES) -->
+      <!-- HERO ILLUSTRATION CONTAINER -->
       <div class="w-full rounded-3xl bg-gradient-to-br from-sky-100 via-blue-50 to-indigo-100 border border-sky-200/60 p-3 shadow-inner flex flex-col items-center justify-center text-center relative overflow-hidden group">
         <img loading="lazy" src="/assets/bhusawal_login_hero.jpg" alt="Bhusawal Connect Delivery Rider" class="w-full h-44 object-cover rounded-2xl shadow-md group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
       </div>
@@ -76,7 +88,7 @@ import Switcher from '../components/Switcher.astro';
         </p>
       </div>
 
-      <!-- FOUR TRUST BADGES GRID -->
+      <!-- TRUST BADGES GRID -->
       <div class="grid grid-cols-2 gap-2 pt-1">
         <div class="flex items-center gap-2 p-2 bg-sky-50/80 rounded-xl border border-sky-100 text-[11px] font-black text-slate-800">
           <span class="text-sm">⚡</span>
@@ -84,7 +96,7 @@ import Switcher from '../components/Switcher.astro';
         </div>
         <div class="flex items-center gap-2 p-2 bg-purple-50/80 rounded-xl border border-purple-100 text-[11px] font-black text-slate-800">
           <span class="text-sm">🛒</span>
-          <span>25,000+ Products</span>
+          <span>2,680+ Products</span>
         </div>
         <div class="flex items-center gap-2 p-2 bg-amber-50/80 rounded-xl border border-amber-100 text-[11px] font-black text-slate-800">
           <span class="text-sm">🏪</span>
@@ -105,63 +117,71 @@ import Switcher from '../components/Switcher.astro';
             <span>🇮🇳</span>
             <span>+91</span>
           </div>
-          <input type="tel" id="mobile-input" maxlength="10" placeholder="Enter 10-digit mobile number" class="w-full bg-transparent px-2 py-1 text-sm font-black text-slate-900 outline-none placeholder-slate-400 tracking-wider" autocomplete="tel" />
+          <input type="tel" id="mobile-input" maxlength="10" placeholder="Enter 10-digit mobile number" class="w-full bg-transparent px-2 py-1 text-sm font-black text-slate-900 outline-none placeholder-slate-400 tracking-wider" autocomplete="tel" inputmode="numeric" />
         </div>
 
         <!-- Validation Error Message -->
         <p id="mobile-error-msg" class="text-[11px] font-bold text-rose-500 hidden flex items-center gap-1">
           <span class="material-symbols-outlined text-xs">error</span>
-          <span>Please enter a valid 10-digit mobile number.</span>
+          <span id="mobile-error-text">Please enter a valid 10-digit mobile number.</span>
         </p>
       </div>
 
+      <!-- RECAPTCHA CONTAINER FOR FIREBASE PHONE AUTH (fallback only) -->
+      <div id="recaptcha-container"></div>
+
       <!-- SEND OTP BUTTON -->
       <button id="btn-send-otp" class="w-full py-4 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs sm:text-sm rounded-2xl shadow-xl shadow-purple-900/20 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
-        <span id="btn-send-otp-text">Send OTP</span>
+        <span id="btn-send-otp-text">Send OTP via SMS</span>
         <span class="material-symbols-outlined text-base">arrow_forward</span>
       </button>
 
     </div>
 
-    <!-- STEP 2: OTP VERIFICATION SCREEN (HIDDEN INITIALLY) -->
+    <!-- STEP 2: OTP VERIFICATION SCREEN (FALLBACK — only used when MSG91 widget fails to load) -->
     <div id="step-otp-screen" class="hidden space-y-5 animate-in slide-in-from-right-4 duration-300">
       
       <!-- BACK BUTTON & HEADING -->
-      <div class="flex items-center gap-3">
-        <button id="btn-back-to-mobile" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
-          <span class="material-symbols-outlined text-lg">arrow_back</span>
-        </button>
-        <div>
-          <h2 class="text-xl font-black font-display text-slate-900">Verify Mobile Number</h2>
-          <p class="text-xs font-bold text-slate-400 mt-0.5">OTP sent to <span id="display-mobile-number" class="text-slate-900 font-black">+91 99234 56789</span></p>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button id="btn-back-to-mobile" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+            <span class="material-symbols-outlined text-lg">arrow_back</span>
+          </button>
+          <div>
+            <h2 class="text-xl font-black font-display text-slate-900">Verify SMS OTP</h2>
+            <p class="text-xs font-bold text-slate-400 mt-0.5">OTP sent to <span id="display-mobile-number" class="text-slate-900 font-black">+91 ******3210</span></p>
+          </div>
         </div>
+        <button id="btn-change-number" class="text-xs font-bold text-purpleBrand hover:underline">Change</button>
       </div>
 
-      <!-- OTP DIGITS INPUT BOXES -->
+      <!-- 6-DIGIT OTP DIGITS INPUT BOXES -->
       <div class="space-y-3">
-        <label class="text-xs font-black text-slate-700 block uppercase tracking-wider">Enter 4-Digit OTP</label>
+        <label class="text-xs font-black text-slate-700 block uppercase tracking-wider">Enter 6-Digit SMS OTP</label>
         
-        <div class="flex items-center justify-between gap-2">
-          <input type="text" maxlength="1" class="otp-box w-14 h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-xl font-black text-slate-900 rounded-2xl outline-none transition-all" />
-          <input type="text" maxlength="1" class="otp-box w-14 h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-xl font-black text-slate-900 rounded-2xl outline-none transition-all" />
-          <input type="text" maxlength="1" class="otp-box w-14 h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-xl font-black text-slate-900 rounded-2xl outline-none transition-all" />
-          <input type="text" maxlength="1" class="otp-box w-14 h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-xl font-black text-slate-900 rounded-2xl outline-none transition-all" />
+        <div class="flex items-center justify-between gap-1.5">
+          <input type="text" maxlength="1" inputmode="numeric" autocomplete="one-time-code" class="otp-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-lg font-black text-slate-900 rounded-xl outline-none transition-all" />
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-lg font-black text-slate-900 rounded-xl outline-none transition-all" />
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-lg font-black text-slate-900 rounded-xl outline-none transition-all" />
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-lg font-black text-slate-900 rounded-xl outline-none transition-all" />
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-lg font-black text-slate-900 rounded-xl outline-none transition-all" />
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box w-11 h-12 sm:w-12 sm:h-14 bg-slate-50 border-2 border-slate-200 focus:border-purpleBrand focus:bg-white text-center text-lg font-black text-slate-900 rounded-xl outline-none transition-all" />
         </div>
 
-        <!-- Demo OTP Helper Hint -->
+        <!-- Real OTP Helper Hint -->
         <p class="text-[10px] font-extrabold text-purpleBrand text-center bg-purple-50 py-1 rounded-lg">
-          💡 Demo Hint: Enter any 4 digits (e.g. 1234) to verify
+          🔒 Secure SMS OTP verification powered by Bhusawal Connect Auth Engine
         </p>
 
         <!-- OTP Error Message -->
         <p id="otp-error-msg" class="text-[11px] font-bold text-rose-500 hidden text-center">
-          Invalid OTP code. Please try again.
+          Invalid SMS OTP code. Please check and try again.
         </p>
       </div>
 
       <!-- RESEND OTP TIMER CONTAINER -->
       <div class="flex items-center justify-between text-xs font-bold text-slate-500 pt-1">
-        <span id="resend-timer-text">Resend OTP in <strong id="timer-seconds" class="text-slate-900 font-black">30s</strong></span>
+        <span id="resend-timer-text">Resend OTP in <strong id="timer-seconds" class="text-slate-900 font-black">60s</strong></span>
         <button id="btn-resend-otp" class="hidden text-purpleBrand hover:underline font-black">Resend OTP via SMS</button>
       </div>
 
@@ -173,14 +193,14 @@ import Switcher from '../components/Switcher.astro';
 
     </div>
 
-    <!-- STEP 3: LOGIN SUCCESS SCREEN (TEMPORARY OVERLAY BEFORE REDIRECT) -->
+    <!-- STEP 3: LOGIN SUCCESS SCREEN -->
     <div id="step-success-screen" class="hidden text-center py-6 space-y-4 animate-in zoom-in-95 duration-300">
       <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-lg animate-bounce">
         <span class="material-symbols-outlined text-5xl">check_circle</span>
       </div>
       <div>
-        <h2 class="text-xl font-black font-display text-slate-900">Login Successful!</h2>
-        <p class="text-xs font-bold text-slate-400 mt-1">Redirecting you to Bhusawal Connect Home...</p>
+        <h2 class="text-xl font-black font-display text-slate-900">Authenticated!</h2>
+        <p class="text-xs font-bold text-slate-400 mt-1">Recognized customer session. Redirecting to Bhusawal Connect...</p>
       </div>
       <div class="w-8 h-8 border-4 border-purpleBrand border-t-transparent rounded-full animate-spin mx-auto"></div>
     </div>
@@ -196,23 +216,47 @@ import Switcher from '../components/Switcher.astro';
 
   </div>
 
-  <Switcher />
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- AUTHENTICATION INTEGRATION MODULE                          -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
 
-  <!-- CLIENT-SIDE OTP LOGIN LOGIC -->
-  <script is:inline>
-    document.addEventListener('DOMContentLoaded', () => {
+  <!--
+    MSG91 OTP Widget Configuration.
+    widgetId and tokenAuth are injected by Astro SSR from server-side env vars
+    via define:vars (NOT from PUBLIC_* env vars, NOT hardcoded).
+    The tokenAuth is MSG91's browser-facing widget token (required by their SDK).
+    The server-side MSG91_AUTH_KEY is used only in /api/auth/verify-widget-token.
+  -->
+  <script is:inline define:vars={{ widgetId, widgetTokenAuth }}>
+    // Store widget config globally for the module script to access
+    window.__msg91WidgetId = widgetId || '';
+    window.__msg91TokenAuth = widgetTokenAuth || '';
+    window.__msg91WidgetReady = false;
+  </script>
 
+  <!-- Load MSG91 OTP Widget SDK -->
+  <script is:inline src="https://verify.msg91.com/otp-provider.js"></script>
+
+  <!-- Main Authentication Module -->
+  <script type="module">
+    import { setupRecaptcha, sendPhoneOtp, verifyPhoneOtp, subscribeToAuth } from '/src/lib/firebase.ts';
+    import { getCurrentCustomer, syncCustomerProfile } from '/src/lib/customerAuth.ts';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // ── DOM References ──
       const mobileScreen = document.getElementById('step-mobile-screen');
       const otpScreen = document.getElementById('step-otp-screen');
       const successScreen = document.getElementById('step-success-screen');
 
       const mobileInput = document.getElementById('mobile-input');
       const mobileError = document.getElementById('mobile-error-msg');
+      const mobileErrorText = document.getElementById('mobile-error-text');
       const sendOtpBtn = document.getElementById('btn-send-otp');
       const sendOtpText = document.getElementById('btn-send-otp-text');
 
       const displayMobile = document.getElementById('display-mobile-number');
       const backBtn = document.getElementById('btn-back-to-mobile');
+      const changeNumberBtn = document.getElementById('btn-change-number');
       const otpBoxes = document.querySelectorAll('.otp-box');
       const otpError = document.getElementById('otp-error-msg');
       const verifyBtn = document.getElementById('btn-verify-otp');
@@ -222,39 +266,173 @@ import Switcher from '../components/Switcher.astro';
       const timerSec = document.getElementById('timer-seconds');
       const resendBtn = document.getElementById('btn-resend-otp');
 
-      let timerInterval;
+      // ── State ──
+      let recaptchaVerifier = null;
+      let confirmationResult = null;
+      let timerInterval = null;
+      let activePhone = '';
+      let sendOtpInProgress = false;
 
-      // 1. Send OTP Action
-      sendOtpBtn?.addEventListener('click', () => {
-        const val = mobileInput.value.trim();
-        if (!val || val.length !== 10 || isNaN(val)) {
-          mobileError.classList.remove('hidden');
+      // ── Helpers ──
+      const redirectAfterLogin = () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        window.location.href = urlParams.get('redirect') || '/customer';
+      };
+
+      const showError = (msg) => {
+        if (mobileErrorText) mobileErrorText.textContent = msg;
+        mobileError.classList.remove('hidden');
+      };
+
+      const hideError = () => {
+        mobileError.classList.add('hidden');
+      };
+
+      const resetSendBtn = () => {
+        sendOtpText.textContent = 'Send OTP via SMS';
+        sendOtpBtn.disabled = false;
+        sendOtpInProgress = false;
+      };
+
+      // ── Server-side widget token verification ──
+      const verifyWidgetTokenAndRedirect = async (accessToken) => {
+        if (!accessToken) {
+          showError('Verification succeeded but no token received. Please try again.');
+          mobileScreen.classList.remove('hidden');
+          otpScreen.classList.add('hidden');
+          resetSendBtn();
           return;
         }
-        mobileError.classList.add('hidden');
 
-        // Loading animation
-        sendOtpText.textContent = 'Sending OTP...';
-        sendOtpBtn.disabled = true;
+        try {
+          const verifyRes = await fetch('/api/auth/verify-widget-token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ accessToken })
+          });
+          const verifyData = await verifyRes.json().catch(() => ({}));
 
-        setTimeout(() => {
-          sendOtpText.textContent = 'Send OTP';
-          sendOtpBtn.disabled = false;
+          if (verifyRes.ok && verifyData.success) {
+            mobileScreen.classList.add('hidden');
+            otpScreen.classList.add('hidden');
+            successScreen.classList.remove('hidden');
+            setTimeout(redirectAfterLogin, 600);
+          } else {
+            showError(verifyData.message || 'Server verification failed. Please try again.');
+            mobileScreen.classList.remove('hidden');
+            otpScreen.classList.add('hidden');
+            resetSendBtn();
+          }
+        } catch (err) {
+          showError('Network error during verification. Please try again.');
+          mobileScreen.classList.remove('hidden');
+          otpScreen.classList.add('hidden');
+          resetSendBtn();
+        }
+      };
 
-          displayMobile.textContent = `+91 ${val}`;
+      // ── 0. Auto-detect returning authenticated customer ──
+      const currentSupabase = await getCurrentCustomer();
+      if (currentSupabase && currentSupabase.profile) {
+        mobileScreen.classList.add('hidden');
+        otpScreen.classList.add('hidden');
+        successScreen.classList.remove('hidden');
+        setTimeout(redirectAfterLogin, 600);
+        return;
+      }
+
+      subscribeToAuth((user) => {
+        if (user) {
           mobileScreen.classList.add('hidden');
-          otpScreen.classList.remove('hidden');
-
-          startResendTimer();
-        }, 600);
+          otpScreen.classList.add('hidden');
+          successScreen.classList.remove('hidden');
+          setTimeout(redirectAfterLogin, 600);
+        }
       });
 
-      // Allow Enter key on mobile input
+      // ── 1. Firebase recaptcha fallback setup ──
+      try {
+        recaptchaVerifier = setupRecaptcha('recaptcha-container');
+      } catch (err) {
+        // Firebase recaptcha is a fallback; non-critical if it fails
+      }
+
+      // ── 2. Send OTP — Primary: MSG91 Widget, Fallback: Server API → Direct OTP ──
+      sendOtpBtn?.addEventListener('click', async () => {
+        // Prevent duplicate submissions
+        if (sendOtpInProgress) return;
+
+        const val = mobileInput.value.trim();
+        if (!val || val.length !== 10 || isNaN(val)) {
+          showError('Please enter a valid 10-digit Indian mobile number.');
+          return;
+        }
+        hideError();
+        activePhone = val;
+        sendOtpInProgress = true;
+        sendOtpText.textContent = 'Sending SMS OTP...';
+        sendOtpBtn.disabled = true;
+
+        try {
+          // PRIMARY: MSG91 OTP Widget (initSendOTP)
+          const wid = window.__msg91WidgetId;
+          const wta = window.__msg91TokenAuth;
+
+          if (wid && wta && typeof window.initSendOTP === 'function') {
+            const widgetConfig = {
+              widgetId: wid,
+              tokenAuth: wta,
+              identifier: `91${val}`,
+              success: async (data) => {
+                const accessToken = data?.message || data?.access_token || data?.accessToken || '';
+                await verifyWidgetTokenAndRedirect(accessToken);
+              },
+              failure: (error) => {
+                showError('OTP verification was cancelled or failed. Please try again.');
+                mobileScreen.classList.remove('hidden');
+                resetSendBtn();
+              }
+            };
+
+            window.initSendOTP(widgetConfig);
+            return;
+          }
+
+          // Server-side MSG91 OTP API
+          const res = await fetch('/api/auth/request-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: val })
+          });
+          const apiData = await res.json().catch(() => ({}));
+
+          if (res.ok && apiData.success) {
+            displayMobile.textContent = `+91 ******${val.slice(-4)}`;
+            mobileScreen.classList.add('hidden');
+            otpScreen.classList.remove('hidden');
+            if (otpBoxes[0]) {
+              setTimeout(() => otpBoxes[0].focus(), 100);
+            }
+            startResendTimer(60);
+            resetSendBtn();
+            return;
+          }
+
+          showError(apiData.message || 'Unable to send OTP. Please check server configuration.');
+          resetSendBtn();
+        } catch (err) {
+          console.error('[Login] OTP send error:', err);
+          showError('Network error while requesting OTP. Please try again.');
+          resetSendBtn();
+        }
+      });
+
+      // Enter key triggers Send OTP
       mobileInput?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') sendOtpBtn.click();
       });
 
-      // 2. OTP Box Auto-Focus Behavior
+      // ── 3. OTP Box Navigation & Paste (fallback OTP UI) ──
       otpBoxes.forEach((box, index) => {
         box.addEventListener('input', (e) => {
           if (e.target.value.length === 1 && index < otpBoxes.length - 1) {
@@ -267,21 +445,37 @@ import Switcher from '../components/Switcher.astro';
             otpBoxes[index - 1].focus();
           }
         });
+
+        box.addEventListener('paste', (e) => {
+          const pasteData = e.clipboardData?.getData('text') || '';
+          const digits = pasteData.replace(/\D/g, '').slice(0, 6);
+          if (digits.length > 0) {
+            e.preventDefault();
+            digits.split('').forEach((digit, i) => {
+              if (otpBoxes[i]) otpBoxes[i].value = digit;
+            });
+            if (digits.length === 6 && verifyBtn) verifyBtn.focus();
+          }
+        });
       });
 
-      // 3. Back to Mobile Entry Screen
-      backBtn?.addEventListener('click', () => {
+      // ── 4. Back & Change Phone Number ──
+      const returnToMobileStep = () => {
         clearInterval(timerInterval);
         otpScreen.classList.add('hidden');
         mobileScreen.classList.remove('hidden');
-      });
+        if (mobileInput) mobileInput.focus();
+      };
 
-      // 4. Start Resend Countdown Timer
-      function startResendTimer() {
-        let sec = 30;
+      backBtn?.addEventListener('click', returnToMobileStep);
+      changeNumberBtn?.addEventListener('click', returnToMobileStep);
+
+      // ── 5. Resend Timer ──
+      function startResendTimer(seconds = 60) {
+        let sec = seconds;
         timerText.classList.remove('hidden');
         resendBtn.classList.add('hidden');
-        if (timerSec) timerSec.textContent = '30s';
+        if (timerSec) timerSec.textContent = `${sec}s`;
 
         clearInterval(timerInterval);
         timerInterval = setInterval(() => {
@@ -295,40 +489,69 @@ import Switcher from '../components/Switcher.astro';
         }, 1000);
       }
 
-      resendBtn?.addEventListener('click', () => {
-        alert('OTP resent via SMS!');
-        startResendTimer();
+      resendBtn?.addEventListener('click', async () => {
+        if (activePhone) {
+          sendOtpBtn.click();
+        }
       });
 
-      // 5. Verify OTP & Submit
-      verifyBtn?.addEventListener('click', () => {
+      // ── 6. Verify OTP (Strict MSG91 server verification) ──
+      verifyBtn?.addEventListener('click', async () => {
         let enteredOtp = '';
         otpBoxes.forEach(box => enteredOtp += box.value);
 
         if (enteredOtp.length < 4) {
+          otpError.textContent = 'Please enter the complete OTP code.';
           otpError.classList.remove('hidden');
           return;
         }
         otpError.classList.add('hidden');
-
-        verifyText.textContent = 'Verifying OTP...';
+        verifyText.textContent = 'Verifying...';
         verifyBtn.disabled = true;
 
-        setTimeout(() => {
-          // Store authentication state
-          localStorage.setItem('bhusawal_user_logged_in', 'true');
-          localStorage.setItem('bhusawal_user_mobile', mobileInput.value.trim());
+        try {
+          // Server-side MSG91 OTP verification
+          const verifyRes = await fetch('/api/auth/verify-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: activePhone, otp: enteredOtp })
+          });
+          const verifyData = await verifyRes.json().catch(() => ({}));
 
-          otpScreen.classList.add('hidden');
-          successScreen.classList.remove('hidden');
+          if (verifyRes.ok && verifyData.success) {
+            const profileData = {
+              id: verifyData.user?.id || 'CUST-' + activePhone.slice(-4),
+              phone: '+91 ' + activePhone,
+              name: verifyData.user?.name || 'Customer',
+              email: verifyData.user?.email || '',
+              isLoggedIn: true,
+            };
+            localStorage.setItem('bhusawal_user_profile', JSON.stringify(profileData));
+            localStorage.setItem('bhusawal_user_phone', '+91' + activePhone);
+            try {
+              localStorage.setItem('bhusawal_auth_session', JSON.stringify({
+                user: profileData,
+                phone: '+91' + activePhone,
+                loginTime: new Date().toISOString()
+              }));
+            } catch (e) {}
+            window.dispatchEvent(new Event('storage'));
 
-          // Redirect to Home
-          setTimeout(() => {
-            window.location.href = '/home';
-          }, 800);
-        }, 600);
+            otpScreen.classList.add('hidden');
+            successScreen.classList.remove('hidden');
+            setTimeout(redirectAfterLogin, 600);
+            return;
+          }
+
+          throw new Error(verifyData.message || 'Invalid OTP code. Please try again.');
+        } catch (err) {
+          otpError.textContent = err.message || 'Invalid OTP code. Please try again.';
+          otpError.classList.remove('hidden');
+        } finally {
+          verifyText.textContent = 'Verify & Continue';
+          verifyBtn.disabled = false;
+        }
       });
-
     });
   </script>
 </body>
