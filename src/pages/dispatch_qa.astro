@@ -1,0 +1,118 @@
+---
+// Intelligent Rider Assignment QA Audit & Test Suite Page
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intelligent Rider Assignment QA Audit — Bhusawal Connect</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  
+  <script src="/bhusawal_master_db.js" is:inline></script>
+  <script src="/bhusawal_backend.js" is:inline></script>
+  <script src="/bhusawal_dispatch_engine.js" is:inline></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-['Inter'] min-h-screen p-4 md:p-8">
+  <div class="max-w-6xl mx-auto space-y-6">
+    
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/80 p-6 rounded-2xl border border-slate-800 backdrop-blur-md">
+      <div>
+        <div class="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider mb-1">
+          <span class="material-symbols-outlined text-sm">psychology</span>
+          <span>Intelligent Load Balancing & Rider Match Engine</span>
+        </div>
+        <h1 class="text-2xl md:text-3xl font-black text-white">Intelligent Rider Assignment QA Audit</h1>
+        <p class="text-xs md:text-sm text-slate-400 mt-1">
+          Evaluates Road Distance, ETA, Live GPS, Order Load, Batch Delay Limits, Offline Protection & Duplicate Safeguards
+        </p>
+      </div>
+      
+      <button id="btn-run-dispatch-qa" class="bg-indigo-500 hover:bg-indigo-600 active:scale-95 text-white font-extrabold text-xs px-5 py-3 rounded-xl transition-all flex items-center gap-2 shadow-lg shadow-indigo-500/20">
+        <span class="material-symbols-outlined text-base">refresh</span>
+        <span>Re-Run Dispatch QA Suite</span>
+      </button>
+    </div>
+
+    <!-- Live Test Match Execution Box -->
+    <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+          <span class="material-symbols-outlined text-emerald-400 text-sm">bolt</span>
+          Simulate Real Order Auto-Dispatch Test
+        </span>
+        <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-mono uppercase font-bold">Dispatch Engine v2.0 Active</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-1">
+          <div class="text-[10px] text-slate-500 font-bold uppercase">Test Order Details</div>
+          <div class="text-xs font-extrabold text-white">Order #ORD_QA_991</div>
+          <div class="text-[11px] text-slate-400">Pickup: Station Road Market Yard</div>
+          <div class="text-[11px] text-slate-400">Delivery: Khadaka Road Colony</div>
+        </div>
+
+        <div id="match-winner-card" class="bg-slate-950 p-4 rounded-xl border border-indigo-500/40 space-y-1 md:col-span-2">
+          <div class="text-[10px] text-indigo-400 font-bold uppercase flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">workspace_premium</span>
+            Optimal Rider Match Result
+          </div>
+          <div id="winner-name" class="text-sm font-black text-white">Calculating best rider match...</div>
+          <div id="winner-metrics" class="text-xs text-slate-300 font-mono">Distance: -- km | ETA: -- mins | Score: --</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QA Checklist Results Table -->
+    <div class="space-y-3">
+      <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider px-1">Intelligent Dispatch QA Test Verification Results</h2>
+      <div id="qa-results-container" class="space-y-2.5">
+        <!-- Dynamically rendered result cards -->
+      </div>
+    </div>
+
+  </div>
+
+  <script is:inline>
+    (function() {
+      function runAndRenderQA() {
+        const container = document.getElementById('qa-results-container');
+        if (!window.BhusawalIntelligentDispatchEngine) return;
+
+        // Run automated QA suite built into engine
+        const results = window.BhusawalIntelligentDispatchEngine.runDispatchQASuite();
+
+        container.innerHTML = results.map(item => `
+          <div class="p-4 bg-slate-900 rounded-xl border border-emerald-500/40 bg-emerald-950/20 flex items-center justify-between gap-3">
+            <div class="space-y-0.5">
+              <div class="text-xs font-extrabold text-white">${item.name}</div>
+              <p class="text-[11px] text-slate-400 font-mono">${item.details}</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-500/40 flex items-center gap-1 shrink-0">
+              <span class="material-symbols-outlined text-sm">check_circle</span>
+              ${item.status}
+            </span>
+          </div>
+        `).join('');
+
+        // Also test sample auto-dispatch
+        const testOrder = { id: 'ORD_QA_991', pickupLat: 21.0478, pickupLng: 75.7896, pickupZone: 'Station Road', status: 'placed' };
+        const match = window.BhusawalIntelligentDispatchEngine.findBestRiderForOrder(testOrder);
+
+        if (match && match.selectedRider) {
+          document.getElementById('winner-name').textContent = `🏆 ${match.selectedRider.name || match.selectedRider.fullName} (Rider ID: ${match.selectedRider.id})`;
+          document.getElementById('winner-metrics').textContent = `Proximity Distance: ${match.distanceKm} km | Estimated Travel ETA: ${match.roadEtaMins} mins | Composite Score: ${match.score.toFixed(1)} | Active Load: ${match.activeOrdersCount} orders`;
+        }
+      }
+
+      document.getElementById('btn-run-dispatch-qa')?.addEventListener('click', runAndRenderQA);
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(runAndRenderQA, 300);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,5 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
 import foodCatalog from '../../public/food_catalog.json';
 
 // 6 DYNAMIC FEATURED PRODUCT SECTIONS
@@ -135,6 +134,9 @@ const featuredPartnerRestaurants = [
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     html { scroll-behavior: smooth; }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="pb-32 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased bg-white">
@@ -365,54 +367,62 @@ const featuredPartnerRestaurants = [
 
             <!-- HORIZONTALLY SCROLLABLE PRODUCT CAROUSEL WITH QUICK VIEW AND ADD TO CART -->
             <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
-              {items.map(item => (
-                <div 
-                  class="food-product-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative cursor-pointer"
-                  data-id={item.id}
-                  data-name={item.name}
-                  data-category={item.category}
-                  data-price={item.price}
-                  data-isveg={item.isVeg ? 'true' : 'false'}
-                  data-kw={item.searchKeywords ? item.searchKeywords.join(' ') : ''}
-                  onclick={`window.location.href='/product?id=${item.id}';`}
-                >
-                  <div>
-                    <div class="w-full aspect-square bg-slate-50/90 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative group-hover:bg-red-50/30 transition-colors">
-                      
-                      <!-- Veg / Non-Veg Badge -->
-                      <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
-                        <span class={`w-2 h-2 rounded-full shrink-0 ${item.isVeg ? 'bg-emerald-600' : 'bg-rose-600'}`}></span>
-                        <span class={item.isVeg ? 'text-emerald-700' : 'text-rose-700'}>{item.isVeg ? 'VEG' : 'NON-VEG'}</span>
+              {items.map(item => {
+                const rawId = item["Product ID"] || item.id || item.sku || item.ProductID;
+                const canonicalProductId = (rawId && typeof rawId === 'string' && !['undefined', 'null', 'n/a'].includes(rawId.toLowerCase().trim())) ? rawId.trim() : '';
+                const hasValidLink = canonicalProductId.length > 0;
+                const productHref = hasValidLink ? `/product/${encodeURIComponent(canonicalProductId)}` : null;
+
+                return (
+                  <div 
+                    class="food-product-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative cursor-pointer"
+                    data-id={canonicalProductId}
+                    data-name={item.name}
+                    data-category={item.category}
+                    data-price={item.price}
+                    data-isveg={item.isVeg ? 'true' : 'false'}
+                    data-kw={item.searchKeywords ? item.searchKeywords.join(' ') : ''}
+                    onclick={hasValidLink ? `window.location.href='${productHref}';` : undefined}
+                  >
+                    <div>
+                      <div class="w-full aspect-square bg-slate-50/90 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative group-hover:bg-red-50/30 transition-colors">
+                        
+                        <!-- Veg / Non-Veg Badge -->
+                        <div class="absolute top-2 left-2 bg-white/95 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-1 shadow-xs z-10 border border-slate-200">
+                          <span class={`w-2 h-2 rounded-full shrink-0 ${item.isVeg ? 'bg-emerald-600' : 'bg-rose-600'}`}></span>
+                          <span class={item.isVeg ? 'text-emerald-700' : 'text-rose-700'}>{item.isVeg ? 'VEG' : 'NON-VEG'}</span>
+                        </div>
+
+                        <!-- Rating Badge -->
+                        <div class="absolute top-2 right-2 bg-amber-50 text-amber-800 border border-amber-200/80 px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-0.5 shadow-xs z-10">
+                          <span>⭐</span>
+                          <span>{item.rating || '4.8'}</span>
+                        </div>
+
+                        <!-- Preparation Time Badge -->
+                        <div class="absolute bottom-2 left-2 bg-slate-900/85 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-1 shadow-xs z-10">
+                          <span>⏱️ {item.prepTime || '15-20 min'}</span>
+                        </div>
+
+                        {/* QUICK VIEW BUTTON */}
+                        {hasValidLink && (
+                          <button 
+                            class="btn-quick-view absolute inset-x-3 bottom-2 py-1.5 bg-white/95 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-xl border border-slate-200 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-20 flex items-center justify-center gap-1 hover:bg-redBrand hover:text-white hover:border-redBrand"
+                            onclick={`event.stopPropagation(); window.location.href='${productHref}';`}
+                          >
+                            <span class="material-symbols-outlined text-xs">visibility</span>
+                            <span>Quick View</span>
+                          </button>
+                        )}
+
+                        <img 
+                          loading="lazy" 
+                          src={item.image} 
+                          alt={item.name} 
+                          class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                          onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';"
+                        />
                       </div>
-
-                      <!-- Rating Badge -->
-                      <div class="absolute top-2 right-2 bg-amber-50 text-amber-800 border border-amber-200/80 px-2 py-0.5 rounded-full text-[9px] font-black flex items-center gap-0.5 shadow-xs z-10">
-                        <span>⭐</span>
-                        <span>{item.rating || '4.8'}</span>
-                      </div>
-
-                      <!-- Preparation Time Badge -->
-                      <div class="absolute bottom-2 left-2 bg-slate-900/85 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold flex items-center gap-1 shadow-xs z-10">
-                        <span>⏱️ {item.prepTime || '15-20 min'}</span>
-                      </div>
-
-                      <!-- QUICK VIEW BUTTON -->
-                      <button 
-                        class="btn-quick-view absolute inset-x-3 bottom-2 py-1.5 bg-white/95 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-xl border border-slate-200 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-20 flex items-center justify-center gap-1 hover:bg-redBrand hover:text-white hover:border-redBrand"
-                        onclick={`event.stopPropagation(); window.location.href='/product?id=${item.id}';`}
-                      >
-                        <span class="material-symbols-outlined text-xs">visibility</span>
-                        <span>Quick View</span>
-                      </button>
-
-                      <!-- Large Product Image -->
-                      <img 
-                        loading="lazy" 
-                        src={item.image} 
-                        alt={item.name} 
-                        class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
-                        onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';"
-                      />
                     </div>
 
                     <span class="text-[10px] font-extrabold text-redBrand uppercase tracking-wider block mb-0.5 truncate">
@@ -438,7 +448,6 @@ const featuredPartnerRestaurants = [
                       data-price={item.price} 
                       data-img={item.image}
                       data-category={item.category}
-                      onclick="event.stopPropagation();"
                     >
                       <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs flex items-center gap-1">
                         <span>+ ADD</span>
@@ -457,7 +466,8 @@ const featuredPartnerRestaurants = [
                   </div>
 
                 </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         );
@@ -485,16 +495,22 @@ const featuredPartnerRestaurants = [
             </div>
 
             <div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar py-2 px-0.5">
-              {items.map(item => (
+              {items.map(item => {
+                const rawId = item["Product ID"] || item.id || item.sku || item.ProductID;
+                const canonicalProductId = (rawId && typeof rawId === 'string' && !['undefined', 'null', 'n/a'].includes(rawId.toLowerCase().trim())) ? rawId.trim() : '';
+                const hasValidLink = canonicalProductId.length > 0;
+                const productHref = hasValidLink ? `/product/${encodeURIComponent(canonicalProductId)}` : null;
+
+                return (
                 <div 
                   class="food-product-card w-52 sm:w-60 shrink-0 bg-white rounded-3xl border border-slate-100 p-3.5 flex flex-col justify-between shadow-xs hover:shadow-xl hover:border-red-200 transition-all duration-300 group relative cursor-pointer"
-                  data-id={item.id}
+                  data-id={canonicalProductId}
                   data-name={item.name}
                   data-category={item.category}
                   data-price={item.price}
                   data-isveg={item.isVeg ? 'true' : 'false'}
                   data-kw={item.searchKeywords ? item.searchKeywords.join(' ') : ''}
-                  onclick={`window.location.href='/product?id=${item.id}';`}
+                  onclick={hasValidLink ? `window.location.href='${productHref}';` : undefined}
                 >
                   <div>
                     <div class="w-full aspect-square bg-slate-50/90 rounded-2xl p-2.5 mb-3 flex items-center justify-center border border-slate-100 overflow-hidden relative group-hover:bg-red-50/30 transition-colors">
@@ -513,14 +529,16 @@ const featuredPartnerRestaurants = [
                         <span>⏱️ {item.prepTime || '15-20 min'}</span>
                       </div>
 
-                      <!-- QUICK VIEW BUTTON -->
-                      <button 
-                        class="btn-quick-view absolute inset-x-3 bottom-2 py-1.5 bg-white/95 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-xl border border-slate-200 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-20 flex items-center justify-center gap-1 hover:bg-redBrand hover:text-white hover:border-redBrand"
-                        onclick={`event.stopPropagation(); window.location.href='/product?id=${item.id}';`}
-                      >
-                        <span class="material-symbols-outlined text-xs">visibility</span>
-                        <span>Quick View</span>
-                      </button>
+                      {/* QUICK VIEW BUTTON */}
+                      {hasValidLink && (
+                        <button 
+                          class="btn-quick-view absolute inset-x-3 bottom-2 py-1.5 bg-white/95 backdrop-blur-md text-slate-800 text-[10px] font-black rounded-xl border border-slate-200 shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-20 flex items-center justify-center gap-1 hover:bg-redBrand hover:text-white hover:border-redBrand"
+                          onclick={`event.stopPropagation(); window.location.href='${productHref}';`}
+                        >
+                          <span class="material-symbols-outlined text-xs">visibility</span>
+                          <span>Quick View</span>
+                        </button>
+                      )}
 
                       <img 
                         loading="lazy" 
@@ -553,7 +571,6 @@ const featuredPartnerRestaurants = [
                       data-price={item.price} 
                       data-img={item.image}
                       data-category={item.category}
-                      onclick="event.stopPropagation();"
                     >
                       <button class="btn-add-direct-food px-3.5 py-1.5 bg-redLight text-redBrand hover:bg-redBrand hover:text-white border border-red-200 text-xs font-black rounded-xl active:scale-90 transition-all shadow-xs flex items-center gap-1">
                         <span>+ ADD</span>
@@ -572,7 +589,8 @@ const featuredPartnerRestaurants = [
                   </div>
 
                 </div>
-              ))}
+                );
+              })}
             </div>
 
           </section>
@@ -603,10 +621,7 @@ const featuredPartnerRestaurants = [
       <span class="material-symbols-outlined text-sm">arrow_forward</span>
     </a>
   </div>
-
-  <Switcher />
-
-  <!-- Client-Side Catalog Array for Instant Search Dropdown Suggestions -->
+<!-- Client-Side Catalog Array for Instant Search Dropdown Suggestions -->
   <script is:inline define:vars={{ foodCatalog }}>
     window.BHUSAWAL_FOOD_CATALOG = foodCatalog || [];
   </script>
@@ -962,7 +977,9 @@ const featuredPartnerRestaurants = [
           if (!row) return;
 
           var itemId = row.getAttribute('data-id');
-          window.location.href = '/product?id=' + itemId;
+          if (itemId && itemId !== 'undefined' && itemId !== 'null' && itemId !== 'N/A') {
+            window.location.href = '/product/' + encodeURIComponent(itemId);
+          }
         });
       }
 

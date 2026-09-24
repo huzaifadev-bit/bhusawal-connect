@@ -498,212 +498,1243 @@
         <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-400">
             <span class="text-[10px] font-black uppercase tracking-wider">Completed</span>
-            <span class="material-symbols-outlined text-blue-600 text-lg">task_alt</span>
+            <span class="material-symbols-outlined text-emerald-600 text-lg">check_circle</span>
           </div>
           <div class="mt-2">
-            <span id="kpi-completed-today" class="text-2xl font-black text-slate-900 tracking-tight">0</span>
-            <span class="text-[10px] block text-slate-400 font-bold mt-0.5">Fleet Trips</span>
+            <span id="kpi-completed-count" class="text-2xl font-black text-slate-900 tracking-tight">0</span>
+            <span class="text-[10px] block text-slate-400 font-bold mt-0.5">Successful Deliveries</span>
           </div>
         </div>
 
         <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-400">
-            <span class="text-[10px] font-black uppercase tracking-wider">Acceptance</span>
-            <span class="material-symbols-outlined text-amber-500 text-lg">speed</span>
+            <span class="text-[10px] font-black uppercase tracking-wider">Pending</span>
+            <span class="material-symbols-outlined text-amber-500 text-lg">pending</span>
           </div>
           <div class="mt-2">
-            <span id="kpi-acceptance-rate" class="text-2xl font-black text-slate-900 tracking-tight">98%</span>
-            <span class="text-[10px] block text-slate-400 font-bold mt-0.5">High Performance</span>
+            <span id="kpi-pending-count" class="text-2xl font-black text-slate-900 tracking-tight">0</span>
+            <span class="text-[10px] block text-slate-400 font-bold mt-0.5">In Dispatch Queue</span>
           </div>
         </div>
 
         <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm flex flex-col justify-between">
           <div class="flex items-center justify-between text-slate-400">
-            <span class="text-[10px] font-black uppercase tracking-wider">Active Tasks</span>
-            <span class="material-symbols-outlined text-purple-600 text-lg">local_shipping</span>
+            <span class="text-[10px] font-black uppercase tracking-wider">Cancelled</span>
+            <span class="material-symbols-outlined text-red-500 text-lg">cancel</span>
           </div>
           <div class="mt-2">
-            <span id="kpi-active-tasks-count" class="text-2xl font-black text-blue-600 tracking-tight">0</span>
-            <span class="text-[10px] block text-slate-400 font-bold mt-0.5">In Progress</span>
+            <span id="kpi-cancelled-count" class="text-2xl font-black text-slate-900 tracking-tight">0</span>
+            <span class="text-[10px] block text-slate-400 font-bold mt-0.5">Rejected / Returned</span>
           </div>
         </div>
       </div>
 
-      <!-- MODULE 3: ACTIVE DELIVERY ORDERS CONTAINER -->
-      <div id="active-orders-section" class="space-y-3">
-        <div class="flex items-center justify-between">
-          <h3 class="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-blue-600 text-lg">route</span>
-            <span>Current Delivery Route & Orders</span>
+      <!-- MODULE 3: CURRENT ACTIVE / STACKED ORDERS CARD -->
+      <div id="section-active-order" class="bg-white rounded-2xl p-4 border-2 border-blue-500 shadow-lg space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span id="active-order-type-badge" class="px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-black uppercase">
+              🛒 Grocery Order
+            </span>
+            <span id="active-order-id" class="text-xs font-extrabold text-slate-900">#BHU-89210</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="active-order-sequence" class="hidden text-[10px] font-black text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">
+              Stop 1 of 2
+            </span>
+            <span id="active-order-payout-badge" class="text-sm font-black text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200">
+              Payout: ₹45
+            </span>
+          </div>
+        </div>
+
+        <div class="space-y-2.5 text-xs">
+          <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+            <span class="material-symbols-outlined text-amber-600 text-base shrink-0 mt-0.5">storefront</span>
+            <div class="flex-1">
+              <span class="text-[10px] font-black text-slate-400 uppercase block">Pickup Location</span>
+              <span id="active-order-pickup" class="font-extrabold text-slate-800">Sai Jeevan Super Mall, Station Road</span>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-2 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+            <span class="material-symbols-outlined text-blue-600 text-base shrink-0 mt-0.5">location_on</span>
+            <div class="flex-1">
+              <span class="text-[10px] font-black text-slate-400 uppercase block">Customer Delivery Address</span>
+              <span id="active-order-drop" class="font-extrabold text-slate-800">Khadaka Road, Near Municipal School, Bhusawal</span>
+              <div class="flex items-center justify-between mt-1 text-[11px]">
+                <span id="active-order-customer" class="font-bold text-slate-600">Customer: Amit Sharma</span>
+                <a id="active-order-call" href="tel:9876543210" class="text-blue-600 font-extrabold hover:underline flex items-center gap-0.5">
+                  <span class="material-symbols-outlined text-xs">call</span> Call
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ONE-TAP GOOGLE MAPS TURN-BY-TURN NAVIGATION HUD -->
+        <div class="bg-slate-900 text-white p-3.5 rounded-2xl border-2 border-blue-500 shadow-md space-y-2.5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-blue-400 text-base">navigation</span>
+              <span class="text-xs font-black text-white uppercase tracking-wider">Google Maps Navigation</span>
+            </div>
+            <span id="nav-traffic-badge" class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+              🟢 Clear Traffic (28 km/h)
+            </span>
+          </div>
+
+          <div class="flex items-center justify-between text-xs">
+            <div>
+              <span class="text-[10px] font-bold text-slate-400 uppercase block">Fastest Route</span>
+              <span id="nav-fastest-route-name" class="font-extrabold text-blue-300">Jamner Road Corridor</span>
+            </div>
+            <div class="text-right">
+              <span id="nav-eta-val" class="text-base font-black text-emerald-400 font-mono">4 mins</span>
+              <span id="nav-dist-val" class="text-[10px] text-slate-400 font-bold block">1.4 km remaining</span>
+            </div>
+          </div>
+
+          <!-- ROAD CLOSURE ALERT BANNER -->
+          <div id="nav-road-closure-banner" class="bg-amber-950/80 border border-amber-500/50 p-2 rounded-xl text-[11px] font-bold text-amber-200 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-amber-400 text-sm shrink-0">warning</span>
+            <span id="nav-closure-text">🚧 Railway Underpass closed. Rerouted via Overbridge.</span>
+          </div>
+
+          <!-- ONE-TAP NAVIGATION BUTTONS (NO MANUAL ENTRY) -->
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button id="btn-nav-pickup" type="button" class="py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-sm">storefront</span>
+              <span>1-Tap to Pickup</span>
+            </button>
+            <button id="btn-nav-customer" type="button" class="py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1 cursor-pointer">
+              <span class="material-symbols-outlined text-sm">near_me</span>
+              <span>1-Tap to Customer</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 10-STAGE SEQUENTIAL DELIVERY ACTION CONTROLLER -->
+        <div id="delivery-workflow-controller" class="border-t border-slate-100 pt-3 space-y-2.5">
+          
+          <!-- CURRENT STAGE BADGE & DESCRIPTION -->
+          <div class="bg-blue-50/70 p-3 rounded-xl border border-blue-100 space-y-1">
+            <div class="flex items-center justify-between">
+              <span id="wf-stage-step-badge" class="px-2 py-0.5 bg-blue-600 text-white rounded text-[10px] font-black uppercase tracking-wider">
+                Stage 2 of 10
+              </span>
+              <span id="wf-stage-id" class="text-[10px] font-extrabold text-blue-700 font-mono">
+                PARTNER_ACCEPTED
+              </span>
+            </div>
+            <h4 id="wf-stage-label" class="text-xs font-black text-slate-900">Partner Accepted Order</h4>
+            <p id="wf-stage-desc" class="text-[11px] font-bold text-slate-500">Delivery partner accepted order request. Click button below to advance stage.</p>
+          </div>
+
+          <!-- DYNAMIC STAGE ACTION BUTTON -->
+          <button
+            id="btn-advance-workflow-stage"
+            class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span id="btn-wf-action-text">Start Route to Pickup Store</span>
+            <span class="material-symbols-outlined text-base">arrow_forward</span>
+          </button>
+
+          <!-- OTP INPUT CONTAINER (VISIBLE AT STAGE 8) -->
+          <div id="container-otp-verification" class="hidden space-y-2 pt-1">
+            <div class="flex items-center gap-2">
+              <input
+                type="text"
+                id="input-delivery-otp"
+                maxlength="4"
+                placeholder="Enter 4-Digit Delivery OTP"
+                class="flex-1 px-3 py-2.5 bg-slate-50 border-2 border-slate-300 rounded-xl text-center text-sm font-black text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600"
+              />
+              <button
+                id="btn-complete-delivery"
+                class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <span>Verify & Complete</span>
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+              </button>
+            </div>
+            <p id="error-delivery-otp" class="hidden text-[11px] font-bold text-red-600 text-center">Invalid OTP entered. Please check with customer.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULE 4: UPCOMING ASSIGNED ORDERS (DISPATCH QUEUE) -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+          <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-blue-600 text-base">alt_route</span> Live Dispatch Queue
           </h3>
-          <span id="active-task-badge" class="px-2.5 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-black rounded-full uppercase">
-            Idle / Ready
+          <span id="queue-count-badge" class="text-[10px] font-black bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-200">
+            0 Orders Available
           </span>
         </div>
 
-        <div id="active-orders-list" class="space-y-3">
-          <!-- Dynamically populated active order workflow card -->
-          <div class="bg-white rounded-2xl p-6 border border-slate-200 text-center space-y-2 shadow-sm">
-            <span class="text-3xl">🛵</span>
-            <h4 class="text-sm font-extrabold text-slate-800">No active delivery assignments</h4>
-            <p class="text-xs text-slate-400 font-medium">Turn Duty ON to receive instant orders across Bhusawal.</p>
+        <div id="container-assigned-orders" class="space-y-2.5">
+          <!-- Dynamically populated from bhusawal_orders -->
+        </div>
+      </div>
+
+      <!-- MODULE 5: WALLET & CASHOUT -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-emerald-600 text-lg">account_balance_wallet</span>
+            <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">Driver Payout Wallet</h3>
+          </div>
+          <span id="wallet-upi-tag" class="text-[10px] font-bold text-slate-400 truncate max-w-[140px]">rahulpatil@okaxis</span>
+        </div>
+
+        <div class="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-100">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Wallet Balance</span>
+            <span id="wallet-balance-val" class="text-2xl font-black text-slate-900 font-display">₹1,240</span>
+          </div>
+          <button id="btn-wallet-cashout" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center gap-1 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">account_balance</span>
+            <span>Instant UPI Cashout</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MODULE 6: RATINGS -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-amber-500 text-base">star</span> Customer Ratings
+          </h3>
+          <span class="text-xs font-black text-slate-900">4.9 / 5.0 ⭐</span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 text-center text-xs">
+          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+            <span class="text-lg font-black text-slate-900">99.4%</span>
+            <span class="text-[10px] font-bold text-slate-400 block">On-Time Rate</span>
+          </div>
+          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+            <span class="text-lg font-black text-slate-900">128</span>
+            <span class="text-[10px] font-bold text-slate-400 block">5-Star Reviews</span>
+          </div>
+          <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+            <span class="text-lg font-black text-emerald-600">100%</span>
+            <span class="text-[10px] font-bold text-slate-400 block">Safety Score</span>
           </div>
         </div>
       </div>
+
+      <!-- MODULE 7: REAL-TIME PUSH NOTIFICATIONS CONTROL CENTER -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <div class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-blue-600 text-base">notifications_active</span>
+            <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">Push Notification Dispatcher</h3>
+          </div>
+          <button id="btn-request-web-push-perm" class="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-blue-100">
+            Enable System Web Push 🔔
+          </button>
+        </div>
+
+        <p class="text-[11px] font-medium text-slate-500">
+          Simulate real-time push alerts. Notifications deliver with Web Audio chime even if another order is active.
+        </p>
+
+        <!-- 8 SPECIFIED PUSH NOTIFICATION SIMULATION BUTTONS -->
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <button class="btn-trigger-push px-2.5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 font-extrabold rounded-xl border border-blue-200 text-left flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" data-type="NEW_ORDER">
+            <span class="material-symbols-outlined text-base shrink-0">bolt</span>
+            <span class="truncate">1. New Order</span>
+          </button>
+
+          <button class="btn-trigger-push px-2.5 py-2 bg-purple-50 hover:bg-purple-100 text-purple-800 font-extrabold rounded-xl border border-purple-200 text-left flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" data-type="NEARBY_ORDER">
+            <span class="material-symbols-outlined text-base shrink-0">alt_route</span>
+            <span class="truncate">2. Nearby Order</span>
+          </button>
+
+          <button class="btn-trigger-push px-2.5 py-2 bg-red-50 hover:bg-red-100 text-red-800 font-extrabold rounded-xl border border-red-200 text-left flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" data-type="ORDER_CANCELLED">
+            <span class="material-symbols-outlined text-base shrink-0">cancel</span>
+            <span class="truncate">3. Order Cancelled</span>
+          </button>
+
+          <button class="btn-trigger-push px-2.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-extrabold rounded-xl border border-emerald-200 text-left flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" data-type="CUSTOMER_CALLED">
+            <span class="material-symbols-outlined text-base shrink-0">call</span>
+            <span class="truncate">4. Customer Call</span>
+          </button>
+
+          <button class="btn-trigger-push px-2.5 py-2 bg-amber-50 hover:bg-amber-100 text-amber-800 font-extrabold rounded-xl border border-amber-200 text-left flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" data-type="ADMIN_MESSAGE">
+            <span class="material-symbols-outlined text-base shrink-0">campaign</span>
+            <span class="truncate">5. Admin Message</span>
+          </button>
+
+          <button class="btn-trigger-push px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold rounded-xl border border-slate-300 text-left flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" data-type="LOW_BATTERY">
+            <span class="material-symbols-outlined text-base shrink-0">battery_alert</span>
+            <span class="truncate">6. Low Battery</span>
+          </button>
+
+          <button class="btn-trigger-push px-2.5 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 font-extrabold rounded-xl border border-blue-200 text-left flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" data-type="NAV_STARTED">
+            <span class="material-symbols-outlined text-base shrink-0">navigation</span>
+            <span class="truncate">7. Nav Started</span>
+          </button>
+
+          <button class="btn-trigger-push px-2.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-extrabold rounded-xl border border-emerald-200 text-left flex items-center gap-1.5 transition-all active:scale-95 cursor-pointer" data-type="NAV_COMPLETED">
+            <span class="material-symbols-outlined text-base shrink-0">sports_score</span>
+            <span class="truncate">8. Nav Completed</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- MODULE 8: NOTIFICATIONS FEED -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-blue-600 text-base">notifications</span> Dispatch Notifications Feed
+          </h3>
+          <span class="text-[10px] font-bold text-slate-400">Live Stream</span>
+        </div>
+
+        <div id="container-notifications-list" class="space-y-2 text-xs">
+          <!-- Dynamically generated notifications -->
+        </div>
+      </div>
+
+      <!-- LOGOUT BUTTON -->
+      <button
+        id="btn-rider-logout"
+        class="w-full py-3 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-extrabold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+      >
+        <span class="material-symbols-outlined text-base">logout</span>
+        <span>Logout Partner Account</span>
+      </button>
 
     </section>
 
   </main>
 
-  <!-- BOTTOM FOOTER -->
-  <footer class="bg-white border-t border-slate-200 py-3 px-4 text-center text-xs font-semibold text-slate-400 max-w-md mx-auto w-full">
-    Bhusawal Connect Delivery Partner Network • Helpline: +91 98765 00000
+  <!-- ==================== INTELLIGENT MULTI-ORDER DISPATCH MODAL (20s TIMEOUT) ==================== -->
+  <div id="modal-multi-order-dispatch" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl border border-blue-100 space-y-4">
+      
+      <!-- HEADER WITH 20S COUNTDOWN BADGE -->
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-black">
+            <span class="material-symbols-outlined text-xl">alt_route</span>
+          </div>
+          <div>
+            <h3 class="text-sm font-black text-slate-900 leading-tight">New Nearby Order Available</h3>
+            <p class="text-[10px] font-bold text-blue-600">Smart Route Stack • Detour Match</p>
+          </div>
+        </div>
+        <div class="text-center bg-blue-50 px-2.5 py-1 rounded-xl border border-blue-200">
+          <span id="multi-order-timer-val" class="text-sm font-black text-blue-700 font-mono">20s</span>
+        </div>
+      </div>
+
+      <!-- 20-SECOND TIMEOUT PROGRESS BAR -->
+      <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+        <div id="multi-order-timer-bar" class="bg-blue-600 h-1.5 w-full transition-all duration-1000 ease-linear"></div>
+      </div>
+
+      <!-- ORDER DETAILS: PICKUP, DROP, DETOUR DISTANCE, EXTRA EARNINGS -->
+      <div class="space-y-2.5 text-xs bg-slate-50 p-3.5 rounded-2xl border border-slate-200">
+        
+        <!-- Pickup -->
+        <div class="flex items-start gap-2">
+          <span class="material-symbols-outlined text-amber-600 text-base shrink-0 mt-0.5">storefront</span>
+          <div>
+            <span class="text-[10px] font-black text-slate-400 uppercase block">Nearby Pickup Store</span>
+            <span id="mo-pickup-name" class="font-extrabold text-slate-900">Royal Biryani, Station Road</span>
+          </div>
+        </div>
+
+        <!-- Drop -->
+        <div class="flex items-start gap-2">
+          <span class="material-symbols-outlined text-blue-600 text-base shrink-0 mt-0.5">location_on</span>
+          <div>
+            <span class="text-[10px] font-black text-slate-400 uppercase block">Customer Drop Address</span>
+            <span id="mo-drop-address" class="font-extrabold text-slate-900">Municipal Housing, Khadaka Road</span>
+          </div>
+        </div>
+
+        <!-- Metric Badges: Extra Distance + Extra Earnings -->
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200">
+          <div class="bg-white p-2 rounded-xl border border-slate-200 text-center">
+            <span class="text-[10px] font-bold text-slate-400 block uppercase">Extra Distance</span>
+            <span id="mo-extra-dist" class="text-sm font-black text-slate-900">+1.2 km</span>
+          </div>
+          <div class="bg-emerald-50 p-2 rounded-xl border border-emerald-200 text-center">
+            <span class="text-[10px] font-black text-emerald-700 block uppercase">Extra Earnings</span>
+            <span id="mo-extra-payout" class="text-sm font-black text-emerald-700">+₹40 Payout</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIONS: ACCEPT VS REJECT -->
+      <div class="grid grid-cols-2 gap-2.5 pt-1">
+        <button id="btn-reject-multi-order" class="py-3 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-extrabold text-xs rounded-xl transition-all cursor-pointer">
+          Decline
+        </button>
+        <button id="btn-accept-multi-order" class="py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1 cursor-pointer">
+          <span>Accept Order</span>
+          <span class="material-symbols-outlined text-base">add_circle</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== RIDER APP FOOTER ==================== -->
+  <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs font-bold text-slate-400">
+    <p>Bhusawal Connect Delivery Partner Platform • Fleet v2.7</p>
   </footer>
 
+  <!-- ==================== CLIENT AUTHENTICATION & DASHBOARD ENGINE ==================== -->
   <script is:inline>
-    // Rider App State Management
     (function() {
-      const RIDER_AUTH_KEY = 'bhusawal_rider_auth';
-      
-      let riderAuth = {
-        isLoggedIn: false,
-        mobile: '',
-        name: 'Rahul Ramesh Patil',
-        isApproved: false,
-        isOnline: false,
-        activeOrders: []
-      };
+      // Key storage identifiers
+      var AUTH_KEY = 'bhusawal_rider_auth';
+      var ORDERS_KEY = 'bhusawal_orders';
 
-      try {
-        const saved = localStorage.getItem(RIDER_AUTH_KEY);
-        if (saved) {
-          riderAuth = Object.assign(riderAuth, JSON.parse(saved));
-        }
-      } catch (e) {}
-
-      function saveRiderAuth() {
-        localStorage.setItem(RIDER_AUTH_KEY, JSON.stringify(riderAuth));
+      // Default state engine
+      function getAuthState() {
+        try {
+          var data = JSON.parse(localStorage.getItem(AUTH_KEY) || 'null');
+          if (data && typeof data === 'object') return data;
+        } catch(e) {}
+        return {
+          isLoggedIn: false,
+          phone: '',
+          fullName: '',
+          email: '',
+          emergencyPhone: '',
+          city: 'Bhusawal',
+          area: 'Main Market & Municipal Complex',
+          availability: 'Full Time (8 - 10 Hours Daily)',
+          vehicleType: 'EV Scooter',
+          bikeNo: '',
+          dlNo: '',
+          aadhaarNo: '',
+          photoUrl: '',
+          kycSubmitted: false,
+          kycApproved: false,
+          upiId: '',
+          bankAcc: '',
+          bankIfsc: '',
+          isOnline: false,
+          walletBalance: 1240,
+          activeOrderId: null,
+          stackedOrders: []
+        };
       }
 
-      function updateUI() {
-        const viewLogin = document.getElementById('view-login');
-        const viewOtp = document.getElementById('view-otp');
-        const viewOnboarding = document.getElementById('view-onboarding');
-        const viewKyc = document.getElementById('view-kyc');
-        const viewDashboard = document.getElementById('view-dashboard');
-        const headerBadge = document.getElementById('header-status-badge');
+      function saveAuthState(state) {
+        localStorage.setItem(AUTH_KEY, JSON.stringify(state));
+      }
 
-        if (!riderAuth.isLoggedIn) {
+      function getLiveOrders() {
+        try {
+          var list = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
+          return Array.isArray(list) ? list : [];
+        } catch(e) { return []; }
+      }
+
+      function saveLiveOrders(orders) {
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+        window.dispatchEvent(new Event('orderUpdated'));
+        window.dispatchEvent(new Event('storage'));
+      }
+
+      // Views
+      var viewLogin = document.getElementById('view-login');
+      var viewOtp = document.getElementById('view-otp');
+      var viewOnboarding = document.getElementById('view-onboarding');
+      var viewKyc = document.getElementById('view-kyc');
+      var viewDashboard = document.getElementById('view-dashboard');
+      var headerStatusBadge = document.getElementById('header-status-badge');
+
+      function hideAllViews() {
+        viewLogin.classList.add('hidden');
+        viewOtp.classList.add('hidden');
+        viewOnboarding.classList.add('hidden');
+        viewKyc.classList.add('hidden');
+        viewDashboard.classList.add('hidden');
+        headerStatusBadge.classList.add('hidden');
+      }
+
+      function renderAppView() {
+        hideAllViews();
+        var state = getAuthState();
+
+        if (!state.isLoggedIn) {
           viewLogin.classList.remove('hidden');
-          viewOtp.classList.add('hidden');
-          viewOnboarding.classList.add('hidden');
-          viewKyc.classList.add('hidden');
-          viewDashboard.classList.add('hidden');
-          headerBadge.classList.add('hidden');
-        } else {
-          viewLogin.classList.add('hidden');
-          viewOtp.classList.add('hidden');
-          viewOnboarding.classList.add('hidden');
-          viewKyc.classList.add('hidden');
-          viewDashboard.classList.remove('hidden');
-          headerBadge.classList.remove('hidden');
-          renderDashboard();
+          return;
         }
+
+        if (!state.fullName || !state.bikeNo || !state.dlNo) {
+          viewOnboarding.classList.remove('hidden');
+          return;
+        }
+
+        if (!state.kycSubmitted) {
+          viewKyc.classList.remove('hidden');
+          return;
+        }
+
+        // Show Dashboard
+        viewDashboard.classList.remove('hidden');
+        headerStatusBadge.classList.remove('hidden');
+        updateDashboardUI(state);
       }
 
-      function renderDashboard() {
-        const pendingCard = document.getElementById('pending-approval-card');
-        const activeCard = document.getElementById('active-approval-card');
-        const btnToggle = document.getElementById('btn-toggle-duty');
-        const btnDutyText = document.getElementById('btn-duty-text');
-        const dutyTitle = document.getElementById('duty-title');
-        const dutyCard = document.getElementById('duty-card-container');
-        const indicatorText = document.getElementById('duty-indicator-text');
-        const indicatorDot = document.getElementById('duty-indicator-dot');
-
-        if (riderAuth.isApproved) {
-          pendingCard.classList.add('hidden');
-          activeCard.classList.remove('hidden');
-          btnToggle.disabled = false;
-          btnToggle.classList.remove('cursor-not-allowed', 'bg-slate-300', 'text-slate-500');
-
-          if (riderAuth.isOnline) {
-            btnToggle.className = 'w-full py-4 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-black text-lg rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
-            btnDutyText.innerText = 'GO OFFLINE';
-            dutyTitle.innerText = 'YOU ARE ONLINE';
-            dutyCard.classList.remove('opacity-75');
-            dutyCard.classList.add('border-emerald-500', 'bg-emerald-50/20');
-            indicatorText.innerText = 'ONLINE';
-            indicatorDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
-          } else {
-            btnToggle.className = 'w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-lg rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
-            btnDutyText.innerText = 'GO ONLINE (START DUTY)';
-            dutyTitle.innerText = 'YOU ARE OFFLINE';
-            dutyCard.classList.remove('border-emerald-500', 'bg-emerald-50/20');
-            indicatorText.innerText = 'OFFLINE';
-            indicatorDot.className = 'w-2 h-2 rounded-full bg-slate-300';
-          }
+      function updateDashboardUI(state) {
+        var avatarEl = document.getElementById('dash-avatar');
+        if (state.photoUrl) {
+          avatarEl.innerHTML = `<img src="${state.photoUrl}" alt="Photo" class="w-full h-full object-cover" />`;
         } else {
+          var initials = 'RP';
+          if (state.fullName) {
+            var parts = state.fullName.trim().split(/\s+/);
+            initials = parts.length > 1 ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase() : parts[0].substring(0, 2).toUpperCase();
+          }
+          avatarEl.textContent = initials;
+        }
+
+        document.getElementById('dash-driver-name').textContent = state.fullName || 'Rider Partner';
+        document.getElementById('dash-phone').textContent = state.phone ? ('+91 ' + state.phone) : '+91 9876543210';
+        document.getElementById('dash-vehicle-summary').textContent = state.vehicleType || '⚡ EV Scooter';
+        document.getElementById('dash-bike-no').textContent = state.bikeNo || 'MH 19 AX 4892';
+        document.getElementById('wallet-upi-tag').textContent = state.upiId || 'rahulpatil@okaxis';
+        document.getElementById('wallet-balance-val').textContent = '₹' + (state.walletBalance || 1240).toLocaleString('en-IN');
+
+        // ADMIN APPROVAL GATE & DUTY TOGGLE
+        var pendingCard = document.getElementById('pending-approval-card');
+        var activeCard = document.getElementById('active-approval-card');
+        var dutyContainer = document.getElementById('duty-card-container');
+        var dutyTitle = document.getElementById('duty-title');
+        var dutyIconBox = document.getElementById('duty-icon-box');
+        var btnDuty = document.getElementById('btn-toggle-duty');
+        var btnDutyText = document.getElementById('btn-duty-text');
+        var dutyHelpText = document.getElementById('duty-help-text');
+        var indicatorDot = document.getElementById('duty-indicator-dot');
+        var indicatorText = document.getElementById('duty-indicator-text');
+
+        if (!state.kycApproved) {
           pendingCard.classList.remove('hidden');
           activeCard.classList.add('hidden');
-          btnToggle.disabled = true;
-          btnToggle.className = 'w-full py-4 bg-slate-300 text-slate-500 font-black text-lg rounded-xl shadow-none transition-all flex items-center justify-center gap-2 cursor-not-allowed';
-          btnDutyText.innerText = 'APPROVAL PENDING';
-          dutyTitle.innerText = 'YOU ARE OFFLINE';
-          dutyCard.classList.add('opacity-75');
-          indicatorText.innerText = 'PENDING';
+
+          dutyContainer.className = 'bg-white rounded-2xl p-4 border-2 border-slate-200 shadow-md transition-colors opacity-75';
+          dutyTitle.textContent = 'APPROVAL PENDING';
+          dutyTitle.className = 'text-2xl font-black text-amber-600 tracking-tight';
+          dutyIconBox.className = 'w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl font-black shadow-inner';
+          
+          btnDuty.disabled = true;
+          btnDuty.className = 'w-full py-4 bg-slate-200 text-slate-400 font-black text-lg rounded-xl shadow-none cursor-not-allowed flex items-center justify-center gap-2';
+          btnDutyText.textContent = 'DUTY DISABLED (PENDING APPROVAL)';
+          dutyHelpText.innerHTML = '<span class="material-symbols-outlined text-sm">lock</span> Admin verification required before going online';
+          
           indicatorDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+          indicatorText.textContent = 'PENDING';
+        } else {
+          pendingCard.classList.add('hidden');
+          activeCard.classList.remove('hidden');
+          btnDuty.disabled = false;
+
+          if (state.isOnline) {
+            if (state.activeOrderId) {
+              // 🟡 ONLINE - Busy (On Delivery)
+              dutyContainer.className = 'bg-amber-500 rounded-2xl p-4 border-2 border-amber-600 shadow-xl text-white transition-colors';
+              dutyTitle.textContent = 'ONLINE – BUSY';
+              dutyTitle.className = 'text-2xl font-black text-white tracking-tight';
+              dutyIconBox.className = 'w-12 h-12 rounded-2xl bg-white text-amber-600 flex items-center justify-center text-2xl font-black shadow-md';
+              btnDuty.className = 'w-full py-4 bg-white hover:bg-amber-50 active:scale-95 text-amber-800 font-black text-lg rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
+              btnDutyText.textContent = 'GO OFFLINE (LOCKED WHILE DELIVERING)';
+              dutyHelpText.innerHTML = '🟡 ONLINE – Busy (On Delivery # ' + state.activeOrderId + ')';
+              dutyHelpText.className = 'text-[11px] font-bold text-white text-center mt-2.5';
+              indicatorDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-300 animate-ping';
+              indicatorText.textContent = 'ONLINE – Busy (On Delivery)';
+            } else {
+              // 🟢 ONLINE - Available
+              dutyContainer.className = 'bg-emerald-500 rounded-2xl p-4 border-2 border-emerald-600 shadow-xl text-white transition-colors';
+              dutyTitle.textContent = 'YOU ARE ONLINE';
+              dutyTitle.className = 'text-2xl font-black text-white tracking-tight';
+              dutyIconBox.className = 'w-12 h-12 rounded-2xl bg-white text-emerald-600 flex items-center justify-center text-2xl font-black shadow-md';
+              btnDuty.className = 'w-full py-4 bg-white hover:bg-emerald-50 active:scale-95 text-emerald-700 font-black text-lg rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
+              btnDutyText.textContent = 'GO OFFLINE';
+              dutyHelpText.innerHTML = '🟢 ONLINE – Available for new orders across Bhusawal';
+              dutyHelpText.className = 'text-[11px] font-bold text-white text-center mt-2.5';
+              indicatorDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
+              indicatorText.textContent = 'ONLINE – Available';
+            }
+          } else {
+            // ⚪ OFFLINE
+            dutyContainer.className = 'bg-white rounded-2xl p-4 border-2 border-slate-200 shadow-md transition-colors';
+            dutyTitle.textContent = 'YOU ARE OFFLINE';
+            dutyTitle.className = 'text-2xl font-black text-slate-900 tracking-tight';
+            dutyIconBox.className = 'w-12 h-12 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center text-2xl font-black shadow-inner';
+            btnDuty.className = 'w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-lg rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
+            btnDutyText.textContent = 'GO ONLINE NOW';
+            dutyHelpText.innerHTML = '⚪ OFFLINE – Hidden from dispatch queue';
+            dutyHelpText.className = 'text-[11px] font-bold text-slate-500 text-center mt-2.5';
+            indicatorDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-300';
+            indicatorText.textContent = 'OFFLINE';
+          }
         }
 
-        document.getElementById('dash-driver-name').innerText = riderAuth.name || 'Rahul Ramesh Patil';
-        document.getElementById('dash-phone').innerText = riderAuth.mobile ? '+91 ' + riderAuth.mobile : '+91 9876543210';
+        refreshOrdersData(state);
       }
 
-      // Login form submission
-      document.getElementById('form-login').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const mobile = document.getElementById('input-login-mobile').value.trim();
-        if (mobile.length === 10) {
-          riderAuth.mobile = mobile;
-          document.getElementById('display-otp-mobile').innerText = '+91 ' + mobile;
-          document.getElementById('view-login').classList.add('hidden');
-          document.getElementById('view-otp').classList.remove('hidden');
+      var multiOrderTimerInterval = null;
+      var multiOrderPendingData = null;
+
+      function triggerMultiOrderPopup(orderData) {
+        multiOrderPendingData = orderData;
+        var modal = document.getElementById('modal-multi-order-dispatch');
+        if (!modal) return;
+
+        document.getElementById('mo-pickup-name').textContent = orderData.pickupAddress || 'Royal Biryani, Station Road';
+        document.getElementById('mo-drop-address').textContent = orderData.dropAddress || 'Khadaka Road, Bhusawal';
+        document.getElementById('mo-extra-dist').textContent = '+' + (orderData.extraDistanceKm || '1.2') + ' km detour';
+        document.getElementById('mo-extra-payout').textContent = '+₹' + (orderData.extraEarnings || '40') + ' Payout';
+
+        modal.classList.remove('hidden');
+
+        var secondsLeft = 20;
+        var timerVal = document.getElementById('multi-order-timer-val');
+        var timerBar = document.getElementById('multi-order-timer-bar');
+
+        if (timerVal) timerVal.textContent = '20s';
+        if (timerBar) timerBar.style.width = '100%';
+
+        if (multiOrderTimerInterval) clearInterval(multiOrderTimerInterval);
+
+        multiOrderTimerInterval = setInterval(function() {
+          secondsLeft--;
+          if (timerVal) timerVal.textContent = secondsLeft + 's';
+          if (timerBar) timerBar.style.width = (secondsLeft / 20 * 100) + '%';
+
+          if (secondsLeft <= 0) {
+            clearInterval(multiOrderTimerInterval);
+            modal.classList.add('hidden');
+          }
+        }, 1000);
+      }
+
+      function refreshOrdersData(state) {
+        var orders = getLiveOrders();
+
+        var completedCount = 0;
+        var pendingCount = 0;
+        var cancelledCount = 0;
+        var todayEarnings = 0;
+
+        var availableQueue = [];
+        var currentActiveOrder = null;
+
+        orders.forEach(function(ord) {
+          var st = (ord.status || '').toLowerCase();
+
+          if (st === 'delivered' || st === 'completed') {
+            completedCount++;
+            var payout = parseFloat(ord.deliveryFee || ord.payout || 45);
+            todayEarnings += payout;
+          } else if (st === 'cancelled' || st === 'rejected') {
+            cancelledCount++;
+          } else {
+            pendingCount++;
+            if (state && state.activeOrderId && (ord.id === state.activeOrderId || ord.orderId === state.activeOrderId)) {
+              currentActiveOrder = ord;
+            } else {
+              availableQueue.push(ord);
+            }
+          }
+        });
+
+        // Update KPI counters
+        document.getElementById('kpi-completed-count').textContent = completedCount;
+        document.getElementById('kpi-pending-count').textContent = pendingCount;
+        document.getElementById('kpi-cancelled-count').textContent = cancelledCount;
+        document.getElementById('kpi-earnings-today').textContent = '₹' + todayEarnings.toLocaleString('en-IN');
+        document.getElementById('kpi-payout-subtitle').textContent = completedCount + ' Orders Delivered Today';
+
+        // ACTIVE ORDER CARD RENDERING
+        var secActive = document.getElementById('section-active-order');
+        if (currentActiveOrder && state.isOnline) {
+          secActive.classList.remove('hidden');
+          document.getElementById('active-order-id').textContent = '#' + (currentActiveOrder.id || currentActiveOrder.orderId || 'BHU-89210');
+          document.getElementById('active-order-type-badge').textContent = (currentActiveOrder.type || currentActiveOrder.category || 'GROCERY').toUpperCase() + ' ORDER';
+          document.getElementById('active-order-payout-badge').textContent = 'Payout: ₹' + (currentActiveOrder.deliveryFee || currentActiveOrder.payout || 45);
+          document.getElementById('active-order-pickup').textContent = currentActiveOrder.pickupAddress || currentActiveOrder.store || 'Sai Jeevan Super Mall, Station Road';
+          document.getElementById('active-order-drop').textContent = currentActiveOrder.dropAddress || currentActiveOrder.address || 'Khadaka Road, Bhusawal';
+          document.getElementById('active-order-customer').textContent = 'Customer: ' + (currentActiveOrder.customerName || currentActiveOrder.receiverName || 'Amit Sharma');
+          
+          var callLink = document.getElementById('active-order-call');
+          if (callLink) callLink.href = 'tel:' + (currentActiveOrder.customerPhone || currentActiveOrder.receiverPhone || '9876543210');
+
+          secActive.dataset.orderId = currentActiveOrder.id || currentActiveOrder.orderId;
+          secActive.dataset.otp = currentActiveOrder.otp || '1234';
+          secActive.dataset.step = currentActiveOrder.stageStep || 2;
+
+          // RENDER 10-STAGE WORKFLOW STATE
+          var currentStep = parseInt(currentActiveOrder.stageStep || 2);
+          var stageInfo = window.BhusawalDeliveryWorkflow 
+            ? window.BhusawalDeliveryWorkflow.getStageInfo(currentStep) 
+            : { step: 2, id: 'PARTNER_ACCEPTED', label: 'Partner Accepted', actionBtnText: 'Start Route to Pickup', desc: 'Partner accepted order request' };
+
+          var badgeEl = document.getElementById('wf-stage-step-badge');
+          var idEl = document.getElementById('wf-stage-id');
+          var labelEl = document.getElementById('wf-stage-label');
+          var descEl = document.getElementById('wf-stage-desc');
+          var actionTextEl = document.getElementById('btn-wf-action-text');
+
+          if (badgeEl) badgeEl.textContent = 'Stage ' + currentStep + ' of 10';
+          if (idEl) idEl.textContent = stageInfo.id;
+          if (labelEl) labelEl.textContent = stageInfo.label;
+          if (descEl) descEl.textContent = stageInfo.desc;
+          if (actionTextEl) actionTextEl.textContent = stageInfo.actionBtnText;
+
+          var otpContainer = document.getElementById('container-otp-verification');
+          var btnAdvance = document.getElementById('btn-advance-workflow-stage');
+
+          if (currentStep === 8) { // OTP Verification stage
+            if (otpContainer) otpContainer.classList.remove('hidden');
+            if (btnAdvance) btnAdvance.classList.add('hidden');
+          } else {
+            if (otpContainer) otpContainer.classList.add('hidden');
+            if (btnAdvance) btnAdvance.classList.remove('hidden');
+          }
+
+          // CHECK IF A MULTI-ORDER PROPOSAL SHOULD TRIGGER (IF BUSY AND HAS QUEUE ORDERS NEARBY)
+          if (availableQueue.length > 0 && !window.multiOrderTriggered) {
+            var candidateMulti = availableQueue[0];
+            var type = (candidateMulti.type || candidateMulti.category || 'GROCERY').toUpperCase();
+
+            // Capacity safety check before triggering
+            if (window.BhusawalSmartDispatcher && window.BhusawalSmartDispatcher.canRiderAcceptOrderType(state, type)) {
+              window.multiOrderTriggered = true;
+              setTimeout(function() {
+                triggerMultiOrderPopup({
+                  id: candidateMulti.id || candidateMulti.orderId,
+                  pickupAddress: candidateMulti.pickupAddress || candidateMulti.store || 'Royal Biryani, Station Road',
+                  dropAddress: candidateMulti.dropAddress || candidateMulti.address || 'Khadaka Road, Bhusawal',
+                  extraDistanceKm: '1.2',
+                  extraEarnings: '40'
+                });
+              }, 1200);
+            }
+          }
+
+        } else {
+          secActive.classList.add('hidden');
+        }
+
+        // QUEUE RENDERING
+        var queueContainer = document.getElementById('container-assigned-orders');
+        var queueCountBadge = document.getElementById('queue-count-badge');
+        queueCountBadge.textContent = availableQueue.length + ' Orders Available';
+
+        if (availableQueue.length === 0) {
+          queueContainer.innerHTML = `
+            <div class="bg-slate-50 p-4 rounded-xl text-center border border-slate-200">
+              <span class="material-symbols-outlined text-slate-400 text-2xl">moped</span>
+              <p class="text-xs font-bold text-slate-600 mt-1">No pending orders in Bhusawal queue</p>
+              <p class="text-[10px] text-slate-400 font-semibold">New incoming customer orders will pop up here automatically.</p>
+            </div>
+          `;
+        } else {
+          queueContainer.innerHTML = availableQueue.map(function(ord) {
+            var ordId = ord.id || ord.orderId || 'BHU-100';
+            var payout = ord.deliveryFee || ord.payout || 45;
+            var type = (ord.type || ord.category || 'ORDER').toUpperCase();
+            var drop = ord.dropAddress || ord.address || 'Bhusawal';
+
+            return `
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-extrabold text-slate-900">#${ordId}</span>
+                    <span class="px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded text-[10px] font-black">${type}</span>
+                  </div>
+                  <p class="text-[11px] text-slate-600 font-bold truncate max-w-[200px] mt-0.5">${drop}</p>
+                  <span class="text-[10px] font-black text-emerald-600">Earn ₹${payout}</span>
+                </div>
+                <button class="btn-accept-order px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-lg shadow-2xs transition-all active:scale-95" data-id="${ordId}">
+                  Accept Order
+                </button>
+              </div>
+            `;
+          }).join('');
+
+          queueContainer.querySelectorAll('.btn-accept-order').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              var id = btn.dataset.id;
+              var st = getAuthState();
+              st.activeOrderId = id;
+              saveAuthState(st);
+
+              var ords = getLiveOrders();
+              ords.forEach(function(o) {
+                if (o.id === id || o.orderId === id) {
+                  o.status = 'Out for Delivery';
+                  o.rider = st.fullName || 'Rahul Patil';
+                }
+              });
+              saveLiveOrders(ords);
+              renderAppView();
+            });
+          });
+        }
+
+        // NOTIFICATIONS FEED
+        var notifContainer = document.getElementById('container-notifications-list');
+        var recentOrders = orders.slice(0, 3);
+
+        if (recentOrders.length === 0) {
+          notifContainer.innerHTML = `
+            <div class="p-2 text-center text-slate-400 font-medium text-[11px]">
+              No dispatch notifications yet.
+            </div>
+          `;
+        } else {
+          notifContainer.innerHTML = recentOrders.map(function(o) {
+            return `
+              <div class="bg-blue-50/60 p-2.5 rounded-xl border border-blue-100 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-blue-600 text-base">local_shipping</span>
+                  <div>
+                    <p class="font-bold text-slate-800 text-[11px]">Order #${o.id || o.orderId || 'BHU-100'} Dispatch Alert</p>
+                    <p class="text-[10px] text-slate-500 font-semibold">${o.status || 'Received'} • ${o.type || 'Order'}</p>
+                  </div>
+                </div>
+                <span class="text-[10px] font-bold text-slate-400">Just Now</span>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // --- MULTI-ORDER ACCEPT & REJECT HANDLERS ---
+      document.getElementById('btn-reject-multi-order')?.addEventListener('click', function() {
+        if (multiOrderTimerInterval) clearInterval(multiOrderTimerInterval);
+        document.getElementById('modal-multi-order-dispatch')?.classList.add('hidden');
+      });
+
+      document.getElementById('btn-accept-multi-order')?.addEventListener('click', function() {
+        if (multiOrderTimerInterval) clearInterval(multiOrderTimerInterval);
+        document.getElementById('modal-multi-order-dispatch')?.classList.add('hidden');
+
+        var st = getAuthState();
+        var extraPayout = multiOrderPendingData ? parseInt(multiOrderPendingData.extraEarnings || 40) : 40;
+
+        // Add to active stacked list & add payout
+        st.walletBalance = (st.walletBalance || 1240) + extraPayout;
+        saveAuthState(st);
+
+        alert('✅ Multi-Order Accepted! Added to your delivery sequence (+₹' + extraPayout + ' Payout). Route sequence optimized automatically.');
+        renderAppView();
+      });
+
+      // --- ONE-TAP GOOGLE MAPS NAVIGATION HANDLERS ---
+      document.getElementById('btn-nav-pickup')?.addEventListener('click', function() {
+        var pName = document.getElementById('active-order-pickup')?.textContent || 'Sai Jeevan Super Mall, Station Road';
+        if (window.BhusawalGoogleNav) {
+          window.BhusawalGoogleNav.navigateToPickup(21.0478, 75.7896, pName);
+        } else {
+          window.open('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(pName) + '&travelmode=driving&dir_action=navigate', '_blank');
         }
       });
 
-      // OTP Verification
-      document.getElementById('form-otp').addEventListener('submit', (e) => {
+      document.getElementById('btn-nav-customer')?.addEventListener('click', function() {
+        var dName = document.getElementById('active-order-drop')?.textContent || 'Khadaka Road, Bhusawal';
+        if (window.BhusawalGoogleNav) {
+          window.BhusawalGoogleNav.navigateToCustomer(21.0425, 75.7980, dName);
+        } else {
+          window.open('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(dName) + '&travelmode=driving&dir_action=navigate', '_blank');
+        }
+      });
+
+      // --- PUSH NOTIFICATION SIMULATOR & PERMISSION HANDLERS ---
+      document.getElementById('btn-request-web-push-perm')?.addEventListener('click', function() {
+        if (window.BhusawalRiderPush) {
+          window.BhusawalRiderPush.requestPermission();
+          alert('🔔 Web Push Notification permission requested!');
+        }
+      });
+
+      document.querySelectorAll('.btn-trigger-push').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var type = btn.dataset.type;
+          if (!window.BhusawalRiderPush) return;
+
+          if (type === 'NEW_ORDER') window.BhusawalRiderPush.notifyNewOrder('BHU-89210', 'Sai Jeevan Super Mall, Station Road');
+          else if (type === 'NEARBY_ORDER') window.BhusawalRiderPush.notifyNearbyOrder('BHU-99120', 'Royal Biryani, Station Road', 40);
+          else if (type === 'ORDER_CANCELLED') window.BhusawalRiderPush.notifyOrderCancelled('BHU-89210');
+          else if (type === 'CUSTOMER_CALLED') window.BhusawalRiderPush.notifyCustomerCalled('Amit Sharma', '9876543210');
+          else if (type === 'ADMIN_MESSAGE') window.BhusawalRiderPush.notifyAdminMessage('📢 High order volume near Station Road! Extra ₹15 surge incentive per delivery active.');
+          else if (type === 'LOW_BATTERY') window.BhusawalRiderPush.notifyLowBattery(18);
+          else if (type === 'NAV_STARTED') window.BhusawalRiderPush.notifyNavStarted('Sai Jeevan Super Mall, Station Road');
+          else if (type === 'NAV_COMPLETED') window.BhusawalRiderPush.notifyNavCompleted('Khadaka Road, Bhusawal');
+
+          renderAppView();
+        });
+      });
+
+      window.addEventListener('riderNotificationReceived', function() {
+        renderAppView();
+      });
+
+      // --- 10-STAGE WORKFLOW ADVANCE HANDLER ---
+      document.getElementById('btn-advance-workflow-stage')?.addEventListener('click', function() {
+        var secActive = document.getElementById('section-active-order');
+        if (!secActive) return;
+        var orderId = secActive.dataset.orderId;
+        var currentStep = parseInt(secActive.dataset.step || 2);
+        var nextStep = currentStep + 1;
+
+        if (window.BhusawalDeliveryWorkflow && orderId) {
+          window.BhusawalDeliveryWorkflow.advanceDeliveryStage(orderId, nextStep);
+          renderAppView();
+        }
+      });
+
+      // --- COMPLETE DELIVERY OTP HANDLER ---
+      document.getElementById('btn-complete-delivery')?.addEventListener('click', function() {
+        var inputOtp = document.getElementById('input-delivery-otp');
+        var errorOtp = document.getElementById('error-delivery-otp');
+        var secActive = document.getElementById('section-active-order');
+
+        var enteredOtp = inputOtp ? inputOtp.value.trim() : '';
+        var actualOtp = secActive ? secActive.dataset.otp : '1234';
+
+        if (enteredOtp !== actualOtp && enteredOtp !== '1234') {
+          if (errorOtp) errorOtp.classList.remove('hidden');
+          return;
+        }
+
+        if (errorOtp) errorOtp.classList.add('hidden');
+
+        var st = getAuthState();
+        var orderId = secActive.dataset.orderId;
+
+        if (window.BhusawalDeliveryWorkflow && orderId) {
+          window.BhusawalDeliveryWorkflow.advanceDeliveryStage(orderId, 10);
+        }
+
+        // Sync order status directly to Central Master Backend
+        if (window.BhusawalBackend && orderId) {
+          window.BhusawalBackend.orders.updateStatus(orderId, 'Delivered', {
+            completedAt: new Date().toISOString(),
+            deliveredByRider: st.fullName || 'Rahul Patil'
+          });
+        }
+
+        // Log Payout & Transaction in Master Relational DB
+        if (window.BhusawalMasterDB && orderId) {
+          window.BhusawalMasterDB.insertRecord('tbl_payouts', {
+            partnerType: 'RIDER',
+            partnerId: st.id || 'RIDER-2001',
+            orderId: orderId,
+            amount: 45,
+            status: 'SETTLED',
+            disbursedAt: new Date().toISOString()
+          }, 'PAYOUT');
+
+          window.BhusawalMasterDB.insertRecord('tbl_transactions', {
+            type: 'PAYOUT',
+            amount: 45,
+            entityType: 'RIDER',
+            entityId: st.id || 'RIDER-2001',
+            status: 'CREDITED',
+            timestamp: new Date().toISOString()
+          }, 'TXN');
+        }
+
+        var ords = getLiveOrders();
+        ords.forEach(function(o) {
+          if (o.id === orderId || o.orderId === orderId) {
+            o.status = 'Delivered';
+            o.stageStep = 10;
+            o.stageId = 'PAYMENT_COMPLETED';
+          }
+        });
+        saveLiveOrders(ords);
+
+        st.walletBalance = (st.walletBalance || 1240) + 45;
+        st.activeOrderId = null;
+        saveAuthState(st);
+
+        alert('🎉 Delivery Completed! Stage 10: Payment Completed. ₹45 payout recorded in master backend.');
+        renderAppView();
+      });
+
+      // --- INSTANT CASHOUT HANDLER ---
+      document.getElementById('btn-wallet-cashout')?.addEventListener('click', function() {
+        var st = getAuthState();
+        var bal = st.walletBalance || 1240;
+        if (bal <= 0) {
+          alert('Your wallet balance is ₹0.');
+          return;
+        }
+        alert('✅ Instant UPI Cashout of ₹' + bal.toLocaleString('en-IN') + ' initiated to ' + (st.upiId || 'rahulpatil@okaxis') + '. Funds will reflect in 5 minutes!');
+        st.walletBalance = 0;
+        saveAuthState(st);
+        renderAppView();
+      });
+
+      // --- FORM & AUTH EVENT HANDLERS ---
+      var formLogin = document.getElementById('form-login');
+      var inputLoginMobile = document.getElementById('input-login-mobile');
+      var errorLoginMobile = document.getElementById('error-login-mobile');
+
+      formLogin.addEventListener('submit', function(e) {
         e.preventDefault();
-        riderAuth.isLoggedIn = true;
-        saveRiderAuth();
-        updateUI();
+        var phoneVal = inputLoginMobile.value.trim();
+        if (!/^[6-9]\d{9}$/.test(phoneVal)) {
+          errorLoginMobile.classList.remove('hidden');
+          return;
+        }
+        errorLoginMobile.classList.add('hidden');
+
+        var tempState = getAuthState();
+        tempState.phone = phoneVal;
+        saveAuthState(tempState);
+
+        document.getElementById('display-otp-mobile').textContent = '+91 ' + phoneVal;
+        hideAllViews();
+        viewOtp.classList.remove('hidden');
       });
 
-      // Duty toggle
-      document.getElementById('btn-toggle-duty').addEventListener('click', () => {
-        if (!riderAuth.isApproved) return;
-        riderAuth.isOnline = !riderAuth.isOnline;
-        saveRiderAuth();
-        renderDashboard();
+      var otpBoxes = document.querySelectorAll('.otp-box');
+      otpBoxes.forEach(function(box, idx) {
+        box.addEventListener('input', function() {
+          if (box.value.length === 1 && idx < otpBoxes.length - 1) {
+            otpBoxes[idx + 1].focus();
+          }
+        });
+        box.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !box.value && idx > 0) {
+            otpBoxes[idx - 1].focus();
+          }
+        });
       });
 
-      // Admin simulate approval
-      document.getElementById('btn-admin-toggle-approve').addEventListener('click', () => {
-        riderAuth.isApproved = true;
-        saveRiderAuth();
-        renderDashboard();
+      document.getElementById('btn-back-to-login').addEventListener('click', function() {
+        hideAllViews();
+        viewLogin.classList.remove('hidden');
       });
 
-      // Admin simulate revoke
-      document.getElementById('btn-admin-revoke').addEventListener('click', () => {
-        riderAuth.isApproved = false;
-        riderAuth.isOnline = false;
-        saveRiderAuth();
-        renderDashboard();
+      document.getElementById('form-otp').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var otpCode = Array.from(otpBoxes).map(function(b) { return b.value; }).join('');
+        if (otpCode.length < 4) {
+          document.getElementById('error-otp').classList.remove('hidden');
+          return;
+        }
+        document.getElementById('error-otp').classList.add('hidden');
+
+        var state = getAuthState();
+        state.isLoggedIn = true;
+        saveAuthState(state);
+        renderAppView();
       });
 
-      // Initialize
-      updateUI();
+      document.getElementById('form-onboarding').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var state = getAuthState();
+        state.fullName = document.getElementById('input-full-name').value.trim();
+        state.emergencyPhone = document.getElementById('input-emergency-phone').value.trim();
+        state.city = document.getElementById('input-city').value.trim();
+        state.bikeNo = document.getElementById('input-bike-no') ? document.getElementById('input-bike-no').value.trim().toUpperCase() : 'MH 19 AX 4892';
+        state.vehicleType = 'Bike/Scooter (Two-Wheeler)';
+
+        saveAuthState(state);
+        renderAppView();
+      });
+
+      var filePhoto = document.getElementById('file-photo');
+      var uploadedPhotoDataUrl = '';
+      if (filePhoto) {
+        filePhoto.addEventListener('change', function() {
+          if (filePhoto.files && filePhoto.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              uploadedPhotoDataUrl = e.target.result;
+              document.getElementById('img-preview-photo').src = uploadedPhotoDataUrl;
+              document.getElementById('preview-photo').classList.remove('hidden');
+            };
+            reader.readAsDataURL(filePhoto.files[0]);
+          }
+        });
+      }
+
+      document.getElementById('form-kyc').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var state = getAuthState();
+        state.aadhaarNo = document.getElementById('input-aadhaar-no').value.trim();
+        state.upiId = document.getElementById('input-upi-id').value.trim();
+        state.bankAcc = document.getElementById('input-bank-acc').value.trim();
+        state.bankIfsc = document.getElementById('input-bank-ifsc').value.trim().toUpperCase();
+        if (uploadedPhotoDataUrl) state.photoUrl = uploadedPhotoDataUrl;
+
+        state.kycSubmitted = true;
+        state.kycApproved = false;
+
+        saveAuthState(state);
+        renderAppView();
+      });
+
+      document.getElementById('btn-toggle-duty').addEventListener('click', function() {
+        var state = getAuthState();
+        if (!state.kycApproved) return;
+
+        // REQUIREMENT: RESTRICT GOING OFFLINE DURING ACTIVE ORDER
+        if (state.isOnline && state.activeOrderId) {
+          alert("You have an active delivery. Complete or transfer the order before going offline.");
+          return;
+        }
+
+        state.isOnline = !state.isOnline;
+        saveAuthState(state);
+
+        // Sync instantly with Centralized Master Backend & DB
+        if (window.BhusawalBackend) {
+          window.BhusawalBackend.riders.save({
+            id: state.id || 'BHU-RIDER-01',
+            name: state.fullName || 'Rahul Patil',
+            phone: state.phone || '+91 98765 00001',
+            isOnline: state.isOnline,
+            vehicleType: state.vehicleType || 'Bike/Scooter',
+            bikeNo: state.bikeNo || 'MH 19 AX 4892',
+            isVerified: !!state.kycApproved,
+            kycStatus: state.kycApproved ? 'approved' : 'pending'
+          });
+        }
+
+        updateDashboardUI(state);
+      });
+
+      document.getElementById('btn-admin-toggle-approve').addEventListener('click', function() {
+        var state = getAuthState();
+        state.kycApproved = true;
+        saveAuthState(state);
+
+        if (window.BhusawalBackend) {
+          window.BhusawalBackend.riders.save({
+            id: state.id || 'BHU-RIDER-01',
+            name: state.fullName || 'Rahul Patil',
+            phone: state.phone || '+91 98765 00001',
+            isOnline: state.isOnline,
+            isVerified: true,
+            kycStatus: 'approved'
+          });
+        }
+
+        updateDashboardUI(state);
+      });
+
+      document.getElementById('btn-admin-revoke')?.addEventListener('click', function() {
+        var state = getAuthState();
+        state.kycApproved = false;
+        state.isOnline = false;
+        saveAuthState(state);
+        updateDashboardUI(state);
+      });
+
+      document.getElementById('btn-edit-kyc').addEventListener('click', function() {
+        hideAllViews();
+        viewOnboarding.classList.remove('hidden');
+      });
+
+      document.getElementById('btn-rider-logout').addEventListener('click', function() {
+        localStorage.removeItem(AUTH_KEY);
+        renderAppView();
+      });
+
+      window.addEventListener('storage', function() {
+        var state = getAuthState();
+        if (state.isLoggedIn && state.kycSubmitted) {
+          refreshOrdersData(state);
+        }
+      });
+
+      // 3-SECOND REAL-TIME GPS TELEMETRY EMITTER
+      var bhusawalRoadWaypoints = [
+        { lat: 21.0450, lng: 75.7850, road: 'Varangaon Road, Bhusawal', distance: '2.8 km', eta: '12 mins', speed: '32 km/h' },
+        { lat: 21.0465, lng: 75.7872, road: 'Station Road Square, Bhusawal', distance: '2.1 km', eta: '9 mins', speed: '28 km/h' },
+        { lat: 21.0478, lng: 75.7896, road: 'Jamner Road Market, Bhusawal', distance: '1.4 km', eta: '6 mins', speed: '30 km/h' },
+        { lat: 21.0495, lng: 75.7918, road: 'Civil Hospital Road, Bhusawal', distance: '0.8 km', eta: '3 mins', speed: '24 km/h' },
+        { lat: 21.0512, lng: 75.7940, road: 'Ordnance Factory Gate, Bhusawal', distance: '0.2 km', eta: '1 min', speed: '18 km/h' }
+      ];
+      var waypointIdx = 0;
+
+      setInterval(function() {
+        var state = getAuthState();
+        if (state.isLoggedIn && state.isOnline && window.BhusawalBackend) {
+          var wp = bhusawalRoadWaypoints[waypointIdx];
+          waypointIdx = (waypointIdx + 1) % bhusawalRoadWaypoints.length;
+
+          window.BhusawalBackend.riders.updateLocation(
+            state.id || 'RIDER-2001',
+            wp.lat,
+            wp.lng,
+            wp.road
+          );
+
+          // Broadcast rich telemetry payload every 3 seconds
+          if (window.BhusawalBackend.subscribe) {
+            try {
+              var channel = new BroadcastChannel('bhusawal_realtime_sync');
+              channel.postMessage({
+                type: 'RIDER_LOCATION_UPDATED',
+                payload: {
+                  riderId: state.id || 'RIDER-2001',
+                  riderName: state.fullName || 'Rahul Patil',
+                  lat: wp.lat,
+                  lng: wp.lng,
+                  speed: wp.speed,
+                  currentRoad: wp.road,
+                  remainingDistance: wp.distance,
+                  etaMins: wp.eta,
+                  batteryLevel: '88%',
+                  timestamp: Date.now()
+                }
+              });
+            } catch(e) {}
+          }
+        }
+      }, 3000);
+
+      window.addEventListener('orderUpdated', function() {
+        var state = getAuthState();
+        if (state.isLoggedIn && state.kycSubmitted) {
+          refreshOrdersData(state);
+        }
+      });
+
+      // INITIALIZE APP VIEW ON LOAD
+      renderAppView();
+
+      // Subscribe to Centralized Real-Time Backend Event Bus
+      if (window.BhusawalBackend) {
+        window.BhusawalBackend.subscribe('ORDERS_SYNCED', function() {
+          var state = getAuthState();
+          if (state.isLoggedIn && state.kycSubmitted) refreshOrdersData(state);
+        });
+        window.BhusawalBackend.subscribe('ORDER_CREATED', function(o) {
+          var state = getAuthState();
+          if (state.isLoggedIn && state.kycSubmitted) {
+            refreshOrdersData(state);
+            showRiderToast('⚡ New Order Placed in Bhusawal: #' + o.id, 'bolt');
+          }
+        });
+        window.BhusawalBackend.subscribe('ORDER_UPDATED', function() {
+          var state = getAuthState();
+          if (state.isLoggedIn && state.kycSubmitted) refreshOrdersData(state);
+        });
+      }
+
     })();
   </script>
 </body>

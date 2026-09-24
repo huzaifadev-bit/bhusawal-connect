@@ -11,7 +11,7 @@
       } catch (e) {}
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('gkey')) return urlParams.get('gkey');
-      return '';
+      return 'AIzaSyClf3eC2sJBzGDpnWrPxe6QUVJ6B5i9ORU';
     }
 
     static setApiKey(key) {

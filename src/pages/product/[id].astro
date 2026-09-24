@@ -1,0 +1,687 @@
+---
+import { getProductById, getRelatedProducts, getAllCanonicalProducts } from '../../utils/productLookup';
+
+export async function getStaticPaths() {
+  const allProducts = getAllCanonicalProducts();
+  const paths = [];
+  const seen = new Set();
+
+  for (const p of allProducts) {
+    const rawId = p["Product ID"] || p.id || p.sku || p.ProductID || '';
+    const cleanId = String(rawId).trim();
+    if (cleanId && !seen.has(cleanId.toLowerCase())) {
+      seen.add(cleanId.toLowerCase());
+      paths.push({
+        params: { id: cleanId }
+      });
+    }
+  }
+  return paths;
+}
+
+const { id: rawParamId } = Astro.params;
+const requestedId = (rawParamId || '').trim();
+
+// Call ONLY getProductById(productId) from src/utils/productLookup.js
+const matchedProduct = getProductById(requestedId);
+const isFound = Boolean(matchedProduct);
+
+// Extract fields from matched product record without silent dummy substitutions
+const productData = matchedProduct || {};
+const isGrocery = productData.isGrocery !== false;
+
+const matchedId = isFound ? (productData["Product ID"] || productData.id || productData.sku || productData.ProductID || requestedId) : requestedId;
+const displayName = productData.displayName || productData.name || productData["Product Name"] || '';
+const name = displayName || productData.originalName || (isFound ? 'Bhusawal Connect Product' : 'Product Unavailable');
+const brand = productData.brand || productData["Brand Name"] || (isGrocery ? 'Bhusawal Fresh' : 'Bhusawal Special');
+const category = productData.Category || productData.category || (isGrocery ? 'Grocery' : 'Food');
+const subcategory = productData.Subcategory || productData.subcat || category;
+
+const pack = productData.pack || productData["Pack Size"] || productData.quantity || productData.scaleWeight || productData.Unit || '1 Unit';
+
+const mrp = parseFloat(productData.mrp || productData.MRP || productData.price || 0);
+let sp = parseFloat(productData.sp || productData["Selling Price"] || productData.price || mrp);
+if (!sp || sp === 0 || isNaN(sp)) sp = mrp;
+
+let disc = parseInt(productData.disc || productData["Discount %"] || 0);
+if ((!disc || disc === 0) && mrp > sp && mrp > 0) {
+  disc = Math.round(((mrp - sp) / mrp) * 100);
+}
+const hasDiscount = disc > 0 && mrp > sp;
+
+const description = productData.desc || productData.description || 'Premium quality essential item, sourced directly for Bhusawal households. Guaranteed freshness, quality assurance, and quick 10-minute local delivery.';
+
+const mainImg = productData.img || productData["Product Image URL"] || productData.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+
+const galleryImages = [
+  mainImg,
+  'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80'
+];
+
+function getStoreForProduct(catName, prodId) {
+  const cat = (catName || '').toLowerCase();
+  if (cat.includes('fruit') || cat.includes('veg')) return { name: 'Fresh Green Mart', location: 'Jamner Road, Bhusawal', eta: '10 min', icon: '🥦', rating: '4.7' };
+  if (cat.includes('dairy') || cat.includes('bakery')) return { name: "Dinshaw's Dairy & Bakery", location: 'Varangaon Road, Bhusawal', eta: '8 min', icon: '🥛', rating: '4.9' };
+  if (cat.includes('oil') || cat.includes('masala') || cat.includes('atta') || cat.includes('dal')) return { name: 'Khandesh Agro & Spices', location: 'Main Market, Bhusawal', eta: '15 min', icon: '🌾', rating: '4.6' };
+  if (cat.includes('personal') || cat.includes('health') || cat.includes('baby')) return { name: 'City Organic & Essentials', location: 'Civil Lines, Bhusawal', eta: '10 min', icon: '🌿', rating: '4.8' };
+  const num = parseInt((prodId || '').replace(/\D/g, '')) || 0;
+  if (num % 2 === 0) return { name: 'Sai Jeevan Super Mall', location: 'Station Road, Bhusawal', eta: '10 min', icon: '🏬', rating: '4.8' };
+  return { name: 'Balaji Mart', location: 'Jalgaon Road, Bhusawal', eta: '12 min', icon: '🛒', rating: '4.7' };
+}
+
+const storeInfo = getStoreForProduct(category, matchedId);
+const storeName = storeInfo.name;
+
+const relatedProducts = isFound ? getRelatedProducts(matchedProduct, 10) : [];
+
+const allCatalog = getAllCanonicalProducts();
+const sameStoreProducts = allCatalog
+  .filter(p => {
+    const pid = String(p["Product ID"] || p.id || p.sku || p.ProductID || '').trim().toLowerCase();
+    return pid !== String(matchedId).trim().toLowerCase();
+  })
+  .slice(8, 16);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script is:inline src="/bhusawal_age_verification.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{isFound ? `${name} | Bhusawal Connect` : 'Product Unavailable | Bhusawal Connect'}</title>
+  <meta name="description" content={isFound ? `Order ${name} from ${storeInfo.name} in Bhusawal. 10 min express delivery.` : 'Product unavailable on Bhusawal Connect'} />
+
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
+  <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
+  <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8faf9; }
+    h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .green-scroll::-webkit-scrollbar { height: 4px; }
+    .green-scroll::-webkit-scrollbar-track { background: #f0fdf4; border-radius: 4px; }
+    .green-scroll::-webkit-scrollbar-thumb { background: #86efac; border-radius: 4px; }
+
+    .product-card-v2 {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .product-card-v2:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px -8px rgba(22,163,74,0.16), 0 4px 12px -4px rgba(0,0,0,0.06);
+    }
+
+    @keyframes toastFade {
+      0% { opacity: 0; transform: translateY(20px); }
+      15% { opacity: 1; transform: translateY(0); }
+      85% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-20px); }
+    }
+    .toast-anim { animation: toastFade 2.5s forwards; }
+  </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
+</head>
+
+<body class="min-h-screen pb-32 text-slate-800 antialiased">
+
+  <!-- DEVELOPMENT-ONLY DIAGNOSTIC OUTPUT (Non-intrusive inspect bar) -->
+  <div class="bg-slate-900 text-slate-300 text-xs font-mono px-4 py-2 border-b border-slate-800 flex items-center justify-between flex-wrap gap-2 z-50">
+    <div class="flex items-center gap-3">
+      <span class="bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded text-[10px] font-bold uppercase">DEV DIAGNOSTIC</span>
+      <span><strong>Requested ID:</strong> <code class="text-amber-300">{requestedId}</code></span>
+      <span>•</span>
+      <span><strong>Matched ID:</strong> <code class="text-emerald-400">{isFound ? matchedId : 'NONE (404)'}</code></span>
+      <span>•</span>
+      <span><strong>Matched Product Name:</strong> <span class="text-white">{isFound ? name : 'N/A'}</span></span>
+    </div>
+    <span class="text-[10px] text-slate-500">Bhusawal Connect PDP</span>
+  </div>
+
+  <!-- ==================== STICKY HEADER ==================== -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-green-100/60 px-4 py-3 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <button id="pdp-back-btn" onclick="history.back()" class="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 active:scale-90 transition-all cursor-pointer">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </button>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-base font-black font-display text-slate-900 leading-tight truncate max-w-[200px] sm:max-w-xs">{name}</h1>
+            <span class="px-1.5 py-0.5 rounded-md bg-green-100 text-green-700 text-[9px] font-black uppercase tracking-wider">⚡ 10 min</span>
+          </div>
+          <p class="text-[11px] text-slate-500 font-semibold">{storeInfo.name}</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="pdp-share-top-btn" class="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 transition-colors cursor-pointer" title="Share Product">
+          <span class="material-symbols-outlined text-lg">share</span>
+        </button>
+        <a href="/wishlist" class="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 transition-colors">
+          <span class="material-symbols-outlined text-xl text-red-500">favorite</span>
+        </a>
+        <a href="/billing" class="relative w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center hover:bg-green-700 transition-colors">
+          <span class="material-symbols-outlined text-lg">shopping_bag</span>
+          <span id="cart-badge-header" class="absolute -top-1 -right-1 bg-amber-400 text-slate-900 text-[9px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white min-w-[18px] min-h-[18px]">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== BREADCRUMB ==================== -->
+  <div class="max-w-7xl mx-auto px-4 pt-4 pb-2">
+    <div class="flex items-center gap-2 text-xs font-bold text-slate-400 flex-wrap">
+      <a href="/home" class="hover:text-green-700">Home</a>
+      <span>/</span>
+      <a href="/grocery" class="hover:text-green-700">Grocery</a>
+      <span>/</span>
+      <span class="text-slate-600 font-extrabold">{category}</span>
+      <span>/</span>
+      <span class="text-slate-900 font-black truncate max-w-xs">{name}</span>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN PRODUCT SECTION ==================== -->
+  <main class="max-w-7xl mx-auto px-4 py-4 space-y-8">
+
+    {!isFound ? (
+      <div class="max-w-xl mx-auto my-12 p-8 bg-white rounded-3xl border border-slate-200 text-center space-y-4 shadow-xl">
+        <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto">
+          <span class="material-symbols-outlined text-3xl">inventory_2</span>
+        </div>
+        <h2 class="text-xl font-black font-display text-slate-900">Product Unavailable</h2>
+        <p class="text-xs font-semibold text-slate-500 max-w-md mx-auto leading-relaxed">
+          The requested product ID <code class="bg-slate-100 px-2 py-0.5 rounded font-mono text-slate-800">{requestedId || 'N/A'}</code> could not be found in the active Bhusawal Connect catalog.
+        </p>
+        <div class="pt-4 flex items-center justify-center gap-3">
+          <a href="/grocery" class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-extrabold text-xs rounded-xl shadow-sm transition-all">
+            Explore Daily Needs Store
+          </a>
+          <a href="/food" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-xs rounded-xl shadow-sm transition-all">
+            Explore Food Store
+          </a>
+        </div>
+      </div>
+    ) : (
+      <div class="space-y-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+
+          <!-- LEFT COLUMN: LARGE PRODUCT IMAGE & GALLERY -->
+          <div class="lg:col-span-5 space-y-4">
+            <div class="w-full aspect-square bg-white rounded-3xl p-6 border border-slate-100 shadow-sm relative overflow-hidden flex items-center justify-center group">
+              <div class="absolute top-4 left-4 z-10 flex flex-col gap-1.5 items-start">
+                {hasDiscount && (
+                  <span id="pdp-disc-badge" class="px-2.5 py-1 bg-red-600 text-white text-xs font-black rounded-lg uppercase tracking-wider shadow-md">{disc}% OFF</span>
+                )}
+                <span class="px-2.5 py-1 bg-green-600 text-white text-xs font-extrabold rounded-lg shadow-xs flex items-center gap-1">
+                  <span>⚡</span> 10 MIN DELIVERY
+                </span>
+              </div>
+
+              <button 
+                id="pdp-wishlist-btn" 
+                class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur-md border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-500 hover:scale-110 active:scale-95 transition-all shadow-sm cursor-pointer"
+                title="Add to Wishlist"
+              >
+                <span class="material-symbols-outlined text-xl">favorite</span>
+              </button>
+
+              <img 
+                id="pdp-main-image" 
+                src={mainImg} 
+                alt={name} 
+                class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500"
+                loading="eager"
+                onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';"
+              />
+            </div>
+
+            <!-- Gallery Thumbnails -->
+            <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+              {galleryImages.map((imgUrl, idx) => (
+                <button 
+                  class={`pdp-thumb-btn w-16 h-16 rounded-2xl border-2 p-1.5 bg-white overflow-hidden shrink-0 transition-all cursor-pointer ${idx === 0 ? 'border-green-600 shadow-sm' : 'border-slate-100 hover:border-green-300'}`}
+                  data-img={imgUrl}
+                >
+                  <img src={imgUrl} class="w-full h-full object-contain" alt="Thumbnail" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: PRODUCT METADATA & ACTIONS -->
+          <div class="lg:col-span-7 space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm space-y-5">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <span id="pdp-brand-tag" class="px-2.5 py-1 bg-green-100 text-green-800 text-xs font-black rounded-lg uppercase tracking-wider">{brand}</span>
+                <div class="flex items-center gap-1.5 bg-slate-50 px-3 py-1 rounded-xl border border-slate-200/80">
+                  <span class="text-sm">{storeInfo.icon}</span>
+                  <span class="text-xs font-extrabold text-slate-800">{storeInfo.name}</span>
+                  <span class="text-[10px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">⭐ {storeInfo.rating}</span>
+                </div>
+              </div>
+
+              <!-- Product Title from Matched Record -->
+              <h1 id="pdp-title-text" class="text-xl sm:text-2xl font-black font-display text-slate-900 leading-tight">{name}</h1>
+
+              <div class="flex items-center gap-2">
+                <span id="pdp-pack-badge" class="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-extrabold rounded-xl border border-slate-200/80 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm text-slate-400">scale</span>
+                  <span>Weight: {pack}</span>
+                </span>
+                <span class="text-xs font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-xl border border-green-200">In Stock • Bhusawal Store</span>
+              </div>
+
+              <!-- Price & Savings Row -->
+              <div class="flex items-baseline gap-3 pt-2 border-t border-slate-100">
+                <span id="pdp-sp-price" class="text-3xl sm:text-4xl font-black font-display text-slate-900">₹{sp}</span>
+                {hasDiscount && (
+                  <div class="flex items-baseline gap-2">
+                    <span id="pdp-mrp-price" class="text-base font-bold text-slate-400 line-through">₹{mrp}</span>
+                    <span id="pdp-savings-badge" class="text-xs font-extrabold text-red-600 bg-red-50 px-2 py-0.5 rounded-md">Save ₹{mrp - sp} ({disc}% OFF)</span>
+                  </div>
+                )}
+              </div>
+              <p class="text-[11px] text-slate-400 font-semibold">Inclusive of all local taxes. Standard 10-minute door delivery in Bhusawal.</p>
+
+              <div class="space-y-1.5 pt-2 border-t border-slate-100">
+                <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm text-green-600">description</span> Description
+                </h3>
+                <p id="pdp-description-text" class="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  {description}
+                </p>
+              </div>
+
+              <div class="space-y-2 pt-2 border-t border-slate-100">
+                <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm text-green-600">flatware</span> Ingredients / Contents
+                </h3>
+                <div id="pdp-ingredients-list" class="flex flex-wrap gap-1.5">
+                </div>
+              </div>
+
+              <div class="space-y-1.5 pt-2 border-t border-slate-100">
+                <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm text-amber-500">ac_unit</span> Storage Instructions
+                </h3>
+                <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-3.5 flex items-start gap-2.5">
+                  <span class="material-symbols-outlined text-amber-600 text-lg shrink-0">info</span>
+                  <p id="pdp-storage-text" class="text-xs text-amber-900 font-semibold leading-relaxed">
+                    Store in a cool, dry place away from direct sunlight. Keep airtight after opening.
+                  </p>
+                </div>
+              </div>
+
+              <div class="pt-4 border-t border-slate-100 space-y-3">
+                <div class="flex items-center gap-3">
+                  <div id="pdp-action-area" class="flex-1">
+                    <button 
+                      id="pdp-add-btn" 
+                      class="w-full py-4 bg-green-600 hover:bg-green-700 text-white font-black text-sm rounded-2xl shadow-lg shadow-green-900/15 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      <span class="material-symbols-outlined text-xl">shopping_bag</span>
+                      <span>ADD TO CART • ₹{sp}</span>
+                    </button>
+                  </div>
+
+                  <button 
+                    id="pdp-share-btn" 
+                    class="px-4 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-extrabold text-xs flex items-center gap-1.5 transition-all cursor-pointer active:scale-95 shrink-0"
+                  >
+                    <span class="material-symbols-outlined text-lg">share</span>
+                    <span class="hidden sm:inline">Share</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {relatedProducts.length > 0 && (
+          <section class="space-y-3 pt-6 border-t border-slate-200/80">
+            <div class="flex items-center justify-between">
+              <h2 class="section-title"><span>💡</span> Related Products ({category})</h2>
+              <a href="/grocery" class="text-xs font-extrabold text-green-700 hover:underline">View All Category →</a>
+            </div>
+            <div class="flex gap-3.5 overflow-x-auto no-scrollbar pb-3 green-scroll">
+              {relatedProducts.map(p => {
+                const rawId = p["Product ID"] || p.id || p.sku || p.ProductID;
+                const canonicalProductId = (rawId && typeof rawId === 'string' && !['undefined', 'null', 'n/a'].includes(rawId.toLowerCase().trim())) ? rawId.trim() : '';
+                const rHref = canonicalProductId ? `/product/${encodeURIComponent(canonicalProductId)}` : null;
+
+                const rName = (p.displayName || p.name || p["Product Name"] || '').split(" (Batch")[0];
+                const rBrand = p.brand || p["Brand Name"] || 'FORTUNE';
+                const rPack = p.pack || p["Pack Size"] || '1 Unit';
+                const rMrp = parseFloat(p.mrp || p.MRP || 50);
+                const rSp = parseFloat(p.sp || p["Selling Price"] || rMrp);
+                const rImg = p.img || p["Product Image URL"] || mainImg;
+
+                if (!rHref) {
+                  return (
+                    <div class="flex-shrink-0 w-40 sm:w-44 bg-white rounded-2xl border border-slate-100 p-2.5 flex flex-col product-card-v2">
+                      <div class="w-full h-28 bg-green-50/30 rounded-xl flex items-center justify-center p-2 mb-1.5">
+                        <img src={rImg} alt={rName} class="max-h-full max-w-full object-contain" loading="lazy" />
+                      </div>
+                      <span class="text-[8px] font-black text-green-700 uppercase tracking-wider truncate">{rBrand}</span>
+                      <h4 class="text-[10px] font-extrabold text-slate-900 line-clamp-2 min-h-[1.8rem]">{rName}</h4>
+                      <p class="text-[9px] text-slate-400 font-semibold truncate mb-1">{rPack}</p>
+                      <div class="flex items-baseline justify-between pt-1 border-t border-slate-100 mt-auto">
+                        <span class="text-xs font-black text-slate-900">₹{rSp}</span>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <a href={rHref} class="flex-shrink-0 w-40 sm:w-44 bg-white rounded-2xl border border-slate-100 p-2.5 flex flex-col product-card-v2">
+                    <div class="w-full h-28 bg-green-50/30 rounded-xl flex items-center justify-center p-2 mb-1.5">
+                      <img src={rImg} alt={rName} class="max-h-full max-w-full object-contain" loading="lazy" />
+                    </div>
+                    <span class="text-[8px] font-black text-green-700 uppercase tracking-wider truncate">{rBrand}</span>
+                    <h4 class="text-[10px] font-extrabold text-slate-900 line-clamp-2 min-h-[1.8rem]">{rName}</h4>
+                    <p class="text-[9px] text-slate-400 font-semibold truncate mb-1">{rPack}</p>
+                    <div class="flex items-baseline justify-between pt-1 border-t border-slate-100 mt-auto">
+                      <span class="text-xs font-black text-slate-900">₹{rSp}</span>
+                      <span class="text-[9px] font-black text-green-700 bg-green-50 px-2 py-0.5 rounded-lg border border-green-200">VIEW</span>
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        <!-- ==================== PRODUCTS FROM THE SAME STORE ==================== -->
+        <section class="space-y-3 pt-6 border-t border-slate-200/80">
+          <div class="flex items-center justify-between">
+            <h2 class="section-title"><span>🏬</span> Products from {storeInfo.name}</h2>
+            <a href={`/store_profile?store=${storeInfo.name.toLowerCase().replace(/\s+/g,'-')}`} class="text-xs font-extrabold text-green-700 hover:underline">Visit Store →</a>
+          </div>
+          <div class="flex gap-3.5 overflow-x-auto no-scrollbar pb-3 green-scroll">
+            {sameStoreProducts.map(p => {
+              const rawId = p["Product ID"] || p.id || p.sku || p.ProductID;
+              const canonicalProductId = (rawId && typeof rawId === 'string' && !['undefined', 'null', 'n/a'].includes(rawId.toLowerCase().trim())) ? rawId.trim() : '';
+              const sHref = canonicalProductId ? `/product/${encodeURIComponent(canonicalProductId)}` : null;
+
+              const sName = (p.displayName || p.name || p["Product Name"] || '').split(" (Batch")[0];
+              const sBrand = p.brand || p["Brand Name"] || 'BHUSAWAL';
+              const sPack = p.pack || p["Pack Size"] || '1 Unit';
+              const sMrp = parseFloat(p.mrp || p.MRP || 50);
+              const sSp = parseFloat(p.sp || p["Selling Price"] || sMrp);
+              const sImg = p.img || p["Product Image URL"] || mainImg;
+
+              if (!sHref) {
+                return (
+                  <div class="flex-shrink-0 w-40 sm:w-44 bg-white rounded-2xl border border-slate-100 p-2.5 flex flex-col product-card-v2">
+                    <div class="w-full h-28 bg-green-50/30 rounded-xl flex items-center justify-center p-2 mb-1.5">
+                      <img src={sImg} alt={sName} class="max-h-full max-w-full object-contain" loading="lazy" />
+                    </div>
+                    <span class="text-[8px] font-black text-green-700 uppercase tracking-wider truncate">{sBrand}</span>
+                    <h4 class="text-[10px] font-extrabold text-slate-900 line-clamp-2 min-h-[1.8rem]">{sName}</h4>
+                    <p class="text-[9px] text-slate-400 font-semibold truncate mb-1">{sPack}</p>
+                    <div class="flex items-baseline justify-between pt-1 border-t border-slate-100 mt-auto">
+                      <span class="text-xs font-black text-slate-900">₹{sSp}</span>
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <a href={sHref} class="flex-shrink-0 w-40 sm:w-44 bg-white rounded-2xl border border-slate-100 p-2.5 flex flex-col product-card-v2">
+                  <div class="w-full h-28 bg-green-50/30 rounded-xl flex items-center justify-center p-2 mb-1.5">
+                    <img src={sImg} alt={sName} class="max-h-full max-w-full object-contain" loading="lazy" />
+                  </div>
+                  <span class="text-[8px] font-black text-green-700 uppercase tracking-wider truncate">{sBrand}</span>
+                  <h4 class="text-[10px] font-extrabold text-slate-900 line-clamp-2 min-h-[1.8rem]">{sName}</h4>
+                  <p class="text-[9px] text-slate-400 font-semibold truncate mb-1">{sPack}</p>
+                  <div class="flex items-baseline justify-between pt-1 border-t border-slate-100 mt-auto">
+                    <span class="text-xs font-black text-slate-900">₹{sSp}</span>
+                    <span class="text-[9px] font-black text-green-700 bg-green-50 px-2 py-0.5 rounded-lg border border-green-200">VIEW</span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+    )}
+
+  </main>
+
+  <div id="pdp-toast" class="hidden fixed bottom-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900/90 text-white text-xs font-bold px-4 py-2.5 rounded-2xl shadow-xl backdrop-blur-md flex items-center gap-2">
+    <span class="material-symbols-outlined text-green-400 text-sm">check_circle</span>
+    <span id="pdp-toast-msg">Product added to cart!</span>
+  </div>
+
+  <script type="module" define:vars={{ matchedId, name, brand, category, pack, mrp, sp, disc, description, mainImg, storeName, isFound }}>
+    import { trackAnalyticsEvent } from '/src/lib/customerAuth.ts';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (isFound && matchedId) {
+        trackAnalyticsEvent('product_viewed', {
+          productId: String(matchedId),
+          category: String(category || 'Grocery'),
+          brand: String(brand || ''),
+        });
+      }
+
+      document.querySelectorAll('.pdp-thumb-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const imgUrl = btn.getAttribute('data-img');
+          const mainImg = document.getElementById('pdp-main-image');
+          if (mainImg && imgUrl) mainImg.src = imgUrl;
+          document.querySelectorAll('.pdp-thumb-btn').forEach(b => b.classList.remove('border-green-600'));
+          btn.classList.add('border-green-600');
+        });
+      });
+
+      function getCart() {
+        try { return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); } catch(e) { return []; }
+      }
+      function saveCart(cart) { localStorage.setItem('bhusawal_cart', JSON.stringify(cart)); }
+
+      function showToast(msg) {
+        const toast = document.getElementById('pdp-toast');
+        const text = document.getElementById('pdp-toast-msg');
+        if (!toast || !text) return;
+        text.textContent = msg;
+        toast.classList.remove('hidden', 'toast-anim');
+        void toast.offsetWidth;
+        toast.classList.add('toast-anim');
+        setTimeout(() => toast.classList.add('hidden'), 2500);
+      }
+
+      function updateHeaderBadge() {
+        const cart = getCart();
+        const total = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        const badge = document.getElementById('cart-badge-header');
+        if (badge) badge.textContent = total;
+      }
+
+      function populateIngredients() {
+        const container = document.getElementById('pdp-ingredients-list');
+        if (!container) return;
+
+        const catL = (category || '').toLowerCase();
+        const nameL = (name || '').toLowerCase();
+
+        let items = [];
+        if (catL.includes('fruit') || catL.includes('veg')) items = ['100% Farm Fresh Produce', 'Rich in Vitamins & Minerals', 'Zero Artificial Wax'];
+        else if (nameL.includes('atta') || nameL.includes('wheat')) items = ['Whole Wheat Grains', 'Dietary Fiber', 'Iron & Folic Acid'];
+        else if (nameL.includes('rice')) items = ['100% Pure Aged Rice Grains', 'Naturally Aromatic'];
+        else if (nameL.includes('oil')) items = ['Refined Sunflower / Seed Oil', 'Vitamin A & Vitamin D2', 'Antioxidants (E319)'];
+        else if (nameL.includes('ghee')) items = ['100% Pure Milk Fat / Cow Ghee'];
+        else if (nameL.includes('milk') || nameL.includes('dahi') || nameL.includes('paneer')) items = ['Pasteurized Toned Milk', 'Dairy Cultures'];
+        else if (nameL.includes('tea') || nameL.includes('chai')) items = ['CTC Black Tea Leaves', 'Natural Aroma'];
+        else if (nameL.includes('coffee')) items = ['Roasted Coffee Beans', 'Chicory Blend'];
+        else if (nameL.includes('biscuit') || nameL.includes('cookie')) items = ['Refined Wheat Flour', 'Edible Vegetable Oil', 'Sugar', 'Milk Solids'];
+        else if (nameL.includes('bhujia') || nameL.includes('snack')) items = ['Gram Flour (Besan)', 'Edible Oil', 'Authentic Spices', 'Salt'];
+        else if (nameL.includes('soap') || nameL.includes('shampoo')) items = ['Sodium Palmate', 'Aqua', 'Glycerin', 'Essential Fragrance'];
+        else items = ['100% Genuine Certified Ingredients', 'Quality Assured'];
+
+        container.innerHTML = items.map(i => `<span class="px-3 py-1 bg-green-50 text-green-800 text-xs font-bold rounded-xl border border-green-200/80">${i}</span>`).join('');
+      }
+
+      function populateStorage() {
+        const storageEl = document.getElementById('pdp-storage-text');
+        if (!storageEl) return;
+        const catL = (category || '').toLowerCase();
+        const nameL = (name || '').toLowerCase();
+
+        if (catL.includes('fruit') || catL.includes('veg')) {
+          storageEl.textContent = 'Store in a cool, ventilated place or refrigerate for extended freshness. Wash thoroughly before use.';
+        } else if (catL.includes('dairy') || nameL.includes('milk') || nameL.includes('paneer') || nameL.includes('curd')) {
+          storageEl.textContent = 'Keep refrigerated below 4°C. Consume within 2-3 days of opening.';
+        } else if (catL.includes('oil') || catL.includes('ghee')) {
+          storageEl.textContent = 'Store in a cool, dry place away from direct sunlight. Seal cap tightly after every use.';
+        } else if (catL.includes('atta') || nameL.includes('rice') || catL.includes('dal')) {
+          storageEl.textContent = 'Store in an airtight container in a moisture-free pantry to prevent dampness.';
+        } else if (catL.includes('masala') || catL.includes('spice')) {
+          storageEl.textContent = 'Store in a tightly sealed dry container away from direct sunlight to preserve spicy aroma.';
+        } else if (catL.includes('biscuit') || catL.includes('snack')) {
+          storageEl.textContent = 'Store in a cool, dry place. Transfer to an airtight container after opening to maintain crunchiness.';
+        } else {
+          storageEl.textContent = 'Store in a cool, dry place away from direct sunlight. Keep sealed once opened.';
+        }
+      }
+
+      const WISHLIST_KEY = 'bhusawal_wishlist';
+      function getWishlist() {
+        try { return JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]'); } catch(e) { return []; }
+      }
+      function toggleWishlist() {
+        let list = getWishlist();
+        const idx = list.findIndex(i => (i.id || i["Product ID"]) === matchedId);
+        const btn = document.getElementById('pdp-wishlist-btn');
+        const icon = btn?.querySelector('.material-symbols-outlined');
+
+        if (idx > -1) {
+          list.splice(idx, 1);
+          btn?.classList.remove('text-red-500', 'bg-red-50');
+          btn?.classList.add('text-slate-400');
+          if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+          showToast('Removed from Wishlist');
+        } else {
+          list.push({ id: matchedId, name, price: sp, mrp, image: mainImg, brand, pack, cat: category });
+          btn?.classList.add('text-red-500', 'bg-red-50');
+          btn?.classList.remove('text-slate-400');
+          if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+          showToast('Added to Wishlist ❤️');
+        }
+        localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
+      }
+
+      function updateWishlistButtonState() {
+        const wishlist = getWishlist();
+        const isW = wishlist.some(i => (i.id || i["Product ID"]) === matchedId);
+        const btn = document.getElementById('pdp-wishlist-btn');
+        const icon = btn?.querySelector('.material-symbols-outlined');
+        if (isW) {
+          btn?.classList.add('text-red-500', 'bg-red-50');
+          btn?.classList.remove('text-slate-400');
+          if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+        } else {
+          btn?.classList.remove('text-red-500', 'bg-red-50');
+          btn?.classList.add('text-slate-400');
+          if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+        }
+      }
+
+      function updateActionArea() {
+        const area = document.getElementById('pdp-action-area');
+        if (!area) return;
+
+        const cart = getCart();
+        const item = cart.find(i => i.id === matchedId);
+        const qty = item ? (item.quantity || 1) : 0;
+
+        if (qty > 0) {
+          area.innerHTML = `
+            <div class="flex items-center justify-between bg-green-600 text-white font-extrabold text-sm rounded-2xl overflow-hidden p-1 shadow-md">
+              <button id="pdp-btn-minus" class="w-12 h-12 rounded-xl bg-white/20 hover:bg-white/30 text-white flex items-center justify-center font-black active:scale-90 transition-all text-xl cursor-pointer">−</button>
+              <span class="text-base font-black px-4">${qty} in Cart</span>
+              <button id="pdp-btn-plus" class="w-12 h-12 rounded-xl bg-white/20 hover:bg-white/30 text-white flex items-center justify-center font-black active:scale-90 transition-all text-xl cursor-pointer">+</button>
+            </div>
+          `;
+          document.getElementById('pdp-btn-minus')?.addEventListener('click', () => changeQty(-1));
+          document.getElementById('pdp-btn-plus')?.addEventListener('click', () => changeQty(1));
+        } else {
+          area.innerHTML = `
+            <button id="pdp-btn-add" class="w-full py-4 bg-green-600 hover:bg-green-700 text-white font-black text-sm rounded-2xl shadow-lg shadow-green-900/15 active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer">
+              <span class="material-symbols-outlined text-xl">shopping_bag</span>
+              <span>ADD TO CART • ₹${sp}</span>
+            </button>
+          `;
+          document.getElementById('pdp-btn-add')?.addEventListener('click', () => changeQty(1));
+        }
+      }
+
+      function changeQty(delta) {
+        let cart = getCart();
+        const idx = cart.findIndex(i => i.id === matchedId);
+        if (idx > -1) {
+          cart[idx].quantity = (cart[idx].quantity || 1) + delta;
+          if (cart[idx].quantity <= 0) {
+            cart.splice(idx, 1);
+            showToast('Removed from cart');
+            trackAnalyticsEvent('product_removed_from_cart', { productId: String(matchedId), category: String(category || '') });
+          } else {
+            showToast('Cart updated!');
+            trackAnalyticsEvent('product_added_to_cart', { productId: String(matchedId), category: String(category || ''), quantity: cart[idx].quantity });
+          }
+        } else if (delta > 0) {
+          cart.push({ id: matchedId, name, price: sp, mrp, image: mainImg, quantity: 1, cat: category, store: storeName });
+          showToast(name + ' added to cart!');
+          trackAnalyticsEvent('product_added_to_cart', { productId: String(matchedId), category: String(category || ''), quantity: 1 });
+        }
+        saveCart(cart);
+        updateHeaderBadge();
+        updateActionArea();
+      }
+
+      function doShare() {
+        const shareData = {
+          title: name + ' - Bhusawal Connect',
+          text: `Buy ${name} at ₹${sp} on Bhusawal Connect!`,
+          url: window.location.href
+        };
+        if (navigator.share) {
+          navigator.share(shareData).catch(() => {});
+        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(window.location.href).then(() => {
+            showToast('Product link copied to clipboard!');
+          }).catch(() => {
+            showToast('Link: ' + window.location.href);
+          });
+        } else {
+          showToast('Product URL: ' + window.location.href);
+        }
+      }
+
+      document.getElementById('pdp-wishlist-btn')?.addEventListener('click', toggleWishlist);
+      document.getElementById('pdp-share-btn')?.addEventListener('click', doShare);
+      document.getElementById('pdp-share-top-btn')?.addEventListener('click', doShare);
+
+      populateIngredients();
+      populateStorage();
+      updateWishlistButtonState();
+      updateHeaderBadge();
+      updateActionArea();
+    });
+  </script>
+</body>
+</html>

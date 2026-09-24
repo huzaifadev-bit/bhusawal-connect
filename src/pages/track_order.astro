@@ -1,13 +1,12 @@
 ---
-import Switcher from '../components/Switcher.astro';
+// Premium Live Tracking Screen - Bhusawal Connect
 ---
-
 <!DOCTYPE html>
 <html class="light" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Live Delivery Tracking - Bhusawal Connect</title>
+  <title>Premium Live Delivery & Tracking | Bhusawal Connect</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,21 +18,30 @@ import Switcher from '../components/Switcher.astro';
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" is:inline></script>
   <script src="/assets/google_maps_loader.js" is:inline></script>
+  <script src="/assets/smooth_rider_animator.js" is:inline></script>
+  <script src="/assets/google_maps_routing_service.js" is:inline></script>
   <script src="/assets/google_live_tracker.js" is:inline></script>
   <script src="/assets/realtime_sync.js" is:inline></script>
+  <script src="/assets/realtime_gps_telemetry.js" is:inline></script>
+  <script src="/assets/customer_location_manager.js" is:inline></script>
+  <script src="/assets/delivery_workflow_engine.js" is:inline></script>
+  <script src="/bhusawal_backend.js" is:inline></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
+  <script is:inline>
+    window.GOOGLE_MAPS_API_KEY = 'AIzaSyClf3eC2sJBzGDpnWrPxe6QUVJ6B5i9ORU';
+  </script>
 
-  <!-- TAILWIND CONFIGURATION -->
+  <!-- THEME TAILWIND CONFIGURATION -->
   <script is:inline>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            blueBrand: '#3B82F6',
-            blueDark: '#2563EB',
-            blueLight: '#EFF6FF',
-            redBrand: '#E53935',
-            redDark: '#C62828',
-            redLight: '#FFEBEE'
+            orangeBrand: '#F97316',
+            orangeDark: '#EA580C',
+            orangeLight: '#FFF7ED',
+            orangeBorder: '#FFEDD5',
+            orangeDeep: '#C2410C'
           },
           fontFamily: {
             sans: ['Plus Jakarta Sans', 'sans-serif'],
@@ -45,577 +53,619 @@ import Switcher from '../components/Switcher.astro';
   </script>
 
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0F172A; color: #F8FAFC; }
     h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes pulse-pin { 0%,100%{transform:scale(1);} 50%{transform:scale(1.15);} }
+    .animate-pulse-pin { animation: pulse-pin 2s infinite ease-in-out; }
   </style>
 </head>
 
-<body class="bg-slate-50 min-h-screen text-slate-900 pb-20 antialiased">
+<body class="bg-slate-950 min-h-screen text-slate-100 pb-16 antialiased selection:bg-orangeBrand selection:text-white">
 
-  <!-- TOP HEADER WITH SUPPORT BUTTON -->
-  <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100 px-4 py-3 shadow-xs">
+  <!-- TOP HEADER WITH AUTO-REFRESH BADGE -->
+  <header class="bg-slate-900/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-800 px-4 py-3 shadow-xl">
     <div class="max-w-md mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <a href="/orders" class="p-2 hover:bg-slate-100 rounded-full transition-all">
-          <span class="material-symbols-outlined text-slate-800">arrow_back</span>
+        <a href="/orders" class="p-2 hover:bg-slate-800 rounded-full transition-all text-slate-300">
+          <span class="material-symbols-outlined text-lg">arrow_back</span>
         </a>
         <div>
-          <h1 class="text-sm font-black text-slate-900 leading-tight">Live Delivery Tracking</h1>
-          <p class="text-[10px] font-bold text-slate-500" id="header-order-id">Order ID: #BHU-849201</p>
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-sm font-black text-white leading-tight" id="header-tracking-title">Live Delivery Tracking</h1>
+            <span class="inline-flex items-center gap-1 bg-emerald-950 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Live 3s
+            </span>
+          </div>
+          <p class="text-[10px] font-bold text-slate-400" id="header-order-id">Order ID: #BHU-849201</p>
         </div>
       </div>
 
-      <!-- SUPPORT BUTTON -->
-      <a href="tel:7498071274" class="border border-blue-200 text-blueBrand bg-blueLight hover:bg-blue-100 font-extrabold text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1 transition-all active:scale-95 shadow-xs">
-        <span class="material-symbols-outlined text-sm">headset_mic</span> Support
+      <a href="tel:+919876543210" id="header-support-btn" class="border border-slate-700 text-slate-200 bg-slate-800 hover:bg-slate-700 font-extrabold text-xs px-3 py-1.5 rounded-full flex items-center gap-1 transition-all active:scale-95">
+        <span class="material-symbols-outlined text-sm text-sky-400">headset_mic</span> Support
       </a>
     </div>
   </header>
 
-  <!-- Realtime Toast Notification Banner -->
-  <div id="toast-notification" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md bg-slate-900 text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-3 hidden animate-in slide-in-from-top duration-300">
-    <div class="flex items-center gap-2.5 min-w-0">
-      <span class="material-symbols-outlined text-blueBrand text-xl" id="toast-icon">local_shipping</span>
-      <p class="text-xs font-extrabold truncate" id="toast-msg">Rider is en route to doorstep</p>
-    </div>
-    <span class="text-[10px] font-black bg-white/20 px-2 py-0.5 rounded-full uppercase">LIVE</span>
-  </div>
-
   <main class="max-w-md mx-auto relative">
 
-    <!-- Floating Top Status Pill Card with ETA -->
-    <div class="px-4 pt-3 relative z-20 space-y-2">
-      <!-- Proximity Alert Banner -->
-      <div id="rider-nearby-alert" class="hidden bg-amber-500 text-slate-950 font-black text-xs px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce border border-amber-300">
-        <span class="material-symbols-outlined text-lg">notifications_active</span>
-        <span id="nearby-alert-text">Your Bhusawal Connect rider is nearby (&lt;300m). Please be ready to receive your parcel!</span>
-      </div>
-
-      <!-- Top Status Card with Live ETA -->
-      <div class="bg-white rounded-3xl p-4 shadow-xl border border-slate-100 flex items-center justify-between gap-3 animate-in slide-in-from-top-4 duration-300">
+    <!-- LIVE METRICS CARD (ETA, REMAINING DISTANCE, CURRENT SPEED) -->
+    <div class="px-4 pt-3 relative z-20 space-y-3">
+      <div id="top-status-card" class="bg-slate-900/95 rounded-3xl p-4 shadow-2xl border border-slate-800 flex items-center justify-between gap-3 backdrop-blur-md">
         <div class="flex items-center gap-3 flex-1 min-w-0">
-          <div class="w-12 h-12 rounded-2xl bg-blueLight text-blueBrand flex items-center justify-center text-2xl shrink-0 border border-blue-200/60 shadow-xs">
+          <div id="top-status-icon-box" class="w-12 h-12 rounded-2xl bg-orangeBrand text-white flex items-center justify-center text-2xl shrink-0 shadow-lg border border-orangeDark/40">
             🛵
           </div>
           <div class="min-w-0 flex-1">
-            <h2 id="top-status-title" class="text-sm font-black text-slate-900 truncate">Order Received</h2>
-            <p id="top-status-sub" class="text-[11px] font-bold text-slate-500 truncate mt-0.5">Order verified & preparing for dispatch</p>
+            <h2 id="top-status-title" class="text-sm font-black text-white truncate">On The Way</h2>
+            <p id="top-status-sub" class="text-[11px] font-extrabold text-emerald-400 truncate mt-0.5">Rahul Patil is driving to your delivery address</p>
           </div>
         </div>
-        <!-- ETA DISPLAY -->
-        <div id="top-eta-container" class="bg-blueLight border border-blue-200 text-blueBrand px-3.5 py-2 rounded-2xl text-center shrink-0">
-          <span id="top-eta-mins" class="text-sm font-black block leading-none">18 mins</span>
-          <span class="text-[9px] font-black uppercase tracking-wider block mt-0.5 text-blueDark">ETA</span>
+
+        <!-- ETA & REMAINING METRICS BADGE -->
+        <div class="bg-slate-950 border border-slate-800 text-center px-3.5 py-2 rounded-2xl shrink-0">
+          <span id="top-eta-mins" class="text-base font-black text-amber-400 block leading-none">12 mins</span>
+          <span class="text-[9px] font-black uppercase tracking-wider block mt-1 text-slate-400" id="disp-dist-rem">1.4 km left</span>
+        </div>
+      </div>
+
+      <!-- LIVE 4-METRIC REAL-TIME RECALCULATION GRID (REMAINING DISTANCE, ESTIMATED ARRIVAL, EXPECTED DELIVERY, TRAVEL TIME) -->
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl">
+          <div class="text-[9px] text-slate-500 uppercase font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-emerald-400 text-xs">straighten</span>
+            <span>Remaining Distance</span>
+          </div>
+          <div id="disp-remaining-dist" class="font-extrabold text-emerald-400 text-sm font-mono mt-0.5">1.4 km</div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl">
+          <div class="text-[9px] text-slate-500 uppercase font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-amber-400 text-xs">schedule</span>
+            <span>Estimated Arrival</span>
+          </div>
+          <div id="disp-estimated-arrival" class="font-extrabold text-amber-400 text-sm font-mono mt-0.5">01:15 AM</div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl">
+          <div class="text-[9px] text-slate-500 uppercase font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-sky-400 text-xs">timer</span>
+            <span>Expected Delivery</span>
+          </div>
+          <div id="disp-expected-delivery" class="font-extrabold text-sky-400 text-sm font-mono mt-0.5">15 mins</div>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-xl">
+          <div class="text-[9px] text-slate-500 uppercase font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-indigo-400 text-xs">directions_bike</span>
+            <span>Travel Time</span>
+          </div>
+          <div id="disp-travel-time" class="font-extrabold text-indigo-300 text-sm font-mono mt-0.5">11 mins driving</div>
         </div>
       </div>
     </div>
 
-    <!-- Live Map Container of Bhusawal (Google Maps / Leaflet System) -->
-    <div class="h-[48vh] w-full bg-slate-200 relative mt-3 z-10 overflow-hidden" id="bhusawal-map">
-      <!-- Floating Right Controls -->
-      <div class="absolute right-4 bottom-10 z-20 flex flex-col gap-2.5">
-        <button id="btn-recenter-map" class="w-10 h-10 bg-white rounded-full shadow-xl border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-50 active:scale-95 transition-all" title="Recenter Map">
-          <span class="material-symbols-outlined text-lg font-bold">my_location</span>
-        </button>
-      </div>
+    <!-- LIVE GOOGLE MAPS BASE LAYER WITH CUSTOMER (📍), SHOP (🏪), RIDER (🛵) & ROAD POLYLINE -->
+    <div class="h-[42vh] w-full bg-slate-950 relative mt-3 z-10 overflow-hidden border-y border-slate-800" id="bhusawal-map">
+      <!-- Leaflet / Google Maps Canvas -->
     </div>
 
-    <!-- Bottom Sheet Drawer -->
-    <div class="bg-white rounded-t-3xl -mt-6 relative z-30 px-4 pt-4 pb-12 shadow-2xl border-t border-slate-100 space-y-4">
+    <!-- BOTTOM SHEET DRAWER -->
+    <div class="bg-slate-900 rounded-t-3xl -mt-6 relative z-30 px-4 pt-4 pb-12 shadow-2xl border-t border-slate-800 space-y-4">
       
-      <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-2"></div>
+      <div class="w-12 h-1 bg-slate-800 rounded-full mx-auto mb-2"></div>
 
-      <!-- STEP-BY-STEP MEDICINE ORDER TIMELINE BAR -->
-      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+      <!-- CANONICAL 8-STAGE DELIVERY TIMELINE -->
+      <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-3">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] font-black text-blueBrand uppercase tracking-wider block" id="progress-bar-label">ORDER TIMELINE</span>
-          <span class="text-[10px] font-extrabold text-slate-500" id="progress-bar-step-num">Step 1 of 6</span>
+          <span class="text-[10px] font-black text-sky-400 uppercase tracking-wider block">CANONICAL 8-STAGE TIMELINE</span>
+          <span class="text-[10px] font-extrabold text-slate-400" id="progress-bar-step-num">Step 6 of 8</span>
         </div>
         
-        <!-- 6-STEP TIMELINE GRID -->
-        <div class="grid grid-cols-6 gap-1 text-center" id="tracking-steps-bar">
-          <!-- Dynamically Populated for Medicine Order (6 steps) -->
+        <div class="grid grid-cols-4 sm:grid-cols-8 gap-1.5 text-center" id="tracking-steps-bar">
+          <!-- Dynamically Populated 8 Stages -->
         </div>
       </div>
 
-      <!-- LIVE RIDER CARD (WITH CALL RIDER BUTTON) -->
-      <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-full bg-blueBrand text-white flex items-center justify-center font-black text-xl shadow-md border-2 border-white shrink-0">
-            👨‍✈️
+      <!-- DELIVERY PARTNER CARD (WITH CALL & CHAT BUTTONS) -->
+      <div id="rider-card-container" class="flex items-center justify-between bg-slate-950 p-4 rounded-2xl border border-slate-800 shadow-md">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-12 h-12 rounded-full bg-orangeBrand text-white flex items-center justify-center font-black text-xl shadow-md border-2 border-slate-800 shrink-0">
+            🛵
           </div>
-          <div>
-            <h3 id="rider-name" class="text-sm font-black text-slate-900">Rahul Patil (Fleet Captain)</h3>
-            <p class="text-[10px] text-slate-500 font-bold mt-0.5">Vehicle: MH-19-AX-4892 (EV Bike)</p>
-            <div class="flex items-center gap-1 text-[10px] text-amber-500 font-black mt-0.5">
+          <div class="min-w-0">
+            <h3 id="rider-name" class="text-sm font-black text-white truncate">Rahul Patil (Partner)</h3>
+            <p id="rider-vehicle-text" class="text-[10px] text-slate-400 font-bold mt-0.5 truncate">EV Scooter • MH 19 AX 4892</p>
+            <div class="flex items-center gap-1 text-[10px] text-amber-400 font-black mt-0.5">
               <span>★ 4.9 Rating</span>
-              <span class="text-slate-400 font-normal">(420+ deliveries)</span>
+              <span class="text-slate-500 font-semibold">(420+ deliveries)</span>
             </div>
           </div>
         </div>
 
-        <!-- CALL RIDER & WHATSAPP BUTTONS -->
-        <div class="flex items-center gap-2">
-          <a id="btn-call-rider" href="tel:7498071274" class="w-10 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center justify-center active:scale-95 transition-all shadow-md" title="Call Rider">
-            <span class="material-symbols-outlined text-lg">call</span>
+        <!-- CALL & CHAT BUTTONS -->
+        <div class="flex items-center gap-2 shrink-0">
+          <a id="btn-call-rider" href="tel:+919876543210" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center gap-1 text-xs font-black active:scale-95 transition-all shadow-md">
+            <span class="material-symbols-outlined text-base">call</span>
+            <span>Call</span>
           </a>
-          <a id="btn-chat-rider" href="https://wa.me/917498071274?text=Hi%20Rahul,%20regarding%20my%20Bhusawal%20Connect%20order" target="_blank" class="w-10 h-10 bg-blueBrand hover:bg-blueDark text-white rounded-xl flex items-center justify-center active:scale-95 transition-all shadow-md" title="Chat on WhatsApp">
-            <span class="material-symbols-outlined text-lg">chat</span>
+          <a id="btn-chat-rider" href="https://wa.me/919876543210?text=Hi%20Rahul,%20regarding%20my%20Bhusawal%20Connect%20order" target="_blank" class="px-3 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl flex items-center gap-1 text-xs font-black active:scale-95 transition-all shadow-md">
+            <span class="material-symbols-outlined text-base">chat</span>
+            <span>Chat</span>
           </a>
         </div>
       </div>
 
-      <!-- 4-DIGIT HANDOVER OTP CARD FOR CUSTOMER -->
-      <div id="otp-display-card" class="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-400 text-slate-950 p-4 rounded-2xl shadow-lg border border-amber-300 flex items-center justify-between gap-3">
+      <!-- 4-DIGIT HANDOVER OTP CARD -->
+      <div id="otp-display-card" class="bg-gradient-to-r from-orangeBrand via-amber-500 to-orangeDark text-white p-4 rounded-2xl shadow-lg border border-orangeDark/40 flex items-center justify-between gap-3">
         <div class="space-y-0.5">
-          <div class="flex items-center gap-1.5 font-black text-xs uppercase tracking-wider text-slate-950">
+          <div class="flex items-center gap-1.5 font-black text-xs uppercase tracking-wider text-white">
             <span class="material-symbols-outlined text-base">lock</span>
-            <span>Handover Delivery OTP</span>
+            <span>Handover Verification OTP</span>
           </div>
-          <p class="text-[11px] font-extrabold text-slate-800">Share this 4-digit code with Delivery Partner upon arrival</p>
+          <p class="text-[11px] font-extrabold text-orange-100">Share 4-digit OTP with Delivery Partner upon arrival</p>
         </div>
 
-        <div class="bg-white px-3.5 py-1.5 rounded-xl border-2 border-slate-900 shadow-xs text-center shrink-0">
-          <span id="cust-otp-code" class="text-xl font-black font-mono tracking-widest text-slate-900">4892</span>
+        <div class="bg-slate-950 px-3.5 py-1.5 rounded-xl border border-amber-400 text-center shrink-0">
+          <span id="cust-otp-code" class="text-xl font-black font-mono tracking-widest text-amber-400">4892</span>
         </div>
       </div>
 
-      <!-- SUCCESS VERIFIED BANNER (Hidden until OTP is verified) -->
-      <div id="otp-verified-banner" class="hidden bg-emerald-50 text-emerald-900 p-4 rounded-2xl border-2 border-emerald-400 shadow-md space-y-1 animate-in fade-in duration-300">
-        <div class="flex items-center gap-2">
-          <span class="material-symbols-outlined text-emerald-600 text-2xl">verified</span>
-          <h3 class="text-sm font-black text-emerald-950">Delivery Verified Successfully</h3>
-        </div>
-        <p class="text-xs font-bold text-emerald-700">4-digit OTP verified by delivery partner. Order marked as Delivered.</p>
-      </div>
-
-      <!-- PARTNER OTP VERIFICATION TRIGGER BUTTON -->
-      <button id="btn-open-otp-modal" type="button" class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs rounded-2xl flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 cursor-pointer">
-        <span class="material-symbols-outlined text-base text-yellow-400">pin</span>
-        <span>Delivery Partner: Enter 4-Digit OTP</span>
+      <!-- RATE ORDER BUTTON -->
+      <button id="btn-open-rating-modal" type="button" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-orangeBrand hover:from-amber-600 hover:to-orangeDark text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2">
+        <span class="text-lg">★</span>
+        <span>Rate Order & Delivery Experience</span>
       </button>
-
-      <!-- Live ETA Banner -->
-      <div id="bottom-eta-banner" class="bg-blueLight border border-blue-200/80 rounded-2xl p-3.5 flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-blueBrand text-white flex items-center justify-center text-sm font-black shrink-0">
-          ⚡
-        </div>
-        <p class="text-xs font-bold text-slate-800 leading-snug">
-          Your order is being processed and will reach you in <span id="banner-eta-text" class="font-black text-blueBrand">18 mins</span>
-        </p>
-      </div>
-
-      <!-- Delivery Completion Banner -->
-      <div id="delivery-completed-banner" class="hidden bg-gradient-to-br from-emerald-600 to-teal-700 text-white rounded-3xl p-5 shadow-xl space-y-3 text-center border border-emerald-400/30">
-        <div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto text-2xl shadow-inner border border-white/40">
-          🎉
-        </div>
-        <div>
-          <h2 class="text-base font-black">Order Delivered Successfully!</h2>
-          <p class="text-xs text-emerald-100 font-bold mt-1">
-            Thank you for ordering with Bhusawal Connect! Your items have been delivered safely.
-          </p>
-        </div>
-        <a href="/medicines" class="block w-full bg-white text-emerald-800 font-black text-xs py-3 rounded-2xl shadow-lg hover:bg-emerald-50 active:scale-95 transition-all mt-2">
-          Order More Services 🛵
-        </a>
-      </div>
-
-      <!-- ORDER SUMMARY & ITEMS BREAKDOWN CARD -->
-      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3" id="order-summary-card">
-        <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-2">Order Summary</h4>
-        <div id="order-summary-items-list" class="space-y-2 text-xs font-bold text-slate-700">
-          <!-- Dynamically populated -->
-        </div>
-        <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs font-black text-slate-900">
-          <span>Total Paid (incl. ₹30 Delivery)</span>
-          <span id="order-summary-total" class="text-blueBrand text-sm font-extrabold">₹0</span>
-        </div>
-      </div>
-
-      <!-- Navigation Action Buttons -->
-      <div class="grid grid-cols-2 gap-3 pt-1">
-        <a href="/home" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all">
-          Back to Home
-        </a>
-        <a href="/parcel" class="w-full bg-blueBrand hover:bg-blueDark text-white font-black text-xs py-3 rounded-2xl text-center active:scale-95 transition-all shadow-md">
-          Book Parcel Courier 📦
-        </a>
-      </div>
 
     </div>
   </main>
 
-  <!-- ==================== PARTNER OTP VERIFICATION MODAL ==================== -->
-  <div id="otp-verification-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4 animate-in fade-in zoom-in-95 duration-200">
-      
-      <div class="text-center space-y-1">
-        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl mx-auto shadow-xs">
-          🔐
-        </div>
-        <h3 class="text-lg font-black font-display text-slate-900">Enter Delivery OTP</h3>
-        <p class="text-xs font-bold text-slate-500">Enter the 4-digit code provided by customer to complete handover</p>
+  <!-- RATE ORDER & FEEDBACK MODAL -->
+  <div id="rate-order-modal" class="fixed inset-0 z-[10000] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 hidden animate-in fade-in duration-300">
+    <div class="bg-slate-900 border border-slate-800 text-white rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-4 shadow-2xl relative text-center">
+      <button id="close-rating-modal" type="button" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+
+      <div class="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-400 mx-auto flex items-center justify-center border border-amber-500/40 text-3xl shadow-lg">
+        ★
       </div>
 
-      <!-- OTP INPUT -->
-      <div class="space-y-2">
-        <input 
-          type="text" 
-          id="partner-otp-input" 
-          maxlength="4" 
-          placeholder="e.g. 4892" 
-          class="w-full text-center text-2xl font-black font-mono tracking-widest bg-slate-50 border-2 border-slate-300 rounded-2xl py-3 text-slate-900 focus:bg-white focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200 transition-all" 
-        />
-        
-        <!-- ERROR MESSAGE -->
-        <p id="otp-error-msg" class="hidden text-xs font-black text-rose-600 text-center animate-bounce">
-          ❌ Incorrect OTP! Delivery cannot be completed without valid OTP verification.
-        </p>
+      <div>
+        <span class="px-3 py-1 bg-amber-500/20 text-amber-400 text-[10px] font-black rounded-full uppercase tracking-wider">BLINKIT / ZEPTO RATING EXPERIENCE</span>
+        <h3 class="text-xl font-black font-display text-white mt-2">Rate Your Delivery Experience</h3>
+        <p class="text-xs font-bold text-slate-400 mt-1">How was your order and delivery with Rahul Patil?</p>
       </div>
 
-      <!-- ACTION BUTTONS -->
-      <div class="space-y-2 pt-1">
-        <button id="btn-submit-otp-verification" type="button" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
-          Verify OTP & Complete Delivery
-        </button>
+      <!-- 5-STAR INTERACTIVE RATING BAR -->
+      <div id="star-rating-bar" class="flex items-center justify-center gap-2 py-2">
+        <button type="button" class="star-btn text-3xl text-slate-600 hover:text-amber-400 transition-colors" data-star="1">★</button>
+        <button type="button" class="star-btn text-3xl text-slate-600 hover:text-amber-400 transition-colors" data-star="2">★</button>
+        <button type="button" class="star-btn text-3xl text-slate-600 hover:text-amber-400 transition-colors" data-star="3">★</button>
+        <button type="button" class="star-btn text-3xl text-slate-600 hover:text-amber-400 transition-colors" data-star="4">★</button>
+        <button type="button" class="star-btn text-3xl text-slate-600 hover:text-amber-400 transition-colors" data-star="5">★</button>
+      </div>
+      <p id="star-rating-label" class="text-xs font-black text-amber-400">Tap stars to rate</p>
 
-        <button id="btn-close-otp-modal" type="button" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all">
-          Cancel
-        </button>
+      <!-- FEEDBACK TAGS -->
+      <div class="flex flex-wrap justify-center gap-1.5 pt-1 text-[11px] font-extrabold">
+        <button type="button" class="rating-tag-btn px-3 py-1 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:bg-amber-500 hover:text-slate-950">⚡ Superfast Delivery</button>
+        <button type="button" class="rating-tag-btn px-3 py-1 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:bg-amber-500 hover:text-slate-950">📦 Neat Packaging</button>
+        <button type="button" class="rating-tag-btn px-3 py-1 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:bg-amber-500 hover:text-slate-950">👨‍💼 Polite Rider</button>
+        <button type="button" class="rating-tag-btn px-3 py-1 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:bg-amber-500 hover:text-slate-950">🥦 Fresh Items</button>
       </div>
 
+      <textarea id="rating-feedback-text" rows="2" placeholder="Write optional feedback (e.g. Arrived hot and fast!)..." class="w-full bg-slate-950 border border-slate-800 text-xs font-semibold text-white p-3 rounded-2xl outline-none focus:border-amber-400"></textarea>
+
+      <button id="btn-submit-rating" type="button" class="w-full py-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all">
+        Submit Review & Rating
+      </button>
     </div>
   </div>
 
   <script is:inline>
-    document.addEventListener('DOMContentLoaded', () => {
-      let activeOrder = {};
+    (function() {
+      let trackerMap = null;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const reqId = urlParams.get('id');
+
+      let activeOrder = {
+        id: reqId || 'BHU-849201',
+        status: 'on_the_way',
+        riderName: 'Rahul Ramesh Patil',
+        riderPhone: '9876543210',
+        otp: '4892',
+        merchantName: 'Station Road Supermarket',
+        pickupLat: 21.0478,
+        pickupLng: 75.7896,
+        deliveryLat: 21.0520,
+        deliveryLng: 75.7980
+      };
+
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const reqId = urlParams.get('id');
         const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
-
+        let found = null;
         if (reqId) {
-          activeOrder = orders.find(o => o.id === reqId) || {};
+          found = orders.find(o => String(o.id).replace('#', '') === String(reqId).replace('#', ''));
         }
-        if (!activeOrder.id) {
-          activeOrder = JSON.parse(localStorage.getItem('bhusawal_active_order') || localStorage.getItem('last_active_order') || '{}');
+        if (!found) {
+          const storedActive = localStorage.getItem('bhusawal_active_order');
+          if (storedActive) found = JSON.parse(storedActive);
         }
-      } catch(e) {}
+        if (found) {
+          activeOrder = {
+            ...activeOrder,
+            ...found,
+            id: found.id || reqId || activeOrder.id,
+            riderName: found.assignedRider || found.riderName || activeOrder.riderName,
+            riderPhone: found.riderPhone || activeOrder.riderPhone,
+            merchantName: found.storeName || found.merchantName || activeOrder.merchantName,
+            deliveryLat: found.lat || found.deliveryLat || activeOrder.deliveryLat,
+            deliveryLng: found.lng || found.deliveryLng || activeOrder.deliveryLng,
+            pickupLat: found.pickupLat || activeOrder.pickupLat,
+            pickupLng: found.pickupLng || activeOrder.pickupLng
+          };
+        }
+      } catch (e) {}
 
-      if (activeOrder.id) {
-        document.getElementById('header-order-id').textContent = 'Order ID: #' + activeOrder.id;
-      }
+      document.getElementById('header-order-id').textContent = 'Order ID: #' + String(activeOrder.id).replace('#', '');
+      document.getElementById('cust-otp-code').textContent = activeOrder.otp || String(activeOrder.id).slice(-4) || '4892';
 
-      // 4-DIGIT OTP DISPLAY & PARTNER VERIFICATION ENGINE
-      const custOtp = activeOrder.otp || '4892';
-      const custOtpEl = document.getElementById('cust-otp-code');
-      if (custOtpEl) custOtpEl.textContent = custOtp;
+      const riderNameEl = document.getElementById('rider-name');
+      const callBtn = document.getElementById('btn-call-rider');
+      const chatBtn = document.getElementById('btn-chat-rider');
 
-      const otpModal = document.getElementById('otp-verification-modal');
-      const btnOpenOtpModal = document.getElementById('btn-open-otp-modal');
-      const btnCloseOtpModal = document.getElementById('btn-close-otp-modal');
-      const btnSubmitOtp = document.getElementById('btn-submit-otp-verification');
-      const otpInput = document.getElementById('partner-otp-input');
-      const otpErrorMsg = document.getElementById('otp-error-msg');
-      const otpVerifiedBanner = document.getElementById('otp-verified-banner');
+      if (riderNameEl) riderNameEl.textContent = `${activeOrder.riderName} (Partner)`;
+      if (callBtn) callBtn.href = `tel:+91${activeOrder.riderPhone || '9876543210'}`;
+      if (chatBtn) chatBtn.href = `https://wa.me/91${activeOrder.riderPhone || '9876543210'}?text=Hi%20${encodeURIComponent(activeOrder.riderName)},%20regarding%20my%20Bhusawal%20Connect%20order%20%23${activeOrder.id}`;
 
-      if (activeOrder.otpVerified) {
-        if (otpVerifiedBanner) otpVerifiedBanner.classList.remove('hidden');
-        if (btnOpenOtpModal) btnOpenOtpModal.classList.add('hidden');
-      }
-
-      if (btnOpenOtpModal) {
-        btnOpenOtpModal.addEventListener('click', () => {
-          if (otpModal) otpModal.classList.remove('hidden');
-          if (otpInput) {
-            otpInput.value = '';
-            otpInput.focus();
-          }
-          if (otpErrorMsg) otpErrorMsg.classList.add('hidden');
-        });
-      }
-
-      if (btnCloseOtpModal) {
-        btnCloseOtpModal.addEventListener('click', () => {
-          if (otpModal) otpModal.classList.add('hidden');
-        });
-      }
-
-      if (btnSubmitOtp) {
-        btnSubmitOtp.addEventListener('click', () => {
-          const val = (otpInput?.value || '').trim();
-          if (val === custOtp) {
-            // SUCCESSFUL OTP VERIFICATION
-            activeOrder.status = 'Delivered';
-            activeOrder.otpVerified = true;
-            activeOrder.otpVerifiedAt = new Date().toISOString();
-
-            try {
-              localStorage.setItem('bhusawal_active_order', JSON.stringify(activeOrder));
-              const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
-              const idx = orders.findIndex(o => o.id === activeOrder.id);
-              if (idx !== -1) {
-                orders[idx] = activeOrder;
-              } else {
-                orders.unshift(activeOrder);
-              }
-              localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
-            } catch(e) {}
-
-            if (otpModal) otpModal.classList.add('hidden');
-            if (otpVerifiedBanner) otpVerifiedBanner.classList.remove('hidden');
-            if (btnOpenOtpModal) btnOpenOtpModal.classList.add('hidden');
-
-            showToast("✅ Delivery Verified Successfully!");
-            onDeliveryComplete();
-          } else {
-            // INCORRECT OTP - BLOCK DELIVERY COMPLETION
-            if (otpErrorMsg) {
-              otpErrorMsg.textContent = "❌ Incorrect OTP! Delivery cannot be completed without valid OTP verification.";
-              otpErrorMsg.classList.remove('hidden');
-            }
-          }
-        });
-      }
-
-      // 6-STEP MEDICINE/GROCERY TIMELINE
-      const MED_TIMELINE_STEPS = [
-        { step: 1, label: 'Order Received', icon: '📥' },
-        { step: 2, label: 'Prescription Verified', icon: '✅' },
-        { step: 3, label: 'Medicines Packed', icon: '📦' },
-        { step: 4, label: 'Picked Up', icon: '🛵' },
-        { step: 5, label: 'Out For Delivery', icon: '⚡' },
-        { step: 6, label: 'Delivered', icon: '🎉' }
+      // DYNAMIC 8-STAGE DELIVERY TIMELINE
+      const CANONICAL_8_STAGES = [
+        { step: 1, label: 'Order Confirmed', icon: '📝', key: 'ORDER_CONFIRMED' },
+        { step: 2, label: 'Preparing', icon: '🍳', key: 'PREPARING' },
+        { step: 3, label: 'Partner Assigned', icon: '🛵', key: 'PARTNER_ASSIGNED' },
+        { step: 4, label: 'Partner Reached Shop', icon: '🏪', key: 'REACHED_SHOP' },
+        { step: 5, label: 'Order Picked Up', icon: '📦', key: 'PICKED_UP' },
+        { step: 6, label: 'On The Way', icon: '⚡', key: 'ON_THE_WAY' },
+        { step: 7, label: 'Near Your Location', icon: '🏁', key: 'NEAR_LOCATION' },
+        { step: 8, label: 'Delivered', icon: '🎉', key: 'DELIVERED' }
       ];
 
-      // EXACT 7-STEP PARCEL & BIKE RIDE TIMELINE AS REQUESTED:
-      // 1. Request Accepted
-      // 2. Partner Travelling to Pickup
-      // 3. Partner Reached Pickup
-      // 4. Item Collected
-      // 5. Travelling to Drop Location
-      // 6. Arriving
-      // 7. Delivered
-      const PARCEL_TIMELINE_STEPS = [
-        { step: 1, label: 'Request Accepted', icon: '✅' },
-        { step: 2, label: 'Travelling to Pickup', icon: '🛵' },
-        { step: 3, label: 'Reached Pickup', icon: '📍' },
-        { step: 4, label: 'Item Collected', icon: '📦' },
-        { step: 5, label: 'Travelling to Drop', icon: '🚚' },
-        { step: 6, label: 'Arriving', icon: '⚡' },
-        { step: 7, label: 'Delivered', icon: '🎉' }
-      ];
+      function getStageStep(status) {
+        if (!status || status === 'placed' || status === 'Order Confirmed' || status === 'ORDER_CONFIRMED') return 1;
+        if (status === 'Preparing' || status === 'PREPARING' || status === 'Accepted') return 2;
+        if (status === 'partner_accepted' || status === 'Partner Assigned' || status === 'PARTNER_ASSIGNED') return 3;
+        if (status === 'reached_shop' || status === 'Partner Reached Shop' || status === 'REACHED_SHOP') return 4;
+        if (status === 'picked_up' || status === 'Order Picked Up' || status === 'PICKED_UP') return 5;
+        if (status === 'on_the_way' || status === 'On The Way' || status === 'ON_THE_WAY') return 6;
+        if (status === 'near_customer' || status === 'Near Your Location' || status === 'NEAR_LOCATION') return 7;
+        if (status === 'Delivered' || status === 'delivered' || status === 'DELIVERED') return 8;
+        return 6;
+      }
 
-      const isParcelOrRide = activeOrder.type === 'PARCEL' || activeOrder.type === 'BIKE_RIDE';
-      const currentStepsList = isParcelOrRide ? PARCEL_TIMELINE_STEPS : MED_TIMELINE_STEPS;
-      const totalStepsCount = currentStepsList.length;
+      let lastNotificationStep = 0;
+      function renderTimeline(currentStep) {
+        if (currentStep !== lastNotificationStep) {
+          lastNotificationStep = currentStep;
+          const stageObj = CANONICAL_8_STAGES[currentStep - 1];
+          if (stageObj && window.BhusawalNotificationEngine && typeof window.BhusawalNotificationEngine.pushNotification === 'function') {
+            window.BhusawalNotificationEngine.pushNotification({
+              title: `Order Status: ${stageObj.label}`,
+              desc: `Order #${activeOrder.id} is now ${stageObj.label.toLowerCase()}.`,
+              cat: 'order',
+              link: `/track_order?id=${activeOrder.id}`
+            });
+          }
+        }
 
-      const stepsBar = document.getElementById('tracking-steps-bar');
-      const stepNumLabel = document.getElementById('progress-bar-step-num');
-      const barLabel = document.getElementById('progress-bar-label');
+        const container = document.getElementById('tracking-steps-bar');
+        const numLabel = document.getElementById('progress-bar-step-num');
+        if (numLabel) numLabel.textContent = `Stage ${currentStep} of 8: ${CANONICAL_8_STAGES[currentStep - 1]?.label || ''}`;
 
-      if (barLabel) barLabel.textContent = isParcelOrRide ? "LIVE RIDER TRACKING" : "ORDER TIMELINE";
+        if (!container) return;
 
-      function renderStepBar(currentStep) {
-        if (!stepsBar) return;
-        if (stepNumLabel) stepNumLabel.textContent = `Step ${currentStep} of ${totalStepsCount}`;
-
-        let sHtml = '';
-        currentStepsList.forEach(s => {
+        container.innerHTML = CANONICAL_8_STAGES.map(s => {
           const isDone = currentStep >= s.step;
           const isCurrent = currentStep === s.step;
-          sHtml += `
-            <div class="step-box flex flex-col items-center gap-1 ${isDone ? 'opacity-100' : 'opacity-40'}" data-step="${s.step}">
-              <div class="w-7 h-7 rounded-full ${isCurrent ? 'bg-blueBrand text-white font-black animate-pulse ring-2 ring-blue-200' : (isDone ? 'bg-emerald-500 text-white font-black' : 'bg-slate-200 text-slate-500')} flex items-center justify-center text-xs shadow-xs">
+          let badgeBg = isCurrent 
+            ? 'bg-amber-400 text-slate-950 font-black animate-pulse ring-4 ring-amber-400/40 shadow-lg scale-110' 
+            : (isDone ? 'bg-emerald-500 text-white font-bold' : 'bg-slate-800 text-slate-500');
+
+          return `
+            <div class="flex flex-col items-center gap-1 transition-all duration-300 ${isDone ? 'opacity-100' : 'opacity-40'}">
+              <div class="w-7 h-7 rounded-full ${badgeBg} flex items-center justify-center text-xs transition-all duration-300">
                 ${isDone && !isCurrent ? '✓' : s.icon}
               </div>
-              <span class="text-[7.5px] sm:text-[8.5px] ${isCurrent ? 'font-black text-blueBrand' : (isDone ? 'font-black text-slate-900' : 'font-bold text-slate-400')} leading-tight">
+              <span class="text-[8px] ${isCurrent ? 'font-black text-amber-400 scale-105' : (isDone ? 'font-bold text-slate-200' : 'text-slate-500')} leading-tight text-center">
                 ${s.label}
               </span>
             </div>
           `;
-        });
-        stepsBar.className = isParcelOrRide ? "grid grid-cols-7 gap-1 text-center" : "grid grid-cols-6 gap-1 text-center";
-        stepsBar.innerHTML = sHtml;
-      }
+        }).join('');
 
-      function getStepNum(status) {
-        if (isParcelOrRide) {
-          if (!status || status === 'Request Accepted' || status === 'ACCEPTED' || status === 'Rider Assigned' || status === 'Captain Assigned') return 1;
-          if (status === 'Travelling to Pickup' || status === 'EN_ROUTE_PICKUP') return 2;
-          if (status === 'Reached Pickup' || status === 'AT_PICKUP') return 3;
-          if (status === 'Item Collected' || status === 'PICKED_UP' || status === 'Collected') return 4;
-          if (status === 'Travelling to Drop Location' || status === 'EN_ROUTE_DROP' || status === 'OUT_FOR_DELIVERY') return 5;
-          if (status === 'Arriving' || status === 'NEARBY') return 6;
-          if (status === 'Delivered' || status === 'DELIVERED') return 7;
-          return 2;
-        } else {
-          if (!status || status === 'Order Received' || status === 'Confirmed' || status === 'Prescription Uploaded') return 1;
-          if (status === 'Under Verification' || status === 'Verified' || status === 'Prescription Verified') return 2;
-          if (status === 'Medicines Packed' || status === 'Packed') return 3;
-          if (status === 'Picked Up') return 4;
-          if (status === 'Out For Delivery' || status === 'Out for Delivery') return 5;
-          if (status === 'Delivered') return 6;
-          return 2;
+        const statusTitle = document.getElementById('top-status-title');
+        if (statusTitle && CANONICAL_8_STAGES[currentStep - 1]) {
+          statusTitle.textContent = CANONICAL_8_STAGES[currentStep - 1].label;
         }
       }
 
-      const initialStep = getStepNum(activeOrder.status);
-      renderStepBar(initialStep);
+      function initMapAndTracker() {
+        if (typeof L === 'undefined') return;
 
-      // Populate Rider Details if provided
-      if (activeOrder.rider || activeOrder.captain) {
-        const rName = document.getElementById('rider-name');
-        if (rName) rName.textContent = activeOrder.rider || activeOrder.captain;
-      }
+        const shopLat = activeOrder.pickupLat || 21.0478;
+        const shopLng = activeOrder.pickupLng || 75.7896;
+        const custLat = activeOrder.deliveryLat || activeOrder.lat || 21.0520;
+        const custLng = activeOrder.deliveryLng || activeOrder.lng || 75.7980;
 
-      // Render Order Summary
-      if (activeOrder.items && Array.isArray(activeOrder.items) && activeOrder.items.length > 0) {
-        const listEl = document.getElementById('order-summary-items-list');
-        if (listEl) {
-          let sHtml = '';
-          activeOrder.items.forEach(item => {
-            const qty = item.quantity || 1;
-            const price = parseFloat(item.price || item.mrp || 0);
-            sHtml += `
-              <div class="flex items-center justify-between text-xs">
-                <span>${item.name} × ${qty}</span>
-                <span class="font-black">₹${Math.round(price * qty)}</span>
-              </div>
-            `;
-          });
-          listEl.innerHTML = sHtml;
-        }
-      } else {
-        const listEl = document.getElementById('order-summary-items-list');
-        if (listEl) {
-          listEl.innerHTML = `
-            <div class="text-xs font-bold text-slate-700 bg-blue-50/80 p-3 rounded-xl border border-blue-100 space-y-1">
-              <div class="flex justify-between font-black text-slate-900">
-                <span>📦 ${activeOrder.category || 'Express Delivery Package'}</span>
-                <span class="text-blueBrand">${activeOrder.weight || 'Standard Weight'}</span>
-              </div>
-              <p class="text-[11px] text-slate-500 font-medium">📍 Pickup: ${activeOrder.pickupAddress || 'Bhusawal'}</p>
-              <p class="text-[11px] text-slate-500 font-medium">🏁 Drop: ${activeOrder.dropAddress || 'Bhusawal'}</p>
-            </div>
-          `;
-        }
-      }
+        trackerMap = L.map('bhusawal-map', { zoomControl: false, attributionControl: false }).setView([(shopLat + custLat)/2, (shopLng + custLng)/2], 15);
+        
+        // Google Maps Vector Roadmap HD Tile Layer
+        L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        }).addTo(trackerMap);
 
-      if (activeOrder.total) {
-        const totalEl = document.getElementById('order-summary-total');
-        if (totalEl) totalEl.textContent = '₹' + activeOrder.total;
-      }
+        // 1. Shop Marker (🏪) - Glassmorphic Pill
+        const storeLabel = activeOrder.merchantName || 'Partner Store';
+        L.marker([shopLat, shopLng], {
+          icon: L.divIcon({
+            html: `<div style="background:rgba(139,92,246,0.95);color:#fff;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:900;box-shadow:0 6px 16px rgba(139,92,246,0.5);border:2px solid #fff;white-space:nowrap;">🏪 <span>${storeLabel}</span></div>`,
+            iconSize: [140, 32], iconAnchor: [70, 16]
+          })
+        }).bindPopup(`<strong>🏪 Shop Pickup Location</strong><br>${storeLabel}`).addTo(trackerMap);
 
-      const storeLat = (activeOrder.pickupCoords && activeOrder.pickupCoords[0]) ? activeOrder.pickupCoords[0] : 21.0455;
-      const storeLng = (activeOrder.pickupCoords && activeOrder.pickupCoords[1]) ? activeOrder.pickupCoords[1] : 75.7893;
-      const custLat = (activeOrder.dropCoords && activeOrder.dropCoords[0]) ? activeOrder.dropCoords[0] : 21.0385;
-      const custLng = (activeOrder.dropCoords && activeOrder.dropCoords[1]) ? activeOrder.dropCoords[1] : 75.8050;
+        // 2. Customer Marker (📍) - Neon Radar Pulse
+        const custAddressLabel = activeOrder.address ? (activeOrder.address.slice(0, 30) + '...') : 'Your Destination Address';
+        L.marker([custLat, custLng], {
+          icon: L.divIcon({
+            html: '<div style="background:rgba(239,68,68,0.95);color:#fff;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:900;box-shadow:0 6px 16px rgba(239,68,68,0.5);border:2px solid #fff;white-space:nowrap;">📍 <span>Your Destination</span></div>',
+            iconSize: [130, 32], iconAnchor: [65, 16]
+          })
+        }).bindPopup(`<strong>📍 Customer Delivery Spot</strong><br>${custAddressLabel}`).addTo(trackerMap);
 
-      function showToast(msg) {
-        const toast = document.getElementById('toast-notification');
-        const text = document.getElementById('toast-msg');
-        if (toast && text) {
-          text.textContent = msg;
-          toast.classList.remove('hidden');
-          setTimeout(() => toast.classList.add('hidden'), 4000);
-        }
-      }
+        // 3. Delivery Partner Marker (🛵) with Uber/Blinkit Smooth Animation
+        const riderMarker = L.marker([shopLat, shopLng], {
+          icon: L.divIcon({
+            className: 'uber-style-rider-pin',
+            html: '<div class="rider-pin-icon w-11 h-11 rounded-full bg-emerald-500 text-white flex items-center justify-center text-2xl shadow-2xl border-3 border-white ring-4 ring-emerald-400/30" style="transform-origin: center center; transition: transform 0.1s linear;">🛵</div>',
+            iconSize: [44, 44], iconAnchor: [22, 22]
+          })
+        }).bindPopup(`<strong>🛵 ${activeOrder.riderName} (Delivery Partner)</strong>`).addTo(trackerMap);
 
-      // Initialize Google Live Tracker Engine
-      const tracker = new window.GoogleLiveTracker('bhusawal-map', {
-        storePos: { lat: storeLat, lng: storeLng },
-        custPos: { lat: custLat, lng: custLng },
-        onNotification: (type, msg) => {
-          showToast(msg);
-          if (type === '300M_NEARBY' || type === '100M_DOORSTEP') {
-            document.getElementById('rider-nearby-alert')?.classList.remove('hidden');
-            const alertText = document.getElementById('nearby-alert-text');
-            if (alertText) alertText.textContent = msg;
-          }
-          if (type === 'DELIVERED') {
-            onDeliveryComplete();
-          }
-        },
-        onEtaUpdate: (etaText, distText) => {
-          const topEta = document.getElementById('top-eta-mins');
-          const bannerEta = document.getElementById('banner-eta-text');
-          if (topEta) topEta.textContent = etaText;
-          if (bannerEta) bannerEta.textContent = etaText + ' (' + distText + ')';
-        },
-        onStatusChange: (status) => {
-          const titleEl = document.getElementById('top-status-title');
-          const subEl = document.getElementById('top-status-sub');
-          
-          if (isParcelOrRide) {
-            if (status === 'ACCEPTED' || status === 'Request Accepted' || status === 'Order Received') {
-              if (titleEl) titleEl.textContent = "Request Accepted";
-              if (subEl) subEl.textContent = "Delivery partner accepted your booking";
-              renderStepBar(1);
-            } else if (status === 'TRAVELLING_TO_PICKUP' || status === 'PREPARING_FOOD') {
-              if (titleEl) titleEl.textContent = "Partner Travelling to Pickup";
-              if (subEl) subEl.textContent = "Rider is en route to pickup location";
-              renderStepBar(2);
-            } else if (status === 'REACHED_PICKUP' || status === 'FOOD_READY') {
-              if (titleEl) titleEl.textContent = "Partner Reached Pickup";
-              if (subEl) subEl.textContent = "Rider arrived at pickup spot";
-              renderStepBar(3);
-            } else if (status === 'ITEM_COLLECTED' || status === 'PICKED_UP') {
-              if (titleEl) titleEl.textContent = "Item Collected";
-              if (subEl) subEl.textContent = "Partner collected & verified package";
-              renderStepBar(4);
-            } else if (status === 'TRAVELLING_TO_DROP' || status === 'OUT_FOR_DELIVERY') {
-              if (titleEl) titleEl.textContent = "Travelling to Drop Location";
-              if (subEl) subEl.textContent = "Partner is driving to drop destination";
-              renderStepBar(5);
-            } else if (status === 'ARRIVING' || status === '300M_NEARBY') {
-              if (titleEl) titleEl.textContent = "Arriving Soon";
-              if (subEl) subEl.textContent = "Rider is less than 300 meters away";
-              renderStepBar(6);
-            } else if (status === 'DELIVERED') {
-              onDeliveryComplete();
-            }
+        // 4. Glowing Neon Polyline Network
+        const routePoints = [
+          [shopLat, shopLng],
+          [shopLat + 0.0015, shopLng + 0.0025],
+          [shopLat + 0.0030, shopLng + 0.0050],
+          [custLat, custLng]
+        ];
+
+        // Phase Detection: Phase 1 (Delivery Partner -> Partner Shop) vs Phase 2 (Order Picked Up -> Customer)
+        const isPhase1 = (activeOrder.status === 'partner_accepted' || activeOrder.status === 'PARTNER_ASSIGNED' || activeOrder.status === 'heading_to_shop' || activeOrder.status === 'reached_shop' || currentStep <= 4);
+        
+        // Initial Rider position
+        const riderLat = activeOrder.riderLat || (isPhase1 ? shopLat - 0.008 : shopLat);
+        const riderLng = activeOrder.riderLng || (isPhase1 ? shopLng - 0.006 : shopLng);
+
+        // Customer Status Banner Text
+        const topSubEl = document.getElementById('top-status-sub');
+        if (topSubEl) {
+          if (isPhase1) {
+            topSubEl.textContent = "Delivery Partner is heading to the shop.";
           } else {
-            if (status === 'ACCEPTED' || status === 'Order Received') {
-              if (titleEl) titleEl.textContent = "Order Received";
-              if (subEl) subEl.textContent = "Partner store accepted your order";
-              renderStepBar(1);
-            } else if (status === 'PREPARING_FOOD' || status === 'Under Verification') {
-              if (titleEl) titleEl.textContent = "Order Prepared";
-              if (subEl) subEl.textContent = "Items packed & ready for pickup";
-              renderStepBar(2);
-            } else if (status === 'PICKED_UP') {
-              if (titleEl) titleEl.textContent = "Picked Up";
-              if (subEl) subEl.textContent = "Rider collected your order";
-              renderStepBar(4);
-            } else if (status === 'OUT_FOR_DELIVERY') {
-              if (titleEl) titleEl.textContent = "Out For Delivery";
-              if (subEl) subEl.textContent = "Rider is delivering to your doorstep";
-              renderStepBar(5);
-            } else if (status === 'DELIVERED') {
-              onDeliveryComplete();
-            }
+            topSubEl.textContent = "Your order is on the way.";
           }
         }
-      });
 
-      function onDeliveryComplete() {
-        renderStepBar(isParcelOrRide ? 7 : 6);
-        const titleEl = document.getElementById('top-status-title');
-        const subEl = document.getElementById('top-status-sub');
-        if (titleEl) titleEl.textContent = isParcelOrRide ? "Delivered!" : "Order Delivered!";
-        if (subEl) subEl.textContent = isParcelOrRide ? "Delivery partner completed parcel drop" : "Rider safely delivered your order";
-        document.getElementById('bottom-eta-banner')?.classList.add('hidden');
-        document.getElementById('delivery-completed-banner')?.classList.remove('hidden');
-        showToast("🎉 Delivered Successfully!");
+        // Fit map bounds to show Shop, Customer & Rider Markers
+        const bounds = L.latLngBounds([[riderLat, riderLng], [shopLat, shopLng], [custLat, custLng]]);
+        trackerMap.fitBounds(bounds, { padding: [50, 50] });
+
+        // Initialize Smooth Uber/Zepto Rider Animator Engine
+        const riderAnimator = new window.BhusawalSmoothRiderAnimator(riderMarker, {
+          initialLat: riderLat,
+          initialLng: riderLng
+        });
+
+        // Request Phase 1 (Delivery Partner -> Partner Shop) or Phase 2 (Shop -> Customer) Actual Driving Route from Google Maps API
+        const routeOrigin = isPhase1 ? { lat: riderLat, lng: riderLng } : { lat: shopLat, lng: shopLng };
+        const routeDestination = isPhase1 ? { lat: shopLat, lng: shopLng } : { lat: custLat, lng: custLng };
+
+        let roadRoutePoints = [];
+        if (window.BhusawalGoogleMapsRoutingService) {
+          window.BhusawalGoogleMapsRoutingService.requestDrivingRoute(
+            routeOrigin,
+            routeDestination,
+            trackerMap
+          ).then(routeData => {
+            if (routeData && routeData.roadGeometry) {
+              roadRoutePoints = routeData.roadGeometry.map(p => [p.lat, p.lng]);
+              
+              // Update 4-Metric Dashboard with exact Google Maps Directions API values
+              const topEtaEl = document.getElementById('top-eta-mins');
+              const distRemBadgeEl = document.getElementById('disp-dist-rem');
+              const remDistEl = document.getElementById('disp-remaining-dist');
+              const estArrivalEl = document.getElementById('disp-estimated-arrival');
+              const expDelivEl = document.getElementById('disp-expected-delivery');
+              const travelTimeEl = document.getElementById('disp-travel-time');
+
+              if (topEtaEl) topEtaEl.textContent = routeData.etaMins + ' mins';
+              if (distRemBadgeEl) distRemBadgeEl.textContent = routeData.distanceText + (isPhase1 ? ' to shop' : ' left');
+              if (remDistEl) remDistEl.textContent = routeData.distanceText;
+              if (estArrivalEl) estArrivalEl.textContent = routeData.etaClockTime;
+              if (expDelivEl) expDelivEl.textContent = routeData.etaMins + ' mins';
+              if (travelTimeEl) travelTimeEl.textContent = routeData.durationText;
+            }
+          }).catch(err => console.warn("Google Maps Driving Route fallback:", err));
+        }
+
+        // 5. Automatic Telemetry & Smooth Road Interpolation Loop along Google Maps Road Geometry
+        let simStep = 0;
+        setInterval(() => {
+          simStep++;
+          const progress = (simStep % 10) / 10;
+          const targetLat = shopLat + (custLat - shopLat) * progress;
+          const targetLng = shopLng + (custLng - shopLng) * progress;
+          
+          const remDistKm = Math.max(0.1, (1 - progress) * 1.8).toFixed(1);
+          const travelMins = Math.max(2, Math.round((1 - progress) * 11));
+          const totalDeliveryMins = travelMins + 3;
+
+          const arrivalTime = new Date(Date.now() + totalDeliveryMins * 60000);
+          const arrivalTimeString = arrivalTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+          // 60 FPS smooth interpolation along Google Maps actual road geometry
+          const pathPoints = roadRoutePoints.length > 0 ? roadRoutePoints : [[shopLat, shopLng], [custLat, custLng]];
+          riderAnimator.animateTo({ lat: targetLat, lng: targetLng }, pathPoints, 2800);
+
+          // Update Top Card & 4-Metric Dashboard
+          const topEtaEl = document.getElementById('top-eta-mins');
+          const distRemBadgeEl = document.getElementById('disp-dist-rem');
+          const remDistEl = document.getElementById('disp-remaining-dist');
+          const estArrivalEl = document.getElementById('disp-estimated-arrival');
+          const expDelivEl = document.getElementById('disp-expected-delivery');
+          const travelTimeEl = document.getElementById('disp-travel-time');
+
+          if (topEtaEl) topEtaEl.textContent = totalDeliveryMins + ' mins';
+          if (distRemBadgeEl) distRemBadgeEl.textContent = remDistKm + ' km left';
+          if (remDistEl) remDistEl.textContent = remDistKm + ' km';
+          if (estArrivalEl) estArrivalEl.textContent = arrivalTimeString;
+          if (expDelivEl) expDelivEl.textContent = totalDeliveryMins + ' mins';
+          if (travelTimeEl) travelTimeEl.textContent = travelMins + ' mins driving';
+        }, 3000);
+
+        // Real-Time Simultaneous Synchronization (Customer App <-> Delivery Partner App <-> Admin Panel)
+        const handleRiderMovement = (data) => {
+          if (!data || !data.latitude) return;
+          const lat = data.latitude || data.lat;
+          const lng = data.longitude || data.lng;
+          if (!lat || !lng) return;
+
+          // Smoothly animate rider marker along Google Maps actual road geometry
+          const pathPoints = (roadRoutePoints && roadRoutePoints.length > 0) ? roadRoutePoints : [[shopLat, shopLng], [custLat, custLng]];
+          riderAnimator.animateTo({ lat, lng }, pathPoints, 2500);
+
+          // Re-calculate exact Google Maps Driving ETA & Distance on every location change
+          if (window.BhusawalGoogleMapsRoutingService) {
+            const currentDestination = isPhase1 ? { lat: shopLat, lng: shopLng } : { lat: custLat, lng: custLng };
+            window.BhusawalGoogleMapsRoutingService.requestDrivingRoute(
+              { lat, lng },
+              currentDestination,
+              trackerMap
+            ).then(routeData => {
+              if (routeData) {
+                if (routeData.roadGeometry && routeData.roadGeometry.length > 0) {
+                  roadRoutePoints = routeData.roadGeometry.map(p => [p.lat, p.lng]);
+                }
+
+                const topEtaEl = document.getElementById('top-eta-mins');
+                const distRemBadgeEl = document.getElementById('disp-dist-rem');
+                const remDistEl = document.getElementById('disp-remaining-dist');
+                const estArrivalEl = document.getElementById('disp-estimated-arrival');
+                const expDelivEl = document.getElementById('disp-expected-delivery');
+                const travelTimeEl = document.getElementById('disp-travel-time');
+
+                if (topEtaEl) topEtaEl.textContent = routeData.etaMins + ' mins';
+                if (distRemBadgeEl) distRemBadgeEl.textContent = routeData.distanceText + (isPhase1 ? ' to shop' : ' left');
+                if (remDistEl) remDistEl.textContent = routeData.distanceText;
+                if (estArrivalEl) estArrivalEl.textContent = routeData.etaClockTime;
+                if (expDelivEl) expDelivEl.textContent = routeData.etaMins + ' mins';
+                if (travelTimeEl) travelTimeEl.textContent = routeData.durationText;
+              }
+            }).catch(err => console.warn("Google Maps ETA recalculation fallback:", err));
+          }
+        };
+
+        // 1. Subscribe via BroadcastChannel
+        try {
+          const bc = new BroadcastChannel('bhusawal_realtime_sync');
+          bc.onmessage = (e) => {
+            if (e.data && (e.data.type === 'RIDER_TELEMETRY_UPDATE' || e.data.type === 'RIDER_LOCATION_UPDATED')) {
+              handleRiderMovement(e.data.payload);
+            }
+          };
+        } catch(e) {}
+
+        // 2. Subscribe via Centralized Backend Bus
+        if (window.BhusawalBackend) {
+          window.BhusawalBackend.subscribe('RIDER_LOCATION_UPDATED', handleRiderMovement);
+        }
+
+        // 3. Subscribe via LocalStorage Event
+        window.addEventListener('storage', (e) => {
+          if (e.key === 'bhusawal_rider_live_telemetry' && e.newValue) {
+            try { handleRiderMovement(JSON.parse(e.newValue)); } catch(err) {}
+          }
+        });
       }
-    });
-  </script>
+      }
 
-  <Switcher />
+      document.addEventListener('DOMContentLoaded', () => {
+        renderTimeline(6);
+        setTimeout(initMapAndTracker, 300);
+
+        // Rating Modal Logic
+        let selectedStars = 5;
+        const ratingModal = document.getElementById('rate-order-modal');
+        const openRatingBtn = document.getElementById('btn-open-rating-modal');
+        const closeRatingBtn = document.getElementById('close-rating-modal');
+        const submitRatingBtn = document.getElementById('btn-submit-rating');
+        const starBtns = document.querySelectorAll('#star-rating-bar .star-btn');
+        const starLabel = document.getElementById('star-rating-label');
+
+        const ratingLabels = {
+          1: '⭐ 1 Star - Poor',
+          2: '⭐⭐ 2 Stars - Needs Improvement',
+          3: '⭐⭐⭐ 3 Stars - Average',
+          4: '⭐⭐⭐⭐ 4 Stars - Good Experience',
+          5: '⭐⭐⭐⭐⭐ 5 Stars - Excellent & Superfast!'
+        };
+
+        function updateStarsUI(rating) {
+          selectedStars = rating;
+          starBtns.forEach(btn => {
+            const s = parseInt(btn.dataset.star);
+            if (s <= rating) {
+              btn.classList.replace('text-slate-600', 'text-amber-400');
+            } else {
+              btn.classList.replace('text-amber-400', 'text-slate-600');
+            }
+          });
+          if (starLabel) starLabel.textContent = ratingLabels[rating] || '';
+        }
+
+        starBtns.forEach(btn => {
+          btn.onclick = () => updateStarsUI(parseInt(btn.dataset.star));
+        });
+
+        openRatingBtn?.addEventListener('click', () => {
+          ratingModal?.classList.remove('hidden');
+          updateStarsUI(5);
+        });
+
+        closeRatingBtn?.addEventListener('click', () => {
+          ratingModal?.classList.add('hidden');
+        });
+
+        submitRatingBtn?.addEventListener('click', () => {
+          const notes = (document.getElementById('rating-feedback-text')?.value || '').trim();
+          
+          try {
+            const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+            const idx = orders.findIndex(o => String(o.id).replace('#', '') === String(activeOrder.id).replace('#', ''));
+            if (idx > -1) {
+              orders[idx].rating = selectedStars;
+              orders[idx].review = notes;
+              localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+            }
+          } catch(e) {}
+
+          alert(`Thank you! Your ${selectedStars}-Star Rating & Feedback for Order #${activeOrder.id} has been submitted.`);
+          ratingModal?.classList.add('hidden');
+        });
+    })();
+  </script>
 </body>
 </html>

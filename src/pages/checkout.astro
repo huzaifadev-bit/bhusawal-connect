@@ -1,10 +1,10 @@
 ---
-import Switcher from '../components/Switcher.astro';
 ---
 
 <!DOCTYPE html>
 <html lang="en" class="light">
 <head>
+  <script is:inline src="/bhusawal_age_verification.js"></script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checkout & Delivery Address | Bhusawal Connect</title>
@@ -18,6 +18,11 @@ import Switcher from '../components/Switcher.astro';
   <!-- Leaflet Map CSS & JS for Interactive Location Picker -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script is:inline src="/assets/smart_assignment_engine.js"></script>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_dispatch_engine.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 
   <!-- TAILWIND CONFIGURATION -->
   <script is:inline>
@@ -135,47 +140,97 @@ import Switcher from '../components/Switcher.astro';
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             
             <!-- Option 1: Use Current Location (GPS) -->
-            <button id="btn-use-current-gps" class="p-4 rounded-2xl border-2 border-blue-200 bg-blueLight/60 hover:bg-blueLight text-left transition-all group flex items-start gap-3">
+            <button id="btn-use-current-gps" type="button" class="p-4 rounded-2xl border-2 border-blue-200 bg-blueLight/60 hover:bg-blueLight text-left transition-all group flex items-start gap-3">
               <div class="w-10 h-10 rounded-xl bg-blueBrand text-white flex items-center justify-center font-black shrink-0 shadow-md group-hover:scale-105 transition-transform">
                 <span class="material-symbols-outlined text-xl">my_location</span>
               </div>
               <div>
-                <h3 class="text-xs font-black text-slate-900">Current Location</h3>
-                <p class="text-[11px] font-bold text-slate-500 mt-0.5">Detect live GPS coordinates</p>
+                <h3 class="text-xs font-black text-slate-900">Current GPS Location</h3>
+                <p class="text-[11px] font-bold text-slate-500 mt-0.5">Detect exact doorstep GPS coordinates</p>
               </div>
             </button>
 
             <!-- Option 2: Select Location on Google Maps -->
-            <button id="btn-select-google-maps" class="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 text-left transition-all group flex items-start gap-3">
+            <button id="btn-select-google-maps" type="button" class="p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 text-left transition-all group flex items-start gap-3">
               <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black shrink-0 shadow-md group-hover:scale-105 transition-transform">
                 <span class="material-symbols-outlined text-xl">map</span>
               </div>
               <div>
-                <h3 class="text-xs font-black text-slate-900">Google Maps Address Picker</h3>
-                <p class="text-[11px] font-bold text-slate-500 mt-0.5">Drag pin to set doorstep</p>
+                <h3 class="text-xs font-black text-slate-900">Interactive Map Pin Picker</h3>
+                <p class="text-[11px] font-bold text-slate-500 mt-0.5">Drag pin to set exact building or doorstep</p>
               </div>
             </button>
 
           </div>
 
+          <!-- ADDRESS SEARCH & BHUSAWAL AREA QUICK PRESET SELECTOR -->
+          <div class="space-y-2.5 pt-2 border-t border-slate-100">
+            <label class="text-xs font-black text-slate-700 flex items-center justify-between">
+              <span>🔍 Search Address or Landmark in Bhusawal:</span>
+              <span class="text-[10px] font-bold text-blueBrand">HD Google Maps Vector API</span>
+            </label>
+
+            <div class="flex items-center gap-2">
+              <div class="relative flex-1">
+                <input 
+                  type="text" 
+                  id="checkout-search-address-input"
+                  placeholder="Search street, colony, or landmark (e.g. Station Road, Shivaji Nagar...)" 
+                  class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-9 pr-4 py-2.5 text-xs font-extrabold text-slate-900 outline-none focus:border-blueBrand focus:bg-white transition-all placeholder-slate-400"
+                />
+                <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-lg">search</span>
+              </div>
+              <button id="btn-search-address" type="button" class="px-4 py-2.5 bg-blueBrand hover:bg-blueDark text-white font-black text-xs rounded-2xl shrink-0 transition-all shadow-md">
+                Search
+              </button>
+            </div>
+
+            <!-- BHUSAWAL AREA PRESET PILLS -->
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar text-[11px] font-extrabold">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider shrink-0">Quick Area:</span>
+              <button type="button" class="area-pill-btn px-3 py-1 rounded-xl bg-slate-100 hover:bg-blueLight hover:text-blueBrand text-slate-700 border border-slate-200 shrink-0 transition-all" data-lat="21.0478" data-lng="75.7896" data-name="Station Road Market">📍 Station Road</button>
+              <button type="button" class="area-pill-btn px-3 py-1 rounded-xl bg-slate-100 hover:bg-blueLight hover:text-blueBrand text-slate-700 border border-slate-200 shrink-0 transition-all" data-lat="21.0512" data-lng="75.7920" data-name="Jamner Road Commercial Hub">📍 Jamner Road</button>
+              <button type="button" class="area-pill-btn px-3 py-1 rounded-xl bg-slate-100 hover:bg-blueLight hover:text-blueBrand text-slate-700 border border-slate-200 shrink-0 transition-all" data-lat="21.0450" data-lng="75.7850" data-name="Shivaji Nagar Colony">📍 Shivaji Nagar</button>
+              <button type="button" class="area-pill-btn px-3 py-1 rounded-xl bg-slate-100 hover:bg-blueLight hover:text-blueBrand text-slate-700 border border-slate-200 shrink-0 transition-all" data-lat="21.0400" data-lng="75.7800" data-name="Varangaon Road Housing">📍 Varangaon Road</button>
+              <button type="button" class="area-pill-btn px-3 py-1 rounded-xl bg-slate-100 hover:bg-blueLight hover:text-blueBrand text-slate-700 border border-slate-200 shrink-0 transition-all" data-lat="21.0550" data-lng="75.7980" data-name="Nahata College Area">📍 Nahata College</button>
+              <button type="button" class="area-pill-btn px-3 py-1 rounded-xl bg-slate-100 hover:bg-blueLight hover:text-blueBrand text-slate-700 border border-slate-200 shrink-0 transition-all" data-lat="21.0350" data-lng="75.7700" data-name="Ordnance Factory Township">📍 Ordnance Factory</button>
+            </div>
+          </div>
+
           <!-- SAVED ADDRESSES LIST -->
           <div class="space-y-3 pt-2">
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider">Saved Address</h3>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider">Saved Addresses</h3>
             <div id="saved-addresses-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <!-- Dynamically populated by JS -->
             </div>
           </div>
 
-          <!-- LIVE MAP DISPLAY FOR SELECTED LOCATION -->
-          <div class="space-y-2 pt-2 border-t border-slate-100">
+          <!-- LIVE MAP DISPLAY & DOORSTEP LOCATION VERIFICATION CARD -->
+          <div class="space-y-2.5 pt-2 border-t border-slate-100">
             <div class="flex items-center justify-between text-xs font-black text-slate-700">
               <span class="flex items-center gap-1">
                 <span class="material-symbols-outlined text-blueBrand text-sm">map</span>
-                Selected Pin Location on Map
+                Live Doorstep Pin Location on Google Map
               </span>
-              <span id="display-lat-lng" class="text-[10px] font-mono text-blueBrand bg-blueLight px-2 py-0.5 rounded-md">Lat: 21.0478, Lng: 75.7896</span>
+              <span id="display-lat-lng" class="text-[10px] font-mono text-blueBrand bg-blueLight px-2 py-0.5 rounded-md border border-blue-200">Lat: 21.0478, Lng: 75.7896</span>
             </div>
-            <div id="checkout-leaflet-map" class="shadow-inner border border-slate-200"></div>
+
+            <!-- MAP CANVAS -->
+            <div id="checkout-leaflet-map" class="h-64 rounded-2xl shadow-inner border border-slate-200 overflow-hidden relative"></div>
+
+            <!-- DOORSTEP VERIFICATION CARD -->
+            <div class="p-3.5 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-1 shadow-md">
+              <div class="flex items-center justify-between text-[10px] font-bold text-blue-400 uppercase tracking-wider">
+                <span>📍 Doorstep Delivery Destination Preview:</span>
+                <span>GPS High Accuracy</span>
+              </div>
+              <p id="checkout-doorstep-preview" class="text-xs font-black text-white leading-relaxed">
+                Station Road Market, Bhusawal, Maharashtra 425201
+              </p>
+              <p class="text-[10px] text-slate-400 font-semibold italic">
+                Rider will follow Google Maps driving route to this exact doorstep pin location.
+              </p>
+            </div>
           </div>
 
         </div>
@@ -223,37 +278,158 @@ import Switcher from '../components/Switcher.astro';
           ></textarea>
         </div>
 
-        <!-- 4. PAYMENT METHOD -->
+        <!-- 3B. PROMO CODE / COUPON CARD -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-blueBrand text-2xl">local_offer</span>
+              <div>
+                <h2 class="text-lg font-black font-display text-slate-900">Apply Promo Coupon</h2>
+                <p class="text-xs font-bold text-slate-400 mt-0.5">Use discount codes like WELCOME50, BHUSAWAL10, BHUSAWALCONNECT</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <input 
+              type="text" 
+              id="checkout-coupon-input" 
+              placeholder="Enter Promo Code (e.g. WELCOME50)" 
+              class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-xs font-black uppercase tracking-wider text-slate-900 outline-none focus:border-blueBrand focus:bg-white transition-all placeholder-normal"
+            />
+            <button id="btn-apply-coupon" type="button" class="px-5 py-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs rounded-2xl shrink-0 transition-all">
+              Apply
+            </button>
+          </div>
+
+          <div id="applied-coupon-badge" class="hidden p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span>🎉 Promo <strong id="applied-coupon-code-name">WELCOME50</strong> applied!</span>
+              <span id="applied-coupon-savings-text" class="text-emerald-700 font-extrabold">(Saved ₹50)</span>
+            </span>
+            <button id="btn-remove-coupon" type="button" class="text-rose-600 font-black hover:underline text-xs">✕ Remove</button>
+          </div>
+        </div>
+
+        <!-- 3C. DELIVERY SLOT SELECTION CARD -->
+        <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-blueBrand text-2xl">schedule</span>
+              <div>
+                <h2 class="text-lg font-black font-display text-slate-900">Delivery Time Slot</h2>
+                <p class="text-xs font-bold text-slate-400 mt-0.5">Choose express instant delivery or schedule for later</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="delivery-slot-group">
+            <button type="button" class="slot-btn p-3.5 rounded-2xl border-2 border-blueBrand bg-blueLight/40 text-left transition-all flex items-center justify-between" data-slot="⚡ Express Instant (~15-25 Mins)">
+              <div>
+                <span class="text-xs font-black text-slate-900 block">⚡ Express Instant</span>
+                <span class="text-[10px] font-bold text-slate-500">Delivered in ~15 to 25 mins</span>
+              </div>
+              <span class="slot-check text-xs font-black text-blueBrand">✓</span>
+            </button>
+
+            <button type="button" class="slot-btn p-3.5 rounded-2xl border-2 border-slate-200 bg-white text-left transition-all hover:border-blue-300 flex items-center justify-between" data-slot="🌅 Evening Slot (5 PM - 7 PM)">
+              <div>
+                <span class="text-xs font-black text-slate-900 block">🌅 Evening Slot</span>
+                <span class="text-[10px] font-bold text-slate-500">Today 5:00 PM - 7:00 PM</span>
+              </div>
+              <span class="slot-check hidden text-xs font-black text-blueBrand">✓</span>
+            </button>
+
+            <button type="button" class="slot-btn p-3.5 rounded-2xl border-2 border-slate-200 bg-white text-left transition-all hover:border-blue-300 flex items-center justify-between" data-slot="🌙 Night Slot (8 PM - 10 PM)">
+              <div>
+                <span class="text-xs font-black text-slate-900 block">🌙 Night Slot</span>
+                <span class="text-[10px] font-bold text-slate-500">Today 8:00 PM - 10:00 PM</span>
+              </div>
+              <span class="slot-check hidden text-xs font-black text-blueBrand">✓</span>
+            </button>
+
+            <button type="button" class="slot-btn p-3.5 rounded-2xl border-2 border-slate-200 bg-white text-left transition-all hover:border-blue-300 flex items-center justify-between" data-slot="☀️ Tomorrow Morning (9 AM - 11 AM)">
+              <div>
+                <span class="text-xs font-black text-slate-900 block">☀️ Tomorrow Morning</span>
+                <span class="text-[10px] font-bold text-slate-500">Tomorrow 9:00 AM - 11:00 AM</span>
+              </div>
+              <span class="slot-check hidden text-xs font-black text-blueBrand">✓</span>
+            </button>
+          </div>
+        </div>
         <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
-          <h2 class="text-lg font-black font-display text-slate-900 flex items-center gap-2">
-            <span class="material-symbols-outlined text-blueBrand text-2xl">payments</span>
-            <span>Payment Method</span>
-          </h2>
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h2 class="text-lg font-black font-display text-slate-900 flex items-center gap-2">
+              <span class="material-symbols-outlined text-blueBrand text-2xl">payments</span>
+              <span>Select Payment Method</span>
+            </h2>
+            <span id="selected-payment-badge" class="px-3 py-1 rounded-full bg-blueLight text-blueBrand text-xs font-black">
+              📱 Instant UPI (Selected)
+            </span>
+          </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <label class="p-4 rounded-2xl border-2 border-blueBrand bg-blueLight/40 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment-method" value="UPI" checked class="accent-blueBrand w-4 h-4" />
-              <div>
-                <span class="text-xs font-black text-slate-900 block">Instant UPI QR</span>
-                <span class="text-[10px] font-bold text-slate-400">GPay, PhonePe, Paytm</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="payment-options-grid">
+            
+            <!-- 1. Instant UPI -->
+            <label class="payment-card p-4 rounded-2xl border-2 border-blueBrand bg-blueLight/40 shadow-sm flex items-center justify-between cursor-pointer transition-all" data-method="UPI">
+              <div class="flex items-center gap-3">
+                <input type="radio" name="payment-method" value="UPI" checked class="accent-blueBrand w-4 h-4" />
+                <div>
+                  <span class="text-xs font-black text-slate-900 block">📱 Instant UPI</span>
+                  <span class="text-[10px] font-bold text-slate-400">GPay, PhonePe, Paytm, BHIM</span>
+                </div>
               </div>
+              <span class="check-badge text-xs text-blueBrand font-black">✓</span>
             </label>
 
-            <label class="p-4 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment-method" value="COD" class="accent-blueBrand w-4 h-4" />
-              <div>
-                <span class="text-xs font-black text-slate-900 block">Cash on Delivery</span>
-                <span class="text-[10px] font-bold text-slate-400">Pay at Doorstep</span>
+            <!-- 2. Cash on Delivery -->
+            <label class="payment-card p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-blue-300 flex items-center justify-between cursor-pointer transition-all" data-method="COD">
+              <div class="flex items-center gap-3">
+                <input type="radio" name="payment-method" value="COD" class="accent-blueBrand w-4 h-4" />
+                <div>
+                  <span class="text-xs font-black text-slate-900 block">💵 Cash on Delivery</span>
+                  <span class="text-[10px] font-bold text-slate-400">Pay cash/UPI at doorstep</span>
+                </div>
               </div>
+              <span class="check-badge hidden text-xs text-blueBrand font-black">✓</span>
             </label>
 
-            <label class="p-4 rounded-2xl border-2 border-slate-200 bg-white hover:bg-slate-50 flex items-center gap-3 cursor-pointer">
-              <input type="radio" name="payment-method" value="CARD" class="accent-blueBrand w-4 h-4" />
-              <div>
-                <span class="text-xs font-black text-slate-900 block">Card / NetBanking</span>
-                <span class="text-[10px] font-bold text-slate-400">Visa, Mastercard</span>
+            <!-- 3. Credit Card -->
+            <label class="payment-card p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-blue-300 flex items-center justify-between cursor-pointer transition-all" data-method="CREDIT_CARD">
+              <div class="flex items-center gap-3">
+                <input type="radio" name="payment-method" value="CREDIT_CARD" class="accent-blueBrand w-4 h-4" />
+                <div>
+                  <span class="text-xs font-black text-slate-900 block">💳 Credit Card</span>
+                  <span class="text-[10px] font-bold text-slate-400">Visa, Mastercard, RuPay, Amex</span>
+                </div>
               </div>
+              <span class="check-badge hidden text-xs text-blueBrand font-black">✓</span>
             </label>
+
+            <!-- 4. Debit Card -->
+            <label class="payment-card p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-blue-300 flex items-center justify-between cursor-pointer transition-all" data-method="DEBIT_CARD">
+              <div class="flex items-center gap-3">
+                <input type="radio" name="payment-method" value="DEBIT_CARD" class="accent-blueBrand w-4 h-4" />
+                <div>
+                  <span class="text-xs font-black text-slate-900 block">🏦 Debit Card</span>
+                  <span class="text-[10px] font-bold text-slate-400">All Indian bank debit cards</span>
+                </div>
+              </div>
+              <span class="check-badge hidden text-xs text-blueBrand font-black">✓</span>
+            </label>
+
+            <!-- 5. Net Banking -->
+            <label class="payment-card p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-blue-300 flex items-center justify-between cursor-pointer transition-all" data-method="NET_BANKING">
+              <div class="flex items-center gap-3">
+                <input type="radio" name="payment-method" value="NET_BANKING" class="accent-blueBrand w-4 h-4" />
+                <div>
+                  <span class="text-xs font-black text-slate-900 block">🌐 Net Banking</span>
+                  <span class="text-[10px] font-bold text-slate-400">SBI, HDFC, ICICI, Axis, etc.</span>
+                </div>
+              </div>
+              <span class="check-badge hidden text-xs text-blueBrand font-black">✓</span>
+            </label>
+
           </div>
         </div>
 
@@ -280,8 +456,24 @@ import Switcher from '../components/Switcher.astro';
               <span id="summary-mrp-subtotal" class="text-slate-900 font-extrabold">₹0</span>
             </div>
             <div class="flex justify-between">
-              <span>Delivery Fee (Fixed):</span>
-              <span class="text-slate-900 font-extrabold">₹30</span>
+              <span>Taxes & GST (5%):</span>
+              <span id="summary-tax-charge" class="text-slate-900 font-extrabold">₹0</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Delivery Charges:</span>
+              <span id="summary-delivery-charge" class="text-slate-900 font-extrabold">₹30</span>
+            </div>
+            <div id="summary-coupon-discount-row" class="flex justify-between text-emerald-600 hidden">
+              <span class="flex items-center gap-1">🏷️ Discount (<span id="summary-coupon-code-text">NONE</span>):</span>
+              <span id="summary-coupon-discount-val" class="font-extrabold">-₹0</span>
+            </div>
+            <div class="flex justify-between items-center text-xs font-bold text-slate-600">
+              <span>Payment Mode:</span>
+              <span id="summary-selected-payment" class="text-blueBrand font-black">📱 Instant UPI</span>
+            </div>
+            <div class="flex justify-between items-center text-xs font-bold text-slate-600">
+              <span>Delivery Slot:</span>
+              <span id="summary-selected-slot" class="text-slate-900 font-black">⚡ Express Instant</span>
             </div>
             <div class="flex justify-between text-sm font-black text-slate-900 pt-3 border-t border-slate-200">
               <span>Grand Total:</span>
@@ -331,6 +523,19 @@ import Switcher from '../components/Switcher.astro';
 
       <!-- ADDRESS FORM FIELDS -->
       <form id="address-details-form" class="space-y-3 text-left">
+        <input type="hidden" id="field-address-id" value="" />
+        <input type="hidden" id="field-tag" value="Home" />
+
+        <!-- Address Tag / Label Selector -->
+        <div>
+          <label class="text-[11px] font-black text-slate-700 block uppercase mb-1">Address Label / Tag *</label>
+          <div class="flex items-center gap-2 flex-wrap" id="modal-tag-selector-group">
+            <button type="button" class="tag-selector-btn px-3 py-1.5 rounded-xl border text-xs font-black transition-all bg-blueBrand text-white border-blueBrand shadow-xs" data-tag="Home">📍 Home</button>
+            <button type="button" class="tag-selector-btn px-3 py-1.5 rounded-xl border text-xs font-black transition-all bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200" data-tag="Work">💼 Work</button>
+            <button type="button" class="tag-selector-btn px-3 py-1.5 rounded-xl border text-xs font-black transition-all bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200" data-tag="Office">🏢 Office</button>
+            <button type="button" class="tag-selector-btn px-3 py-1.5 rounded-xl border text-xs font-black transition-all bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200" data-tag="Other">📌 Other</button>
+          </div>
+        </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
@@ -394,10 +599,7 @@ import Switcher from '../components/Switcher.astro';
       </form>
     </div>
   </div>
-
-  <Switcher />
-
-  <!-- CLIENT-SIDE CHECKOUT & ADDRESS ENGINE -->
+<!-- CLIENT-SIDE CHECKOUT & ADDRESS ENGINE -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -413,7 +615,14 @@ import Switcher from '../components/Switcher.astro';
           name: 'Sahil Patel',
           phone: '9923456789',
           tag: 'Home',
-          full: 'Plot 42, Near Station Road, Varangaon Road, Bhusawal',
+          house: 'Plot 42',
+          building: 'Gokul Residency',
+          street: 'Station Road',
+          area: 'Shivaji Nagar',
+          landmark: 'Near Railway Station',
+          city: 'Bhusawal',
+          pincode: '425201',
+          full: 'Plot 42, Gokul Residency, Station Road, Shivaji Nagar, Near Railway Station, Bhusawal - 425201',
           lat: 21.0478,
           lng: 75.7896
         },
@@ -422,7 +631,14 @@ import Switcher from '../components/Switcher.astro';
           name: 'Sahil Patel',
           phone: '9923456789',
           tag: 'Work',
-          full: 'Shop 12, Main Market, Jamner Road, Bhusawal',
+          house: 'Shop 12',
+          building: 'Commercial Complex',
+          street: 'Jamner Road',
+          area: 'Main Market',
+          landmark: 'Opposite Central Bank',
+          city: 'Bhusawal',
+          pincode: '425201',
+          full: 'Shop 12, Commercial Complex, Jamner Road, Main Market, Opposite Central Bank, Bhusawal - 425201',
           lat: 21.0512,
           lng: 75.7920
         }
@@ -436,42 +652,103 @@ import Switcher from '../components/Switcher.astro';
         return DEFAULT_ADDRESSES;
       }
 
-      function saveAddressToProfile(addr) {
-        let addresses = getSavedAddresses();
-        addresses.push(addr);
-        localStorage.setItem('bhusawal_user_addresses', JSON.stringify(addresses));
-        renderSavedAddresses();
+      function saveAddressesToStorage(addressesList) {
+        localStorage.setItem('bhusawal_user_addresses', JSON.stringify(addressesList));
       }
 
-      // Initialize Leaflet Map / Location Picker
+      // Tag Button Selection in Form Modal
+      const tagButtons = document.querySelectorAll('#modal-tag-selector-group .tag-selector-btn');
+      const tagHiddenInput = document.getElementById('field-tag');
+
+      tagButtons.forEach(btn => {
+        btn.onclick = () => {
+          tagButtons.forEach(b => {
+            b.className = 'tag-selector-btn px-3 py-1.5 rounded-xl border text-xs font-black transition-all bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200';
+          });
+          btn.className = 'tag-selector-btn px-3 py-1.5 rounded-xl border text-xs font-black transition-all bg-blueBrand text-white border-blueBrand shadow-xs';
+          if (tagHiddenInput) tagHiddenInput.value = btn.dataset.tag || 'Home';
+        };
+      });
+
+      function setTagActive(tagValue) {
+        if (tagHiddenInput) tagHiddenInput.value = tagValue;
+        tagButtons.forEach(b => {
+          if (b.dataset.tag === tagValue) {
+            b.className = 'tag-selector-btn px-3 py-1.5 rounded-xl border text-xs font-black transition-all bg-blueBrand text-white border-blueBrand shadow-xs';
+          } else {
+            b.className = 'tag-selector-btn px-3 py-1.5 rounded-xl border text-xs font-black transition-all bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200';
+          }
+        });
+      }
+
+      // Reverse Geocode Helper for Bhusawal Address Formatting
+      async function reverseGeocodeAddress(lat, lng) {
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+          const data = await res.json();
+          if (data && data.display_name) {
+            return data.display_name;
+          }
+        } catch(e) {}
+        return `Location (${lat.toFixed(4)}, ${lng.toFixed(4)}), Bhusawal, Maharashtra 425201`;
+      }
+
+      // Initialize HD Google Maps / Location Picker Canvas
       function initLeafletMap(lat, lng) {
-        currentLat = lat;
-        currentLng = lng;
+        currentLat = parseFloat(parseFloat(lat).toFixed(4));
+        currentLng = parseFloat(parseFloat(lng).toFixed(4));
 
         const mapContainer = document.getElementById('checkout-leaflet-map');
-        if (!mapContainer) return;
+        if (!mapContainer || typeof L === 'undefined') return;
+
+        const pinIcon = L.divIcon({
+          className: 'custom-doorstep-pin',
+          html: `<div style="background:#EF4444;color:#fff;padding:6px 12px;border-radius:24px;font-size:11px;font-weight:900;box-shadow:0 8px 20px rgba(239,68,68,0.5);border:3px solid #fff;display:flex;align-items:center;gap:4px;white-space:nowrap;">📍 <span id="pin-badge-text">Doorstep Pin</span></div>`,
+          iconSize: [130, 36],
+          iconAnchor: [65, 18]
+        });
 
         if (!map) {
-          map = L.map('checkout-leaflet-map').setView([lat, lng], 15);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
+          map = L.map('checkout-leaflet-map', { zoomControl: true }).setView([lat, lng], 17);
+          
+          // Google Maps Roadmap HD Vector Tiles
+          L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '© Google Maps'
           }).addTo(map);
 
-          marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+          marker = L.marker([lat, lng], { draggable: true, icon: pinIcon }).addTo(map);
 
-          // Update coordinates on drag end
+          const handlePositionChange = async (newLat, newLng) => {
+            updateLatLngDisplay(newLat, newLng);
+            const addrText = await reverseGeocodeAddress(newLat, newLng);
+            const previewEl = document.getElementById('checkout-doorstep-preview');
+            if (previewEl) previewEl.textContent = addrText;
+
+            // Recalculate Distance & Delivery Fee dynamically
+            const shopLat = 21.0478;
+            const shopLng = 75.7896;
+            const dLat = (newLat - shopLat) * 111;
+            const dLng = (newLng - shopLng) * 111 * Math.cos(newLat * Math.PI / 180);
+            const straightKm = Math.sqrt(dLat * dLat + dLng * dLng);
+            const roadKm = Math.max(1.0, parseFloat((straightKm * 1.35).toFixed(1)));
+            const dynamicDeliveryCharge = Math.round(30 + Math.max(0, roadKm - 3.0) * 10);
+            
+            renderCartSummary(dynamicDeliveryCharge);
+          };
+
           marker.on('dragend', function (e) {
-            const position = marker.getLatLng();
-            updateLatLngDisplay(position.lat, position.lng);
+            const pos = marker.getLatLng();
+            handlePositionChange(pos.lat, pos.lng);
           });
 
           map.on('click', function(e) {
             marker.setLatLng(e.latlng);
-            updateLatLngDisplay(e.latlng.lat, e.latlng.lng);
+            handlePositionChange(e.latlng.lat, e.latlng.lng);
           });
         } else {
-          map.setView([lat, lng], 15);
+          map.setView([lat, lng], 17);
           marker.setLatLng([lat, lng]);
         }
 
@@ -479,61 +756,252 @@ import Switcher from '../components/Switcher.astro';
       }
 
       function updateLatLngDisplay(lat, lng) {
-        currentLat = parseFloat(lat).toFixed(4);
-        currentLng = parseFloat(lng).toFixed(4);
-        document.getElementById('display-lat-lng').textContent = `Lat: ${currentLat}, Lng: ${currentLng}`;
-        document.getElementById('modal-lat-lng-text').textContent = `Lat: ${currentLat}, Lng: ${currentLng}`;
+        currentLat = parseFloat(parseFloat(lat).toFixed(4));
+        currentLng = parseFloat(parseFloat(lng).toFixed(4));
+        const displayEl = document.getElementById('display-lat-lng');
+        const modalEl = document.getElementById('modal-lat-lng-text');
+        if (displayEl) displayEl.textContent = `Lat: ${currentLat}, Lng: ${currentLng}`;
+        if (modalEl) modalEl.textContent = `Lat: ${currentLat}, Lng: ${currentLng}`;
       }
 
-      // Render Saved Addresses List
+      let selectedAddressId = localStorage.getItem('bhusawal_selected_address_id') || null;
+
+      function setSelectedAddressId(addrId) {
+        const addresses = getSavedAddresses();
+        if (addresses.length === 0) return;
+
+        let targetAddr = addresses.find(a => a.id === addrId);
+        if (!targetAddr) {
+          targetAddr = addresses[0];
+        }
+
+        selectedAddressId = targetAddr.id;
+        selectedAddressObject = targetAddr;
+
+        localStorage.setItem('bhusawal_selected_address_id', selectedAddressId);
+        localStorage.setItem('bhusawal_selected_address', JSON.stringify(targetAddr));
+
+        if (window.BhusawalCheckoutState) {
+          window.BhusawalCheckoutState.state.address = targetAddr;
+        }
+
+        updateSelectedAddressUI(targetAddr);
+        renderSavedAddresses();
+      }
+
+      // Render Saved Addresses List (Single Source of Truth: selectedAddressId)
       function renderSavedAddresses() {
         const grid = document.getElementById('saved-addresses-grid');
         const addresses = getSavedAddresses();
         if (!grid) return;
 
+        if (!selectedAddressId && addresses.length > 0) {
+          selectedAddressId = addresses[0].id;
+          selectedAddressObject = addresses[0];
+        }
+
         let html = '';
-        addresses.forEach((addr, idx) => {
-          const isSelected = idx === 0;
-          if (isSelected && !selectedAddressObject) {
+        addresses.forEach((addr) => {
+          const isSelected = (addr.id === selectedAddressId);
+          if (isSelected) {
             selectedAddressObject = addr;
-            updateSelectedAddressUI(addr);
           }
 
+          const tagIcons = { Home: '📍', Work: '💼', Office: '🏢', Other: '📌' };
+          const tagIcon = tagIcons[addr.tag] || '📍';
+
           html += `
-            <div class="saved-addr-card p-3.5 rounded-2xl border-2 ${isSelected ? 'border-blueBrand bg-blueLight/50' : 'border-slate-200 bg-white'} cursor-pointer transition-all hover:border-blue-300" data-idx="${idx}">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-xs font-black text-blueBrand flex items-center gap-1">📍 ${addr.tag || 'Address'}</span>
-                ${isSelected ? '<span class="w-4 h-4 rounded-full bg-blueBrand flex items-center justify-center text-white text-[9px] font-black">✓</span>' : ''}
+            <div class="saved-addr-card p-3.5 rounded-2xl border-2 ${isSelected ? 'border-blueBrand bg-blueLight/50 shadow-sm' : 'border-slate-200 bg-white'} transition-all relative flex flex-col justify-between cursor-pointer" data-id="${addr.id}">
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-black text-blueBrand flex items-center gap-1">${tagIcon} ${addr.tag || 'Saved'}</span>
+                  ${isSelected ? '<span class="px-2 py-0.5 rounded-full bg-blueBrand text-white text-[9px] font-black uppercase">Selected ✓</span>' : ''}
+                </div>
+                <p class="text-xs font-black text-slate-900">${addr.name || 'Customer'} (+91 ${addr.phone || '9923456789'})</p>
+                <p class="text-[11px] font-bold text-slate-500 line-clamp-2 mt-0.5">${addr.full}</p>
               </div>
-              <p class="text-xs font-black text-slate-900">${addr.name || 'Customer'}</p>
-              <p class="text-[11px] font-bold text-slate-500 line-clamp-2 mt-0.5">${addr.full}</p>
+
+              <!-- CARD ACTION BUTTONS: SELECT, EDIT, DELETE -->
+              <div class="flex items-center justify-between pt-3 mt-2 border-t border-slate-100 text-[11px] font-black">
+                <span class="btn-select-addr text-blueBrand hover:underline">
+                  ${isSelected ? 'Active Address ✓' : 'Select'}
+                </span>
+                <div class="flex items-center gap-2">
+                  <button type="button" class="btn-edit-addr text-slate-600 hover:text-blueBrand flex items-center gap-0.5" data-id="${addr.id}">
+                    <span class="material-symbols-outlined text-[13px]">edit</span> Edit
+                  </button>
+                  <button type="button" class="btn-delete-addr text-rose-500 hover:text-rose-700 flex items-center gap-0.5" data-id="${addr.id}">
+                    <span class="material-symbols-outlined text-[13px]">delete</span> Delete
+                  </button>
+                </div>
+              </div>
             </div>
           `;
         });
 
         grid.innerHTML = html;
 
+        // Card Click Listener (Single Source of Truth)
         grid.querySelectorAll('.saved-addr-card').forEach(card => {
-          card.onclick = () => {
-            const idx = parseInt(card.dataset.idx);
-            const addr = addresses[idx];
+          card.onclick = (e) => {
+            if (e.target.closest('.btn-edit-addr') || e.target.closest('.btn-delete-addr')) return;
+            const addrId = card.dataset.id;
+            if (addrId && addrId !== selectedAddressId) {
+              setSelectedAddressId(addrId);
+            }
+          };
+        });
+
+        // Bind Edit Action
+        grid.querySelectorAll('.btn-edit-addr').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const addrId = btn.dataset.id;
+            const addr = addresses.find(a => a.id === addrId);
             if (addr) {
-              selectedAddressObject = addr;
-              updateSelectedAddressUI(addr);
-              renderSavedAddresses();
+              openAddressModal(addr.lat || currentLat, addr.lng || currentLng, addr);
+            }
+          };
+        });
+
+        // Bind Delete Action (Preserves Cart!)
+        grid.querySelectorAll('.btn-delete-addr').forEach(btn => {
+          btn.onclick = (e) => {
+            e.stopPropagation();
+            const addrId = btn.dataset.id;
+            if (confirm('Are you sure you want to delete this delivery address?')) {
+              let addrs = getSavedAddresses().filter(a => a.id !== addrId);
+              saveAddressesToStorage(addrs);
+              if (selectedAddressId === addrId) {
+                const nextAddr = addrs[0] || null;
+                if (nextAddr) {
+                  setSelectedAddressId(nextAddr.id);
+                } else {
+                  selectedAddressId = null;
+                  selectedAddressObject = null;
+                  renderSavedAddresses();
+                }
+              } else {
+                renderSavedAddresses();
+              }
             }
           };
         });
       }
 
+      // Update Selected Address UI: Real-time calculation of Distance, ETA, and Delivery Charges
       function updateSelectedAddressUI(addr) {
-        document.getElementById('summary-selected-address').textContent = `${addr.name} (+91 ${addr.phone}) - ${addr.full}`;
-        if (addr.lat && addr.lng) {
-          initLeafletMap(addr.lat, addr.lng);
+        if (!addr) return;
+        selectedAddressObject = addr;
+
+        // Save selected address in localStorage & Customer Profile Sync
+        try {
+          localStorage.setItem('bhusawal_selected_address', JSON.stringify(addr));
+          localStorage.setItem('bhusawal_selected_address_id', addr.id);
+
+          let profile = JSON.parse(localStorage.getItem('bhusawal_user_profile') || '{}');
+          profile.selectedAddress = addr;
+          localStorage.setItem('bhusawal_user_profile', JSON.stringify(profile));
+        } catch(e) {}
+
+        const selAddrEl = document.getElementById('summary-selected-address');
+        if (selAddrEl) {
+          selAddrEl.textContent = `${addr.tag || 'Saved'}: ${addr.name || 'Customer'} (+91 ${addr.phone || '9923456789'}) - ${addr.full || ''}`;
         }
+
+        // 1. Calculate Road Distance (km) from Store (lat: 21.0478, lng: 75.7896)
+        const shopLat = 21.0478;
+        const shopLng = 75.7896;
+        const destLat = addr.lat || 21.0478;
+        const destLng = addr.lng || 75.7896;
+
+        const dLat = (destLat - shopLat) * 111;
+        const dLng = (destLng - shopLng) * 111 * Math.cos(destLat * Math.PI / 180);
+        const straightKm = Math.sqrt(dLat * dLat + dLng * dLng);
+        const roadKm = Math.max(1.0, parseFloat((straightKm * 1.35).toFixed(1)));
+
+        // 2. Calculate ETA (Minutes)
+        const travelMins = Math.max(6, Math.round(roadKm * 4.5) + 5);
+        const etaWidget = document.querySelector('.bg-blueLight.text-blueBrand');
+        if (etaWidget) {
+          etaWidget.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-blueBrand animate-ping"></span><span class="text-xs font-black">⚡ Express Delivery: ~${travelMins} Mins (${roadKm} km)</span>`;
+        }
+
+        // 3. Dynamic Delivery Charges Calculation
+        const baseDeliveryFee = 30; // ₹30 base fee for up to 3 km
+        const extraKm = Math.max(0, roadKm - 3.0);
+        const dynamicDeliveryCharge = Math.round(baseDeliveryFee + extraKm * 10);
+
+        // 4. Center Leaflet Map
+        initLeafletMap(destLat, destLng);
+
+        // 5. Update Cart Summary with Dynamic Delivery Charge (Cart items strictly preserved!)
+        renderCartSummary(dynamicDeliveryCharge);
       }
 
-      // 1. Current Location GPS Handler
+      // Quick Bhusawal Area Pills Listener
+      document.querySelectorAll('.area-pill-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const lat = parseFloat(btn.dataset.lat);
+          const lng = parseFloat(btn.dataset.lng);
+          const name = btn.dataset.name;
+          
+          initLeafletMap(lat, lng);
+          const previewEl = document.getElementById('checkout-doorstep-preview');
+          if (previewEl) previewEl.textContent = `${name}, Bhusawal, Maharashtra 425201`;
+
+          // Recalculate Distance & Delivery Fee
+          const shopLat = 21.0478;
+          const shopLng = 75.7896;
+          const dLat = (lat - shopLat) * 111;
+          const dLng = (lng - shopLng) * 111 * Math.cos(lat * Math.PI / 180);
+          const straightKm = Math.sqrt(dLat * dLat + dLng * dLng);
+          const roadKm = Math.max(1.0, parseFloat((straightKm * 1.35).toFixed(1)));
+          const dynamicDeliveryCharge = Math.round(30 + Math.max(0, roadKm - 3.0) * 10);
+          
+          renderCartSummary(dynamicDeliveryCharge);
+        });
+      });
+
+      // Address Search Action
+      const executeAddressSearch = async () => {
+        const query = (document.getElementById('checkout-search-address-input')?.value || '').trim();
+        if (!query) return;
+
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + ', Bhusawal, Maharashtra')}&format=json&limit=1`);
+          const data = await res.json();
+          if (data && data.length > 0) {
+            const lat = parseFloat(data[0].lat);
+            const lng = parseFloat(data[0].lon);
+            initLeafletMap(lat, lng);
+            const previewEl = document.getElementById('checkout-doorstep-preview');
+            if (previewEl) previewEl.textContent = data[0].display_name;
+
+            const shopLat = 21.0478;
+            const shopLng = 75.7896;
+            const dLat = (lat - shopLat) * 111;
+            const dLng = (lng - shopLng) * 111 * Math.cos(lat * Math.PI / 180);
+            const straightKm = Math.sqrt(dLat * dLat + dLng * dLng);
+            const roadKm = Math.max(1.0, parseFloat((straightKm * 1.35).toFixed(1)));
+            const dynamicDeliveryCharge = Math.round(30 + Math.max(0, roadKm - 3.0) * 10);
+
+            renderCartSummary(dynamicDeliveryCharge);
+          } else {
+            alert(`Could not locate "${query}". Please select an area pill or drag the pin on the map.`);
+          }
+        } catch(e) {}
+      };
+
+      document.getElementById('btn-search-address')?.addEventListener('click', executeAddressSearch);
+      document.getElementById('checkout-search-address-input')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          executeAddressSearch();
+        }
+      });
+
+      // GPS & Location Buttons
       document.getElementById('btn-use-current-gps')?.addEventListener('click', () => {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
@@ -541,11 +1009,9 @@ import Switcher from '../components/Switcher.astro';
               const lat = pos.coords.latitude;
               const lng = pos.coords.longitude;
               initLeafletMap(lat, lng);
-              alert(`GPS location detected! Latitude: ${lat.toFixed(4)}, Longitude: ${lng.toFixed(4)}.`);
               openAddressModal(lat, lng);
             },
             (err) => {
-              alert('Unable to retrieve live GPS location. Using default Bhusawal coordinates (21.0478, 75.7896).');
               initLeafletMap(21.0478, 75.7896);
               openAddressModal(21.0478, 75.7896);
             }
@@ -555,15 +1021,46 @@ import Switcher from '../components/Switcher.astro';
         }
       });
 
-      // 2. Google Maps Location Picker Handler
       document.getElementById('btn-select-google-maps')?.addEventListener('click', () => {
         initLeafletMap(currentLat, currentLng);
         openAddressModal(currentLat, currentLng);
       });
 
-      function openAddressModal(lat, lng) {
+      function openAddressModal(lat, lng, addressToEdit = null) {
         updateLatLngDisplay(lat, lng);
-        document.getElementById('address-form-modal').classList.remove('hidden');
+        const modal = document.getElementById('address-form-modal');
+        const modalTitle = modal.querySelector('h2');
+        const idField = document.getElementById('field-address-id');
+
+        if (addressToEdit) {
+          if (modalTitle) modalTitle.textContent = "Edit Delivery Address";
+          if (idField) idField.value = addressToEdit.id;
+          document.getElementById('field-name').value = addressToEdit.name || '';
+          document.getElementById('field-phone').value = addressToEdit.phone || '';
+          document.getElementById('field-house').value = addressToEdit.house || '';
+          document.getElementById('field-building').value = addressToEdit.building || '';
+          document.getElementById('field-street').value = addressToEdit.street || '';
+          document.getElementById('field-area').value = addressToEdit.area || '';
+          document.getElementById('field-landmark').value = addressToEdit.landmark || '';
+          document.getElementById('field-city').value = addressToEdit.city || 'Bhusawal';
+          document.getElementById('field-pincode').value = addressToEdit.pincode || '425201';
+          setTagActive(addressToEdit.tag || 'Home');
+        } else {
+          if (modalTitle) modalTitle.textContent = "Add Complete Delivery Address";
+          if (idField) idField.value = "";
+          document.getElementById('field-name').value = "";
+          document.getElementById('field-phone').value = "";
+          document.getElementById('field-house').value = "";
+          document.getElementById('field-building').value = "";
+          document.getElementById('field-street').value = "";
+          document.getElementById('field-area').value = "";
+          document.getElementById('field-landmark').value = "";
+          document.getElementById('field-city').value = "Bhusawal";
+          document.getElementById('field-pincode').value = "425201";
+          setTagActive('Home');
+        }
+
+        modal.classList.remove('hidden');
       }
 
       document.getElementById('btn-open-address-modal')?.addEventListener('click', () => {
@@ -574,9 +1071,11 @@ import Switcher from '../components/Switcher.astro';
         document.getElementById('address-form-modal').classList.add('hidden');
       });
 
-      // Save Address Form Submission
+      // Address Form Submission (Handles Add and Edit seamlessly without touching Cart)
       document.getElementById('address-details-form')?.addEventListener('submit', (e) => {
         e.preventDefault();
+        const editingId = document.getElementById('field-address-id').value;
+        const tag = document.getElementById('field-tag').value || 'Home';
         const name = document.getElementById('field-name').value;
         const phone = document.getElementById('field-phone').value;
         const house = document.getElementById('field-house').value;
@@ -589,22 +1088,36 @@ import Switcher from '../components/Switcher.astro';
 
         const fullAddr = `${house}, ${building ? building + ', ' : ''}${street}, ${area}, ${landmark ? 'Near ' + landmark + ', ' : ''}${city} - ${pincode}`;
 
-        const newAddrObj = {
-          id: 'A-' + Math.random(),
-          name,
-          phone,
-          tag: 'Saved',
-          full: fullAddr,
-          lat: currentLat,
-          lng: currentLng
-        };
+        let addresses = getSavedAddresses();
 
-        selectedAddressObject = newAddrObj;
-        saveAddressToProfile(newAddrObj);
-        updateSelectedAddressUI(newAddrObj);
+        if (editingId) {
+          // Update existing address
+          const idx = addresses.findIndex(a => a.id === editingId);
+          if (idx !== -1) {
+            addresses[idx] = {
+              ...addresses[idx],
+              name, phone, tag, house, building, street, area, landmark, city, pincode, full: fullAddr,
+              lat: currentLat, lng: currentLng
+            };
+            selectedAddressObject = addresses[idx];
+          }
+        } else {
+          // Add new address
+          const newAddrObj = {
+            id: 'A-' + Date.now(),
+            name, phone, tag, house, building, street, area, landmark, city, pincode, full: fullAddr,
+            lat: currentLat, lng: currentLng
+          };
+          addresses.unshift(newAddrObj);
+          selectedAddressObject = newAddrObj;
+        }
+
+        saveAddressesToStorage(addresses);
+        localStorage.setItem('bhusawal_selected_address_id', selectedAddressObject.id);
+        updateSelectedAddressUI(selectedAddressObject);
+        renderSavedAddresses();
 
         document.getElementById('address-form-modal').classList.add('hidden');
-        alert('Delivery address saved successfully!');
       });
 
       // Preferred Pharmacy input handler
@@ -620,10 +1133,12 @@ import Switcher from '../components/Switcher.astro';
         prefInput.addEventListener('input', () => {
           const val = prefInput.value.trim();
           localStorage.setItem('bhusawal_preferred_pharmacy', val);
-          if (val) {
-            noticeText.textContent = `Order will be requested from ${val}.`;
-          } else {
-            noticeText.textContent = `We will source your medicines from a nearby verified partner pharmacy.`;
+          if (noticeText) {
+            if (val) {
+              noticeText.textContent = `Order will be requested from ${val}.`;
+            } else {
+              noticeText.textContent = `We will source your medicines from a nearby verified partner pharmacy.`;
+            }
           }
         });
       }
@@ -637,8 +1152,271 @@ import Switcher from '../components/Switcher.astro';
         });
       }
 
-      // Render Cart Summary Items & Calculations
-      function renderCartSummary() {
+      // Payment Selection Engine & Interactive Switcher (Single Source of Truth: selectedPaymentMethod)
+      const paymentLabels = {
+        'UPI': '📱 Instant UPI',
+        'COD': '💵 Cash on Delivery',
+        'CREDIT_CARD': '💳 Credit Card',
+        'DEBIT_CARD': '🏦 Debit Card',
+        'NET_BANKING': '🌐 Net Banking'
+      };
+
+      let selectedPaymentMethod = localStorage.getItem('bhusawal_selected_payment') || 'UPI';
+
+      function setSelectedPaymentMethod(paymentCode) {
+        if (!paymentCode) paymentCode = 'UPI';
+        selectedPaymentMethod = paymentCode;
+        localStorage.setItem('bhusawal_selected_payment', selectedPaymentMethod);
+
+        if (window.BhusawalCheckoutState) {
+          window.BhusawalCheckoutState.state.payment = selectedPaymentMethod;
+        }
+
+        // Iterate over ALL payment cards and update radio checked & card styling synchronously
+        document.querySelectorAll('#payment-options-grid .payment-card').forEach(card => {
+          const radio = card.querySelector('input[name="payment-method"]');
+          const badge = card.querySelector('.check-badge');
+          const methodVal = card.dataset.method || (radio ? radio.value : null);
+          const isSelected = (methodVal === selectedPaymentMethod);
+
+          if (radio) {
+            radio.checked = isSelected;
+          }
+
+          if (isSelected) {
+            card.className = 'payment-card p-4 rounded-2xl border-2 border-blueBrand bg-blueLight/40 shadow-sm flex items-center justify-between cursor-pointer transition-all';
+            if (badge) badge.classList.remove('hidden');
+          } else {
+            card.className = 'payment-card p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-blue-300 flex items-center justify-between cursor-pointer transition-all';
+            if (badge) badge.classList.add('hidden');
+          }
+        });
+
+        const selectedBadge = document.getElementById('selected-payment-badge');
+        const summaryPayment = document.getElementById('summary-selected-payment');
+        const labelText = paymentLabels[selectedPaymentMethod] || selectedPaymentMethod;
+
+        if (selectedBadge) selectedBadge.textContent = `${labelText} (Selected)`;
+        if (summaryPayment) summaryPayment.textContent = labelText;
+      }
+
+      document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+          setSelectedPaymentMethod(radio.value);
+        });
+      });
+
+      document.querySelectorAll('#payment-options-grid .payment-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          const radio = card.querySelector('input[name="payment-method"]');
+          const methodVal = card.dataset.method || (radio ? radio.value : null);
+          if (methodVal && methodVal !== selectedPaymentMethod) {
+            setSelectedPaymentMethod(methodVal);
+          }
+        });
+      });
+
+      // Initialize default selection UI
+      updatePaymentSelectionUI();
+
+      // ============================================================
+      // UNIFIED CHECKOUT STATE MANAGER (Preserves ALL 6 States)
+      // ============================================================
+      class CheckoutStateManager {
+        constructor() {
+          this.state = {
+            cart: this.loadCart(),
+            address: this.loadAddress(),
+            payment: this.loadPayment(),
+            notes: localStorage.getItem('bhusawal_cart_notes') || '',
+            coupon: this.loadCoupon(),
+            slot: localStorage.getItem('bhusawal_delivery_slot') || '⚡ Express Instant (~15-25 Mins)'
+          };
+
+          this.initListeners();
+          this.syncUI();
+        }
+
+        loadCart() {
+          try {
+            return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
+          } catch(e) { return []; }
+        }
+
+        loadAddress() {
+          try {
+            return JSON.parse(localStorage.getItem('bhusawal_selected_address') || 'null');
+          } catch(e) { return null; }
+        }
+
+        loadPayment() {
+          return localStorage.getItem('bhusawal_selected_payment') || 'UPI';
+        }
+
+        loadCoupon() {
+          try {
+            return JSON.parse(localStorage.getItem('bhusawal_applied_coupon') || 'null');
+          } catch(e) { return null; }
+        }
+
+        saveState() {
+          try {
+            localStorage.setItem('bhusawal_cart', JSON.stringify(this.state.cart));
+            if (this.state.address) {
+              localStorage.setItem('bhusawal_selected_address', JSON.stringify(this.state.address));
+            }
+            localStorage.setItem('bhusawal_selected_payment', this.state.payment);
+            localStorage.setItem('bhusawal_cart_notes', this.state.notes);
+            if (this.state.coupon) {
+              localStorage.setItem('bhusawal_applied_coupon', JSON.stringify(this.state.coupon));
+            } else {
+              localStorage.removeItem('bhusawal_applied_coupon');
+            }
+            localStorage.setItem('bhusawal_delivery_slot', this.state.slot);
+          } catch(e) {}
+        }
+
+        setAddress(addrObj) {
+          this.state.address = addrObj;
+          this.saveState();
+          this.syncUI();
+        }
+
+        setPayment(paymentCode) {
+          this.state.payment = paymentCode;
+          this.saveState();
+          this.syncUI();
+        }
+
+        setNotes(notesText) {
+          this.state.notes = notesText;
+          this.saveState();
+        }
+
+        setSlot(slotText) {
+          this.state.slot = slotText;
+          this.saveState();
+          this.syncUI();
+        }
+
+        applyCoupon(codeStr) {
+          const cleanCode = (codeStr || '').trim().toUpperCase();
+          let subtotal = this.state.cart.reduce((sum, item) => sum + (parseFloat(item.price || 0) * (item.quantity || 1)), 0);
+
+          let discountAmount = 0;
+          if (cleanCode === 'WELCOME50') {
+            if (subtotal < 199) {
+              alert('WELCOME50 coupon requires a minimum order subtotal of ₹199.');
+              return false;
+            }
+            discountAmount = 50;
+          } else if (cleanCode === 'BHUSAWAL10') {
+            discountAmount = Math.round(subtotal * 0.10);
+          } else if (cleanCode === 'BHUSAWALCONNECT') {
+            discountAmount = 30;
+          } else {
+            alert('Invalid coupon code! Try WELCOME50, BHUSAWAL10, or BHUSAWALCONNECT.');
+            return false;
+          }
+
+          this.state.coupon = {
+            code: cleanCode,
+            discountAmount: discountAmount
+          };
+
+          this.saveState();
+          this.syncUI();
+          return true;
+        }
+
+        removeCoupon() {
+          this.state.coupon = null;
+          this.saveState();
+          this.syncUI();
+        }
+
+        syncUI() {
+          // Render Delivery Slot Buttons
+          const slotBtns = document.querySelectorAll('#delivery-slot-group .slot-btn');
+          slotBtns.forEach(btn => {
+            const check = btn.querySelector('.slot-check');
+            if (btn.dataset.slot === this.state.slot) {
+              btn.className = 'slot-btn p-3.5 rounded-2xl border-2 border-blueBrand bg-blueLight/40 text-left transition-all flex items-center justify-between shadow-xs';
+              if (check) check.classList.remove('hidden');
+            } else {
+              btn.className = 'slot-btn p-3.5 rounded-2xl border-2 border-slate-200 bg-white text-left transition-all hover:border-blue-300 flex items-center justify-between';
+              if (check) check.classList.add('hidden');
+            }
+          });
+          const slotSummaryEl = document.getElementById('summary-selected-slot');
+          if (slotSummaryEl) slotSummaryEl.textContent = this.state.slot;
+
+          // Render Coupon Badge & Price Breakdown Row
+          const badgeEl = document.getElementById('applied-coupon-badge');
+          const codeNameEl = document.getElementById('applied-coupon-code-name');
+          const savingsTextEl = document.getElementById('applied-coupon-savings-text');
+          const discountRow = document.getElementById('summary-coupon-discount-row');
+          const discountCodeText = document.getElementById('summary-coupon-code-text');
+          const discountValEl = document.getElementById('summary-coupon-discount-val');
+
+          if (this.state.coupon) {
+            if (badgeEl) badgeEl.classList.remove('hidden');
+            if (codeNameEl) codeNameEl.textContent = this.state.coupon.code;
+            if (savingsTextEl) savingsTextEl.textContent = `(Saved ₹${this.state.coupon.discountAmount})`;
+            if (discountRow) discountRow.classList.remove('hidden');
+            if (discountCodeText) discountCodeText.textContent = this.state.coupon.code;
+            if (discountValEl) discountValEl.textContent = `-₹${this.state.coupon.discountAmount}`;
+          } else {
+            if (badgeEl) badgeEl.classList.add('hidden');
+            if (discountRow) discountRow.classList.add('hidden');
+          }
+
+          // Calculate delivery charge & render summary
+          let deliveryFee = 30;
+          if (this.state.address) {
+            const shopLat = 21.0478;
+            const shopLng = 75.7896;
+            const destLat = this.state.address.lat || 21.0478;
+            const destLng = this.state.address.lng || 75.7896;
+
+            const dLat = (destLat - shopLat) * 111;
+            const dLng = (destLng - shopLng) * 111 * Math.cos(destLat * Math.PI / 180);
+            const straightKm = Math.sqrt(dLat * dLat + dLng * dLng);
+            const roadKm = Math.max(1.0, parseFloat((straightKm * 1.35).toFixed(1)));
+            deliveryFee = Math.round(30 + Math.max(0, roadKm - 3.0) * 10);
+          }
+
+          renderCartSummary(deliveryFee, this.state.coupon ? this.state.coupon.discountAmount : 0);
+        }
+
+        initListeners() {
+          // Delivery Slot listeners
+          document.querySelectorAll('#delivery-slot-group .slot-btn').forEach(btn => {
+            btn.onclick = () => this.setSlot(btn.dataset.slot);
+          });
+
+          // Coupon listeners
+          const applyBtn = document.getElementById('btn-apply-coupon');
+          const couponInput = document.getElementById('checkout-coupon-input');
+          const removeBtn = document.getElementById('btn-remove-coupon');
+
+          if (applyBtn && couponInput) {
+            applyBtn.onclick = () => {
+              if (this.applyCoupon(couponInput.value)) {
+                couponInput.value = '';
+              }
+            };
+          }
+          if (removeBtn) {
+            removeBtn.onclick = () => this.removeCoupon();
+          }
+        }
+      }
+
+      window.BhusawalCheckoutState = new CheckoutStateManager();
+
+      // Render Cart Summary Items & Dynamic Distance/Fee Calculations
+      function renderCartSummary(deliveryFee = 30, discountAmount = 0) {
         let cart = [];
         try {
           cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
@@ -681,7 +1459,7 @@ import Switcher from '../components/Switcher.astro';
               <div class="flex items-center gap-2 min-w-0">
                 <img loading="lazy" src="${item.image || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'}" class="w-8 h-8 rounded-lg object-cover bg-slate-50 p-0.5 border" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                 <div class="min-w-0">
-                  <h4 class="font-black text-slate-800 truncate max-w-[140px]">${item.name}</h4>
+                  <h4 class="font-black text-slate-800 truncate max-w-[140px]">${item.displayName || item.name || item.originalName}</h4>
                   <p class="text-[10px] font-bold text-slate-400">Qty: ${qty} × ₹${price}</p>
                 </div>
               </div>
@@ -692,10 +1470,17 @@ import Switcher from '../components/Switcher.astro';
 
         itemsBox.innerHTML = html;
 
-        const deliveryFee = 30; // Fixed Delivery Fee = ₹30
-        const grandTotal = subtotal + deliveryFee;
-        document.getElementById('summary-mrp-subtotal').textContent = `₹${subtotal}`;
-        document.getElementById('summary-grand-total').textContent = `₹${grandTotal}`;
+        const taxFee = Math.round(subtotal * 0.05);
+        const grandTotal = Math.max(0, Math.round(subtotal + deliveryFee + taxFee - discountAmount));
+        const subtotalEl = document.getElementById('summary-mrp-subtotal');
+        const taxChargeEl = document.getElementById('summary-tax-charge');
+        const deliveryChargeEl = document.getElementById('summary-delivery-charge');
+        const grandTotalEl = document.getElementById('summary-grand-total');
+
+        if (subtotalEl) subtotalEl.textContent = `₹${subtotal}`;
+        if (taxChargeEl) taxChargeEl.textContent = `₹${taxFee}`;
+        if (deliveryChargeEl) deliveryChargeEl.textContent = `₹${deliveryFee}`;
+        if (grandTotalEl) grandTotalEl.textContent = `₹${grandTotal}`;
       }
 
       // Place Order Button Handler
@@ -715,7 +1500,8 @@ import Switcher from '../components/Switcher.astro';
           return;
         }
 
-        const selectedPayment = document.querySelector('input[name="payment-method"]:checked')?.value || 'UPI';
+        const selectedPaymentCode = document.querySelector('input[name="payment-method"]:checked')?.value || 'UPI';
+        const selectedPaymentReadable = paymentLabels[selectedPaymentCode] || selectedPaymentCode;
         const preferredStore = (document.getElementById('preferred-pharmacy-input')?.value || '').trim();
         const specialNotes = (document.getElementById('checkout-special-instructions')?.value || '').trim();
 
@@ -725,32 +1511,89 @@ import Switcher from '../components/Switcher.astro';
         // Create Order Object
         const orderId = (hasRx ? 'RX-BHU-' : 'BHU-') + Math.floor(100000 + Math.random() * 900000);
         let subtotal = cart.reduce((acc, i) => acc + (parseFloat(i.price || 0) * (i.quantity || 1)), 0);
-        const grandTotal = Math.round(subtotal + 30);
+
+        let deliveryFee = 30;
+        if (selectedAddressObject) {
+          const shopLat = 21.0478;
+          const shopLng = 75.7896;
+          const destLat = selectedAddressObject.lat || 21.0478;
+          const destLng = selectedAddressObject.lng || 75.7896;
+
+          const dLat = (destLat - shopLat) * 111;
+          const dLng = (destLng - shopLng) * 111 * Math.cos(destLat * Math.PI / 180);
+          const straightKm = Math.sqrt(dLat * dLat + dLng * dLng);
+          const roadKm = Math.max(1.0, parseFloat((straightKm * 1.35).toFixed(1)));
+          deliveryFee = Math.round(30 + Math.max(0, roadKm - 3.0) * 10);
+        }
+
+        const activeCoupon = window.BhusawalCheckoutState?.state?.coupon || null;
+        const discountAmount = activeCoupon ? activeCoupon.discountAmount : 0;
+        const taxFee = Math.round(subtotal * 0.05);
+        const grandTotal = Math.max(0, Math.round(subtotal + deliveryFee + taxFee - discountAmount));
+        const activeSlot = window.BhusawalCheckoutState?.state?.slot || '⚡ Express Instant (~15-25 Mins)';
+
+        const hasAgeRestricted = cart.some(i => window.BhusawalAgeVerification && window.BhusawalAgeVerification.isCigaretteItem(i));
 
         const newOrder = {
           id: orderId,
+          uid: (window.BhusawalBackend && window.BhusawalBackend.db ? (window.BhusawalBackend.customers.getAll()[0]?.uid || '') : ''),
+          customerId: (window.BhusawalBackend && window.BhusawalBackend.db ? (window.BhusawalBackend.customers.getAll()[0]?.customerId || '') : ''),
+          customerPhone: (window.BhusawalBackend && window.BhusawalBackend.db ? (window.BhusawalBackend.customers.getAll()[0]?.phoneNumber || '') : ''),
+          isAgeRestricted: hasAgeRestricted,
+          requiresAgeVerification: hasAgeRestricted,
+          ageVerificationStatus: hasAgeRestricted ? 'VERIFIED_18_PLUS' : 'N/A',
           type: hasRx ? 'PRESCRIPTION' : (isMedicineOrder ? 'MEDICINE' : 'STANDARD'),
           date: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
           status: hasRx ? 'Under Verification' : 'Confirmed',
           items: cart,
+          subtotal: subtotal,
+          tax: taxFee,
+          taxFee: taxFee,
+          deliveryFee: deliveryFee,
+          discount: discountAmount,
+          coupon: activeCoupon,
+          slot: activeSlot,
           total: grandTotal,
-          address: selectedAddressObject.full,
+          selectedAddressId: selectedAddressId,
+          selectedAddress: selectedAddressObject ? selectedAddressObject.full : '',
+          address: selectedAddressObject ? selectedAddressObject.full : '',
           lat: currentLat,
           lng: currentLng,
-          payment: selectedPayment,
+          latitude: currentLat,
+          longitude: currentLng,
+          payment: selectedPaymentReadable,
+          paymentMethod: selectedPaymentReadable,
+          paymentCode: selectedPaymentCode,
           storeName: preferredStore || 'Nearby Verified Partner Pharmacy',
           notes: specialNotes,
           rxStatus: hasRx ? 'Prescription Verification Required Before Dispatch' : 'Verified'
         };
 
-        // Save order to history
-        let orders = [];
-        try {
-          orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
-        } catch(e) {}
-        orders.unshift(newOrder);
-        localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+        // Smart Order Assignment (GPS Road Distance & Shortest ETA Priority)
+        if (window.BhusawalSmartDispatcher) {
+          window.BhusawalSmartDispatcher.assignNearestRider(newOrder);
+        } else {
+          newOrder.assignedRider = 'Rahul Ramesh Patil';
+          newOrder.riderPhone = '9876543210';
+          newOrder.etaMins = 8;
+          newOrder.roadDistanceKm = 1.8;
+        }
+
+        // Save order to history via BhusawalBackend
+        if (window.BhusawalBackend) {
+          window.BhusawalBackend.orders.create(newOrder);
+        } else {
+          let orders = [];
+          try {
+            orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+          } catch(e) {}
+          orders.unshift(newOrder);
+          localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+        }
+
         localStorage.setItem('bhusawal_active_order', JSON.stringify(newOrder));
+        window.dispatchEvent(new Event('orderUpdated'));
 
         // Clear Cart
         localStorage.removeItem('bhusawal_cart');
@@ -764,6 +1607,7 @@ import Switcher from '../components/Switcher.astro';
       });
 
       // Initial Calls
+      setSelectedPaymentMethod(selectedPaymentMethod);
       renderSavedAddresses();
       initLeafletMap(21.0478, 75.7896);
       renderCartSummary();

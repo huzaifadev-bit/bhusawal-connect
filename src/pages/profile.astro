@@ -1,404 +1,255 @@
 ---
-import Switcher from '../components/Switcher.astro';
-import catalog from '../../public/grocery_catalog.json';
-
-const sampleWishlist = catalog.slice(0, 4);
+// src/pages/profile.astro
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
+  <script is:inline src="/bhusawal_age_verification.js"></script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Profile & Account | Bhusawal Connect</title>
   
   <script is:inline src="https://cdn.tailwindcss.com"></script>
+  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
+  <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
+  <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  
-  <script is:inline>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            purpleBrand: '#7c3aed',
-            purpleDark: '#6d28d9',
-            purpleLight: '#f3e8ff'
-          },
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-            display: ['Outfit', 'sans-serif']
-          }
-        }
-      }
-    };
-  </script>
 
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
     h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
-<body class="min-h-screen pb-32 text-slate-800 antialiased">
+<body class="min-h-screen pb-24 text-slate-800 antialiased">
 
-  <!-- TOP APP HEADER -->
-  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 sm:px-8 py-3.5 shadow-xs flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <a href="/home" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
-        <span class="material-symbols-outlined text-xl">arrow_back</span>
-      </a>
-      <a href="/home" class="flex items-center gap-1.5">
-        <span class="text-lg font-black font-display text-purpleBrand tracking-tight">bhusawal<span class="text-slate-900">connect</span></span>
-      </a>
-    </div>
-
-    <div class="flex items-center gap-2">
-      <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-black uppercase tracking-wider flex items-center gap-1">
-        ⭐ VIP Member
-      </span>
+  <!-- STICKY HEADER -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3.5 shadow-xs">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/home" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-700 hover:bg-purpleBrand hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <h1 class="text-lg font-black font-display text-slate-900">My Account</h1>
+      </div>
+      <button id="btn-logout" class="px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl text-xs font-black transition-all flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">logout</span>
+        <span>Logout</span>
+      </button>
     </div>
   </header>
 
-  <!-- MAIN PROFILE CONTAINER -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+  <main class="max-w-4xl mx-auto px-4 py-6 space-y-6">
 
-    <!-- USER PROFILE CARD BANNER -->
-    <div class="bg-gradient-to-r from-purpleBrand via-purpleDark to-indigo-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
-      
-      <div class="flex items-center gap-5 z-10">
-        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white/30 overflow-hidden shadow-inner flex-shrink-0 bg-white/10">
-          <img loading="lazy" id="profile-avatar-img" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Sahil Patel" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='/assets/d686bc969706f3bd6cf093f663be9579.jpg';" />
+    <!-- USER SUMMARY CARD -->
+    <div class="bg-gradient-to-r from-purple-900 via-purple-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl flex items-center justify-between flex-wrap gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white text-2xl font-black shadow-inner">
+          <span class="material-symbols-outlined text-3xl text-purple-300">person</span>
         </div>
-        <div class="space-y-1">
-          <div class="flex items-center gap-2">
-            <h1 class="text-2xl sm:text-3xl font-black font-display" id="profile-user-name">Sahil Patel</h1>
-            <span class="px-2 py-0.5 bg-amber-400 text-slate-950 text-[10px] font-black rounded-md uppercase">GOLD</span>
-          </div>
-          <p class="text-xs sm:text-sm text-purple-100 font-medium" id="profile-user-phone">+91 99234 56789</p>
-          <p class="text-xs text-purple-200 font-medium" id="profile-user-email">sahil.patel@bhusawal.com</p>
+        <div>
+          <h2 id="user-display-name" class="text-xl font-black font-display">Bhusawal Customer</h2>
+          <p id="user-display-phone" class="text-xs font-semibold text-purple-200">+91 Customer Phone</p>
+          <p id="user-display-email" class="text-[11px] text-purple-300 font-medium">Email: Not Provided</p>
         </div>
       </div>
-
-      <!-- Quick Actions / Edit Profile -->
-      <div class="flex items-center gap-3 z-10">
-        <button id="btn-edit-profile-modal" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white font-black text-xs rounded-xl backdrop-blur-md transition-all flex items-center gap-1.5 active:scale-95">
-          <span class="material-symbols-outlined text-base">edit</span>
-          <span>Edit Profile</span>
-        </button>
-      </div>
-
-      <!-- Background Subtle Pattern Circles -->
-      <div class="absolute -right-10 -bottom-10 w-48 h-48 rounded-full bg-white/5 blur-2xl pointer-events-none"></div>
-    </div>
-
-    <!-- STATS OVERVIEW CARDS -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-      <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
-        <span class="text-xs font-black text-slate-400 uppercase tracking-wider block">Total Orders</span>
-        <span class="text-2xl font-black font-display text-purpleBrand mt-1 block" id="stat-total-orders">12</span>
-      </div>
-
-      <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
-        <span class="text-xs font-black text-slate-400 uppercase tracking-wider block">B-Wallet Balance</span>
-        <span class="text-2xl font-black font-display text-emerald-600 mt-1 block">₹250</span>
-      </div>
-
-      <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
-        <span class="text-xs font-black text-slate-400 uppercase tracking-wider block">Saved Addresses</span>
-        <span class="text-2xl font-black font-display text-slate-900 mt-1 block">3</span>
-      </div>
-
-      <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center">
-        <span class="text-xs font-black text-slate-400 uppercase tracking-wider block">Referral Rewards</span>
-        <span class="text-2xl font-black font-display text-amber-500 mt-1 block">₹500</span>
+      <div class="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-white/15">
+        <span class="material-symbols-outlined text-emerald-400 text-lg">verified</span>
+        <span class="text-xs font-bold text-emerald-300" id="header-user-phone">Phone Verified</span>
       </div>
     </div>
 
-    <!-- MAIN PROFILE NAVIGATION DASHBOARD (RESPONSIVE SPLIT PANES) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-2">
+    <!-- QUICK STATS -->
+    <div class="grid grid-cols-3 gap-3">
+      <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-xs text-center">
+        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-wider block">Orders</span>
+        <span id="stat-total-orders" class="text-xl font-black font-display text-slate-900">0</span>
+      </div>
+      <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-xs text-center">
+        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-wider block">Wallet</span>
+        <span class="text-xl font-black font-display text-emerald-600">₹150</span>
+      </div>
+      <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-xs text-center">
+        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-wider block">Status</span>
+        <span class="text-xs font-black text-purpleBrand bg-purple-50 px-2 py-0.5 rounded-full inline-block mt-1">ACTIVE</span>
+      </div>
+    </div>
 
-      <!-- LEFT 4 COLS: NAVIGATION MENU TABS -->
-      <div class="lg:col-span-4 space-y-2">
-        
-        <button class="profile-nav-tab w-full p-3.5 rounded-2xl bg-purpleBrand text-white font-black text-xs text-left flex items-center justify-between transition-all shadow-md" data-tab="tab-orders">
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-xl">package_2</span>
-            <span>Orders & History</span>
-          </div>
-          <span class="material-symbols-outlined text-sm">chevron_right</span>
+    <!-- ACCOUNT NAVIGATION TABS -->
+    <div class="space-y-4">
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+        <button class="profile-nav-tab px-4 py-2.5 bg-purpleBrand text-white text-xs font-black rounded-2xl shadow-md transition-all whitespace-nowrap cursor-pointer" data-tab="tab-orders">
+          📦 My Orders
         </button>
-
-        <button class="profile-nav-tab w-full p-3.5 rounded-2xl bg-white hover:bg-purple-50 text-slate-700 hover:text-purpleBrand font-extrabold text-xs text-left flex items-center justify-between border border-slate-100 transition-all shadow-xs" data-tab="tab-addresses">
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-xl text-purpleBrand">location_on</span>
-            <span>Saved Addresses</span>
-          </div>
-          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        <button class="profile-nav-tab px-4 py-2.5 bg-white text-slate-700 hover:bg-purple-50 text-xs font-black rounded-2xl shadow-xs border border-slate-100 transition-all whitespace-nowrap cursor-pointer" data-tab="tab-buyagain">
+          🔄 Buy Again
         </button>
-
-        <button class="profile-nav-tab w-full p-3.5 rounded-2xl bg-white hover:bg-purple-50 text-slate-700 hover:text-purpleBrand font-extrabold text-xs text-left flex items-center justify-between border border-slate-100 transition-all shadow-xs" data-tab="tab-wishlist">
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-xl text-rose-500">favorite</span>
-            <span>My Wishlist</span>
-          </div>
-          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        <button class="profile-nav-tab px-4 py-2.5 bg-white text-slate-700 hover:bg-purple-50 text-xs font-black rounded-2xl shadow-xs border border-slate-100 transition-all whitespace-nowrap cursor-pointer" data-tab="tab-addresses">
+          🏠 Saved Addresses
         </button>
-
-        <button class="profile-nav-tab w-full p-3.5 rounded-2xl bg-white hover:bg-purple-50 text-slate-700 hover:text-purpleBrand font-extrabold text-xs text-left flex items-center justify-between border border-slate-100 transition-all shadow-xs" data-tab="tab-payment">
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-xl text-emerald-600">account_balance_wallet</span>
-            <span>Payment Methods & Wallet</span>
-          </div>
-          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        <button class="profile-nav-tab px-4 py-2.5 bg-white text-slate-700 hover:bg-purple-50 text-xs font-black rounded-2xl shadow-xs border border-slate-100 transition-all whitespace-nowrap cursor-pointer" data-tab="tab-communication">
+          🔔 Communication & Consent
         </button>
-
-        <button class="profile-nav-tab w-full p-3.5 rounded-2xl bg-white hover:bg-purple-50 text-slate-700 hover:text-purpleBrand font-extrabold text-xs text-left flex items-center justify-between border border-slate-100 transition-all shadow-xs" data-tab="tab-refer">
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-xl text-amber-500">card_giftcard</span>
-            <span>Refer & Earn (₹100)</span>
-          </div>
-          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        <button class="profile-nav-tab px-4 py-2.5 bg-white text-slate-700 hover:bg-purple-50 text-xs font-black rounded-2xl shadow-xs border border-slate-100 transition-all whitespace-nowrap cursor-pointer" data-tab="tab-payment">
+          💳 Payments & Wallet
         </button>
-
-        <button class="profile-nav-tab w-full p-3.5 rounded-2xl bg-white hover:bg-purple-50 text-slate-700 hover:text-purpleBrand font-extrabold text-xs text-left flex items-center justify-between border border-slate-100 transition-all shadow-xs" data-tab="tab-notifications">
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-xl text-blue-500">notifications</span>
-            <span>Notifications & Alerts</span>
-          </div>
-          <span class="material-symbols-outlined text-sm">chevron_right</span>
+        <button class="profile-nav-tab px-4 py-2.5 bg-white text-slate-700 hover:bg-purple-50 text-xs font-black rounded-2xl shadow-xs border border-slate-100 transition-all whitespace-nowrap cursor-pointer" data-tab="tab-settings">
+          ⚙️ Settings
         </button>
-
-        <button class="profile-nav-tab w-full p-3.5 rounded-2xl bg-white hover:bg-purple-50 text-slate-700 hover:text-purpleBrand font-extrabold text-xs text-left flex items-center justify-between border border-slate-100 transition-all shadow-xs" data-tab="tab-support">
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-xl text-teal-600">support_agent</span>
-            <span>Help & Customer Support</span>
-          </div>
-          <span class="material-symbols-outlined text-sm">chevron_right</span>
-        </button>
-
-        <button class="profile-nav-tab w-full p-3.5 rounded-2xl bg-white hover:bg-purple-50 text-slate-700 hover:text-purpleBrand font-extrabold text-xs text-left flex items-center justify-between border border-slate-100 transition-all shadow-xs" data-tab="tab-settings">
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-xl text-slate-600">settings</span>
-            <span>App Settings</span>
-          </div>
-          <span class="material-symbols-outlined text-sm">chevron_right</span>
-        </button>
-
-        <button id="btn-logout" class="w-full p-3.5 rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-black text-xs text-left flex items-center justify-between border border-rose-200 transition-all">
-          <div class="flex items-center gap-3">
-            <span class="material-symbols-outlined text-xl">logout</span>
-            <span>Logout Account</span>
-          </div>
-          <span class="material-symbols-outlined text-sm">power_settings_new</span>
-        </button>
-
       </div>
 
-      <!-- RIGHT 8 COLS: DYNAMIC TAB CONTENT CONTAINER -->
-      <div class="lg:col-span-8">
-        
-        <!-- 1. ORDERS HISTORY TAB -->
+      <!-- TAB CONTENT PANES -->
+      <div class="space-y-4">
+
+        <!-- 1. MY ORDERS TAB -->
         <div id="tab-orders" class="tab-pane space-y-4">
           <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
             <div class="flex items-center justify-between">
-              <h2 class="text-lg font-black font-display text-slate-900">Your Recent Orders</h2>
-              <a href="/orders" class="text-xs font-black text-purpleBrand hover:underline">View All</a>
+              <h2 class="text-lg font-black font-display text-slate-900">Order History</h2>
+              <a href="/orders" class="text-xs font-extrabold text-purpleBrand hover:underline">Full Orders Page →</a>
             </div>
-
-            <!-- Orders Container -->
             <div id="orders-list-wrapper" class="space-y-3">
-              <!-- Dynamically populated from localStorage -->
+              <div class="p-6 text-center text-slate-400 font-semibold text-xs">
+                Loading customer orders from Supabase...
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- 2. SAVED ADDRESSES TAB -->
+        <!-- 2. BUY AGAIN TAB -->
+        <div id="tab-buyagain" class="tab-pane hidden space-y-4">
+          <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="text-lg font-black font-display text-slate-900">Buy Again & Recommended</h2>
+              <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-xl">Current Catalog Prices</span>
+            </div>
+            <div id="buy-again-products-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="p-6 text-center text-slate-400 font-semibold text-xs col-span-4">
+                Loading personalized recommendations...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. SAVED ADDRESSES TAB -->
         <div id="tab-addresses" class="tab-pane hidden space-y-4">
           <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
             <div class="flex items-center justify-between">
-              <h2 class="text-lg font-black font-display text-slate-900">Saved Delivery Addresses</h2>
-              <button class="px-3.5 py-1.5 bg-purpleBrand text-white text-xs font-black rounded-xl hover:bg-purpleDark transition-all">
-                + Add Address
+              <h2 class="text-lg font-black font-display text-slate-900">Saved Addresses</h2>
+              <a href="/checkout" class="px-3 py-1.5 bg-purple-50 text-purpleBrand hover:bg-purpleBrand hover:text-white rounded-xl text-xs font-black transition-all">+ Add Address</a>
+            </div>
+            <div id="addresses-wrapper" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="p-6 text-center text-slate-400 font-semibold text-xs col-span-2">
+                Loading delivery addresses...
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. COMMUNICATION & CONSENT PREFERENCES TAB -->
+        <div id="tab-communication" class="tab-pane hidden space-y-4">
+          <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-5">
+            <div>
+              <h2 class="text-lg font-black font-display text-slate-900">Communication Preferences</h2>
+              <p class="text-xs font-bold text-slate-500 mt-0.5">Manage how Bhusawal Connect communicates order updates and local offers with you.</p>
+            </div>
+
+            <div class="space-y-4 border-t border-slate-100 pt-4">
+
+              <!-- Transactional SMS (Always Required/Active) -->
+              <div class="flex items-start justify-between gap-4 p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80">
+                <div class="space-y-0.5">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-black text-slate-900">⚡ Order & Delivery SMS Updates</span>
+                    <span class="text-[9px] font-black uppercase text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">Always Active</span>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-500">Essential SMS notifications regarding your active orders, rider assignments, and delivery status.</p>
+                </div>
+                <input type="checkbox" checked disabled class="w-5 h-5 accent-purpleBrand rounded cursor-not-allowed mt-0.5" />
+              </div>
+
+              <!-- Marketing SMS (Explicit Opt-In) -->
+              <div class="flex items-start justify-between gap-4 p-3.5 bg-purple-50/50 rounded-2xl border border-purple-100">
+                <div class="space-y-0.5">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-black text-slate-900">🎉 Promotional SMS & Offers</span>
+                    <span class="text-[9px] font-black uppercase text-purpleBrand bg-purple-100 px-2 py-0.5 rounded">Explicit Consent</span>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-500">Receive special local discount codes, festive deals, and flash delivery offers in Bhusawal.</p>
+                  <p id="marketing-sms-helper" class="text-[11px] font-bold text-purpleBrand mt-1 hidden">You'll receive occasional offers and promotions from Bhusawal Connect. You can turn this off anytime.</p>
+                </div>
+                <input type="checkbox" id="pref-marketing-sms" class="w-5 h-5 accent-purpleBrand rounded cursor-pointer mt-0.5" />
+              </div>
+
+              <!-- WhatsApp Offers -->
+              <div class="flex items-start justify-between gap-4 p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80">
+                <div class="space-y-0.5">
+                  <span class="text-sm font-black text-slate-900">💬 WhatsApp Offer Messages</span>
+                  <p class="text-xs font-semibold text-slate-500">Receive instant recommendations and order tracking updates directly via WhatsApp.</p>
+                </div>
+                <input type="checkbox" id="pref-marketing-whatsapp" class="w-5 h-5 accent-purpleBrand rounded cursor-pointer mt-0.5" />
+              </div>
+
+              <!-- Email Offers -->
+              <div class="flex items-start justify-between gap-4 p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80">
+                <div class="space-y-0.5">
+                  <span class="text-sm font-black text-slate-900">✉️ Email Receipts & Weekly Summary</span>
+                  <p class="text-xs font-semibold text-slate-500">Receive digital invoices, order receipts, and weekly category recommendations.</p>
+                </div>
+                <input type="checkbox" id="pref-marketing-email" class="w-5 h-5 accent-purpleBrand rounded cursor-pointer mt-0.5" />
+              </div>
+
+            </div>
+
+            <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+              <span id="comm-pref-status" class="text-xs font-bold text-slate-400">Default settings loaded</span>
+              <button id="btn-save-comm-prefs" class="px-5 py-2.5 bg-purpleBrand text-white text-xs font-black rounded-xl hover:bg-purpleDark transition-all flex items-center gap-1.5 shadow-md">
+                <span class="material-symbols-outlined text-base">save</span>
+                <span>Save Preferences</span>
               </button>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div class="p-4 rounded-2xl border border-slate-200 space-y-2 bg-slate-50">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-black text-purpleBrand">🏠 Home (Default)</span>
-                  <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">Active</span>
-                </div>
-                <p class="text-xs font-bold text-slate-800">Plot 42, Station Road, Near Railway Station, Shivaji Nagar, Bhusawal - 425201</p>
-                <div class="flex gap-2 pt-1">
-                  <button class="text-[10px] font-bold text-purpleBrand hover:underline">Edit</button>
-                  <span class="text-slate-300">•</span>
-                  <button class="text-[10px] font-bold text-rose-500 hover:underline">Delete</button>
-                </div>
-              </div>
-
-              <div class="p-4 rounded-2xl border border-slate-200 space-y-2 bg-white">
-                <div class="flex items-center justify-between">
-                  <span class="text-xs font-black text-slate-800">🏢 Office / Work</span>
-                </div>
-                <p class="text-xs font-bold text-slate-700">Shop 12, Main Market Road, Jamner Road, Bhusawal - 425201</p>
-                <div class="flex gap-2 pt-1">
-                  <button class="text-[10px] font-bold text-purpleBrand hover:underline">Edit</button>
-                  <span class="text-slate-300">•</span>
-                  <button class="text-[10px] font-bold text-rose-500 hover:underline">Delete</button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
-        <!-- 3. MY WISHLIST TAB -->
-        <div id="tab-wishlist" class="tab-pane hidden space-y-4">
-          <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
-            <h2 class="text-lg font-black font-display text-slate-900">Your Favourites & Wishlist</h2>
-
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {sampleWishlist.map(w => {
-                const wId = w["Product ID"] || w.id || '';
-                const wName = w["Product Name"] || '';
-                const wMrp = parseFloat(w.MRP || w.mrp || 60);
-                const wImg = w["Product Image URL"] || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-
-                return (
-                  <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col justify-between">
-                    <div class="w-full aspect-square bg-white rounded-xl p-1 mb-2 flex items-center justify-center border border-slate-100">
-                      <img onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" loading="lazy" src={wImg} alt={wName} class="max-h-full max-w-full object-contain" />
-                    </div>
-                    <div class="space-y-1">
-                      <h4 class="text-xs font-bold text-slate-800 line-clamp-2 min-h-[2.2rem]">{wName}</h4>
-                      <p class="text-xs font-black text-slate-900">MRP ₹{wMrp}</p>
-                      <button class="w-full py-1.5 bg-purpleBrand text-white text-[10px] font-black rounded-lg hover:bg-purpleDark transition-all mt-1">
-                        MOVE TO CART
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        <!-- 4. PAYMENT METHODS & WALLET TAB -->
+        <!-- 5. PAYMENT METHODS & WALLET TAB -->
         <div id="tab-payment" class="tab-pane hidden space-y-4">
           <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
             <h2 class="text-lg font-black font-display text-slate-900">B-Wallet & Saved Payments</h2>
-
-            <!-- Wallet Banner -->
             <div class="p-4 bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl text-white flex items-center justify-between">
               <div>
                 <span class="text-[10px] font-black uppercase tracking-wider text-emerald-200">Bhusawal Connect Cash</span>
-                <h3 class="text-2xl font-black font-display">₹250.00</h3>
+                <p class="text-2xl font-black font-display">₹150.00</p>
               </div>
-              <button class="px-4 py-2 bg-white text-emerald-800 text-xs font-black rounded-xl shadow-md">
-                + Add Money
-              </button>
-            </div>
-
-            <!-- Saved UPI -->
-            <div class="space-y-2">
-              <span class="text-xs font-black text-slate-400 uppercase tracking-wider block">Saved UPI Handles:</span>
-              <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="text-base">📱</span>
-                  <span class="text-xs font-black text-slate-800">sahil@okaxis (Google Pay)</span>
-                </div>
-                <span class="text-[10px] font-bold text-emerald-600">Verified</span>
-              </div>
+              <span class="px-3 py-1 bg-white/20 rounded-full text-xs font-bold">Active Balance</span>
             </div>
           </div>
         </div>
 
-        <!-- 5. REFER & EARN TAB -->
-        <div id="tab-refer" class="tab-pane hidden space-y-4">
-          <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4 text-center">
-            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto text-3xl">
-              🎁
-            </div>
-            <h2 class="text-xl font-black font-display text-slate-900">Invite Friends & Earn ₹100</h2>
-            <p class="text-xs font-bold text-slate-500 max-w-sm mx-auto">Share your referral link with friends in Bhusawal. They get 10% OFF & you receive ₹100 B-Wallet cashback on their first order!</p>
-
-            <div class="p-3 bg-slate-50 rounded-2xl border border-dashed border-amber-300 max-w-xs mx-auto flex items-center justify-between">
-              <span class="text-sm font-black text-slate-900" id="referral-code">BHUSAWAL-SAHIL50</span>
-              <button class="px-3 py-1 bg-amber-400 text-slate-950 text-xs font-black rounded-lg" onclick="navigator.clipboard.writeText('BHUSAWAL-SAHIL50'); alert('Referral code copied!');">Copy</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 6. NOTIFICATIONS TAB -->
-        <div id="tab-notifications" class="tab-pane hidden space-y-4">
-          <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
-            <h2 class="text-lg font-black font-display text-slate-900">Notification Preferences</h2>
-
-            <div class="space-y-3 divide-y divide-slate-100">
-              <div class="flex items-center justify-between pt-2">
-                <div>
-                  <h4 class="text-xs font-extrabold text-slate-800">Order Delivery Updates</h4>
-                  <p class="text-[10px] text-slate-400 font-bold">Push notifications for rider status</p>
-                </div>
-                <input type="checkbox" checked class="w-4 h-4 accent-purpleBrand" />
-              </div>
-
-              <div class="flex items-center justify-between pt-3">
-                <div>
-                  <h4 class="text-xs font-extrabold text-slate-800">WhatsApp Order Receipts</h4>
-                  <p class="text-[10px] text-slate-400 font-bold">Receive invoices & receipts on WhatsApp</p>
-                </div>
-                <input type="checkbox" checked class="w-4 h-4 accent-purpleBrand" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 7. HELP & SUPPORT TAB -->
-        <div id="tab-support" class="tab-pane hidden space-y-4">
-          <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
-            <h2 class="text-lg font-black font-display text-slate-900">Customer Support (Bhusawal)</h2>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <a href="https://wa.me/919923456789" target="_blank" class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-center space-y-1 hover:bg-emerald-100 transition-colors">
-                <span class="text-2xl block">💬</span>
-                <span class="text-xs font-black text-emerald-900 block">WhatsApp Chat</span>
-                <span class="text-[9px] font-bold text-emerald-700">Instant Help</span>
-              </a>
-
-              <a href="tel:1800123456" class="p-4 bg-purple-50 rounded-2xl border border-purple-200 text-center space-y-1 hover:bg-purple-100 transition-colors">
-                <span class="text-2xl block">📞</span>
-                <span class="text-xs font-black text-purple-900 block">Call Toll-Free</span>
-                <span class="text-[9px] font-bold text-purple-700">1800-BHUSAWAL</span>
-              </a>
-
-              <a href="mailto:help@bhusawalconnect.com" class="p-4 bg-blue-50 rounded-2xl border border-blue-200 text-center space-y-1 hover:bg-blue-100 transition-colors">
-                <span class="text-2xl block">✉️</span>
-                <span class="text-xs font-black text-blue-900 block">Email Support</span>
-                <span class="text-[9px] font-bold text-blue-700">24/7 Response</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- 8. APP SETTINGS TAB -->
+        <!-- 6. ACCOUNT SETTINGS TAB -->
         <div id="tab-settings" class="tab-pane hidden space-y-4">
           <div class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-sm space-y-4">
-            <h2 class="text-lg font-black font-display text-slate-900">App Settings & Info</h2>
-            <div class="space-y-2 text-xs font-bold text-slate-600">
-              <div class="flex items-center justify-between py-2 border-b border-slate-100">
-                <span>App Version</span>
-                <span class="text-slate-900 font-black">v3.4.0 (Bhusawal Build)</span>
+            <h2 class="text-lg font-black font-display text-slate-900">Account Preferences</h2>
+            <form id="profile-edit-form" class="space-y-3">
+              <div>
+                <label class="text-xs font-extrabold text-slate-700 block mb-1">Full Name</label>
+                <input type="text" id="edit-profile-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-bold text-slate-800" placeholder="Enter your full name" />
               </div>
-              <div class="flex items-center justify-between py-2 border-b border-slate-100">
-                <span>City Location</span>
-                <span class="text-slate-900 font-black">Bhusawal, Maharashtra</span>
+              <div>
+                <label class="text-xs font-extrabold text-slate-700 block mb-1">Email Address</label>
+                <input type="email" id="edit-profile-email" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-bold text-slate-800" placeholder="Enter email address" />
               </div>
-            </div>
+              <button type="submit" class="px-4 py-2 bg-purpleBrand text-white text-xs font-black rounded-xl hover:bg-purpleDark transition-all">
+                Save Profile Changes
+              </button>
+            </form>
           </div>
         </div>
 
@@ -408,13 +259,359 @@ const sampleWishlist = catalog.slice(0, 4);
 
   </main>
 
-  <Switcher />
+  <!-- SUPABASE & FIREBASE AUTH INTEGRATION MODULE -->
+  <script type="module">
+    import { 
+      getCurrentCustomer, 
+      updateCustomerProfile, 
+      getCustomerAddresses, 
+      deleteCustomerAddress, 
+      setDefaultCustomerAddress, 
+      getCustomerOrders, 
+      signOutCustomer 
+    } from '/src/lib/customerAuth.ts';
 
-  <!-- CLIENT-SIDE PROFILE ENGINE -->
-  <script is:inline>
-    document.addEventListener('DOMContentLoaded', () => {
+    import {
+      getCustomerCommunicationPreferences,
+      updateCustomerCommunicationPreferences
+    } from '/src/lib/communicationService.ts';
 
-      // 1. Tab Switching Handler
+    import {
+      getRecommendedProducts
+    } from '/src/lib/recommendations.ts';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const headerPhone = document.getElementById('header-user-phone');
+      const displayName = document.getElementById('user-display-name');
+      const displayPhone = document.getElementById('user-display-phone');
+      const displayEmail = document.getElementById('user-display-email');
+      const logoutBtn = document.getElementById('btn-logout');
+
+      const wrapper = document.getElementById('orders-list-wrapper');
+      const addressWrapper = document.getElementById('addresses-wrapper');
+      const statOrders = document.getElementById('stat-total-orders');
+
+      // 1. Fetch Current Authenticated Customer Profile
+      const customerSession = await getCurrentCustomer();
+
+      let activeCustomerId = null;
+      let activePhone = '+91 Customer Phone';
+      let activeName = 'Bhusawal Customer';
+      let activeEmail = 'Not Provided';
+
+      if (customerSession && customerSession.profile) {
+        const p = customerSession.profile;
+        activeCustomerId = p.id;
+        activePhone = p.phone || 'Phone Verified';
+        activeName = p.name || 'Bhusawal Customer';
+        activeEmail = p.email || 'Not Provided';
+      } else {
+        try {
+          const localProfile = JSON.parse(localStorage.getItem('bhusawal_user_profile') || '{}');
+          if (localProfile.name) activeName = localProfile.name;
+          if (localProfile.phone) activePhone = localProfile.phone;
+          if (localProfile.email) activeEmail = localProfile.email;
+        } catch(e) {}
+      }
+
+      if (headerPhone) headerPhone.textContent = activePhone;
+      if (displayName) displayName.textContent = activeName;
+      if (displayPhone) displayPhone.textContent = activePhone;
+      if (displayEmail) displayEmail.textContent = `Email: ${activeEmail}`;
+
+      const nameInput = document.getElementById('edit-profile-name');
+      const emailInput = document.getElementById('edit-profile-email');
+      if (nameInput) nameInput.value = activeName !== 'Bhusawal Customer' ? activeName : '';
+      if (emailInput) emailInput.value = activeEmail !== 'Not Provided' ? activeEmail : '';
+
+      // 2. Load Communication Preferences
+      async function loadCommPreferences() {
+        if (!activeCustomerId) return;
+
+        const marketingSms = document.getElementById('pref-marketing-sms');
+        const marketingWhatsapp = document.getElementById('pref-marketing-whatsapp');
+        const marketingEmail = document.getElementById('pref-marketing-email');
+        const statusSpan = document.getElementById('comm-pref-status');
+        const helperP = document.getElementById('marketing-sms-helper');
+
+        const prefs = await getCustomerCommunicationPreferences(activeCustomerId);
+
+        if (marketingSms) {
+          marketingSms.checked = prefs.marketing_sms_enabled;
+          if (helperP) {
+            if (prefs.marketing_sms_enabled) helperP.classList.remove('hidden');
+            else helperP.classList.add('hidden');
+          }
+
+          marketingSms.addEventListener('change', () => {
+            if (helperP) {
+              if (marketingSms.checked) helperP.classList.remove('hidden');
+              else helperP.classList.add('hidden');
+            }
+          });
+        }
+        if (marketingWhatsapp) marketingWhatsapp.checked = prefs.marketing_whatsapp_enabled;
+        if (marketingEmail) marketingEmail.checked = prefs.marketing_email_enabled;
+
+        if (statusSpan) {
+          statusSpan.textContent = prefs.marketing_sms_enabled 
+            ? '✅ Promotional SMS active' 
+            : '🔒 Promotional SMS disabled (Explicit Opt-In required)';
+        }
+      }
+
+      await loadCommPreferences();
+
+      // Save Communication Preferences Listener
+      document.getElementById('btn-save-comm-prefs')?.addEventListener('click', async () => {
+        if (!activeCustomerId) {
+          alert('Please sign in to update communication preferences.');
+          return;
+        }
+
+        const marketingSms = document.getElementById('pref-marketing-sms')?.checked || false;
+        const marketingWhatsapp = document.getElementById('pref-marketing-whatsapp')?.checked || false;
+        const marketingEmail = document.getElementById('pref-marketing-email')?.checked || false;
+        const statusSpan = document.getElementById('comm-pref-status');
+
+        const res = await updateCustomerCommunicationPreferences(activeCustomerId, {
+          marketing_sms_enabled: marketingSms,
+          marketing_whatsapp_enabled: marketingWhatsapp,
+          marketing_email_enabled: marketingEmail
+        });
+
+        if (!res.error && res.data && res.data.marketing_sms_enabled === marketingSms) {
+          if (statusSpan) {
+            statusSpan.textContent = marketingSms 
+              ? "You're opted in to promotional SMS from Bhusawal Connect."
+              : 'Opted out of promotional SMS.';
+          }
+          alert(marketingSms 
+            ? "You're opted in to promotional SMS from Bhusawal Connect." 
+            : 'Opted out of promotional SMS.');
+        } else {
+          alert('Failed to update communication preferences. Please try again.');
+        }
+      });
+
+      // Profile Save Form Listener
+      document.getElementById('profile-edit-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newName = nameInput.value.trim();
+        const newEmail = emailInput.value.trim();
+
+        if (activeCustomerId) {
+          await updateCustomerProfile(activeCustomerId, { name: newName, email: newEmail });
+          alert('Profile updated successfully in Supabase.');
+          window.location.reload();
+        } else {
+          localStorage.setItem('bhusawal_user_profile', JSON.stringify({ name: newName, email: newEmail, phone: activePhone }));
+          alert('Profile updated successfully.');
+          window.location.reload();
+        }
+      });
+
+      // Load Recommendations & Buy Again Products
+      async function loadBuyAgainRecommendations() {
+        const grid = document.getElementById('buy-again-products-grid');
+        if (!grid) return;
+
+        try {
+          const products = await getRecommendedProducts(activeCustomerId || undefined, 8);
+
+          if (!products || products.length === 0) {
+            grid.innerHTML = `
+              <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center space-y-2 col-span-4">
+                <span class="material-symbols-outlined text-3xl text-slate-400">inventory_2</span>
+                <p class="text-xs font-bold text-slate-600">No items available for recommendation.</p>
+                <a href="/grocery" class="inline-block text-xs font-black text-purpleBrand hover:underline">Browse Daily Needs Store →</a>
+              </div>
+            `;
+            return;
+          }
+
+          grid.innerHTML = products.map(p => `
+            <div class="bg-slate-50 rounded-2xl p-2.5 border border-slate-100 flex flex-col space-y-1.5">
+              <a href="/product/${encodeURIComponent(p.id)}" class="w-full h-24 bg-white rounded-xl flex items-center justify-center p-1.5 overflow-hidden">
+                <img src="${p.image}" alt="${p.name}" class="max-h-full max-w-full object-contain" />
+              </a>
+              <span class="text-[8px] font-black text-purpleBrand uppercase tracking-wider truncate">${p.brand}</span>
+              <a href="/product/${encodeURIComponent(p.id)}" class="text-[11px] font-extrabold text-slate-900 line-clamp-2 leading-tight hover:text-purpleBrand">
+                ${p.name}
+              </a>
+              <p class="text-[9px] text-slate-400 font-semibold truncate">${p.pack}</p>
+              <div class="flex items-center justify-between pt-1 border-t border-slate-200/60 mt-auto">
+                <span class="text-xs font-black text-slate-900">₹${p.sp}</span>
+                <a href="/product/${encodeURIComponent(p.id)}" class="px-2 py-0.5 bg-purpleBrand text-white text-[9px] font-black rounded-lg">
+                  VIEW
+                </a>
+              </div>
+            </div>
+          `).join('');
+        } catch(err) {
+          console.warn('Error loading buy again recommendations:', err);
+        }
+      }
+
+      await loadBuyAgainRecommendations();
+
+      // Load Saved Delivery Addresses
+      async function loadSavedAddresses() {
+        if (!addressWrapper) return;
+        let addresses = [];
+
+        if (activeCustomerId) {
+          addresses = await getCustomerAddresses(activeCustomerId);
+        }
+
+        if (!addresses || addresses.length === 0) {
+          try {
+            addresses = JSON.parse(
+              localStorage.getItem('bhusawal_customer_addresses_v1') ||
+              localStorage.getItem('bhusawal_addresses') ||
+              localStorage.getItem('bhusawal_user_addresses') || '[]'
+            );
+          } catch(e) {}
+        }
+
+        if (!addresses || addresses.length === 0) {
+          addressWrapper.innerHTML = `
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center space-y-2 col-span-2">
+              <span class="material-symbols-outlined text-3xl text-slate-400">location_off</span>
+              <p class="text-xs font-bold text-slate-600">No saved delivery addresses found.</p>
+              <a href="/checkout" class="inline-block text-xs font-black text-purpleBrand hover:underline">+ Add Address in Checkout</a>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '';
+        addresses.forEach(addr => {
+          const isDef = addr.is_default || addr.isDefault;
+          const label = addr.label || addr.tag || 'Saved Address';
+          const line = addr.address_line || addr.fullAddress || addr.address || '';
+
+          html += `
+            <div class="p-4 rounded-2xl border ${isDef ? 'border-purpleBrand bg-purple-50/30' : 'border-slate-200 bg-slate-50'} space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black ${isDef ? 'text-purpleBrand' : 'text-slate-700'}">🏠 ${label} ${isDef ? '(Default)' : ''}</span>
+                ${isDef ? '<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Default Address</span>' : ''}
+              </div>
+              <p class="text-xs font-bold text-slate-800 leading-snug">${line}</p>
+              <div class="flex items-center gap-2 pt-2 border-t border-slate-200/60 text-[11px] font-black">
+                ${!isDef ? `<button class="btn-set-default text-purpleBrand hover:underline" data-id="${addr.id}">Make Default</button> • ` : ''}
+                <button class="btn-delete-addr text-rose-600 hover:underline" data-id="${addr.id}">Delete</button>
+              </div>
+            </div>
+          `;
+        });
+
+        addressWrapper.innerHTML = html;
+
+        document.querySelectorAll('.btn-set-default').forEach(btn => {
+          btn.onclick = async () => {
+            if (activeCustomerId) {
+              await setDefaultCustomerAddress(btn.dataset.id, activeCustomerId);
+              loadSavedAddresses();
+            }
+          };
+        });
+
+        document.querySelectorAll('.btn-delete-addr').forEach(btn => {
+          btn.onclick = async () => {
+            if (confirm('Delete this address?')) {
+              if (activeCustomerId) {
+                await deleteCustomerAddress(btn.dataset.id, activeCustomerId);
+                loadSavedAddresses();
+              }
+            }
+          };
+        });
+      }
+
+      await loadSavedAddresses();
+
+      // Load Customer Orders History
+      async function loadCustomerOrdersList() {
+        if (!wrapper) return;
+        let orders = [];
+
+        if (activeCustomerId) {
+          const dbOrders = await getCustomerOrders(activeCustomerId);
+          orders = dbOrders.map(o => ({
+            id: o.legacy_order_id || o.id,
+            status: o.status,
+            total: o.total_amount,
+            date: o.created_at,
+            items: o.order_data?.items || [],
+          }));
+        }
+
+        if (!orders || orders.length === 0) {
+          try {
+            orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
+          } catch(e) {}
+        }
+
+        if (statOrders) statOrders.textContent = orders.length;
+
+        if (!orders || orders.length === 0) {
+          wrapper.innerHTML = `
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 text-center space-y-2">
+              <span class="material-symbols-outlined text-3xl text-slate-400">shopping_bag</span>
+              <p class="text-xs font-bold text-slate-600">No previous orders found for your account.</p>
+              <a href="/grocery" class="inline-block text-xs font-black text-purpleBrand hover:underline">Start Shopping in Bhusawal →</a>
+            </div>
+          `;
+          return;
+        }
+
+        let html = '';
+        orders.forEach(o => {
+          const itemCount = o.items ? o.items.length : 1;
+          const status = o.status || 'Confirmed';
+          const total = o.total || 0;
+          const dateStr = o.date ? new Date(o.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Recent';
+          const isActive = status !== 'Delivered' && status !== 'Cancelled';
+
+          html += `
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-3">
+              <div class="flex items-center justify-between text-xs font-black">
+                <span class="text-slate-900">Order #${o.id}</span>
+                <span class="px-2.5 py-0.5 rounded-full ${isActive ? 'bg-purple-100 text-purpleBrand' : 'bg-emerald-100 text-emerald-800'} text-[10px]">${status}</span>
+              </div>
+              <p class="text-[11px] font-bold text-slate-500">${itemCount} ${itemCount === 1 ? 'Item' : 'Items'} • ₹${total} • Placed on ${dateStr}</p>
+              <div class="flex items-center justify-between border-t border-slate-200/60 pt-2 text-xs font-black">
+                <a href="/orders" class="text-purpleBrand hover:underline">View Order Details</a>
+                <button class="btn-reorder-item px-3 py-1 bg-purpleBrand text-white rounded-lg text-[11px]" data-items='${JSON.stringify(o.items || [])}'>
+                  🔄 Reorder
+                </button>
+              </div>
+            </div>
+          `;
+        });
+
+        wrapper.innerHTML = html;
+
+        document.querySelectorAll('.btn-reorder-item').forEach(btn => {
+          btn.onclick = () => {
+            try {
+              const items = JSON.parse(btn.dataset.items || '[]');
+              if (items.length > 0) {
+                localStorage.setItem('bhusawal_cart', JSON.stringify(items));
+                alert('Order items loaded into cart! Redirecting to cart...');
+                window.location.href = '/cart';
+              }
+            } catch(e) {
+              alert('Could not reorder items.');
+            }
+          };
+        });
+      }
+
+      await loadCustomerOrdersList();
+
+      // Tab Switching Handler
       const navTabs = document.querySelectorAll('.profile-nav-tab');
       const tabPanes = document.querySelectorAll('.tab-pane');
 
@@ -441,72 +638,13 @@ const sampleWishlist = catalog.slice(0, 4);
         });
       });
 
-      // 2. Populate Orders History from localStorage
-      function renderOrdersHistory() {
-        const wrapper = document.getElementById('orders-list-wrapper');
-        const statOrders = document.getElementById('stat-total-orders');
-
-        let orders = [];
-        try {
-          orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
-        } catch(e) {}
-
-        if (statOrders) statOrders.textContent = orders.length > 0 ? orders.length : '12';
-
-        if (!wrapper) return;
-
-        if (orders.length === 0) {
-          // Render sample fallback orders
-          wrapper.innerHTML = `
-            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
-              <div class="flex items-center justify-between text-xs font-black">
-                <span class="text-slate-900">Order #BHU-98212</span>
-                <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px]">Delivered</span>
-              </div>
-              <p class="text-[11px] font-bold text-slate-500">3 Items • Amul Milk, Maggi Noodles, Lay's Chips</p>
-              <div class="flex items-center justify-between border-t border-slate-200/60 pt-2 text-xs font-black">
-                <span>Total Paid: ₹240</span>
-                <a href="/track_order" class="text-purpleBrand hover:underline">Track Delivery</a>
-              </div>
-            </div>
-          `;
-          return;
-        }
-
-        let html = '';
-        orders.forEach(o => {
-          const itemCount = o.items ? o.items.length : 1;
-          const status = o.status || 'Confirmed';
-          const total = o.total || 0;
-          const dateStr = o.date ? new Date(o.date).toLocaleDateString() : 'Today';
-
-          html += `
-            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
-              <div class="flex items-center justify-between text-xs font-black">
-                <span class="text-slate-900">Order #${o.id}</span>
-                <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px]">${status}</span>
-              </div>
-              <p class="text-[11px] font-bold text-slate-500">${itemCount} ${itemCount === 1 ? 'Item' : 'Items'} • Delivered in Bhusawal (${dateStr})</p>
-              <div class="flex items-center justify-between border-t border-slate-200/60 pt-2 text-xs font-black">
-                <span>Total: ₹${total}</span>
-                <a href="/track_order" class="text-purpleBrand hover:underline">Track Rider</a>
-              </div>
-            </div>
-          `;
-        });
-
-        wrapper.innerHTML = html;
-      }
-
-      // 3. Logout Modal & Action
-      document.getElementById('btn-logout')?.addEventListener('click', () => {
-        if (confirm('Are you sure you want to log out of Bhusawal Connect?')) {
-          localStorage.removeItem('bhusawal_cart');
-          window.location.href = '/home';
+      // Customer Sign Out Handler
+      logoutBtn?.addEventListener('click', async () => {
+        if (confirm('Are you sure you want to sign out of Bhusawal Connect?')) {
+          await signOutCustomer();
+          window.location.href = '/login';
         }
       });
-
-      renderOrdersHistory();
     });
   </script>
 </body>

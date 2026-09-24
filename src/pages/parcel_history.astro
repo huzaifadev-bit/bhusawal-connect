@@ -1,5 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
 ---
 
 <!DOCTYPE html>
@@ -7,7 +6,7 @@ import Switcher from '../components/Switcher.astro';
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pickup & Drop Booking History | Bhusawal Connect</title>
+  <title>Parcel Delivery History | Bhusawal Connect</title>
   
   <!-- TAILWIND & GOOGLE FONTS -->
   <script is:inline src="https://cdn.tailwindcss.com"></script>
@@ -16,17 +15,17 @@ import Switcher from '../components/Switcher.astro';
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   
-  <!-- GROCERY & PARCEL MATCHED YELLOW THEME -->
+  <!-- PARCEL DELIVERY ORANGE THEME -->
   <script is:inline>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            yellowBrand: '#FACC15',
-            yellowDark: '#CA8A04',
-            yellowLight: '#FEF9C3',
-            yellowBorder: '#FEF08A',
-            yellowDeep: '#854D0E'
+            orangeBrand: '#F97316',
+            orangeDark: '#EA580C',
+            orangeLight: '#FFF7ED',
+            orangeBorder: '#FFEDD5',
+            orangeDeep: '#C2410C'
           },
           fontFamily: {
             sans: ['Plus Jakarta Sans', 'sans-serif'],
@@ -49,6 +48,9 @@ import Switcher from '../components/Switcher.astro';
       #printable-receipt-modal { position: absolute; left: 0; top: 0; width: 100%; }
     }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="min-h-screen pb-32 text-slate-800 antialiased bg-slate-50/50">
@@ -56,27 +58,27 @@ import Switcher from '../components/Switcher.astro';
   <!-- ==================== HEADER ==================== -->
   <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 shadow-xs flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <a href="/parcel" class="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-all active:scale-95 border border-slate-200" title="Back to Parcel Service">
+      <a href="/parcel" class="w-10 h-10 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-all active:scale-95 border border-slate-200" title="Back to Parcel Delivery">
         <span class="material-symbols-outlined text-xl">arrow_back</span>
       </a>
       <div>
         <h1 class="text-lg sm:text-xl font-black font-display text-slate-900 leading-tight flex items-center gap-2">
-          <span>📜 Pickup & Drop Booking History</span>
+          <span>📜 Parcel Delivery History</span>
         </h1>
-        <p class="text-xs text-slate-500 font-medium">View past express courier deliveries, status & tax receipts</p>
+        <p class="text-xs text-slate-500 font-medium">View previous parcel bookings, delivery status, courier partners & tax receipts</p>
       </div>
     </div>
 
-    <!-- NEW BOOKING CTA -->
-    <a href="/parcel" class="px-4 py-2 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white font-black text-xs rounded-xl shadow-xs border border-yellowDark/20 flex items-center gap-1.5 transition-all active:scale-95">
+    <!-- NEW PARCEL BOOKING CTA -->
+    <a href="/parcel" class="px-4 py-2 bg-orangeBrand hover:bg-orangeDark text-white font-black text-xs rounded-xl shadow-xs border border-orangeDark/20 flex items-center gap-1.5 transition-all active:scale-95">
       <span class="material-symbols-outlined text-base">add_circle</span>
-      <span>+ Book New Parcel</span>
+      <span>+ Send New Parcel</span>
     </a>
   </header>
 
   <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-    <!-- SEARCH BAR & CATEGORY TABS -->
+    <!-- SEARCH BAR & STATUS FILTER TABS -->
     <div class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-sm space-y-4">
       
       <!-- SEARCH INPUT -->
@@ -85,8 +87,8 @@ import Switcher from '../components/Switcher.astro';
         <input 
           type="text" 
           id="search-history-input" 
-          placeholder="Search by Order ID, Pickup address, Drop destination, Category, or Rider name..." 
-          class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-10 py-3 text-xs font-bold text-slate-800 placeholder-slate-400 outline-none focus:bg-white focus:border-yellowBrand focus:ring-2 focus:ring-yellowBrand/20 transition-all shadow-xs" 
+          placeholder="Search by Order ID, Pickup address, Delivery address, Parcel category, or Delivery Partner name..." 
+          class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-10 pr-10 py-3 text-xs font-bold text-slate-800 placeholder-slate-400 outline-none focus:bg-white focus:border-orangeBrand focus:ring-2 focus:ring-orangeBrand/20 transition-all shadow-xs" 
         />
         <button id="btn-clear-search" type="button" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
           <span class="material-symbols-outlined text-base">close</span>
@@ -95,16 +97,16 @@ import Switcher from '../components/Switcher.astro';
 
       <!-- STATUS FILTER TABS -->
       <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-0.5">
-        <button class="status-tab-btn active px-4 py-2 rounded-xl bg-yellowBrand text-slate-950 font-black text-xs border border-yellowDark/20 transition-all shadow-xs" data-status="ALL">
+        <button class="status-tab-btn active px-4 py-2 rounded-xl bg-orangeBrand text-white font-black text-xs border border-orangeDark/20 transition-all shadow-xs" data-status="ALL">
           All Bookings (<span id="count-all">0</span>)
         </button>
-        <button class="status-tab-btn px-4 py-2 rounded-xl bg-slate-50 hover:bg-yellowLight text-slate-700 font-bold text-xs border border-slate-200 transition-all" data-status="Delivered">
+        <button class="status-tab-btn px-4 py-2 rounded-xl bg-slate-50 hover:bg-orangeLight text-slate-700 font-bold text-xs border border-slate-200 transition-all" data-status="Delivered">
           ✅ Delivered (<span id="count-delivered">0</span>)
         </button>
-        <button class="status-tab-btn px-4 py-2 rounded-xl bg-slate-50 hover:bg-yellowLight text-slate-700 font-bold text-xs border border-slate-200 transition-all" data-status="In Transit">
+        <button class="status-tab-btn px-4 py-2 rounded-xl bg-slate-50 hover:bg-orangeLight text-slate-700 font-bold text-xs border border-slate-200 transition-all" data-status="In Transit">
           ⚡ In Transit (<span id="count-active">0</span>)
         </button>
-        <button class="status-tab-btn px-4 py-2 rounded-xl bg-slate-50 hover:bg-yellowLight text-slate-700 font-bold text-xs border border-slate-200 transition-all" data-status="Cancelled">
+        <button class="status-tab-btn px-4 py-2 rounded-xl bg-slate-50 hover:bg-orangeLight text-slate-700 font-bold text-xs border border-slate-200 transition-all" data-status="Cancelled">
           ❌ Cancelled (<span id="count-cancelled">0</span>)
         </button>
       </div>
@@ -116,17 +118,17 @@ import Switcher from '../components/Switcher.astro';
       <!-- Dynamically Populated Cards via Client JS -->
     </div>
 
-    <!-- EMPTY STATE ILLUSTATION -->
+    <!-- EMPTY STATE ILLUSTRATION -->
     <div id="empty-history-state" class="hidden bg-white rounded-3xl p-8 sm:p-12 text-center border border-slate-200/80 shadow-sm space-y-4">
-      <div class="w-20 h-20 bg-yellowLight rounded-full flex items-center justify-center text-4xl mx-auto border-2 border-yellowBorder">
+      <div class="w-20 h-20 bg-orangeLight rounded-full flex items-center justify-center text-4xl mx-auto border-2 border-orangeBorder">
         📦
       </div>
       <div class="max-w-md mx-auto space-y-1">
-        <h3 class="text-lg font-black font-display text-slate-900">No Pickup & Drop Bookings Found</h3>
-        <p class="text-xs font-bold text-slate-500">You haven't placed any parcel delivery bookings yet or no orders match your search criteria.</p>
+        <h3 class="text-lg font-black font-display text-slate-900">No Parcel Deliveries Found</h3>
+        <p class="text-xs font-bold text-slate-500">You haven't placed any parcel bookings yet or no orders match your search query.</p>
       </div>
-      <a href="/parcel" class="inline-flex items-center gap-2 px-6 py-3 bg-yellowBrand hover:bg-yellowDark text-slate-950 font-black text-xs rounded-2xl shadow-md transition-all active:scale-95">
-        <span>Book Your First Parcel Courier</span>
+      <a href="/parcel" class="inline-flex items-center gap-2 px-6 py-3 bg-orangeBrand hover:bg-orangeDark text-white font-black text-xs rounded-2xl shadow-md transition-all active:scale-95">
+        <span>Send Your First Parcel</span>
         <span class="material-symbols-outlined text-base">arrow_forward</span>
       </a>
     </div>
@@ -141,7 +143,7 @@ import Switcher from '../components/Switcher.astro';
       <!-- MODAL HEADER -->
       <div class="bg-slate-900 text-white p-5 flex items-center justify-between border-b border-slate-800">
         <div>
-          <span class="text-[10px] font-black text-yellowBrand uppercase tracking-wider block">Booking Details</span>
+          <span class="text-[10px] font-black text-orangeBrand uppercase tracking-wider block">Parcel Booking Details</span>
           <h3 id="modal-order-id" class="text-base font-black font-display">PARCEL-BHU-849201</h3>
         </div>
         <button id="btn-close-details-modal" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all">
@@ -158,19 +160,19 @@ import Switcher from '../components/Switcher.astro';
             <span class="material-symbols-outlined text-emerald-600 text-xl">verified</span>
             <span id="modal-status-text">Delivered Successfully</span>
           </div>
-          <span id="modal-delivered-time" class="text-[11px] font-extrabold text-emerald-700">Aug 04, 2026 • 11:48 AM</span>
+          <span id="modal-delivered-time" class="text-[11px] font-extrabold text-emerald-700">11:48 AM</span>
         </div>
 
         <!-- ADDRESSES -->
-        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3 relative pl-4 border-l-2 border-dashed border-slate-300">
+        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3 relative pl-4 border-l-2 border-dashed border-orangeBrand">
           <div>
-            <span class="text-[10px] font-black text-sky-700 uppercase tracking-wider block">📍 Pickup Address</span>
+            <span class="text-[10px] font-black text-orangeBrand uppercase tracking-wider block">📍 Pickup Address</span>
             <p class="font-black text-slate-900" id="modal-pickup-addr">Varangaon Road, Bhusawal</p>
             <p class="text-slate-500 font-medium" id="modal-sender-info">Sender: Rahul Patil • 9876543210</p>
           </div>
 
           <div class="pt-2 border-t border-slate-200">
-            <span class="text-[10px] font-black text-slate-700 uppercase tracking-wider block">🏁 Drop Address</span>
+            <span class="text-[10px] font-black text-emerald-700 uppercase tracking-wider block">🏁 Delivery Address</span>
             <p class="font-black text-slate-900" id="modal-drop-addr">Jamner Road, Bhusawal</p>
             <p class="text-slate-500 font-medium" id="modal-receiver-info">Receiver: Amit Sharma • 9123456789</p>
           </div>
@@ -180,21 +182,21 @@ import Switcher from '../components/Switcher.astro';
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
             <span class="text-[10px] font-black text-slate-500 uppercase tracking-wider block">👨‍✈️ Delivery Partner</span>
-            <p class="font-black text-slate-900 mt-0.5" id="modal-rider-name">Vikram Patil</p>
-            <p class="text-[10px] text-slate-500 font-bold" id="modal-vehicle-info">Express Bike (MH 19 BJ 5921)</p>
+            <p class="font-black text-slate-900 mt-0.5" id="modal-rider-name">Rahul Patil</p>
+            <p class="text-[10px] text-slate-500 font-bold" id="modal-vehicle-info">EV Scooter (MH 19 AX 4892)</p>
           </div>
 
-          <div class="bg-yellowLight p-3.5 rounded-2xl border border-yellowBorder">
-            <span class="text-[10px] font-black text-yellowDeep uppercase tracking-wider block">🔐 Handover OTP</span>
+          <div class="bg-orangeLight p-3.5 rounded-2xl border border-orangeBorder">
+            <span class="text-[10px] font-black text-orangeDeep uppercase tracking-wider block">🔐 Handover OTP</span>
             <p class="font-black font-mono text-base text-slate-900 mt-0.5" id="modal-otp-code">4892</p>
             <span class="text-[9px] font-extrabold text-emerald-700 block">✓ OTP Verified</span>
           </div>
         </div>
 
-        <!-- ITEM SPECIFICATIONS -->
+        <!-- SPECIFICATIONS -->
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 space-y-1.5">
           <div class="flex justify-between font-bold">
-            <span class="text-slate-500">Item Category:</span>
+            <span class="text-slate-500">Parcel Category:</span>
             <span class="text-slate-900 font-black" id="modal-category">Documents</span>
           </div>
           <div class="flex justify-between font-bold">
@@ -203,11 +205,11 @@ import Switcher from '../components/Switcher.astro';
           </div>
           <div class="flex justify-between font-bold">
             <span class="text-slate-500">Distance & Time:</span>
-            <span class="text-slate-900 font-black" id="modal-dist-time">3.5 km • 15-20 Mins</span>
+            <span class="text-slate-900 font-black" id="modal-dist-time">3.2 km • 12 Mins</span>
           </div>
           <div class="flex justify-between font-bold pt-1 border-t border-slate-200">
-            <span class="text-slate-500">Total Delivery Fee:</span>
-            <span class="text-yellowDeep font-black text-sm" id="modal-fee">₹40</span>
+            <span class="text-slate-500">Delivery Fee:</span>
+            <span class="text-orangeDeep font-black text-sm" id="modal-fee">₹32</span>
           </div>
         </div>
 
@@ -220,7 +222,7 @@ import Switcher from '../components/Switcher.astro';
           <span>Download Receipt</span>
         </button>
 
-        <button id="modal-btn-rebook" type="button" class="flex-1 py-3 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
+        <button id="modal-btn-rebook" type="button" class="flex-1 py-3 bg-orangeBrand hover:bg-orangeDark text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
           <span class="material-symbols-outlined text-base">refresh</span>
           <span>Book Again</span>
         </button>
@@ -238,7 +240,7 @@ import Switcher from '../components/Switcher.astro';
       <div class="border-b-2 border-slate-900 pb-3 flex items-center justify-between">
         <div>
           <h2 class="text-lg font-black font-display text-slate-900 tracking-tight">Bhusawal Connect</h2>
-          <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Express Parcel Courier Receipt</p>
+          <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Parcel Delivery Tax Receipt</p>
         </div>
         <span class="text-2xl">📦</span>
       </div>
@@ -255,7 +257,7 @@ import Switcher from '../components/Switcher.astro';
         </div>
         <div class="flex justify-between">
           <span class="text-slate-500">Service Type:</span>
-          <span>Express Scooter Parcel Transport</span>
+          <span>Bhusawal Connect Parcel Express</span>
         </div>
       </div>
 
@@ -266,8 +268,8 @@ import Switcher from '../components/Switcher.astro';
           <p id="receipt-pickup">Varangaon Road, Bhusawal</p>
         </div>
         <div class="pt-1 border-t border-slate-200">
-          <span class="text-[9px] font-black text-slate-500 uppercase block">Drop Destination</span>
-          <p id="receipt-drop">Jamner Road, Ordnance Factory Gate, Bhusawal</p>
+          <span class="text-[9px] font-black text-slate-500 uppercase block">Delivery Location</span>
+          <p id="receipt-drop">Jamner Road, Bhusawal</p>
         </div>
       </div>
 
@@ -280,22 +282,22 @@ import Switcher from '../components/Switcher.astro';
           </tr>
           <tr>
             <td class="py-1">Distance Charge</td>
-            <td class="py-1 text-right font-bold text-slate-900">₹15.00</td>
+            <td class="py-1 text-right font-bold text-slate-900">₹7.00</td>
           </tr>
           <tr>
             <td class="py-1">Promo Discount</td>
             <td class="py-1 text-right font-bold text-emerald-600">-₹5.00</td>
           </tr>
           <tr class="font-black text-sm border-t border-slate-900 text-slate-900">
-            <td class="pt-2">Total Amount Paid</td>
-            <td class="pt-2 text-right text-yellowDeep font-black" id="receipt-total">₹40.00</td>
+            <td class="pt-2">Total Delivery Fee</td>
+            <td class="pt-2 text-right text-orangeDeep font-black" id="receipt-total">₹32.00</td>
           </tr>
         </tbody>
       </table>
 
       <div class="text-[10px] text-center text-slate-400 font-bold space-y-0.5">
-        <p>Thank you for choosing Bhusawal Connect Express Delivery!</p>
-        <p>GSTIN: 27AAAAA0000A1Z5 • Support: +91 74980 71274</p>
+        <p>Thank you for choosing Bhusawal Connect Parcel Express!</p>
+        <p>GSTIN: 27AAAAA0000A1Z5 • Support: +91 98765 43210</p>
       </div>
 
       <!-- BUTTONS -->
@@ -312,20 +314,15 @@ import Switcher from '../components/Switcher.astro';
 
     </div>
   </div>
-
-  <Switcher />
-
-
-  <!-- ==================== CLIENT SCRIPT ==================== -->
+<!-- ==================== CLIENT SCRIPT ==================== -->
   <script is:inline>
     (function() {
-      // SAMPLE DEMO BOOKINGS IF LOCALSTORAGE IS EMPTY
+      // DEMO BOOKINGS IF LOCALSTORAGE IS EMPTY
       var sampleParcelBookings = [
         {
           id: 'PARCEL-BHU-849201',
           type: 'PARCEL',
-          category: 'Documents / Legal Papers',
-          description: 'Sealed waterproof legal document pouch',
+          category: 'Documents',
           weight: 'Up to 1 kg',
           pickupAddress: 'Varangaon Road, Near Station Square, Bhusawal',
           dropAddress: 'Jamner Road, Near Ordnance Factory Gate, Bhusawal',
@@ -333,13 +330,13 @@ import Switcher from '../components/Switcher.astro';
           senderPhone: '9876543210',
           receiverName: 'Amit Sharma',
           receiverPhone: '9123456789',
-          distance: '3.5 km',
-          estTime: '15 - 20 Mins',
-          total: 40,
+          distance: '3.2 km',
+          estTime: '12 Mins',
+          total: 32,
           paymentMethod: 'Cash on Pickup',
           status: 'Delivered',
-          rider: 'Vikram Patil',
-          vehicle: 'Express Bike (MH 19 BJ 5921)',
+          rider: 'Rahul Patil',
+          vehicle: 'EV Scooter (MH 19 AX 4892)',
           otp: '4892',
           otpVerified: true,
           timestamp: '2026-08-04T11:30:00.000Z',
@@ -348,9 +345,8 @@ import Switcher from '../components/Switcher.astro';
         {
           id: 'PARCEL-BHU-719304',
           type: 'PARCEL',
-          category: 'Homemade Food / Tiffin',
-          description: 'Hot homecooked lunch tiffin box',
-          weight: '1–5 kg',
+          category: 'Electronics',
+          weight: '1 kg - 5 kg',
           pickupAddress: 'Khadka Road, Near ZP School, Bhusawal',
           dropAddress: 'Railway Colony, Quarter 42, Bhusawal',
           senderName: 'Sunita Patil',
@@ -358,12 +354,12 @@ import Switcher from '../components/Switcher.astro';
           receiverName: 'Rohan Patil',
           receiverPhone: '9822334455',
           distance: '4.2 km',
-          estTime: '18 - 22 Mins',
-          total: 55,
-          paymentMethod: 'UPI / QR Code',
+          estTime: '18 Mins',
+          total: 47,
+          paymentMethod: 'UPI / Online',
           status: 'Delivered',
           rider: 'Suresh Mahajan',
-          vehicle: 'Delivery Scooter (MH 19 CK 4012)',
+          vehicle: 'EV Scooter (MH 19 CK 4012)',
           otp: '7214',
           otpVerified: true,
           timestamp: '2026-08-03T14:15:00.000Z',
@@ -372,22 +368,21 @@ import Switcher from '../components/Switcher.astro';
         {
           id: 'PARCEL-BHU-602918',
           type: 'PARCEL',
-          category: 'Mobile / Electronics',
-          description: 'Smartphone box with charger & invoice',
+          category: 'Gift Box',
           weight: 'Up to 1 kg',
           pickupAddress: 'Main Market, Mobile Plaza, Bhusawal',
           dropAddress: 'Tapti Nagar, Block C, Bhusawal',
-          senderName: 'Ganesh Electronics',
+          senderName: 'Ganesh Gifts',
           senderPhone: '9890112233',
           receiverName: 'Pooja Chaudhari',
           receiverPhone: '9765432109',
           distance: '2.8 km',
-          estTime: '12 - 16 Mins',
-          total: 45,
+          estTime: '10 Mins',
+          total: 32,
           paymentMethod: 'Cash on Delivery',
           status: 'Delivered',
-          rider: 'Vikram Patil',
-          vehicle: 'Express Bike (MH 19 BJ 5921)',
+          rider: 'Rahul Patil',
+          vehicle: 'EV Scooter (MH 19 AX 4892)',
           otp: '9103',
           otpVerified: true,
           timestamp: '2026-08-01T16:00:00.000Z',
@@ -401,8 +396,7 @@ import Switcher from '../components/Switcher.astro';
         allOrders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
       } catch(e) {}
 
-      // Filter parcel / bike ride bookings or fallback to samples
-      var parcelBookings = allOrders.filter(function(o) { return o.type === 'PARCEL' || o.type === 'BIKE_RIDE' || o.pickupAddress; });
+      var parcelBookings = allOrders.filter(function(o) { return o.type === 'PARCEL' || o.weight; });
       if (parcelBookings.length === 0) {
         parcelBookings = sampleParcelBookings;
       }
@@ -415,7 +409,7 @@ import Switcher from '../components/Switcher.astro';
       var searchInput = document.getElementById('search-history-input');
       var clearSearchBtn = document.getElementById('btn-clear-search');
 
-      // UPDATE STATS COUNTS
+      // UPDATE COUNTS
       function updateCounts() {
         var countAll = parcelBookings.length;
         var countDel = parcelBookings.filter(function(b) { return b.status === 'Delivered'; }).length;
@@ -441,12 +435,10 @@ import Switcher from '../components/Switcher.astro';
         var query = currentSearchQuery.toLowerCase().trim();
 
         var filtered = parcelBookings.filter(function(b) {
-          // Status filter
           if (currentFilterStatus === 'Delivered' && b.status !== 'Delivered') return false;
           if (currentFilterStatus === 'In Transit' && (b.status === 'Delivered' || b.status === 'Cancelled')) return false;
           if (currentFilterStatus === 'Cancelled' && b.status !== 'Cancelled') return false;
 
-          // Search filter
           if (query) {
             var matchId = (b.id || '').toLowerCase().indexOf(query) !== -1;
             var matchPick = (b.pickupAddress || '').toLowerCase().indexOf(query) !== -1;
@@ -471,7 +463,6 @@ import Switcher from '../components/Switcher.astro';
         filtered.forEach(function(b) {
           var dateStr = b.timestamp ? new Date(b.timestamp).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Aug 04, 2026';
           var delTimeStr = b.deliveredAt ? new Date(b.deliveredAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '11:48 AM';
-
           var isDelivered = b.status === 'Delivered';
           var isCancelled = b.status === 'Cancelled';
 
@@ -479,7 +470,7 @@ import Switcher from '../components/Switcher.astro';
             ? '<span class="bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">✅ Delivered</span>'
             : (isCancelled 
               ? '<span class="bg-rose-100 text-rose-800 border border-rose-300 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">❌ Cancelled</span>'
-              : '<span class="bg-yellowBrand text-slate-950 border border-yellowDark/20 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase animate-pulse">⚡ In Transit</span>');
+              : '<span class="bg-orangeBrand text-white border border-orangeDark/20 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase animate-pulse">⚡ In Transit</span>');
 
           html += `
             <div class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm hover:shadow-md transition-all space-y-4 group">
@@ -487,48 +478,49 @@ import Switcher from '../components/Switcher.astro';
               <!-- CARD HEADER -->
               <div class="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2">
                 <div class="flex items-center gap-2">
-                  <div class="w-9 h-9 rounded-xl bg-yellowLight text-yellowDeep flex items-center justify-center text-lg font-black border border-yellowBorder shadow-2xs">
+                  <div class="w-9 h-9 rounded-xl bg-orangeLight text-orangeDeep flex items-center justify-center text-lg font-black border border-orangeBorder shadow-2xs">
                     📦
                   </div>
                   <div>
                     <div class="flex items-center gap-2">
                       <h3 class="text-sm font-black font-display text-slate-900">${b.id || 'PARCEL-BHU'}</h3>
                       ${statusBadge}
+                      <span class="bg-orangeLight text-orangeDeep border border-orangeBorder text-[10px] font-black px-2 py-0.5 rounded-full">📦 ${b.category || 'Documents'}</span>
                     </div>
                     <span class="text-[10px] font-extrabold text-slate-400">Booking Date: ${dateStr}</span>
                   </div>
                 </div>
 
                 <div class="text-right">
-                  <span class="text-lg font-black font-display text-yellowDeep block">₹${b.total || 40}</span>
-                  <span class="text-[10px] font-bold text-slate-400 block">${b.paymentMethod || 'Cash on Pickup'}</span>
+                  <span class="text-lg font-black font-display text-orangeDeep block">₹${b.total || 32}</span>
+                  <span class="text-[10px] font-bold text-slate-400 block">Delivery Fee</span>
                 </div>
               </div>
 
               <!-- CARD BODY: ADDRESSES & SPECIFICATIONS -->
               <div class="grid grid-cols-1 md:grid-cols-12 gap-4 text-xs">
                 
-                <!-- ADDRESSES (7 COLS) -->
-                <div class="md:col-span-7 space-y-2 relative pl-3.5 border-l-2 border-dashed border-slate-300">
+                <!-- ADDRESSES -->
+                <div class="md:col-span-7 space-y-2 relative pl-3.5 border-l-2 border-dashed border-orangeBrand">
                   <div>
-                    <span class="text-[9px] font-black text-sky-700 uppercase tracking-wider block">📍 Pickup Address</span>
+                    <span class="text-[9px] font-black text-orangeBrand uppercase tracking-wider block">📍 Pickup Address</span>
                     <p class="font-bold text-slate-900 truncate">${b.pickupAddress || 'Varangaon Road, Bhusawal'}</p>
                   </div>
                   <div>
-                    <span class="text-[9px] font-black text-slate-700 uppercase tracking-wider block">🏁 Drop Address</span>
+                    <span class="text-[9px] font-black text-emerald-700 uppercase tracking-wider block">🏁 Delivery Address</span>
                     <p class="font-bold text-slate-900 truncate">${b.dropAddress || 'Jamner Road, Bhusawal'}</p>
                   </div>
                 </div>
 
-                <!-- ITEM & RIDER INFO (5 COLS) -->
+                <!-- ITEM & RIDER INFO -->
                 <div class="md:col-span-5 bg-slate-50 p-3 rounded-2xl border border-slate-200/80 space-y-1.5">
                   <div class="flex justify-between font-semibold">
-                    <span class="text-slate-500 text-[10px]">Item Category:</span>
+                    <span class="text-slate-500 text-[10px]">Parcel Category:</span>
                     <span class="font-black text-slate-900 text-[11px]">${b.category || 'Documents'}</span>
                   </div>
                   <div class="flex justify-between font-semibold">
                     <span class="text-slate-500 text-[10px]">Delivery Partner:</span>
-                    <span class="font-black text-slate-900 text-[11px]">${b.rider || 'Vikram Patil'}</span>
+                    <span class="font-black text-slate-900 text-[11px]">${b.rider || 'Rahul Patil'}</span>
                   </div>
                   <div class="flex justify-between font-semibold">
                     <span class="text-slate-500 text-[10px]">Delivered Time:</span>
@@ -547,14 +539,14 @@ import Switcher from '../components/Switcher.astro';
                 </button>
 
                 <!-- BOOK AGAIN -->
-                <button type="button" class="btn-book-again px-4 py-2.5 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white font-black text-xs rounded-xl transition-all active:scale-95 flex items-center gap-1 shadow-xs" data-id="${b.id}">
+                <button type="button" class="btn-book-again px-4 py-2.5 bg-orangeBrand hover:bg-orangeDark text-white font-black text-xs rounded-xl transition-all active:scale-95 flex items-center gap-1 shadow-xs" data-id="${b.id}">
                   <span class="material-symbols-outlined text-base">refresh</span>
                   <span>Book Again</span>
                 </button>
 
                 <!-- DOWNLOAD RECEIPT -->
                 <button type="button" class="btn-download-receipt px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs rounded-xl transition-all active:scale-95 flex items-center gap-1 shadow-xs" data-id="${b.id}">
-                  <span class="material-symbols-outlined text-base text-yellowBrand">download</span>
+                  <span class="material-symbols-outlined text-base text-orangeBrand">download</span>
                   <span>Download Receipt</span>
                 </button>
               </div>
@@ -567,11 +559,11 @@ import Switcher from '../components/Switcher.astro';
         attachCardListeners();
       }
 
-      // ATTACH EVENT LISTENERS TO CARD BUTTONS
+      // ATTACH CARD LISTENERS
       var activeSelectedBooking = null;
 
       function attachCardListeners() {
-        // VIEW DETAILS BUTTON
+        // VIEW DETAILS
         document.querySelectorAll('.btn-view-details').forEach(function(btn) {
           btn.addEventListener('click', function() {
             var bId = btn.getAttribute('data-id');
@@ -597,25 +589,25 @@ import Switcher from '../components/Switcher.astro';
 
             if (dId) dId.textContent = booking.id;
             if (dStatus) dStatus.textContent = booking.status === 'Delivered' ? 'Delivered Successfully' : booking.status;
-            if (dTime) dTime.textContent = booking.deliveredAt ? new Date(booking.deliveredAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : 'In Transit';
+            if (dTime) dTime.textContent = booking.deliveredAt ? new Date(booking.deliveredAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '11:48 AM';
             if (dPick) dPick.textContent = booking.pickupAddress;
             if (dDrop) dDrop.textContent = booking.dropAddress;
             if (dSender) dSender.textContent = 'Sender: ' + (booking.senderName || 'Rahul Patil') + ' • ' + (booking.senderPhone || '9876543210');
             if (dReceiver) dReceiver.textContent = 'Receiver: ' + (booking.receiverName || 'Amit Sharma') + ' • ' + (booking.receiverPhone || '9123456789');
-            if (dRider) dRider.textContent = booking.rider || 'Vikram Patil';
-            if (dVehicle) dVehicle.textContent = booking.vehicle || 'Express Bike (MH 19 BJ 5921)';
+            if (dRider) dRider.textContent = booking.rider || 'Rahul Patil';
+            if (dVehicle) dVehicle.textContent = booking.vehicle || 'EV Scooter (MH 19 AX 4892)';
             if (dOtp) dOtp.textContent = booking.otp || '4892';
             if (dCat) dCat.textContent = booking.category || 'Documents';
             if (dWeight) dWeight.textContent = booking.weight || 'Up to 1 kg';
-            if (dDist) dDist.textContent = (booking.distance || '3.5 km') + ' • ' + (booking.estTime || '15 - 20 Mins');
-            if (dFee) dFee.textContent = '₹' + (booking.total || 40);
+            if (dDist) dDist.textContent = (booking.distance || '3.2 km') + ' • ' + (booking.estTime || '12 Mins');
+            if (dFee) dFee.textContent = '₹' + (booking.total || 32);
 
             var dModal = document.getElementById('details-modal');
             if (dModal) dModal.classList.remove('hidden');
           });
         });
 
-        // BOOK AGAIN BUTTON
+        // BOOK AGAIN
         document.querySelectorAll('.btn-book-again').forEach(function(btn) {
           btn.addEventListener('click', function() {
             var bId = btn.getAttribute('data-id');
@@ -626,9 +618,11 @@ import Switcher from '../components/Switcher.astro';
               pickupAddress: booking.pickupAddress,
               dropAddress: booking.dropAddress,
               category: booking.category,
-              description: booking.description || '',
               weight: booking.weight || 'Up to 1 kg',
-              instructions: booking.instructions || ''
+              senderName: booking.senderName || '',
+              senderPhone: booking.senderPhone || '',
+              receiverName: booking.receiverName || '',
+              receiverPhone: booking.receiverPhone || ''
             };
             try {
               localStorage.setItem('bhusawal_parcel_draft', JSON.stringify(draft));
@@ -638,7 +632,7 @@ import Switcher from '../components/Switcher.astro';
           });
         });
 
-        // DOWNLOAD RECEIPT BUTTON
+        // DOWNLOAD RECEIPT
         document.querySelectorAll('.btn-download-receipt').forEach(function(btn) {
           btn.addEventListener('click', function() {
             var bId = btn.getAttribute('data-id');
@@ -650,46 +644,56 @@ import Switcher from '../components/Switcher.astro';
         });
       }
 
-      function openReceiptModal(booking) {
-        activeSelectedBooking = booking;
-
+      // OPEN RECEIPT MODAL
+      function openReceiptModal(b) {
+        activeSelectedBooking = b;
         var rId = document.getElementById('receipt-id');
         var rDate = document.getElementById('receipt-date');
         var rPick = document.getElementById('receipt-pickup');
         var rDrop = document.getElementById('receipt-drop');
         var rTotal = document.getElementById('receipt-total');
 
-        if (rId) rId.textContent = booking.id;
-        if (rDate) rDate.textContent = booking.timestamp ? new Date(booking.timestamp).toLocaleString() : 'Aug 04, 2026';
-        if (rPick) rPick.textContent = booking.pickupAddress;
-        if (rDrop) rDrop.textContent = booking.dropAddress;
-        if (rTotal) rTotal.textContent = '₹' + (booking.total || 40) + '.00';
+        var dStr = b.timestamp ? new Date(b.timestamp).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Aug 04, 2026 • 11:30 AM';
 
-        var rModal = document.getElementById('printable-receipt-modal');
-        if (rModal) rModal.classList.remove('hidden');
+        if (rId) rId.textContent = b.id || 'PARCEL-BHU-849201';
+        if (rDate) rDate.textContent = dStr;
+        if (rPick) rPick.textContent = b.pickupAddress || 'Varangaon Road, Bhusawal';
+        if (rDrop) rDrop.textContent = b.dropAddress || 'Jamner Road, Bhusawal';
+        if (rTotal) rTotal.textContent = '₹' + (b.total || 32) + '.00';
+
+        var recModal = document.getElementById('printable-receipt-modal');
+        if (recModal) recModal.classList.remove('hidden');
       }
 
-      // TAB FILTER CLICK LISTENERS
-      document.querySelectorAll('.status-tab-btn').forEach(function(tab) {
-        tab.addEventListener('click', function() {
-          document.querySelectorAll('.status-tab-btn').forEach(function(t) {
-            t.classList.remove('bg-yellowBrand', 'text-slate-950', 'active');
-            t.classList.add('bg-slate-50', 'text-slate-700');
-          });
-          tab.classList.add('bg-yellowBrand', 'text-slate-950', 'active');
-          tab.classList.remove('bg-slate-50', 'text-slate-700');
-
-          currentFilterStatus = tab.getAttribute('data-status');
-          renderBookings();
-        });
+      // CLOSE MODALS HANDLERS
+      document.getElementById('btn-close-details-modal')?.addEventListener('click', function() {
+        document.getElementById('details-modal')?.classList.add('hidden');
       });
 
-      // SEARCH INPUT LISTENER
+      document.getElementById('btn-close-receipt')?.addEventListener('click', function() {
+        document.getElementById('printable-receipt-modal')?.classList.add('hidden');
+      });
+
+      document.getElementById('modal-btn-download')?.addEventListener('click', function() {
+        if (activeSelectedBooking) openReceiptModal(activeSelectedBooking);
+      });
+
+      document.getElementById('modal-btn-rebook')?.addEventListener('click', function() {
+        if (activeSelectedBooking) {
+          window.location.href = '/parcel';
+        }
+      });
+
+      document.getElementById('btn-do-print')?.addEventListener('click', function() {
+        window.print();
+      });
+
+      // SEARCH HANDLERS
       if (searchInput) {
         searchInput.addEventListener('input', function() {
           currentSearchQuery = searchInput.value;
           if (clearSearchBtn) {
-            if (currentSearchQuery) clearSearchBtn.classList.remove('hidden');
+            if (currentSearchQuery.length > 0) clearSearchBtn.classList.remove('hidden');
             else clearSearchBtn.classList.add('hidden');
           }
           renderBookings();
@@ -705,55 +709,21 @@ import Switcher from '../components/Switcher.astro';
         });
       }
 
-      // CLOSE DETAILS MODAL
-      var btnCloseDetails = document.getElementById('btn-close-details-modal');
-      var detailsModal = document.getElementById('details-modal');
-      if (btnCloseDetails && detailsModal) {
-        btnCloseDetails.addEventListener('click', function() {
-          detailsModal.classList.add('hidden');
+      // TABS FILTER HANDLERS
+      document.querySelectorAll('.status-tab-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.status-tab-btn').forEach(function(b) {
+            b.classList.remove('active', 'bg-orangeBrand', 'text-white', 'shadow-xs');
+            b.classList.add('bg-slate-50', 'text-slate-700');
+          });
+
+          btn.classList.add('active', 'bg-orangeBrand', 'text-white', 'shadow-xs');
+          btn.classList.remove('bg-slate-50', 'text-slate-700');
+
+          currentFilterStatus = btn.getAttribute('data-status');
+          renderBookings();
         });
-      }
-
-      // MODAL FOOTER ACTION BUTTONS
-      var modalBtnDownload = document.getElementById('modal-btn-download');
-      var modalBtnRebook = document.getElementById('modal-btn-rebook');
-
-      if (modalBtnDownload) {
-        modalBtnDownload.addEventListener('click', function() {
-          if (detailsModal) detailsModal.classList.add('hidden');
-          if (activeSelectedBooking) openReceiptModal(activeSelectedBooking);
-        });
-      }
-
-      if (modalBtnRebook) {
-        modalBtnRebook.addEventListener('click', function() {
-          if (!activeSelectedBooking) return;
-          var draft = {
-            pickupAddress: activeSelectedBooking.pickupAddress,
-            dropAddress: activeSelectedBooking.dropAddress,
-            category: activeSelectedBooking.category
-          };
-          try { localStorage.setItem('bhusawal_parcel_draft', JSON.stringify(draft)); } catch(e) {}
-          window.location.href = '/parcel';
-        });
-      }
-
-      // RECEIPT MODAL BUTTONS
-      var btnDoPrint = document.getElementById('btn-do-print');
-      var btnCloseReceipt = document.getElementById('btn-close-receipt');
-      var receiptModal = document.getElementById('printable-receipt-modal');
-
-      if (btnDoPrint) {
-        btnDoPrint.addEventListener('click', function() {
-          window.print();
-        });
-      }
-
-      if (btnCloseReceipt && receiptModal) {
-        btnCloseReceipt.addEventListener('click', function() {
-          receiptModal.classList.add('hidden');
-        });
-      }
+      });
 
       // INITIAL RENDER
       renderBookings();

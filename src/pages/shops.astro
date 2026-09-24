@@ -1,5 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
 import foodCatalog from '../../public/food_catalog.json';
 ---
 
@@ -41,6 +40,9 @@ import foodCatalog from '../../public/food_catalog.json';
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="min-h-screen pb-32 text-slate-800 antialiased bg-slate-50">
@@ -270,10 +272,7 @@ import foodCatalog from '../../public/food_catalog.json';
     </div>
 
   </main>
-
-  <Switcher />
-
-  <!-- CLIENT-SIDE RESTAURANT & MENU ENGINE -->
+<!-- CLIENT-SIDE RESTAURANT & MENU ENGINE -->
   <script is:inline define:vars={{ initialFoodCatalog: foodCatalog }}>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -503,7 +502,8 @@ import foodCatalog from '../../public/food_catalog.json';
             if (existing) {
               existing.quantity = (existing.quantity || 1) + 1;
             } else {
-              cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Restaurant Menu' });
+              const actualMrp = parseFloat(btn.dataset.mrp || price);
+              cart.push({ id, name, price, mrp: actualMrp, image: img, quantity: 1, cat: 'Local Shops' });
             }
 
             localStorage.setItem('bhusawal_cart', JSON.stringify(cart));

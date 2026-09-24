@@ -1,1 +1,44 @@
-.vercel
+# Build output
+dist/
+.astro/
+.vercel/
+
+# Dependencies
+node_modules/
+
+# Environment variables & Secrets
+.env
+.env.*
+!.env.example
+
+# Google Credentials & Service Accounts
+*credentials*.json
+*service_account*.json
+token.json
+client_secret*.json
+*.pem
+credentials/
+
+# Colab Bridge & Job System Caches
+.jobs/
+.colab_cache/
+
+# Temporary / Scratch scripts
+check_env_tracked.mjs
+git_ops.mjs
+push_to_git.mjs
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Large Archives & Image Cache
+*.zip
+*.tar.gz
+*.rar
+.image_cache/
+
+# OS / Editor
+.DS_Store
+Thumbs.db

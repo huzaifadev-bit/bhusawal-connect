@@ -1,5 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
 ---
 
 <!DOCTYPE html>
@@ -7,7 +6,7 @@ import Switcher from '../components/Switcher.astro';
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🛵 Pickup & Drop (Bike Taxi & Auto Rickshaw) | Bhusawal Connect</title>
+  <title>🛵 Pickup & Drop (Bike Taxi) | Bhusawal Connect</title>
   
   <!-- TAILWIND & GOOGLE FONTS -->
   <script is:inline src="https://cdn.tailwindcss.com"></script>
@@ -55,6 +54,9 @@ import Switcher from '../components/Switcher.astro';
       box-shadow: 0 10px 25px -5px rgba(202, 138, 4, 0.2);
     }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="pb-36 max-w-4xl mx-auto min-h-screen text-slate-800 antialiased bg-white">
@@ -67,10 +69,10 @@ import Switcher from '../components/Switcher.astro';
       </a>
       <div>
         <h1 class="text-base sm:text-lg font-black font-display text-slate-900 leading-tight flex items-center gap-2">
-          <span>🛵 Pickup & Drop Rides</span>
-          <span class="bg-yellowLight text-yellowDeep text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-yellowBorder">BIKE TAXI & AUTO</span>
+          <span>🛵 Pickup & Drop</span>
+          <span class="bg-yellowLight text-yellowDeep text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-yellowBorder">BIKE TAXI ONLY</span>
         </h1>
-        <p class="text-xs text-slate-500 font-medium">Book Bike Taxi or Auto Rickshaw across Bhusawal</p>
+        <p class="text-xs text-slate-500 font-medium">Fast Bike Taxi across Bhusawal</p>
       </div>
     </div>
 
@@ -90,11 +92,11 @@ import Switcher from '../components/Switcher.astro';
 
   <main class="px-4 sm:px-6 py-6 space-y-7">
 
-    <!-- ==================== HERO SECTION (UBER & RAPIDO STYLE) ==================== -->
+    <!-- ==================== HERO SECTION REDESIGN ==================== -->
     <section class="relative overflow-hidden bg-gradient-to-br from-yellowBrand via-amber-400 to-yellow-500 rounded-3xl p-6 sm:p-10 text-slate-950 shadow-xl border border-yellowDark/20 group">
       
       <!-- BACKGROUND ACCENT GLOWS -->
-      <div class="absolute -top-24 -right-24 w-72 h-72 bg-white/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -top-24 -right-24 w-72 h-72 bg-white/30 rounded-full blur-3xl pointer-events-none"></div>
       <div class="absolute -bottom-24 -left-24 w-72 h-72 bg-amber-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -105,51 +107,43 @@ import Switcher from '../components/Switcher.astro';
           <!-- TOP BADGE -->
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950 text-yellowBrand text-xs font-black uppercase tracking-wider shadow-md">
             <span class="w-2 h-2 rounded-full bg-yellowBrand animate-ping"></span>
-            <span>Instant Booking • 24/7 Available</span>
+            <span>BHUSAWAL SUPER APP • 24/7 BIKE TAXI</span>
           </div>
 
           <!-- HEADLINE -->
           <h1 class="text-3xl sm:text-5xl font-black font-display tracking-tight text-slate-950 leading-tight sm:leading-none">
-            Ride Anywhere in <span class="underline decoration-slate-950/30 underline-offset-8">Bhusawal</span>
+            Book a Bike Taxi in Minutes
           </h1>
 
           <!-- SUBHEADING -->
-          <p class="text-sm sm:text-lg font-bold text-slate-900/90 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-            Book a Bike Taxi or Auto Rickshaw in Minutes
+          <p class="text-base sm:text-xl font-extrabold text-slate-900/90 tracking-wide uppercase">
+            Fast • Affordable • Safe
           </p>
 
-          <!-- CTA BUTTON -->
+          <!-- CTA BUTTON (LARGE YELLOW BUTTON) -->
           <div class="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
             <a 
               href="#pickup-section-card" 
               onclick="document.getElementById('pickup-address-input').focus();"
-              class="w-full sm:w-auto px-8 py-4 bg-slate-950 text-yellowBrand hover:bg-slate-900 active:scale-95 transition-all duration-300 rounded-2xl font-black text-base sm:text-lg shadow-2xl flex items-center justify-center gap-3 border border-yellowBrand/30 group/btn"
+              class="w-full sm:w-auto px-10 py-4 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white active:scale-95 transition-all duration-300 rounded-2xl font-black text-lg sm:text-xl shadow-2xl flex items-center justify-center gap-3 border-2 border-slate-950 group/btn cursor-pointer"
             >
-              <span>🛵 Book Ride Now</span>
-              <span class="material-symbols-outlined text-xl group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+              <span>🛵 Book Bike Taxi</span>
+              <span class="material-symbols-outlined text-2xl group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
             </a>
           </div>
 
-          <!-- 4 KEY FEATURE HIGHLIGHTS BELOW HERO BUTTON -->
+          <!-- 4 FEATURE BADGES -->
           <div class="pt-4 grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 text-left">
             
-            <div class="bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/60 shadow-sm flex items-center gap-2.5">
+            <div class="bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-md flex items-center gap-2.5 hover:scale-105 transition-transform">
               <span class="text-xl">⚡</span>
               <div>
                 <p class="text-xs font-black text-slate-900 leading-tight">Fast Pickup</p>
-                <p class="text-[10px] font-bold text-slate-600">~3-5 Mins ETA</p>
+                <p class="text-[10px] font-bold text-slate-600">~3 Mins ETA</p>
               </div>
             </div>
 
-            <div class="bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/60 shadow-sm flex items-center gap-2.5">
-              <span class="text-xl">💰</span>
-              <div>
-                <p class="text-xs font-black text-slate-900 leading-tight">Affordable Fare</p>
-                <p class="text-[10px] font-bold text-slate-600">From ₹25 Only</p>
-              </div>
-            </div>
-
-            <div class="bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/60 shadow-sm flex items-center gap-2.5">
+            <div class="bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-md flex items-center gap-2.5 hover:scale-105 transition-transform">
               <span class="text-xl">📍</span>
               <div>
                 <p class="text-xs font-black text-slate-900 leading-tight">Live Tracking</p>
@@ -157,11 +151,19 @@ import Switcher from '../components/Switcher.astro';
               </div>
             </div>
 
-            <div class="bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-white/60 shadow-sm flex items-center gap-2.5">
-              <span class="text-xl">⭐</span>
+            <div class="bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-md flex items-center gap-2.5 hover:scale-105 transition-transform">
+              <span class="text-xl">🛡</span>
               <div>
-                <p class="text-xs font-black text-slate-900 leading-tight">Verified Drivers</p>
+                <p class="text-xs font-black text-slate-900 leading-tight">Verified Riders</p>
                 <p class="text-[10px] font-bold text-slate-600">100% Safe Rides</p>
+              </div>
+            </div>
+
+            <div class="bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-white/80 shadow-md flex items-center gap-2.5 hover:scale-105 transition-transform">
+              <span class="text-xl">💰</span>
+              <div>
+                <p class="text-xs font-black text-slate-900 leading-tight">Affordable Fare</p>
+                <p class="text-[10px] font-bold text-slate-600">From ₹25 Only</p>
               </div>
             </div>
 
@@ -169,26 +171,26 @@ import Switcher from '../components/Switcher.astro';
 
         </div>
 
-        <!-- RIGHT COLUMN: PREMIUM ILLUSTRATION (BIKE TAXI + AUTO RICKSHAW) -->
+        <!-- RIGHT COLUMN: MODERN BIKE TAXI ILLUSTRATION -->
         <div class="lg:col-span-5 relative">
-          <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/80 bg-white group-hover:scale-[1.02] transition-transform duration-300">
+          <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/90 bg-white group-hover:scale-[1.02] transition-transform duration-300">
             <img 
-              src="/assets/bike_ride_auto_hero.jpg" 
-              alt="Bike Taxi & Auto Rickshaw Ride in Bhusawal" 
-              class="w-full h-56 sm:h-72 lg:h-80 object-cover"
-              onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=800&q=80';"
+              src="/assets/services/service_bike_taxi_hero.jpg?v=3" 
+              alt="Modern Bike Taxi Illustration with Rider and Passenger wearing Helmets" 
+              class="w-full h-60 sm:h-72 lg:h-84 object-cover"
+              onerror="this.onerror=null;this.src='/assets/service_bike_taxi_hero.jpg';"
             />
             
             <!-- OVERLAY BADGE -->
-            <div class="absolute bottom-3 left-3 right-3 bg-slate-950/80 backdrop-blur-md p-3 rounded-2xl text-white flex items-center justify-between border border-white/20">
+            <div class="absolute bottom-3 left-3 right-3 bg-slate-950/85 backdrop-blur-md p-3 rounded-2xl text-white flex items-center justify-between border border-white/20">
               <div class="flex items-center gap-2">
-                <span class="text-lg">🛺 🛵</span>
+                <span class="text-xl">🛵</span>
                 <div>
-                  <p class="text-xs font-black text-yellowBrand">Bike & Auto Fleet</p>
-                  <p class="text-[10px] text-slate-300 font-medium">Bhusawal City Coverage</p>
+                  <p class="text-xs font-black text-yellowBrand">Premium Bike Taxi</p>
+                  <p class="text-[10px] text-slate-300 font-medium">Helmet Safety • Instant Rider</p>
                 </div>
               </div>
-              <span class="text-[10px] font-black bg-yellowBrand text-slate-950 px-2.5 py-1 rounded-lg uppercase">Active Now</span>
+              <span class="text-[10px] font-black bg-yellowBrand text-slate-950 px-2.5 py-1 rounded-lg uppercase shadow-xs">Fast & Safe</span>
             </div>
 
           </div>
@@ -198,7 +200,7 @@ import Switcher from '../components/Switcher.astro';
 
     </section>
 
-    <!-- VALIDATION ERROR TOAST BANNER (Hidden by default) -->
+    <!-- VALIDATION ERROR TOAST BANNER -->
     <div id="address-validation-banner" class="hidden bg-rose-500 text-white p-4 rounded-2xl shadow-lg border border-rose-600 flex items-center justify-between gap-3 animate-bounce">
       <div class="flex items-center gap-2.5">
         <span class="material-symbols-outlined text-xl">warning</span>
@@ -220,7 +222,7 @@ import Switcher from '../components/Switcher.astro';
             </div>
             <div>
               <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
-                <span>📍 Pickup Location</span>
+                <span>📍 Pickup Address</span>
                 <span class="text-[10px] font-extrabold text-yellowDeep bg-yellowLight px-2 py-0.5 rounded-full border border-yellowBorder">Boarding Spot</span>
               </h2>
               <p class="text-xs text-slate-500 font-medium">Select where driver collects you</p>
@@ -271,7 +273,7 @@ import Switcher from '../components/Switcher.astro';
             </div>
             <div>
               <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
-                <span>🏁 Drop Destination</span>
+                <span>🏁 Drop Address</span>
                 <span class="text-[10px] font-extrabold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">Destination</span>
               </h2>
               <p class="text-xs text-slate-500 font-medium">Select your ride destination in Bhusawal</p>
@@ -308,102 +310,13 @@ import Switcher from '../components/Switcher.astro';
     </div>
 
 
-    <!-- ==================== 2. TWO PREMIUM RIDE OPTION CARDS ==================== -->
-    <section class="space-y-3">
-      <div class="flex items-center justify-between px-1">
-        <div>
-          <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
-            <span>⚡ Select Ride Option</span>
-            <span class="text-[10px] font-black text-yellowDeep bg-yellowLight px-2 py-0.5 rounded-full border border-yellowBorder">PICKUP & DROP</span>
-          </h2>
-          <p class="text-xs text-slate-500 font-medium">Choose Bike Taxi or Auto Rickshaw for your journey</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        
-        <!-- CARD 1: BIKE TAXI -->
-        <div 
-          id="ride-card-bike"
-          class="ride-option-card active cursor-pointer bg-yellowLight rounded-3xl p-5 border-2 border-yellowBrand shadow-md hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
-          data-type="Bike Taxi"
-          data-base="25"
-          data-perkm="7"
-          data-capacity="1 Passenger"
-          data-speed="Fastest option"
-          data-eta="~3 Mins"
-        >
-          <!-- HIGHLIGHT BADGE -->
-          <div class="absolute top-3 right-3 bg-yellowBrand text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border border-yellowDark/20 shadow-2xs">
-            RECOMMENDED
-          </div>
-
-          <div class="flex items-start gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-yellowBrand text-slate-950 flex items-center justify-center text-3xl shadow-sm shrink-0 border border-yellowDark/20 group-hover:scale-110 transition-transform">
-              🛵
-            </div>
-
-            <div class="space-y-1 flex-1">
-              <h3 class="text-lg font-black font-display text-slate-900">Bike Taxi</h3>
-              <p class="text-xs font-bold text-yellowDeep">Fastest option • Affordable</p>
-              
-              <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-bold text-slate-700">
-                <span class="bg-white/80 px-2 py-0.5 rounded-lg border border-yellowBorder">👤 1 Passenger</span>
-                <span class="bg-white/80 px-2 py-0.5 rounded-lg border border-yellowBorder">⚡ ~3 Mins Arrival</span>
-              </div>
-
-              <div class="pt-2 flex items-baseline justify-between">
-                <span class="text-[10px] font-black text-slate-500 uppercase">Starting Fare</span>
-                <span class="text-base font-black font-display text-yellowDeep">₹25 <span class="text-xs font-bold text-slate-500">(+₹7/km)</span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- CARD 2: AUTO RICKSHAW -->
-        <div 
-          id="ride-card-auto"
-          class="ride-option-card cursor-pointer bg-white rounded-3xl p-5 border-2 border-slate-200/80 shadow-sm hover:border-yellowBrand hover:shadow-lg transition-all duration-300 relative overflow-hidden group"
-          data-type="Auto Rickshaw"
-          data-base="40"
-          data-perkm="14"
-          data-capacity="Up to 3 Passengers"
-          data-speed="Comfortable ride"
-          data-eta="~5 Mins"
-        >
-          <div class="flex items-start gap-4">
-            <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-900 flex items-center justify-center text-3xl shadow-sm shrink-0 border border-amber-200 group-hover:scale-110 transition-transform">
-              🛺
-            </div>
-
-            <div class="space-y-1 flex-1">
-              <h3 class="text-lg font-black font-display text-slate-900">Auto Rickshaw</h3>
-              <p class="text-xs font-bold text-slate-500">Comfortable ride • Luggage space</p>
-              
-              <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-bold text-slate-700">
-                <span class="bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">👥 Up to 3 Passengers</span>
-                <span class="bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">⏱️ ~5 Mins Arrival</span>
-              </div>
-
-              <div class="pt-2 flex items-baseline justify-between">
-                <span class="text-[10px] font-black text-slate-500 uppercase">Starting Fare</span>
-                <span class="text-base font-black font-display text-slate-900">₹40 <span class="text-xs font-bold text-slate-500">(+₹14/km)</span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- ==================== 3. LIVE ROUTE MAP ==================== -->
+    <!-- ==================== 2. GOOGLE MAPS ROUTE ==================== -->
     <section class="bg-white rounded-3xl p-5 sm:p-6 border-2 border-slate-200/80 shadow-sm space-y-4">
       <div class="flex items-center justify-between flex-wrap gap-2">
         <div>
           <h2 class="text-base font-black font-display text-slate-900 flex items-center gap-2">
             <span class="text-yellowDark">🗺️</span>
-            <span>Live Route Map & GPS Navigation</span>
+            <span>Google Maps Route & Live Navigation</span>
           </h2>
           <p class="text-xs text-slate-500 font-medium">Real-time route calculation between pickup and drop points</p>
         </div>
@@ -417,12 +330,22 @@ import Switcher from '../components/Switcher.astro';
 
       <!-- MAP CONTAINER -->
       <div class="w-full h-56 sm:h-64 rounded-2xl overflow-hidden border border-slate-200 relative shadow-inner z-10" id="route-map">
-        <!-- Leaflet map initialized via JS -->
+        <iframe
+          class="w-full h-full border-0 absolute inset-0 z-0"
+          src="https://maps.google.com/maps?q=21.0478,75.7896&hl=en&z=14&output=embed"
+          allowfullscreen=""
+          loading="lazy"
+          title="Google Maps Bhusawal Route">
+        </iframe>
+        <div class="absolute bottom-3 left-3 z-10 bg-slate-950/90 text-white text-[10px] font-black px-3 py-1.5 rounded-xl border border-yellowBrand/40 shadow-lg backdrop-blur-xs flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-yellowBrand animate-ping"></span>
+          <span>Google Maps Base Layer • Bhusawal Junction Zone</span>
+        </div>
       </div>
     </section>
 
 
-    <!-- ==================== 4. FARE ESTIMATION & BREAKDOWN ==================== -->
+    <!-- ==================== 3. ESTIMATED BIKE FARE & BREAKDOWN ==================== -->
     <section class="bg-gradient-to-br from-yellowLight via-white to-amber-50/60 rounded-3xl p-5 sm:p-6 border border-yellowBorder shadow-sm space-y-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2.5">
@@ -430,30 +353,51 @@ import Switcher from '../components/Switcher.astro';
             <span class="material-symbols-outlined text-lg">receipt_long</span>
           </div>
           <div>
-            <h2 class="text-base font-black font-display text-slate-900">Fare Estimation & Breakdown</h2>
-            <p class="text-xs text-slate-500 font-medium">Transparent pricing based on distance & duration</p>
+            <h2 class="text-base font-black font-display text-slate-900">Fare Estimation</h2>
+            <p class="text-xs text-slate-500 font-medium">Bike Taxi pricing calculated on distance & duration</p>
           </div>
         </div>
 
-        <span id="display-selected-type" class="bg-yellowBrand text-slate-950 text-[11px] font-black px-3 py-1 rounded-full border border-yellowDark/20 shadow-2xs">
-          🛵 Bike Taxi Selected
+        <span class="bg-yellowBrand text-slate-950 text-[11px] font-black px-3 py-1 rounded-full border border-yellowDark/20 shadow-2xs">
+          🛵 Bike Taxi
         </span>
       </div>
 
-      <div class="bg-white/80 backdrop-blur-md rounded-2xl p-4 border border-yellowBorder space-y-2">
+      <div class="bg-white/90 backdrop-blur-md rounded-2xl p-4 border border-yellowBorder space-y-2.5">
+        <!-- 1. Estimated Distance -->
         <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
-          <span>Base Minimum Fare (Includes 2 km)</span>
-          <span class="font-bold text-slate-800" id="fare-base-amount">₹25</span>
+          <span class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-yellowDark text-sm">straighten</span>
+            Estimated Distance
+          </span>
+          <span class="font-bold text-slate-900" id="fare-distance-km">3.2 km</span>
         </div>
 
+        <!-- 2. Estimated Time -->
         <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
-          <span>Distance Charge (<span id="fare-distance-km">3.2 km</span>)</span>
-          <span class="font-bold text-slate-800" id="fare-distance-cost">₹9</span>
+          <span class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-yellowDark text-sm">schedule</span>
+            Estimated Time
+          </span>
+          <span class="font-bold text-slate-900" id="fare-duration-text">12 Mins</span>
         </div>
 
+        <!-- 3. Base Fare -->
         <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
-          <span>Estimated Duration</span>
-          <span class="font-bold text-slate-800" id="fare-duration-text">12 Mins</span>
+          <span class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-yellowDark text-sm">payments</span>
+            Base Fare
+          </span>
+          <span class="font-bold text-slate-900" id="fare-base-amount">₹25</span>
+        </div>
+
+        <!-- 4. Distance Charge -->
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-600">
+          <span class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-yellowDark text-sm">add_road</span>
+            Distance Charge
+          </span>
+          <span class="font-bold text-slate-900" id="fare-distance-cost">₹9</span>
         </div>
 
         <div class="flex items-center justify-between text-xs font-semibold text-emerald-600 pt-1 border-t border-slate-100">
@@ -461,9 +405,10 @@ import Switcher from '../components/Switcher.astro';
           <span class="font-bold">-₹5</span>
         </div>
 
-        <div class="flex items-center justify-between text-base font-black font-display text-slate-900 pt-2 border-t border-slate-200">
-          <span>Total Fare Payable</span>
-          <span class="text-xl text-yellowDeep" id="total-fare-display">₹29</span>
+        <!-- 5. Total Fare -->
+        <div class="flex items-center justify-between text-base sm:text-lg font-black font-display text-slate-900 pt-2 border-t-2 border-slate-200">
+          <span>Total Fare</span>
+          <span class="text-xl sm:text-2xl text-yellowDeep" id="total-fare-display">₹29</span>
         </div>
       </div>
     </section>
@@ -513,7 +458,7 @@ import Switcher from '../components/Switcher.astro';
   </div>
 
 
-  <!-- ==================== 2-PHASE RIDER / DRIVER SEARCH MODAL ==================== -->
+  <!-- ==================== RIDER SEARCH & ASSIGNMENT MODAL ==================== -->
   <div id="partner-search-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-slate-100 text-center space-y-0 relative animate-in fade-in zoom-in-95 duration-200">
       
@@ -530,19 +475,19 @@ import Switcher from '../components/Switcher.astro';
           <div class="absolute inset-2 bg-yellowBrand/30 rounded-full animate-pulse"></div>
           
           <div class="w-20 h-20 rounded-full bg-yellowBrand text-slate-950 flex items-center justify-center text-4xl shadow-xl relative z-10 border-4 border-white">
-            <span id="searching-icon-emoji">🛵</span>
+            <span>🛵</span>
           </div>
         </div>
 
         <div class="space-y-1">
-          <h3 class="text-xl font-black font-display text-slate-900" id="searching-title-text">Searching Nearby Captains...</h3>
-          <p class="text-xs font-bold text-slate-500">Connecting your pickup request with nearby drivers in Bhusawal</p>
+          <h3 class="text-xl font-black font-display text-slate-900">Searching Nearby Bike Riders...</h3>
+          <p class="text-xs font-bold text-slate-500">Connecting your pickup request with nearby Bike Taxi riders in Bhusawal</p>
         </div>
 
         <div class="bg-yellowLight rounded-2xl p-3 border border-yellowBorder flex items-center justify-around text-xs font-black text-yellowDeep">
           <div class="flex items-center gap-1.5">
             <span class="material-symbols-outlined text-base">near_me</span>
-            <span>5 Active Drivers</span>
+            <span>5 Active Bike Riders</span>
           </div>
           <div class="w-px h-4 bg-yellowBorder"></div>
           <div class="flex items-center gap-1.5">
@@ -556,31 +501,31 @@ import Switcher from '../components/Switcher.astro';
         </button>
       </div>
 
-      <!-- PHASE 2: PARTNER ACCEPTED DETAILS -->
+      <!-- PHASE 2: BIKE RIDER ACCEPTED DETAILS -->
       <div id="partner-accepted-phase" class="hidden p-6 sm:p-8 space-y-5 text-left bg-gradient-to-b from-yellowLight/50 to-white">
         
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
-            <span class="text-xs font-black text-emerald-700 uppercase tracking-wider">Ride Accepted 🎉</span>
+            <span class="text-xs font-black text-emerald-700 uppercase tracking-wider">Bike Ride Accepted 🎉</span>
           </div>
-          <span class="text-xs font-black text-yellowDeep bg-yellowLight px-2.5 py-0.5 rounded-full border border-yellowBorder" id="modal-accepted-ride-type">🛵 Bike Taxi</span>
+          <span class="text-xs font-black text-yellowDeep bg-yellowLight px-2.5 py-0.5 rounded-full border border-yellowBorder">🛵 Bike Taxi</span>
         </div>
 
-        <!-- DRIVER PROFILE CARD -->
+        <!-- RIDER PROFILE CARD -->
         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3.5">
           <div class="relative">
-            <img id="modal-driver-avatar" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Driver" class="w-14 h-14 rounded-full object-cover border-2 border-yellowBrand shadow-xs" />
+            <img id="modal-driver-avatar" src="/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg" alt="Rider" class="w-14 h-14 rounded-full object-cover border-2 border-yellowBrand shadow-xs" />
             <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-black">✓</span>
           </div>
 
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-1.5">
-              <h4 class="text-base font-black font-display text-slate-900 truncate" id="modal-driver-name">Vikram Patil</h4>
+              <h4 class="text-base font-black font-display text-slate-900 truncate">Vikram Patil</h4>
               <span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.5 rounded-md uppercase">VERIFIED</span>
             </div>
-            <p class="text-xs font-bold text-slate-500" id="modal-driver-rating">4.9 ⭐ • 850+ Rides Completed</p>
-            <p class="text-xs font-black text-yellowDeep mt-0.5" id="modal-vehicle-plate">EV Bike • MH 19 BJ 5921</p>
+            <p class="text-xs font-bold text-slate-500">4.9 ⭐ • 850+ Bike Rides Completed</p>
+            <p class="text-xs font-black text-yellowDeep mt-0.5">EV Bike • MH 19 BJ 5921</p>
           </div>
         </div>
 
@@ -588,7 +533,7 @@ import Switcher from '../components/Switcher.astro';
         <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80 grid grid-cols-2 gap-2 text-xs">
           <div>
             <span class="text-[10px] font-black text-slate-400 uppercase block">Boarding OTP</span>
-            <span class="text-base font-black font-mono text-slate-900" id="modal-trip-otp">4892</span>
+            <span class="text-base font-black font-mono text-slate-900">4892</span>
           </div>
           <div>
             <span class="text-[10px] font-black text-slate-400 uppercase block">Arrival Time</span>
@@ -600,7 +545,7 @@ import Switcher from '../components/Switcher.astro';
         <div class="grid grid-cols-2 gap-2.5">
           <a href="tel:+919876543210" class="py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
             <span class="material-symbols-outlined text-base">call</span>
-            <span>Call Driver</span>
+            <span>Call Rider</span>
           </a>
 
           <button id="btn-track-live-ride" type="button" class="py-3 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
@@ -620,7 +565,7 @@ import Switcher from '../components/Switcher.astro';
     <div class="max-w-4xl mx-auto flex items-center justify-between gap-4">
       
       <div>
-        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Estimated Fare</span>
+        <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Total Bike Fare</span>
         <div class="flex items-baseline gap-1.5">
           <span class="text-xl sm:text-2xl font-black font-display text-yellowDeep" id="bar-fare-total">₹29</span>
           <span class="text-xs text-slate-400 line-through font-bold">₹40</span>
@@ -630,23 +575,18 @@ import Switcher from '../components/Switcher.astro';
       <button 
         id="btn-confirm-ride-booking" 
         type="button" 
-        class="flex-1 sm:flex-none px-6 sm:px-8 py-3.5 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white text-sm font-black rounded-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all border border-yellowDark/20 flex items-center justify-center gap-2 cursor-pointer"
+        class="flex-1 sm:flex-none px-8 sm:px-12 py-4 bg-yellowBrand hover:bg-yellowDark text-slate-950 hover:text-white text-base sm:text-lg font-black rounded-2xl shadow-xl hover:shadow-2xl active:scale-95 transition-all border-2 border-slate-950 flex items-center justify-center gap-3 cursor-pointer"
       >
-        <span>Confirm & Book Ride</span>
-        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+        <span>Continue</span>
+        <span class="material-symbols-outlined text-xl">arrow_forward</span>
       </button>
 
     </div>
   </div>
-
-  <Switcher />
-
-
-  <!-- ==================== CLIENT DYNAMIC SCRIPT ==================== -->
+<!-- ==================== CLIENT DYNAMIC SCRIPT ==================== -->
   <script is:inline>
     (function() {
-      // STATE VARIABLES
-      var selectedRideType = 'Bike Taxi';
+      // STATE VARIABLES FOR BIKE TAXI ONLY
       var baseFare = 25;
       var perKmFare = 7;
       var distanceKm = 3.2;
@@ -663,45 +603,7 @@ import Switcher from '../components/Switcher.astro';
         { name: 'Tapti Nagar, Block C, Bhusawal', coords: [21.0550, 75.8110] }
       ];
 
-      // RIDE CARDS SELECTION LISTENERS
-      var cardBike = document.getElementById('ride-card-bike');
-      var cardAuto = document.getElementById('ride-card-auto');
-      var displayTypeBadge = document.getElementById('display-selected-type');
-
-      function selectRideType(type) {
-        selectedRideType = type;
-        if (type === 'Bike Taxi') {
-          baseFare = 25;
-          perKmFare = 7;
-          if (cardBike) {
-            cardBike.classList.add('bg-yellowLight', 'border-yellowBrand', 'shadow-md', 'active');
-            cardBike.classList.remove('bg-white', 'border-slate-200/80', 'shadow-sm');
-          }
-          if (cardAuto) {
-            cardAuto.classList.remove('bg-yellowLight', 'border-yellowBrand', 'shadow-md', 'active');
-            cardAuto.classList.add('bg-white', 'border-slate-200/80', 'shadow-sm');
-          }
-          if (displayTypeBadge) displayTypeBadge.textContent = '🛵 Bike Taxi Selected';
-        } else {
-          baseFare = 40;
-          perKmFare = 14;
-          if (cardAuto) {
-            cardAuto.classList.add('bg-yellowLight', 'border-yellowBrand', 'shadow-md', 'active');
-            cardAuto.classList.remove('bg-white', 'border-slate-200/80', 'shadow-sm');
-          }
-          if (cardBike) {
-            cardBike.classList.remove('bg-yellowLight', 'border-yellowBrand', 'shadow-md', 'active');
-            cardBike.classList.add('bg-white', 'border-slate-200/80', 'shadow-sm');
-          }
-          if (displayTypeBadge) displayTypeBadge.textContent = '🛺 Auto Rickshaw Selected';
-        }
-        recalculateFare();
-      }
-
-      if (cardBike) cardBike.addEventListener('click', function() { selectRideType('Bike Taxi'); });
-      if (cardAuto) cardAuto.addEventListener('click', function() { selectRideType('Auto Rickshaw'); });
-
-      // FARE CALCULATION
+      // FARE CALCULATION (BIKE TAXI)
       function recalculateFare() {
         var extraDist = Math.max(0, distanceKm - 2);
         var distCost = Math.round(extraDist * perKmFare);
@@ -844,7 +746,7 @@ import Switcher from '../components/Switcher.astro';
         recalculateFare();
       }
 
-      // CONFIRM & BOOK RIDE CLICK HANDLER
+      // BOOK BIKE RIDE CLICK HANDLER
       var btnConfirm = document.getElementById('btn-confirm-ride-booking');
       var searchModal = document.getElementById('partner-search-modal');
       var searchPhase1 = document.getElementById('partner-searching-phase');
@@ -867,47 +769,22 @@ import Switcher from '../components/Switcher.astro';
             if (searchPhase1) searchPhase1.classList.remove('hidden');
             if (searchPhase2) searchPhase2.classList.add('hidden');
 
-            var emojiEl = document.getElementById('searching-icon-emoji');
-            var titleEl = document.getElementById('searching-title-text');
-
-            if (selectedRideType === 'Bike Taxi') {
-              if (emojiEl) emojiEl.textContent = '🛵';
-              if (titleEl) titleEl.textContent = 'Searching Nearby Captains...';
-            } else {
-              if (emojiEl) emojiEl.textContent = '🛺';
-              if (titleEl) titleEl.textContent = 'Searching Nearby Auto Rickshaws...';
-            }
-
             // Phase 2 transition after 3 seconds
             setTimeout(function() {
               if (searchPhase1) searchPhase1.classList.add('hidden');
               if (searchPhase2) searchPhase2.classList.remove('hidden');
 
-              var rideTypeBadge = document.getElementById('modal-accepted-ride-type');
-              var driverName = document.getElementById('modal-driver-name');
-              var vehiclePlate = document.getElementById('modal-vehicle-plate');
-
-              if (selectedRideType === 'Bike Taxi') {
-                if (rideTypeBadge) rideTypeBadge.textContent = '🛵 Bike Taxi Accepted';
-                if (driverName) driverName.textContent = 'Vikram Patil';
-                if (vehiclePlate) vehiclePlate.textContent = 'EV Bike • MH 19 BJ 5921';
-              } else {
-                if (rideTypeBadge) rideTypeBadge.textContent = '🛺 Auto Rickshaw Accepted';
-                if (driverName) driverName.textContent = 'Ramesh Kale';
-                if (vehiclePlate) vehiclePlate.textContent = 'Bajaj RE Auto • MH 19 CZ 3912';
-              }
-
               // SAVE ACTIVE ORDER IN LOCALSTORAGE
               var activeOrder = {
                 id: 'RIDE-BHU-' + Math.floor(100000 + Math.random() * 900000),
                 type: 'BIKE_RIDE',
-                rideType: selectedRideType,
+                rideType: 'Bike Taxi',
                 pickupAddress: pickVal,
                 dropAddress: dropVal,
                 total: document.getElementById('total-fare-display').textContent.replace('₹', ''),
                 status: 'Request Accepted',
-                rider: selectedRideType === 'Bike Taxi' ? 'Vikram Patil' : 'Ramesh Kale',
-                vehicle: selectedRideType === 'Bike Taxi' ? 'EV Bike (MH 19 BJ 5921)' : 'Bajaj RE Auto (MH 19 CZ 3912)',
+                rider: 'Vikram Patil',
+                vehicle: 'EV Bike (MH 19 BJ 5921)',
                 otp: '4892',
                 otpVerified: false,
                 timestamp: new Date().toISOString()

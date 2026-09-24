@@ -1,8 +1,6 @@
 ---
 import fs from 'fs';
 import path from 'path';
-import Switcher from '../components/Switcher.astro';
-
 // Read master grocery catalog at build time
 const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
 let catalog = [];
@@ -17,20 +15,16 @@ const initialProducts = catalog.slice(0, 48);
 
 // Granular categories matching exact user requirements
 const storeCategories = [
-  { id: 'all', name: 'All Products', icon: '⚡' },
-  { id: 'atta', name: 'Atta & Flours', icon: '🌾' },
-  { id: 'rice', name: 'Rice & Grains', icon: '🍚' },
-  { id: 'oil', name: 'Oils & Ghee', icon: '🛢️' },
-  { id: 'dal', name: 'Dal & Pulses', icon: '🫘' },
-  { id: 'masala', name: 'Masala & Spices', icon: '🌶️' },
-  { id: 'snacks', name: 'Snacks & Namkeen', icon: '🍿' },
-  { id: 'drinks', name: 'Cold Drinks & Juices', icon: '🥤' },
-  { id: 'milk', name: 'Milk & Dairy', icon: '🥛' },
-  { id: 'icecream', name: 'Ice Cream & Desserts', icon: '🍦' },
-  { id: 'cleaning', name: 'Cleaning & Household', icon: '🧹' },
+  { id: 'all', name: 'All', icon: '⚡' },
+  { id: 'atta', name: 'Atta', icon: '🌾' },
+  { id: 'rice', name: 'Rice', icon: '🍚' },
+  { id: 'oil', name: 'Oil', icon: '🛢️' },
+  { id: 'snacks', name: 'Snacks', icon: '🍿' },
+  { id: 'beverages', name: 'Beverages', icon: '🥤' },
+  { id: 'cleaning', name: 'Cleaning', icon: '🧹' },
   { id: 'personal', name: 'Personal Care', icon: '✨' },
+  { id: 'frozen', name: 'Frozen', icon: '🍦' },
   { id: 'baby', name: 'Baby Care', icon: '👶' },
-  { id: 'stationery', name: 'Stationery & Supplies', icon: '✏️' },
 ];
 ---
 
@@ -75,6 +69,9 @@ const storeCategories = [
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="pb-28 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased">
@@ -238,6 +235,25 @@ const storeCategories = [
           </select>
         </div>
       </div>
+
+      <!-- HORIZONTAL CATEGORY CHIPS BAR (Smooth Scrolling & Instant Filter) -->
+      <div class="pt-2 border-t border-slate-100">
+        <div class="flex items-center justify-between mb-1.5 px-0.5">
+          <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Store Category Chips</span>
+          <span class="text-[10px] font-extrabold text-purpleBrand">Instant Filter • Smooth Scroll</span>
+        </div>
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth pb-1 pt-0.5 px-0.5" id="store-horizontal-category-chips">
+          {storeCategories.map((cat, idx) => (
+            <button 
+              class={`store-cat-pill flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-2xl text-xs font-extrabold cursor-pointer transition-all duration-200 select-none whitespace-nowrap ${idx === 0 ? 'bg-purpleBrand text-white shadow-md shadow-purple-200' : 'bg-slate-100 text-slate-700 hover:bg-purple-50 hover:text-purpleBrand border border-slate-200/60'}`}
+              data-category={cat.name}
+            >
+              <span class="text-sm">{cat.icon}</span>
+              <span>{cat.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
 
     <!-- MAIN STORE CATALOG LAYOUT -->
@@ -279,7 +295,12 @@ const storeCategories = [
         <!-- Products Grid (REUSING EXACT GROCERY PRODUCT CARD DESIGN) -->
         <div id="store-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4.5">
           {initialProducts.map(p => {
-            const id = p["Product ID"] || p.ProductID || p.id || '';
+            const rawId = p["Product ID"] || p.id || p.sku || p.ProductID;
+            const canonicalProductId = (rawId && typeof rawId === 'string' && !['undefined', 'null', 'n/a'].includes(rawId.toLowerCase().trim())) ? rawId.trim() : '';
+            const hasValidLink = canonicalProductId.length > 0;
+            const productHref = hasValidLink ? `/product/${encodeURIComponent(canonicalProductId)}` : null;
+
+            const id = canonicalProductId || '';
             const name = p["Product Name"] || '';
             const brand = p["Brand Name"] || p.brand || 'Store Fresh';
             const cat = p.Category || 'Grocery';
@@ -299,27 +320,53 @@ const storeCategories = [
                   <span class="material-symbols-outlined text-lg">favorite</span>
                 </button>
 
-                <!-- PRODUCT IMAGE -->
-                <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
-                  {isOutOfStock && (
-                    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
-                      <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
+                {/* PRODUCT IMAGE */}
+                {hasValidLink ? (
+                  <a href={productHref} class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2 block">
+                    {isOutOfStock && (
+                      <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
+                        <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
+                      </div>
+                    )}
+
+                    <img src={img} alt={name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+
+                    <div class="absolute bottom-2 left-2 z-10">
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
+                        ⚡ 10 MINS
+                      </span>
                     </div>
-                  )}
+                  </a>
+                ) : (
+                  <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
+                    {isOutOfStock && (
+                      <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
+                        <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
+                      </div>
+                    )}
 
-                  <img src={img} alt={name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+                    <img src={img} alt={name} class="max-h-full max-w-full object-contain" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
 
-                  <div class="absolute bottom-2 left-2 z-10">
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
-                      ⚡ 10 MINS
-                    </span>
+                    <div class="absolute bottom-2 left-2 z-10">
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
+                        ⚡ 10 MINS
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <!-- PRODUCT DETAILS -->
+                {/* PRODUCT DETAILS */}
                 <div class="flex flex-col flex-1 px-0.5 space-y-1">
                   <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate">{brand}</span>
-                  <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">{name}</h3>
+                  {hasValidLink ? (
+                    <a href={productHref} class="block">
+                      <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">{name}</h3>
+                    </a>
+                  ) : (
+                    <div class="block">
+                      <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem]">{name}</h3>
+                    </div>
+                  )}
                   
                   <div class="flex items-center justify-between text-[10px] font-bold">
                     <span class="text-slate-400">{pack}</span>
@@ -382,10 +429,7 @@ const storeCategories = [
       <span class="material-symbols-outlined text-sm">arrow_forward</span>
     </a>
   </div>
-
-  <Switcher />
-
-  <!-- CLIENT-SIDE DEDICATED STORE SEARCH LOGIC -->
+<!-- CLIENT-SIDE DEDICATED STORE SEARCH LOGIC -->
   <script is:inline>
     const storeRegistry = {
       'sai-jeevan': {
@@ -476,19 +520,16 @@ const storeCategories = [
 
     // Category Keyword Mappings for Granular Filtering
     const categoryKeywords = {
-      'atta': ['atta', 'flour', 'maida', 'suji', 'besan', 'wheat flour', 'multigrain'],
+      'all': [],
+      'atta': ['atta', 'flour', 'maida', 'suji', 'besan', 'wheat', 'multigrain'],
       'rice': ['rice', 'basmati', 'poha', 'paddy', 'grain', 'dalia'],
-      'oil': ['oil', 'ghee', 'mustard oil', 'sunflower', 'groundnut', 'olive oil'],
-      'dal': ['dal', 'pulse', 'moong', 'toor', 'chana', 'urad', 'masoor', 'rajma', 'chole'],
-      'masala': ['masala', 'spice', 'chilli', 'turmeric', 'coriander', 'cumin', 'hing', 'garam masala', 'salt', 'pepper'],
-      'snacks': ['snack', 'namkeen', 'biscuit', 'chip', 'wafer', 'kurkure', 'chocolate', 'toast', 'rusk', 'noodle', 'pasta'],
-      'drinks': ['drink', 'juice', 'soda', 'coke', 'pepsi', 'sprite', 'cold drink', 'beverage', 'water', 'energy drink'],
-      'milk': ['milk', 'curd', 'paneer', 'butter', 'cheese', 'yogurt', 'dairy', 'cream'],
-      'icecream': ['ice cream', 'dessert', 'kulfi', 'scoop', 'cone', 'cassatta', 'amul ice'],
-      'cleaning': ['clean', 'detergent', 'soap', 'dishwash', 'harpic', 'surf', 'rin', 'floor cleaner', 'tissue'],
-      'personal': ['shampoo', 'soap', 'toothpaste', 'brush', 'lotion', 'face wash', 'cream', 'deodorant', 'hair oil'],
-      'baby': ['baby', 'diaper', 'pampers', 'cerelac', 'wipes', 'baby soap', 'johnson'],
-      'stationery': ['pen', 'pencil', 'notebook', 'paper', 'stapler', 'tape', 'marker', 'eraser', 'folder', 'file']
+      'oil': ['oil', 'ghee', 'mustard', 'sunflower', 'groundnut', 'olive'],
+      'snacks': ['snack', 'namkeen', 'biscuit', 'chip', 'wafer', 'kurkure', 'chocolate', 'toast', 'rusk', 'noodle', 'pasta', 'munch'],
+      'beverages': ['drink', 'juice', 'soda', 'coke', 'pepsi', 'sprite', 'cold drink', 'beverage', 'tea', 'coffee', 'water', 'energy'],
+      'cleaning': ['clean', 'detergent', 'soap', 'dishwash', 'harpic', 'surf', 'rin', 'floor cleaner', 'tissue', 'phenyl'],
+      'personal': ['shampoo', 'soap', 'toothpaste', 'brush', 'lotion', 'face wash', 'cream', 'deodorant', 'hair oil', 'body wash'],
+      'frozen': ['ice cream', 'frozen', 'kulfi', 'dessert', 'peas', 'nuggets', 'fries', 'paneer'],
+      'baby': ['baby', 'diaper', 'pampers', 'cerelac', 'wipes', 'baby soap', 'johnson']
     };
 
     document.addEventListener('DOMContentLoaded', async () => {
@@ -554,15 +595,27 @@ const storeCategories = [
       const BATCH_SIZE = 48;
 
       function getWishlist() {
-        try { return JSON.parse(localStorage.getItem('bhusawal_wishlist') || '[]'); } catch(e) { return []; }
+        try {
+          const raw = JSON.parse(localStorage.getItem('bhusawal_wishlist') || '[]');
+          return Array.isArray(raw) ? raw : [];
+        } catch(e) { return []; }
       }
 
-      function toggleWishlist(id) {
+      function toggleWishlist(item) {
         let wish = getWishlist();
-        if (wish.includes(id)) {
-          wish = wish.filter(i => i !== id);
+        const itemId = typeof item === 'object' ? (item.id || item["Product ID"]) : item;
+        const exists = wish.some(i => (typeof i === 'object' ? (i.id || i["Product ID"]) === itemId : i === itemId));
+
+        if (exists) {
+          wish = wish.filter(i => (typeof i === 'object' ? (i.id || i["Product ID"]) !== itemId : i !== itemId));
         } else {
-          wish.push(id);
+          if (typeof item === 'object') {
+            wish.push(item);
+          } else {
+            const p = storeCatalog.find(x => (x.id || x["Product ID"]) === itemId);
+            if (p) wish.push({ id: p.id || itemId, name: p.name, price: p.sp || p.price, image: p.img || p.image, brand: p.brand || '' });
+            else wish.push({ id: itemId, name: 'Store Product', price: 0 });
+          }
         }
         localStorage.setItem('bhusawal_wishlist', JSON.stringify(wish));
         renderStoreProducts();
@@ -604,31 +657,27 @@ const storeCategories = [
         }
 
         // Granular Category Filter
-        if (activeCategory && activeCategory !== 'All Products') {
+        if (activeCategory && activeCategory !== 'All' && activeCategory !== 'All Products') {
           const target = activeCategory.toLowerCase();
           
           let matchedKeys = [];
           if (target.includes('atta')) matchedKeys = categoryKeywords['atta'];
           else if (target.includes('rice')) matchedKeys = categoryKeywords['rice'];
           else if (target.includes('oil')) matchedKeys = categoryKeywords['oil'];
-          else if (target.includes('dal')) matchedKeys = categoryKeywords['dal'];
-          else if (target.includes('masala')) matchedKeys = categoryKeywords['masala'];
           else if (target.includes('snack')) matchedKeys = categoryKeywords['snacks'];
-          else if (target.includes('drink')) matchedKeys = categoryKeywords['drinks'];
-          else if (target.includes('milk')) matchedKeys = categoryKeywords['milk'];
-          else if (target.includes('ice cream')) matchedKeys = categoryKeywords['icecream'];
+          else if (target.includes('beverage') || target.includes('drink')) matchedKeys = categoryKeywords['beverages'];
           else if (target.includes('clean')) matchedKeys = categoryKeywords['cleaning'];
           else if (target.includes('personal')) matchedKeys = categoryKeywords['personal'];
+          else if (target.includes('frozen')) matchedKeys = categoryKeywords['frozen'];
           else if (target.includes('baby')) matchedKeys = categoryKeywords['baby'];
-          else if (target.includes('stationery')) matchedKeys = categoryKeywords['stationery'];
 
-          if (matchedKeys.length > 0) {
+          if (matchedKeys && matchedKeys.length > 0) {
             filtered = filtered.filter(p => {
               const text = `${p["Product Name"] || ''} ${p.Category || ''} ${p["Brand Name"] || ''}`.toLowerCase();
               return matchedKeys.some(k => text.includes(k));
             });
           } else {
-            filtered = filtered.filter(p => (p.Category || '').toLowerCase() === target);
+            filtered = filtered.filter(p => (p.Category || '').toLowerCase().includes(target));
           }
         }
 
@@ -677,7 +726,7 @@ const storeCategories = [
         const visible = filtered.slice(0, limit);
         grid.innerHTML = visible.map(p => {
           const id = p["Product ID"] || p.ProductID || p.id || '';
-          const name = (p["Product Name"] || p.name || '').split(" (Batch")[0];
+          const name = p.displayName || p.name || p["Product Name"] || p.originalName || "";
           const brand = p["Brand Name"] || p.brand || store.name;
           const cat = p.Category || 'Grocery';
           const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
@@ -933,19 +982,23 @@ const storeCategories = [
         renderStoreProducts();
       });
 
-      // Category Pill Listeners
+      // Category Pill Listeners with Smooth Scroll & Instant Filter
       document.querySelectorAll('.store-cat-pill').forEach(pill => {
         pill.addEventListener('click', () => {
           document.querySelectorAll('.store-cat-pill').forEach(p => {
-            p.classList.remove('bg-purpleBrand', 'text-white', 'shadow-xs');
-            p.classList.add('bg-slate-100', 'text-slate-700');
+            p.classList.remove('bg-purpleBrand', 'text-white', 'shadow-md', 'shadow-purple-200');
+            p.classList.add('bg-slate-100', 'text-slate-700', 'border', 'border-slate-200/60');
           });
-          pill.classList.remove('bg-slate-100', 'text-slate-700');
-          pill.classList.add('bg-purpleBrand', 'text-white', 'shadow-xs');
+          pill.classList.remove('bg-slate-100', 'text-slate-700', 'border', 'border-slate-200/60');
+          pill.classList.add('bg-purpleBrand', 'text-white', 'shadow-md', 'shadow-purple-200');
 
-          activeCategory = pill.dataset.category || 'All Products';
+          activeCategory = pill.dataset.category || 'All';
+
+          // Smooth scroll active chip into view
+          pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
           const title = document.getElementById('store-catalog-title');
-          if (title) title.textContent = activeCategory === 'All Products' ? `Complete Store Catalog` : `${activeCategory} in ${store.name}`;
+          if (title) title.textContent = (activeCategory === 'All' || activeCategory === 'All Products') ? `Complete Store Catalog` : `${activeCategory} Items in ${store.name}`;
           renderStoreProducts();
         });
       });
@@ -954,6 +1007,22 @@ const storeCategories = [
       document.getElementById('store-load-more-btn')?.addEventListener('click', () => {
         limit += BATCH_SIZE;
         renderStoreProducts();
+      });
+
+      // Product Card Click Navigation Delegate
+      document.body.addEventListener('click', (e) => {
+        const actionBtn = e.target.closest('.add-btn, .qty-btn, .wishlist-btn, a, button');
+        if (actionBtn && !actionBtn.classList.contains('product-card')) {
+          return;
+        }
+
+        const card = e.target.closest('[data-product-id]');
+        if (card) {
+          const pId = card.dataset.productId;
+          if (pId) {
+            window.location.href = `/product/${encodeURIComponent(pId)}`;
+          }
+        }
       });
 
       renderStoreProducts();

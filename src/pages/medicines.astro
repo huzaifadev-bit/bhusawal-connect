@@ -1,6 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
-
 // Featured Medical Stores in Bhusawal (Displayed only once)
 const featuredMedicalStores = [
   {
@@ -224,6 +222,9 @@ const allMedicines = [
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     html { scroll-behavior: smooth; }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="pb-32 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased bg-white">
@@ -906,10 +907,7 @@ const allMedicines = [
     </div>
 
   </main>
-
-  <Switcher />
-
-  <!-- DYNAMIC CLIENT SCRIPT -->
+<!-- DYNAMIC CLIENT SCRIPT -->
   <script is:inline>
     (function() {
       // ========== 1. PRESCRIPTION FILE UPLOAD ==========
@@ -1105,6 +1103,24 @@ const allMedicines = [
         btn.classList.toggle('border-rose-200');
         btn.classList.toggle('text-slate-400');
         btn.classList.toggle('border-slate-200');
+
+        try {
+          const card = btn.closest('[data-med-id]');
+          const id = card ? card.dataset.medId : (btn.dataset.id || 'med_101');
+          const name = btn.dataset.name || (card ? card.querySelector('h4')?.textContent : 'Medicine Item');
+          const price = parseFloat(btn.dataset.price || '30');
+          const img = btn.dataset.img || 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80';
+
+          let wish = JSON.parse(localStorage.getItem('bhusawal_wishlist') || '[]');
+          if (!Array.isArray(wish)) wish = [];
+          const exists = wish.some(i => (typeof i === 'object' ? (i.id || i["Product ID"]) === id : i === id));
+          if (exists) {
+            wish = wish.filter(i => (typeof i === 'object' ? (i.id || i["Product ID"]) !== id : i !== id));
+          } else {
+            wish.push({ id: id, name: name, price: price, image: img, brand: 'Pharmacy' });
+          }
+          localStorage.setItem('bhusawal_wishlist', JSON.stringify(wish));
+        } catch(e) {}
       };
 
       function getGlobalCart() {

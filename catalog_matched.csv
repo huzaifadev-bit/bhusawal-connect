@@ -1,0 +1,6 @@
+SKU,PRODUCT,BARCODE,IMAGE_URL,IMAGE_SOURCE,IMAGE_LICENSE,IMAGE_CONFIDENCE,IMAGE_STATUS,MATCH_METHOD,NOTES
+SKU-0001,Maggi 2-Minute Masala Noodles,8901234567890,https://cdn.example/supplier/maggi_masala_70g.jpg,SUPPLIER_IMAGE,SUPPLIER_LICENSED,50,RE_MATCH,SUPPLIER_EXACT,"brand+15,name+15,variant+10,pack+5,quality+5"
+SKU-0002,Maggi 2-Minute Masala Noodles,8901234567891,https://cdn.example/supplier/maggi_masala_70g.jpg,SUPPLIER_IMAGE,SUPPLIER_LICENSED,40,REJECT,SUPPLIER_EXACT,"brand+15,name+15,variant_mismatch,pack+5,quality+5"
+BC-000015,Lemon Nimbu Yellow,,https://cdn.example/produce/lemon_yellow.jpg,OWN_CATALOG,OWNED,99,AUTO_APPROVE,CATEGORY_VARIANT,own_catalog_produce
+BC-000016,Lemon Nimbu Yellow,,https://cdn.example/produce/lemon_yellow.jpg,OWN_CATALOG,OWNED,99,AUTO_APPROVE,CATEGORY_VARIANT,own_catalog_produce
+SKU-0030,Unknown Snack Bar,8909999999999,,IMAGE_REQUIRED,,0,MISSING,NO_MATCH,No candidate found in any source

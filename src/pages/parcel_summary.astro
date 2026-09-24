@@ -1,5 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
 ---
 
 <!DOCTYPE html>
@@ -57,6 +56,9 @@ import Switcher from '../components/Switcher.astro';
       box-shadow: 0 10px 25px -5px rgba(2, 132, 199, 0.15);
     }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="pb-40 max-w-4xl mx-auto min-h-screen text-slate-800 antialiased bg-slate-50/50">
@@ -500,11 +502,7 @@ import Switcher from '../components/Switcher.astro';
 
     </div>
   </div>
-
-  <Switcher />
-
-
-  <!-- ==================== DYNAMIC CLIENT SCRIPT ==================== -->
+<!-- ==================== DYNAMIC CLIENT SCRIPT ==================== -->
   <script is:inline>
     (function() {
       // 1. READ PARCEL DRAFT FROM LOCALSTORAGE

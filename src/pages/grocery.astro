@@ -1,9 +1,6 @@
 ---
 import fs from 'fs';
 import path from 'path';
-import Switcher from '../components/Switcher.astro';
-
-// Read master grocery catalog at build time
 const jsonPath = path.join(process.cwd(), 'public/grocery_catalog.json');
 let catalog = [];
 try {
@@ -12,131 +9,118 @@ try {
   console.error("Failed to read grocery catalog at build time", err);
 }
 
-// Master categories list from catalog
 const categoriesList = [
-  { id: 'all', name: 'All Products', icon: '⚡' },
-  { id: 'fruits', name: 'Fruits & Vegetables', icon: '🥬' },
-  { id: 'dairy', name: 'Dairy & Breakfast', icon: '🥛' },
-  { id: 'staples', name: 'Grocery Staples', icon: '🌾' },
-  { id: 'snacks', name: 'Snacks & Confectionery', icon: '🍿' },
-  { id: 'beverages', name: 'Beverages', icon: '🥤' },
-  { id: 'personal', name: 'Personal Care', icon: '✨' },
-  { id: 'home', name: 'Home Cleaning & Household', icon: '🧹' },
-  { id: 'instant', name: 'Instant & Frozen Foods', icon: '🍜' },
-  { id: 'baby', name: 'Baby, Health & Specialty', icon: '👶' },
+  { id: 'all', name: 'All Products', icon: '🛒', desc: 'Master Catalog' },
+  { id: 'fresh-veg', name: 'Fresh Vegetables', icon: '🥦', desc: 'Farm Fresh' },
+  { id: 'fresh-fruits', name: 'Fresh Fruits', icon: '🍎', desc: 'Seasonal & Sweet' },
+  { id: 'dairy', name: 'Dairy & Breakfast', icon: '🥛', desc: 'Milk, Curd & Paneer' },
+  { id: 'atta-rice-dal', name: 'Atta Rice & Dal', icon: '🌾', desc: 'Flours & Grains' },
+  { id: 'oil-ghee-masala', name: 'Oil, Ghee & Masala', icon: '🫒', desc: 'Oils & Spices' },
+  { id: 'bakery', name: 'Bakery', icon: '🍞', desc: 'Bread & Cakes' },
+  { id: 'snacks', name: 'Snacks', icon: '🍿', desc: 'Namkeen & Chips' },
+  { id: 'tea-coffee', name: 'Tea & Coffee', icon: '☕', desc: 'Chai & Coffee' },
+  { id: 'cold-drinks', name: 'Cold Drinks', icon: '🥤', desc: 'Juices & Soda' },
+  { id: 'frozen-food', name: 'Frozen Food', icon: '🧊', desc: 'Paneer & Ice Cream' },
+  { id: 'personal-care', name: 'Personal Care', icon: '✨', desc: 'Soaps & Hygiene' },
+  { id: 'cleaning', name: 'Cleaning', icon: '🧹', desc: 'Detergents & Cleaners' },
+  { id: 'baby-care', name: 'Baby Care', icon: '👶', desc: 'Diapers & Food' },
+  { id: 'health', name: 'Health & Wellness', icon: '💊', desc: 'OTC & Wellness' },
+  { id: 'dry-fruits', name: 'Dry Fruits', icon: '🥜', desc: 'Almonds & Cashews' },
+  { id: 'pooja', name: 'Pooja', icon: '🪔', desc: 'Agarbatti & Diya' },
+  { id: 'pet-care', name: 'Pet Care', icon: '🐾', desc: 'Dog & Cat Food' },
+  { id: 'cigarettes', name: 'Cigarettes', icon: '🚬', desc: 'Smokes & Essentials', slug: 'cigarettes' }
 ];
 
-// Featured Partner Stores in Bhusawal Marketplace
 const partnerStores = [
   {
-    id: 'sai-jeevan',
-    name: 'Sai Jeevan Super Mall',
-    tagline: 'Premium Supermarket & Daily Needs Mart',
-    location: 'Station Road, Bhusawal',
-    badge: 'TOP RATED SUPERSTORE',
-    rating: '4.8 ★',
-    eta: '10 MINS',
-    icon: '🏬',
+    id: 'sai-jeevan', name: 'Sai Jeevan Super Mall',
+    tagline: 'Premium Supermarket & Daily Needs',
+    location: 'Station Road, Bhusawal', badge: 'TOP RATED',
+    rating: '4.8', eta: '10 min', icon: '🏬',
     image: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&w=500&q=80',
-    color: 'border-purpleBrand bg-purple-50 text-purpleBrand',
-    categories: ['Fruits & Vegetables', 'Dairy & Breakfast', 'Grocery Staples', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
+    gradient: 'from-emerald-600 to-green-700'
   },
   {
-    id: 'central-supermarket',
-    name: 'Bhusawal Central Supermarket',
-    tagline: 'Staples, Snacks, Household & Beverages',
-    location: 'Station Road, Bhusawal',
-    badge: 'FEATURED PARTNER',
-    rating: '4.8 ★',
-    eta: '10 MINS',
-    icon: '🏬',
+    id: 'balaji-mart', name: 'Balaji Mart',
+    tagline: 'Staples, Snacks & Household',
+    location: 'Jalgaon Road, Bhusawal', badge: 'PARTNER',
+    rating: '4.7', eta: '12 min', icon: '🛒',
     image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=500&q=80',
-    color: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-    categories: ['Grocery Staples', 'Snacks & Confectionery', 'Beverages', 'Home Cleaning & Household']
+    gradient: 'from-green-600 to-emerald-700'
   },
   {
-    id: 'fresh-green-mart',
-    name: 'Fresh Green Mart & Organics',
-    tagline: 'Farm-fresh Fruits, Vegetables & Dairy',
-    location: 'Jamner Road, Bhusawal',
-    badge: 'FARM FRESH',
-    rating: '4.7 ★',
-    eta: '12 MINS',
-    icon: '🥦',
+    id: 'fresh-green-mart', name: 'Fresh Green Mart',
+    tagline: 'Farm-fresh Fruits & Vegetables',
+    location: 'Jamner Road, Bhusawal', badge: 'FARM FRESH',
+    rating: '4.7', eta: '12 min', icon: '🥦',
     image: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=500&q=80',
-    color: 'border-green-200 bg-green-50 text-green-700',
-    categories: ['Fruits & Vegetables', 'Dairy & Breakfast', 'Grocery Staples']
+    gradient: 'from-lime-600 to-green-700'
   },
   {
-    id: 'dinshaws-dairy-hub',
-    name: "Dinshaw's Dairy & Bakery Hub",
-    tagline: 'Fresh Milk, Cheese, Bakery & Frozen',
-    location: 'Varangaon Road, Bhusawal',
-    badge: 'DAIRY SPECIALIST',
-    rating: '4.9 ★',
-    eta: '8 MINS',
-    icon: '🥛',
+    id: 'dinshaws-dairy', name: "Dinshaw's Dairy & Bakery",
+    tagline: 'Fresh Milk, Cheese & Bakery',
+    location: 'Varangaon Road, Bhusawal', badge: 'DAIRY',
+    rating: '4.9', eta: '8 min', icon: '🥛',
     image: 'https://images.unsplash.com/photo-1528751014936-863e6e7a319c?auto=format&fit=crop&w=500&q=80',
-    color: 'border-amber-200 bg-amber-50 text-amber-800',
-    categories: ['Dairy & Breakfast', 'Instant & Frozen Foods', 'Beverages']
+    gradient: 'from-teal-600 to-emerald-700'
   },
   {
-    id: 'khandesh-agro-spices',
-    name: 'Khandesh Agro & Spices Store',
-    tagline: 'Pure Grains, Spices, Pulses & Oils',
-    location: 'Main Market, Bhusawal',
-    badge: 'LOCAL TRADITIONAL',
-    rating: '4.6 ★',
-    eta: '15 MINS',
-    icon: '🌾',
+    id: 'khandesh-agro', name: 'Khandesh Agro & Spices',
+    tagline: 'Pure Grains, Spices & Oils',
+    location: 'Main Market, Bhusawal', badge: 'LOCAL',
+    rating: '4.6', eta: '15 min', icon: '🌾',
     image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=500&q=80',
-    color: 'border-orange-200 bg-orange-50 text-orange-800',
-    categories: ['Grocery Staples', 'Instant & Frozen Foods']
+    gradient: 'from-amber-600 to-orange-700'
   },
   {
-    id: 'city-organic-daily',
-    name: 'City Organic & Daily Needs',
-    tagline: 'Personal Care, Baby Care & Essentials',
-    location: 'Civil Lines, Bhusawal',
-    badge: 'HEALTH & ESSENTIALS',
-    rating: '4.8 ★',
-    eta: '10 MINS',
-    icon: '✨',
+    id: 'city-organic', name: 'City Organic & Essentials',
+    tagline: 'Personal Care & Baby Needs',
+    location: 'Civil Lines, Bhusawal', badge: 'HEALTH',
+    rating: '4.8', eta: '10 min', icon: '🌿',
     image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=500&q=80',
-    color: 'border-blue-200 bg-blue-50 text-blue-800',
-    categories: ['Personal Care', 'Home Cleaning & Household', 'Baby, Health & Specialty', 'Snacks & Confectionery']
+    gradient: 'from-cyan-600 to-teal-700'
   }
 ];
 
-// Server-render first 48 items
-const initialProducts = catalog.slice(0, 48);
+// Master Top Brands List for Filter
+const topBrandsList = [
+  'All Brands', 'Fortune', 'Amul', 'Aashirvaad', "Haldiram's", 'Tata', 'Parle',
+  'Britannia', 'Dettol', 'Surf Excel', 'Lay\'s', 'Bingo', 'Bikanervala', 'Gowardhan',
+  'Bhusawal Fresh', 'Mahafresh', 'Farm Fresh', 'Organic India', 'Wonderchef', 'Cello',
+  'Scotch-Brite', 'Hawkins', 'Daawat', 'Mother Dairy', 'Colgate', 'Everest', 'MDH', 'Catch'
+];
+
+const totalProducts = catalog.length;
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
+  <script is:inline src="/bhusawal_age_verification.js"></script>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bhusawal Connect | Grocery Marketplace & Partner Superstores</title>
-  
+  <title>Bhusawal Connect | Modern Grocery Marketplace</title>
+  <meta name="description" content="Order groceries from top Bhusawal stores. Premium cards, instant search, 10 min delivery." />
+
   <script is:inline src="https://cdn.tailwindcss.com"></script>
   <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
   <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
   <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-  
+
   <script is:inline>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            purpleBrand: '#7c3aed',
-            purpleDark: '#6d28d9',
-            purpleLight: '#f3e8ff'
+            brand: '#16a34a',
+            brandDark: '#15803d',
+            brandLight: '#f0fdf4',
+            brandMuted: '#dcfce7'
           },
           fontFamily: {
             sans: ['Plus Jakarta Sans', 'sans-serif'],
@@ -148,526 +132,1704 @@ const initialProducts = catalog.slice(0, 48);
   </script>
 
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8faf9; }
     h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Skeleton loading shimmer */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 16px;
+    }
+
+    /* Smooth entry animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up {
+      animation: fadeUp 0.3s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* Category pill active glow */
+    .cat-pill-active {
+      box-shadow: 0 4px 14px -2px rgba(22, 163, 74, 0.35);
+      transform: scale(1.02);
+    }
+
+    /* Section header */
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      color: #0f172a;
+      font-size: 1.05rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Modern Product Card Styling */
+    .product-card-v2 {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .product-card-v2:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px -8px rgba(22,163,74,0.16), 0 4px 12px -4px rgba(0,0,0,0.06);
+    }
+
+    /* Green scrollbar for horizontal sections */
+    .green-scroll::-webkit-scrollbar { height: 4px; }
+    .green-scroll::-webkit-scrollbar-track { background: #f0fdf4; border-radius: 4px; }
+    .green-scroll::-webkit-scrollbar-thumb { background: #86efac; border-radius: 4px; }
+
+    /* Highlight matching search text */
+    .search-match-hl {
+      background-color: #dcfce7;
+      color: #15803d;
+      font-weight: 800;
+      padding: 0 2px;
+      border-radius: 4px;
+    }
+
+    .search-overlay-shadow {
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15), 0 10px 20px -5px rgba(22, 163, 74, 0.08);
+    }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
-<body class="pb-28 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased">
+<body class="pb-32 max-w-7xl mx-auto min-h-screen text-slate-800 antialiased">
 
-  <!-- TOP HEADER -->
-  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 px-4 py-3.5 shadow-xs flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <a href="/home" class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
-        <span class="material-symbols-outlined text-xl">arrow_back</span>
-      </a>
-      <div>
-        <div class="flex items-center gap-1.5">
-          <span class="px-2 py-0.5 rounded-md bg-purple-100 text-purpleBrand text-[10px] font-black uppercase tracking-wider">⚡ MARKETPLACE</span>
-          <h1 class="text-base font-black font-display text-slate-900 leading-tight">Grocery Superstore</h1>
+  <!-- ==================== STICKY HEADER ==================== -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-green-100/60 px-4 py-3 shadow-sm">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/home" class="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 active:scale-90 transition-all">
+          <span class="material-symbols-outlined text-xl">arrow_back</span>
+        </a>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-base font-black font-display text-slate-900 leading-tight">Grocery</h1>
+            <span class="px-1.5 py-0.5 rounded-md bg-green-100 text-green-700 text-[9px] font-black uppercase tracking-wider">⚡ 10 min</span>
+          </div>
+          <p class="text-[11px] text-slate-500 font-semibold">Bhusawal's #1 Grocery Delivery</p>
         </div>
-        <p class="text-[11px] text-slate-500 font-bold truncate max-w-[200px] sm:max-w-xs">
-          Partner Stores & Direct Superstore • Bhusawal
-        </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <a href="/wishlist" class="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 transition-colors">
+          <span class="material-symbols-outlined text-xl text-red-500">favorite</span>
+        </a>
+        <a href="/cart" class="relative w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center hover:bg-green-700 transition-colors">
+          <span class="material-symbols-outlined text-lg">shopping_bag</span>
+          <span id="cart-badge-header" class="absolute -top-1 -right-1 bg-amber-400 text-slate-900 text-[9px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white min-w-[18px] min-h-[18px]">0</span>
+        </a>
       </div>
     </div>
-
-    <a href="/billing" class="relative w-10 h-10 rounded-full bg-purple-100 text-purpleBrand flex items-center justify-center font-bold hover:bg-purple-200 transition-colors">
-      <span class="material-symbols-outlined text-xl">shopping_bag</span>
-      <span id="cart-badge-header" class="absolute -top-1 -right-1 bg-purpleBrand text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
-    </a>
   </header>
 
-  <!-- STICKY SEARCH, FILTERS & SORTING BAR -->
-  <div class="sticky top-16 z-40 bg-white/95 backdrop-blur-md px-4 py-3 border-b border-slate-100 shadow-sm space-y-3">
-    
-    <!-- Search Bar -->
-    <div class="flex items-center gap-2 bg-slate-100 rounded-2xl px-4 py-2.5 border border-slate-200/80 focus-within:ring-2 focus-within:ring-purpleBrand/40 focus-within:bg-white transition-all">
-      <span class="material-symbols-outlined text-slate-400">search</span>
-      <input type="text" id="grocery-search-input" placeholder="Search 25,000+ items across partner stores..." class="w-full bg-transparent outline-none text-xs sm:text-sm font-bold text-slate-800 placeholder-slate-400" autocomplete="off" />
-      <button id="clear-search-btn" class="hidden text-slate-400 hover:text-slate-600">
-        <span class="material-symbols-outlined text-lg">close</span>
-      </button>
-    </div>
-
-    <!-- Filter Pills & Sorting Dropdown -->
-    <div class="flex items-center justify-between gap-2 overflow-x-auto no-scrollbar pt-1">
-      <div class="flex items-center gap-2">
-        <button class="diet-filter-btn px-3 py-1.5 rounded-xl bg-purpleBrand text-white text-xs font-black shadow-xs transition-all" data-filter="all">All Items</button>
-        <button class="diet-filter-btn px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold transition-all" data-filter="instock">In Stock Only</button>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <label for="sort-select" class="text-xs font-bold text-slate-400 hidden sm:inline">Sort:</label>
-        <select id="sort-select" class="bg-slate-100 border border-slate-200 text-slate-800 text-xs font-extrabold rounded-xl px-3 py-1.5 outline-none cursor-pointer hover:bg-slate-200 transition-colors">
-          <option value="popular">Popularity</option>
-          <option value="low-high">Price: Low to High</option>
-          <option value="high-low">Price: High to Low</option>
-          <option value="name">Name: A to Z</option>
-        </select>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- FEATURED PROMO BANNER -->
-  <div class="px-4 pt-4">
-    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-800 via-purple-700 to-indigo-900 text-white p-5 shadow-lg shadow-purple-900/10">
-      <div class="relative z-10 max-w-xl space-y-1">
-        <span class="px-2.5 py-0.5 bg-amber-400 text-slate-950 text-[10px] font-black uppercase tracking-wider rounded-full inline-block mb-1">BHUSAWAL MARKETPLACE</span>
-        <h2 class="text-xl sm:text-2xl font-black font-display leading-tight">25,500+ Items from Local Partner Stores</h2>
-        <p class="text-xs text-purple-100 font-semibold">Shop from top Bhusawal partner superstores or order directly from master catalog</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== FEATURED PARTNER STORES HORIZONTAL CAROUSEL ==================== -->
-  <div class="px-4 pt-5 space-y-3">
-    <div class="flex items-center justify-between">
-      <div>
-        <h2 class="text-base sm:text-lg font-black font-display text-slate-900 flex items-center gap-2">
-          <span>🏬 Featured Partner Stores</span>
-          <span class="text-[10px] font-black text-purpleBrand bg-purple-100 px-2 py-0.5 rounded-full border border-purple-200 uppercase">Bhusawal Marketplace</span>
-        </h2>
-        <p class="text-xs text-slate-500 font-medium">Click any store card to open its dedicated store profile and storefront</p>
-      </div>
-    </div>
-
-    <!-- CAROUSEL CONTAINER -->
-    <div class="flex gap-3.5 overflow-x-auto no-scrollbar pb-2 pt-1 scroll-smooth" id="partner-stores-carousel">
-      {partnerStores.map(store => (
-        <a 
-          href={`/store_profile?store=${store.id}`}
-          class="partner-store-card flex-shrink-0 w-64 sm:w-72 bg-white rounded-3xl p-3.5 border-2 border-slate-100 shadow-xs hover:shadow-xl hover:border-purpleBrand transition-all duration-300 cursor-pointer relative group flex flex-col justify-between"
-          data-store-id={store.id}
-        >
-          <!-- Store Image & Badge Header -->
-          <div class="relative w-full h-28 rounded-2xl overflow-hidden mb-3 bg-slate-100">
-            <img src={store.image} alt={store.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
-            
-            <div class="absolute top-2 left-2">
-              <span class="px-2 py-0.5 bg-white/95 backdrop-blur-md text-slate-900 text-[9px] font-black rounded-lg uppercase tracking-wider shadow-xs">
-                {store.badge}
-              </span>
-            </div>
-
-            <div class="absolute bottom-2 left-2 right-2 flex items-center justify-between text-white">
-              <span class="text-xs font-bold text-slate-200 flex items-center gap-1 truncate max-w-[160px]">
-                <span class="material-symbols-outlined text-xs shrink-0">location_on</span>
-                <span class="truncate">{store.location}</span>
-              </span>
-              <span class="bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.5 rounded shrink-0">
-                {store.rating}
-              </span>
-            </div>
-          </div>
-
-          <!-- Store Info & Details -->
-          <div class="space-y-1">
-            <h3 class="text-sm font-black font-display text-slate-900 group-hover:text-purpleBrand transition-colors leading-tight flex items-center gap-1.5">
-              <span>{store.icon}</span>
-              <span class="truncate">{store.name}</span>
-            </h3>
-            <p class="text-[11px] font-semibold text-slate-500 truncate">{store.tagline}</p>
-          </div>
-
-          <!-- Action Button & ETA -->
-          <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between">
-            <span class="text-[10px] font-bold text-slate-500 flex items-center gap-1">
-              <span class="material-symbols-outlined text-xs text-purpleBrand">bolt</span>
-              <span>{store.eta} ETA</span>
-            </span>
-
-            <span class="store-browse-btn px-3 py-1 bg-purple-50 group-hover:bg-purpleBrand text-purpleBrand group-hover:text-white text-[10px] font-black rounded-xl border border-purple-200 transition-all">
-              View Store Profile →
-            </span>
-          </div>
-        </a>
-      ))}
-    </div>
-  </div>
-
-  <!-- MAIN CONTAINER (CATEGORY SIDEBAR + PRODUCT GRID) -->
-  <div class="px-4 py-5 md:flex md:gap-6">
-    
-    <!-- Mobile Categories Horizontal Bar -->
-    <div class="md:hidden flex gap-2 overflow-x-auto no-scrollbar pb-3 mb-3 border-b border-slate-100">
-      {categoriesList.map(cat => (
-        <button class="mobile-cat-btn flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-white border border-slate-200 text-xs font-extrabold text-slate-700 hover:border-purpleBrand transition-all" data-category={cat.name}>
-          <span>{cat.icon}</span>
-          <span>{cat.name}</span>
+  <!-- ==================== SEARCH CONTAINER ==================== -->
+  <div class="sticky top-[57px] z-40 bg-white/95 backdrop-blur-xl px-4 py-2.5 border-b border-green-100/40">
+    <div class="relative">
+      <div class="flex items-center gap-2.5 bg-green-50/80 rounded-2xl px-4 py-2.5 border border-green-200/60 focus-within:ring-2 focus-within:ring-green-500/30 focus-within:bg-white focus-within:border-green-400 transition-all">
+        <span class="material-symbols-outlined text-green-600 text-xl shrink-0">search</span>
+        <input
+          type="text"
+          id="grocery-search-input"
+          placeholder="Search 2,699 Master SKUs (Name, Brand, Category, Subcategory)..."
+          class="w-full bg-transparent outline-none text-xs sm:text-sm font-semibold text-slate-800 placeholder-slate-400"
+          autocomplete="off"
+        />
+        <span id="search-spinner" class="hidden text-green-600 shrink-0 animate-spin">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+        </span>
+        <button id="clear-search-btn" class="hidden text-slate-400 hover:text-slate-600 shrink-0 transition-colors">
+          <span class="material-symbols-outlined text-lg">close</span>
         </button>
-      ))}
-    </div>
+      </div>
 
-    <!-- Desktop Category Sidebar -->
-    <aside class="hidden md:block w-64 flex-shrink-0 space-y-2 sticky top-44 h-fit">
-      <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider px-3 mb-2">Categories</h3>
-      <div class="bg-white rounded-3xl p-2.5 border border-slate-100 shadow-sm space-y-1">
-        {categoriesList.map(cat => (
-          <button class="desktop-cat-btn w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-extrabold text-slate-700 hover:bg-purple-50 hover:text-purpleBrand transition-all" data-category={cat.name}>
-            <div class="flex items-center gap-2.5">
-              <span class="text-base">{cat.icon}</span>
-              <span>{cat.name}</span>
+      <!-- ZEPTO INSTANT AUTO-SUGGEST & OVERLAY DROPDOWN -->
+      <div
+        id="grocery-search-dropdown"
+        class="hidden absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-green-100 search-overlay-shadow max-h-[75vh] overflow-y-auto no-scrollbar z-50 p-4 space-y-4"
+      >
+        <div id="search-dropdown-empty" class="space-y-4">
+          <div id="recent-searches-box" class="hidden">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">schedule</span> Recent Searches
+              </span>
+              <button id="clear-recent-searches" class="text-[10px] font-bold text-red-500 hover:underline">Clear All</button>
             </div>
-            <span class="material-symbols-outlined text-sm text-slate-300">chevron_right</span>
+            <div id="recent-searches-list" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <div>
+            <span class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-2">
+              <span>🔥</span> Trending Searches in Bhusawal
+            </span>
+            <div class="flex flex-wrap gap-1.5" id="trending-searches-list">
+              <button class="trending-tag px-3 py-1 bg-green-50 hover:bg-green-600 text-green-800 hover:text-white rounded-xl text-xs font-extrabold border border-green-200/80 transition-all flex items-center gap-1" data-query="Amul Milk">
+                <span>🥛</span> Amul Milk
+              </button>
+              <button class="trending-tag px-3 py-1 bg-green-50 hover:bg-green-600 text-green-800 hover:text-white rounded-xl text-xs font-extrabold border border-green-200/80 transition-all flex items-center gap-1" data-query="Fortune Oil">
+                <span>🫒</span> Fortune Oil
+              </button>
+              <button class="trending-tag px-3 py-1 bg-green-50 hover:bg-green-600 text-green-800 hover:text-white rounded-xl text-xs font-extrabold border border-green-200/80 transition-all flex items-center gap-1" data-query="Aashirvaad Atta">
+                <span>🌾</span> Aashirvaad Atta
+              </button>
+              <button class="trending-tag px-3 py-1 bg-green-50 hover:bg-green-600 text-green-800 hover:text-white rounded-xl text-xs font-extrabold border border-green-200/80 transition-all flex items-center gap-1" data-query="Haldiram Bhujia">
+                <span>🍿</span> Haldiram Bhujia
+              </button>
+              <button class="trending-tag px-3 py-1 bg-green-50 hover:bg-green-600 text-green-800 hover:text-white rounded-xl text-xs font-extrabold border border-green-200/80 transition-all flex items-center gap-1" data-query="Tata Tea">
+                <span>☕</span> Tata Tea
+              </button>
+              <button class="trending-tag px-3 py-1 bg-green-50 hover:bg-green-600 text-green-800 hover:text-white rounded-xl text-xs font-extrabold border border-green-200/80 transition-all flex items-center gap-1" data-query="Lay's Chips">
+                <span>🥔</span> Lay's Chips
+              </button>
+              <button class="trending-tag px-3 py-1 bg-green-50 hover:bg-green-600 text-green-800 hover:text-white rounded-xl text-xs font-extrabold border border-green-200/80 transition-all flex items-center gap-1" data-query="Surf Excel">
+                <span>🧹</span> Surf Excel
+              </button>
+              <button class="trending-tag px-3 py-1 bg-green-50 hover:bg-green-600 text-green-800 hover:text-white rounded-xl text-xs font-extrabold border border-green-200/80 transition-all flex items-center gap-1" data-query="Basmati Rice">
+                <span>🍚</span> Basmati Rice
+              </button>
+              <button class="trending-tag px-3 py-1 bg-green-50 hover:bg-green-600 text-green-800 hover:text-white rounded-xl text-xs font-extrabold border border-green-200/80 transition-all flex items-center gap-1" data-query="Dettol Soap">
+                <span>✨</span> Dettol Soap
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-100">
+            <span class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-2">
+              <span>⭐</span> Popular Grocery Staples
+            </span>
+            <div id="dropdown-popular-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+          </div>
+        </div>
+
+        <div id="search-dropdown-results" class="hidden space-y-3">
+          <div id="dropdown-shortcuts-box" class="flex flex-wrap gap-1.5"></div>
+          <div class="space-y-1.5">
+            <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Matching Products</span>
+            <div id="dropdown-products-preview" class="space-y-1"></div>
+          </div>
+          <button id="see-all-results-btn" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-98 transition-all">
+            <span>View All Matching Results</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <div id="homepage-sections">
+
+    <!-- FEATURED PARTNER STORES -->
+    <section class="px-4 pt-5 pb-1">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="section-title"><span>🏬</span> Partner Stores</h2>
+        <span class="text-[10px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full border border-green-200">Bhusawal</span>
+      </div>
+
+      <div class="flex gap-3 overflow-x-auto no-scrollbar pb-2 scroll-smooth green-scroll">
+        {partnerStores.map(store => (
+          <a
+            href={`/store_profile?store=${store.id}`}
+            class="flex-shrink-0 w-56 sm:w-64 bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-lg hover:border-green-200 transition-all duration-300 group"
+          >
+            <div class="relative w-full h-28 overflow-hidden">
+              <img src={store.image} alt={store.name} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-900/70 to-transparent"></div>
+              <div class="absolute top-2 left-2">
+                <span class="px-1.5 py-0.5 bg-green-500 text-white text-[8px] font-black rounded-md uppercase tracking-wider">{store.badge}</span>
+              </div>
+              <div class="absolute bottom-2 left-2 right-2 flex justify-between items-end">
+                <span class="text-white text-[10px] font-bold truncate flex items-center gap-0.5">
+                  <span class="material-symbols-outlined text-[10px]">location_on</span>
+                  {store.location}
+                </span>
+                <span class="bg-amber-400 text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded-md flex items-center gap-0.5">⭐ {store.rating}</span>
+              </div>
+            </div>
+            <div class="p-3 space-y-1">
+              <h3 class="text-xs font-extrabold text-slate-900 group-hover:text-green-700 transition-colors flex items-center gap-1.5 truncate">
+                <span>{store.icon}</span>
+                <span class="truncate">{store.name}</span>
+              </h3>
+              <p class="text-[10px] text-slate-500 font-medium truncate">{store.tagline}</p>
+              <div class="flex items-center justify-between pt-1.5 border-t border-slate-100 mt-1.5">
+                <span class="text-[10px] font-bold text-green-600 flex items-center gap-0.5">
+                  <span class="material-symbols-outlined text-xs">bolt</span> {store.eta}
+                </span>
+                <span class="text-[9px] font-black text-green-600 group-hover:text-white group-hover:bg-green-600 bg-green-50 px-2 py-0.5 rounded-lg border border-green-200 group-hover:border-green-600 transition-all">Visit →</span>
+              </div>
+            </div>
+          </a>
         ))}
       </div>
-    </aside>
+    </section>
 
-    <!-- Product Grid Section -->
-    <main class="flex-1 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">
-        <h2 id="active-category-title" class="text-lg font-black font-display text-slate-900">All Products Catalog</h2>
-        <span id="product-count-label" class="text-xs font-bold text-slate-400">Loading catalog...</span>
+    <!-- HORIZONTAL CATEGORIES BAR -->
+    <section class="px-4 pt-4 pb-2">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="section-title"><span>📦</span> Explore Categories</h2>
+        <span class="text-[10px] font-bold text-green-700 bg-green-50 px-2.5 py-0.5 rounded-full border border-green-200">21 Categories</span>
       </div>
 
-      <!-- Products Grid -->
-      <div id="grocery-products-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3.5 sm:gap-4.5">
-        {initialProducts.map(p => {
-          const id = p["Product ID"] || p.ProductID || p.id || '';
-          const name = p["Product Name"] || '';
-          const brand = p["Brand Name"] || p.brand || 'Bhusawal Fresh';
-          const cat = p.Category || 'Grocery';
-          const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
-          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 0);
-          const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-          const isOutOfStock = p.stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
-          const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
-          const nameSafe = name.replace(/"/g, '&quot;');
-
-          return (
-            <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-3" data-id={id} data-name={nameSafe} data-price={mrp} data-mrp={mrp} data-img={img} data-unit={pack} data-cat={cat} data-brand={brand} data-desc={descSafe}>
-
-              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
-                {isOutOfStock && (
-                  <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
-                    <span class="bg-slate-900 text-white text-[10px] sm:text-xs font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-md">Out of Stock</span>
-                  </div>
-                )}
-
-                <img src={img} alt={name} class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-
-                <div class="absolute bottom-2 left-2 z-10">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
-                    ⚡ 10 MINS
-                  </span>
-                </div>
+      <div class="relative">
+        <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-2 pt-1 scroll-smooth green-scroll" id="categories-scroll">
+          {categoriesList.map((cat, i) => (
+            <button
+              class={`cat-pill flex-shrink-0 flex items-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-2xl text-xs font-extrabold transition-all duration-300 active:scale-95 border cursor-pointer select-none group ${
+                i === 0
+                  ? 'bg-green-600 text-white border-green-600 cat-pill-active'
+                  : 'bg-white text-slate-700 border-slate-200/90 hover:border-green-400 hover:bg-green-50/80 hover:text-green-800'
+              }`}
+              data-cat-id={cat.id}
+              data-category={cat.name}
+            >
+              <span class="text-base sm:text-lg group-hover:scale-110 transition-transform duration-200 shrink-0">{cat.icon}</span>
+              <div class="text-left min-w-0">
+                <span class="whitespace-nowrap font-black block leading-tight">{cat.name}</span>
+                <span class="text-[9px] font-semibold opacity-75 whitespace-nowrap block hidden sm:inline">{cat.desc}</span>
               </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
 
-              <div class="flex flex-col flex-1 px-0.5">
-                <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">{brand}</span>
-                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">{name}</h3>
-                <p class="text-[11px] font-semibold text-slate-400 mb-2">{pack}</p>
+    <!-- FREQUENTLY BOUGHT -->
+    <section class="px-4 pt-3 pb-1" id="section-frequently-bought">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="section-title"><span>🔄</span> Frequently Bought</h2>
+        <button class="text-[10px] font-bold text-green-600 hover:underline" onclick="document.getElementById('all-products-anchor')?.scrollIntoView({behavior:'smooth'})">View All →</button>
+      </div>
+      <div class="flex gap-3.5 overflow-x-auto no-scrollbar pb-2.5 scroll-smooth green-scroll" id="frequently-bought-row">
+        <div class="flex gap-3.5">
+          {Array.from({length:6}).map((_,i) => (
+            <div class="flex-shrink-0 w-40 sm:w-44 h-64 skeleton rounded-3xl"></div>
+          ))}
+        </div>
+      </div>
+    </section>
 
-                <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
-                  <span class="text-sm font-black text-slate-900">MRP ₹{mrp}</span>
+    <!-- RECENTLY ORDERED -->
+    <section class="px-4 pt-4 pb-1 hidden" id="section-recently-ordered">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="section-title"><span>🕐</span> Recently Ordered</h2>
+        <button class="text-[10px] font-bold text-green-600 hover:underline" onclick="document.getElementById('all-products-anchor')?.scrollIntoView({behavior:'smooth'})">View All →</button>
+      </div>
+      <div class="flex gap-3.5 overflow-x-auto no-scrollbar pb-2.5 scroll-smooth green-scroll" id="recently-ordered-row">
+      </div>
+    </section>
 
-                  <div class="cart-action-container" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
-                    <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id={id} data-name={nameSafe} data-price={mrp} data-img={img}>
-                      + ADD
-                    </button>
-                  </div>
-                </div>
-              </div>
+    <!-- POPULAR IN BHUSAWAL -->
+    <section class="px-4 pt-4 pb-1" id="section-popular">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="section-title"><span>🔥</span> Popular in Bhusawal</h2>
+        <button class="text-[10px] font-bold text-green-600 hover:underline" onclick="document.getElementById('all-products-anchor')?.scrollIntoView({behavior:'smooth'})">View All →</button>
+      </div>
+      <div class="flex gap-3.5 overflow-x-auto no-scrollbar pb-2.5 scroll-smooth green-scroll" id="popular-row">
+        <div class="flex gap-3.5">
+          {Array.from({length:6}).map((_,i) => (
+            <div class="flex-shrink-0 w-40 sm:w-44 h-64 skeleton rounded-3xl"></div>
+          ))}
+        </div>
+      </div>
+    </section>
 
-            </div>
-          );
-        })}
+    <!-- ALL PRODUCTS GRID SECTION -->
+    <section class="px-4 pt-5" id="all-products-anchor">
+      <!-- Section Header -->
+      <div class="flex items-center justify-between mb-2 pb-2">
+        <h2 id="active-category-title" class="section-title"><span>🛒</span> All Products</h2>
+        <span id="product-count-label" class="text-xs font-bold text-slate-400">Loading...</span>
       </div>
 
-      <!-- LOAD MORE -->
-      <div id="load-more-container" class="py-8 text-center space-y-2">
-        <button id="load-more-btn" class="px-8 py-3 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs rounded-2xl shadow-lg active:scale-95 transition-all">
-          Load More Products
-        </button>
-        <p id="pagination-status-text" class="text-xs font-bold text-slate-400"></p>
+      <!-- MULTI-FIELD INSTANT FILTER & SORT BAR -->
+      <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-2xs mb-4 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-2">
+          <span class="text-xs font-black text-slate-700 flex items-center gap-1">
+            <span class="material-symbols-outlined text-green-600 text-base">tune</span> Instant Filters
+          </span>
+          <button id="reset-all-filters-btn" class="hidden text-[11px] font-extrabold text-red-600 hover:text-red-700 bg-red-50 px-2.5 py-1 rounded-xl transition-all flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">restart_alt</span> Reset Filters
+          </button>
+        </div>
+
+        <!-- Filter Select Dropdowns & Sort Selector -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+          <!-- Brand Filter -->
+          <div>
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Brand</label>
+            <select id="filter-brand-select" class="w-full bg-green-50/60 border border-green-200 text-slate-800 text-xs font-extrabold rounded-xl px-2.5 py-1.5 outline-none cursor-pointer hover:bg-green-100 transition-colors">
+              {topBrandsList.map(b => (
+                <option value={b}>{b}</option>
+              ))}
+            </select>
+          </div>
+
+          <!-- Price Range Filter -->
+          <div>
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Price</label>
+            <select id="filter-price-select" class="w-full bg-green-50/60 border border-green-200 text-slate-800 text-xs font-extrabold rounded-xl px-2.5 py-1.5 outline-none cursor-pointer hover:bg-green-100 transition-colors">
+              <option value="all">All Prices</option>
+              <option value="under-50">Under ₹50</option>
+              <option value="50-100">₹50 - ₹100</option>
+              <option value="100-250">₹100 - ₹250</option>
+              <option value="250-500">₹250 - ₹500</option>
+              <option value="above-500">Above ₹500</option>
+            </select>
+          </div>
+
+          <!-- Availability Filter -->
+          <div>
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Availability</label>
+            <select id="filter-availability-select" class="w-full bg-green-50/60 border border-green-200 text-slate-800 text-xs font-extrabold rounded-xl px-2.5 py-1.5 outline-none cursor-pointer hover:bg-green-100 transition-colors">
+              <option value="all">All Items</option>
+              <option value="instock">In Stock Only</option>
+              <option value="outofstock">Out of Stock</option>
+            </select>
+          </div>
+
+          <!-- Discount Filter -->
+          <div>
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Discount</label>
+            <select id="filter-discount-select" class="w-full bg-green-50/60 border border-green-200 text-slate-800 text-xs font-extrabold rounded-xl px-2.5 py-1.5 outline-none cursor-pointer hover:bg-green-100 transition-colors">
+              <option value="all">All Items</option>
+              <option value="discounted">Discounted Only</option>
+              <option value="10">10%+ OFF</option>
+              <option value="20">20%+ OFF</option>
+              <option value="30">30%+ OFF</option>
+            </select>
+          </div>
+
+          <!-- Sort By Dropdown -->
+          <div>
+            <label class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Sort By</label>
+            <select id="sort-select" class="w-full bg-green-600 text-white border border-green-600 text-xs font-extrabold rounded-xl px-2.5 py-1.5 outline-none cursor-pointer hover:bg-green-700 transition-colors">
+              <option value="popular">Popularity</option>
+              <option value="newest">Newest</option>
+              <option value="low-high">Price: Low to High</option>
+              <option value="high-low">Price: High to Low</option>
+              <option value="name">Alphabetical (A-Z)</option>
+              <option value="recent-added">Recently Added</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-    </main>
+      <!-- MODERN LAZY-LOADED PRODUCT GRID (INITIAL 20 PRODUCTS) -->
+      <div id="grocery-products-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-2.5 sm:gap-4">
+        {Array.from({length:6}).map((_,i) => (
+          <div class="skeleton rounded-3xl h-72"></div>
+        ))}
+      </div>
+
+      <!-- Infinite scroll sentinel for automatic lazy loading -->
+      <div id="scroll-sentinel" class="py-8 flex justify-center">
+        <div id="loading-spinner" class="flex items-center gap-2 text-green-600">
+          <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+          <span class="text-xs font-bold">Loading more products...</span>
+        </div>
+      </div>
+
+      <div id="end-of-catalog" class="hidden py-6 text-center">
+        <p class="text-xs font-bold text-slate-400">You've reached the end.</p>
+      </div>
+    </section>
+
   </div>
 
-  <!-- FLOATING CART BAR -->
-  <div id="floating-cart-bar" class="hidden fixed bottom-6 left-4 right-4 max-w-xl mx-auto bg-purpleBrand text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between z-50 animate-in fade-in slide-in-from-bottom-2">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-black text-sm" id="cart-count-badge">
-        0
-      </div>
+  <!-- ==================== FULL SEARCH RESULTS VIEW ==================== -->
+  <div id="search-results-view" class="hidden px-4 pt-4 space-y-4">
+    <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">
       <div>
-        <p class="text-xs font-black text-white" id="cart-total-text">₹0</p>
-        <p class="text-[10px] text-purple-200">View items in cart</p>
+        <h2 id="search-results-title" class="section-title"><span>🔍</span> Instant Search Results</h2>
+        <p id="search-results-query-label" class="text-xs text-slate-500 font-semibold"></p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="search-results-count" class="text-xs font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-xl border border-green-200"></span>
+        <button id="back-to-home-btn" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all">Close Search</button>
       </div>
     </div>
-    <a href="/billing" class="bg-white text-purpleBrand font-black text-xs px-5 py-2.5 rounded-xl flex items-center gap-1.5 shadow-md hover:bg-purple-50 active:scale-95 transition-all">
-      <span>Proceed to Checkout</span>
+
+    <!-- Active Search Results Grid -->
+    <div id="search-results-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-2.5 sm:gap-4"></div>
+
+    <!-- NO RESULTS & RELATED PRODUCTS FALLBACK -->
+    <div id="search-no-results" class="hidden py-8 space-y-6">
+      <div class="text-center bg-white rounded-3xl p-8 border border-slate-100 shadow-sm max-w-lg mx-auto">
+        <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl">🔍</div>
+        <h3 class="text-base font-black font-display text-slate-900">No products found</h3>
+        <p id="search-no-results-text" class="text-xs text-slate-500 font-medium mt-1">We couldn't find matches for your query.</p>
+        <p class="text-xs font-bold text-green-600 mt-3">Check out related popular products in Bhusawal below!</p>
+      </div>
+
+      <!-- RELATED PRODUCTS SECTION -->
+      <div>
+        <h3 class="section-title mb-3"><span>💡</span> Recommended Related Products</h3>
+        <div id="search-related-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FLOATING CART BAR ==================== -->
+  <div id="floating-cart-bar" class="hidden fixed bottom-5 left-4 right-4 max-w-xl mx-auto bg-green-600 text-white p-3 rounded-2xl shadow-2xl shadow-green-900/20 flex items-center justify-between z-50" style="animation: fadeUp 0.3s ease-out forwards;">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-black text-sm" id="cart-count-badge">0</div>
+      <div>
+        <p class="text-sm font-black" id="cart-total-text">₹0</p>
+        <p class="text-[10px] text-green-200 font-semibold">View cart & checkout</p>
+      </div>
+    </div>
+    <a href="/cart" class="bg-white text-green-700 font-black text-xs px-5 py-2.5 rounded-xl flex items-center gap-1.5 shadow-md hover:bg-green-50 active:scale-95 transition-all">
+      <span>Checkout</span>
       <span class="material-symbols-outlined text-sm">arrow_forward</span>
     </a>
   </div>
 
-  <Switcher />
+  <!-- ==================== BOTTOM NAV ==================== -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xl border-t border-green-100/60 py-2 px-4">
+    <div class="max-w-7xl mx-auto flex items-center justify-around">
+      <a href="/home" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-green-600 transition-colors">
+        <span class="material-symbols-outlined text-xl">home</span>
+        <span class="text-[9px] font-bold">Home</span>
+      </a>
+      <a href="/grocery" class="flex flex-col items-center gap-0.5 text-green-600">
+        <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">local_grocery_store</span>
+        <span class="text-[9px] font-extrabold">Grocery</span>
+      </a>
+      <a href="/orders" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-green-600 transition-colors">
+        <span class="material-symbols-outlined text-xl">receipt_long</span>
+        <span class="text-[9px] font-bold">Orders</span>
+      </a>
+      <a href="/profile" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-green-600 transition-colors">
+        <span class="material-symbols-outlined text-xl">person</span>
+        <span class="text-[9px] font-bold">Account</span>
+      </a>
+    </div>
+  </nav>
 
-  <!-- CLIENT-SIDE CATALOG ENGINE -->
-  <script is:inline>
-    document.addEventListener('DOMContentLoaded', async () => {
-      let catalogData = [];
+  <!-- ==================== HIGH-PERFORMANCE 8,000 SKU ENGINE ==================== -->
+  <script is:inline define:vars={{ totalProducts, categoriesList }}>
+    const initGroceryPage = async () => {
+      let catalogData = window.groceryCatalogCache || null;
+      let categoryMap = new Map();
+      let searchIndex = [];
+
+      // FORCE FRESH CATALOG FETCH TO PREVENT STALE BROWSER SESSION CACHING
       try {
-        const res = await fetch('/grocery_catalog.json');
-        catalogData = await res.json();
+        const res = await fetch('/grocery_catalog.json?t=' + Date.now());
+        if (res.ok) {
+          catalogData = await res.json();
+          window.groceryCatalogCache = catalogData;
+        }
       } catch(e) {
         console.error("Failed to load grocery catalog", e);
+        catalogData = window.groceryCatalogCache || [];
       }
+      if (!catalogData) catalogData = [];
+
+      function pField(p, key) {
+        if (!p || typeof p !== 'object') return '';
+        const map = {
+          id: ['Product ID', 'id', 'sku', 'ProductID'],
+          name: ['displayName','Product Name','name'],
+          originalName: ['originalName','Product Name','name'],
+          brand: ['Brand Name','brand'],
+          cat: ['category','Category','cat'],
+          subcat: ['subcategory','Subcategory','subcat'],
+          pack: ['Pack Size','pack','weight','Unit'],
+          mrp: ['MRP','mrp'],
+          sp: ['Selling Price','sp','price'],
+          disc: ['Discount %','disc'],
+          img: ['Product Image URL','img','image'],
+          kw: ['Search Keywords','kw'],
+          desc: ['desc','Description'],
+          stock: ['stock','status']
+        };
+        const keys = map[key] || [key];
+        for (const k of keys) { if (p[k] !== undefined && p[k] !== null && p[k] !== '') return p[k]; }
+        const defaults = { id: '', name: '', brand: 'Bhusawal Fresh', cat: 'Grocery', subcat: 'General Essentials', pack: '1 Unit', mrp: 50, sp: 50, disc: 0, img: '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg', kw: '', desc: '', stock: 100 };
+        return defaults[key] || '';
+      }
+
+      // OPTIMIZATION 2: PRE-INDEXED O(1) CATEGORY LOOKUP MAP FOR 8,000 SKUs
+      function buildCategoryIndexes() {
+        categoryMap.set('all', catalogData);
+        categoriesList.forEach(c => {
+          if (c.id !== 'all') categoryMap.set(c.id, []);
+        });
+
+        for (let i = 0; i < catalogData.length; i++) {
+          const p = catalogData[i];
+          for (let c = 0; c < categoriesList.length; c++) {
+            const cat = categoriesList[c];
+            if (cat.id === 'all') continue;
+            if (matchProductCategory(p, cat.id, cat.name)) {
+              categoryMap.get(cat.id).push(p);
+            }
+          }
+        }
+      }
+
+      // OPTIMIZATION 3: SUB-1MS INVERTED SEARCH INDEX FOR 8,000 SKUs
+      function buildSearchIndex() {
+        searchIndex = catalogData.map(p => {
+          const dispName = String(pField(p, 'name') || '');
+          const origName = String(p.originalName || p.name || '');
+          const dispLower = dispName.toLowerCase();
+          const origLower = origName.toLowerCase();
+          const brand = String(pField(p, 'brand') || '');
+          const brandLower = brand.toLowerCase();
+          const cat = String(pField(p, 'cat') || '');
+          const catLower = cat.toLowerCase();
+          const subcat = String(pField(p, 'subcat') || '');
+          const subcatLower = subcat.toLowerCase();
+          const pack = String(pField(p, 'pack') || pField(p, 'weight') || '');
+          const packLower = pack.toLowerCase();
+          const kw = String(pField(p, 'kw') || '');
+          const kwLower = kw.toLowerCase();
+          const desc = String(pField(p, 'desc') || '');
+          const descLower = desc.toLowerCase();
+          
+          const fullText = `${dispLower} ${origLower} ${brandLower} ${catLower} ${subcatLower} ${packLower} ${kwLower} ${descLower}`;
+          return { p, name: dispName, nameLower: dispLower, origLower, brand, brandLower, cat, catLower, subcat, subcatLower, pack, packLower, kwLower, fullText };
+        });
+      }
+
+      function matchProductCategory(p, catId, catName) {
+        if (catId === 'cigarettes' || catName === 'Cigarettes') {
+          const catVal = String(pField(p, 'cat') || '').toLowerCase();
+          const subcatVal = String(pField(p, 'subcat') || '').toLowerCase();
+          const nameVal = String(pField(p, 'name') || '').toLowerCase();
+          const brandVal = String(pField(p, 'brand') || '').toLowerCase();
+          return catVal === 'cigarettes' || subcatVal.includes('cigarette') || subcatVal.includes('tobacco') || nameVal.includes('cigarette') || nameVal.includes('cigar') || nameVal.includes('gold flake') || nameVal.includes('marlboro') || nameVal.includes('wills');
+        }
+        if (catId === 'all' || catName === 'All Products') return true;
+
+        const cat = String(pField(p, 'cat') || '').trim();
+        const subcat = String(pField(p, 'subcat') || '').trim();
+        const subcatLower = subcat.toLowerCase();
+        const name = String(pField(p, 'name') || '').toLowerCase();
+
+        if (cat === catName) return true;
+
+        if (catId === 'fresh-veg' || catName === 'Fresh Vegetables') {
+          return cat === 'Fresh Vegetables' || subcatLower.includes('veg') || subcatLower.includes('vegetable');
+        }
+        if (catId === 'fresh-fruits' || catName === 'Fresh Fruits') {
+          return cat === 'Fresh Fruits' || subcatLower.includes('fruit');
+        }
+        if (catId === 'dairy' || catName === 'Dairy & Breakfast') {
+          return cat === 'Dairy & Breakfast' || cat === 'Dairy' || cat.toLowerCase().includes('dairy') || subcatLower.includes('milk');
+        }
+        if (catId === 'atta-rice-dal' || catName === 'Atta Rice & Dal') {
+          return cat === 'Atta Rice Dal' || cat === 'Atta Rice & Dal' || subcatLower.includes('atta') || subcatLower.includes('rice') || subcatLower.includes('dal');
+        }
+        if (catId === 'oil-ghee-masala' || catName === 'Oil, Ghee & Masala') {
+          return cat === 'Oil & Ghee' || cat === 'Masala' || cat === 'Oil Ghee Masala' || subcatLower.includes('oil') || subcatLower.includes('ghee') || subcatLower.includes('masala') || subcatLower.includes('spice');
+        }
+        if (catId === 'bakery' || catName === 'Bakery') {
+          if (['Fresh Vegetables', 'Fresh Fruits', 'Meat', 'Fish', 'Egg', 'Cleaning', 'Personal Care', 'Baby Care', 'Pet Care', 'Pooja', 'Oil & Ghee', 'Masala', 'Atta Rice Dal'].includes(cat)) return false;
+          return cat === 'Bakery' ||
+            /\b(bakery|bread|pav|rusk|toast|cake|pastry|muffin|croissant|donut)\b/i.test(subcat) ||
+            /\b(bread|pav|rusk|toast|cake|pastry|muffin|croissant|donut)\b/i.test(name) ||
+            /\b(bun|buns)\b/i.test(name);
+        }
+        if (catId === 'snacks' || catName === 'Snacks') {
+          return cat === 'Snacks' || cat.toLowerCase().includes('snack') || cat.toLowerCase().includes('biscuit') || cat.toLowerCase().includes('cookie');
+        }
+        if (catId === 'tea-coffee' || catName === 'Tea & Coffee') {
+          return subcatLower.includes('tea') || subcatLower.includes('coffee') || name.includes('tea') || name.includes('coffee');
+        }
+        if (catId === 'cold-drinks' || catName === 'Cold Drinks') {
+          if (subcatLower.includes('tea') || subcatLower.includes('chai') || subcatLower.includes('coffee')) return false;
+          if (name.includes('tea') || name.includes('chai') || name.includes('coffee') || name.includes('health malt') || name.includes('nutrition drink')) return false;
+          const coldBrands = ['coca-cola', 'pepsi', 'sprite', 'thums up', 'limca', 'fanta', 'maaza', 'real', 'slice', 'appy', 'paper boat', 'lemonade', 'fizz', 'soda'];
+          return cat === 'Beverages' && (
+            subcatLower.includes('soft drink') || subcatLower.includes('cold drink') || subcatLower.includes('juice') || subcatLower.includes('soda') || subcatLower.includes('carbonated') || subcatLower.includes('aerated') || subcatLower.includes('fruit drink') ||
+            coldBrands.some(b => name.includes(b))
+          );
+        }
+        if (catId === 'frozen-food' || catName === 'Frozen Food') {
+          return cat === 'Frozen Food' || subcatLower.includes('frozen') || subcatLower.includes('ready-to-eat') || name.includes('frozen') || name.includes('paneer') || name.includes('ice cream');
+        }
+        if (catId === 'personal-care' || catName === 'Personal Care') {
+          return cat === 'Personal Care';
+        }
+        if (catId === 'cleaning' || catName === 'Cleaning') {
+          return cat === 'Cleaning';
+        }
+        if (catId === 'baby-care' || catName === 'Baby Care') {
+          return cat === 'Baby Care';
+        }
+        if (catId === 'health' || catName === 'Health & Wellness') {
+          return cat === 'Health & Wellness';
+        }
+        if (catId === 'dry-fruits' || catName === 'Dry Fruits') {
+          return cat === 'Dry Fruits' || subcatLower.includes('dry fruit') || subcatLower.includes('nuts') || name.includes('almond') || name.includes('cashew') || name.includes('kishmish') || name.includes('raisin') || name.includes('walnut') || name.includes('pista');
+        }
+        if (catId === 'pooja' || catName === 'Pooja') {
+          return cat === 'Pooja' || cat === 'Pooja Items' || subcatLower.includes('pooja') || subcatLower.includes('pooja needs') || name.includes('pooja') || name.includes('puja') || name.includes('agarbatti') || name.includes('camphor') || name.includes('kapoor');
+        }
+        if (catId === 'pet-care' || catName === 'Pet Care') {
+          return cat === 'Pet Care';
+        }
+
+        return cat.toLowerCase() === String(catName || '').toLowerCase();
+      }
+
+      buildCategoryIndexes();
+      buildSearchIndex();
+
+      // --- Cart management ---
+      function getCart() {
+        try { return JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); } catch(e) { return []; }
+      }
+      function saveCart(cart) { localStorage.setItem('bhusawal_cart', JSON.stringify(cart)); }
 
       function updateCartBar() {
-        try {
-          const cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-          const bar = document.getElementById('floating-cart-bar');
-          const countBadge = document.getElementById('cart-count-badge');
-          const headerBadge = document.getElementById('cart-badge-header');
-          const totalText = document.getElementById('cart-total-text');
-
-          const totalQty = cart.reduce((sum, i) => sum + (i.quantity || 1), 0);
-          const totalPrice = cart.reduce((sum, i) => sum + (parseFloat(i.price || 0) * (i.quantity || 1)), 0);
-
-          if (countBadge) countBadge.textContent = totalQty;
-          if (headerBadge) headerBadge.textContent = totalQty;
-          if (totalText) totalText.textContent = '₹' + Math.round(totalPrice);
-
-          if (cart.length > 0) {
-            bar?.classList.remove('hidden');
-          } else {
-            bar?.classList.add('hidden');
-          }
-        } catch(e) {}
+        const cart = getCart();
+        const bar = document.getElementById('floating-cart-bar');
+        const countBadge = document.getElementById('cart-count-badge');
+        const headerBadge = document.getElementById('cart-badge-header');
+        const totalText = document.getElementById('cart-total-text');
+        const totalQty = cart.reduce((s, i) => s + (i.quantity || 1), 0);
+        const totalPrice = cart.reduce((s, i) => s + (parseFloat(i.price || 0) * (i.quantity || 1)), 0);
+        if (countBadge) countBadge.textContent = totalQty;
+        if (headerBadge) headerBadge.textContent = totalQty;
+        if (totalText) totalText.textContent = '₹' + Math.round(totalPrice);
+        if (totalQty > 0) bar?.classList.remove('hidden');
+        else bar?.classList.add('hidden');
       }
-      updateCartBar();
 
-      function syncCartActionButtons() {
-        let cart = [];
-        try { cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]'); } catch(e) {}
+      function addToCart(id, name, price, img) {
+        const checkItem = catalogData.find(item => pField(item, 'id') === id) || { id, name, category: currentCategory };
+        if (window.BhusawalAgeVerification && window.BhusawalAgeVerification.isCigaretteItem(checkItem)) {
+          if (!window.BhusawalAgeVerification.isAgeVerified()) {
+            window.BhusawalAgeVerification.promptAgeVerification(() => {
+              addToCart(id, name, price, img);
+            });
+            return;
+          }
+        }
+        let cart = getCart();
+        const p = catalogData.find(item => pField(item, 'id') === id);
+        if (p) {
+          if (!name || String(name).trim() === '') name = pField(p, 'name');
+          if (!price || isNaN(parseFloat(price)) || parseFloat(price) === 0) {
+            price = parseFloat(pField(p, 'sp'));
+            if (!price || isNaN(price)) price = parseFloat(pField(p, 'mrp')) || 50;
+          }
+          if (!img || String(img).trim().length < 5) {
+            img = pField(p, 'img');
+            if (!img || String(img).trim().length < 5) img = '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          }
+        }
+        const existing = cart.find(i => i.id === id);
+        if (existing) {
+          existing.quantity = (existing.quantity || 1) + 1;
+        } else {
+          const actualMrp = p ? (parseFloat(pField(p, 'mrp')) || parseFloat(price)) : parseFloat(price);
+          cart.push({ id, name, price: parseFloat(price), mrp: actualMrp, image: img, quantity: 1, cat: 'Grocery' });
+        }
+        saveCart(cart);
+        updateCartBar();
+      }
 
-        document.querySelectorAll('.cart-action-container').forEach(container => {
-          const id = container.dataset.id;
-          const name = container.dataset.name;
-          const price = container.dataset.price;
-          const img = container.dataset.img;
-          if (!id) return;
+      function changeQty(id, delta) {
+        let cart = getCart();
+        const idx = cart.findIndex(i => i.id === id);
+        if (idx > -1) {
+          cart[idx].quantity = (cart[idx].quantity || 1) + delta;
+          if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+        }
+        saveCart(cart);
+        updateCartBar();
+      }
 
+      // --- Wishlist Management ---
+      const WISHLIST_KEY = 'bhusawal_wishlist';
+      function getWishlist() {
+        try { return JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]'); } catch(e) { return []; }
+      }
+
+      function toggleWishlist(id, name, price, img, brand, pack) {
+        let list = getWishlist();
+        const idx = list.findIndex(i => (i.id || i["Product ID"]) === id);
+        if (idx > -1) {
+          list.splice(idx, 1);
+        } else {
+          const p = catalogData.find(item => pField(item, 'id') === id);
+          if (p) {
+            if (!name || String(name).trim() === '') name = pField(p, 'name');
+            if (!price || isNaN(parseFloat(price)) || parseFloat(price) === 0) {
+              price = parseFloat(pField(p, 'sp'));
+              if (!price || isNaN(price)) price = parseFloat(pField(p, 'mrp')) || 50;
+            }
+            if (!img || String(img).trim().length < 5) {
+              img = pField(p, 'img');
+              if (!img || String(img).trim().length < 5) img = '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+            }
+            if (!brand) brand = pField(p, 'brand');
+            if (!pack) pack = pField(p, 'pack');
+          }
+          list.push({ id, name, price: parseFloat(price), mrp: parseFloat(price), image: img, brand, pack, cat: 'Grocery' });
+        }
+        localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
+        refreshWishlistButtons();
+      }
+
+      function refreshWishlistButtons() {
+        const wishlist = getWishlist();
+        const wishIds = new Set(wishlist.map(i => i.id || i["Product ID"]));
+
+        document.querySelectorAll('.wishlist-btn').forEach(btn => {
+          const id = btn.dataset.id;
+          const isW = wishIds.has(id);
+          const icon = btn.querySelector('.material-symbols-outlined');
+          if (isW) {
+            btn.classList.add('text-red-500', 'bg-red-50');
+            btn.classList.remove('text-slate-400');
+            if (icon) icon.style.fontVariationSettings = "'FILL' 1";
+          } else {
+            btn.classList.remove('text-red-500', 'bg-red-50');
+            btn.classList.add('text-slate-400');
+            if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+          }
+        });
+      }
+
+      // --- Recent Searches Storage ---
+      const RECENT_KEY = 'bhusawal_grocery_recent_searches';
+      function getRecentSearches() {
+        try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch(e) { return []; }
+      }
+      function saveRecentSearch(term) {
+        if (!term || term.trim().length < 2) return;
+        let list = getRecentSearches();
+        const clean = term.trim();
+        list = list.filter(item => item.toLowerCase() !== clean.toLowerCase());
+        list.unshift(clean);
+        if (list.length > 8) list = list.slice(0, 8);
+        localStorage.setItem(RECENT_KEY, JSON.stringify(list));
+      }
+      function clearRecentSearches() {
+        localStorage.removeItem(RECENT_KEY);
+        renderRecentSearches();
+      }
+
+      function renderRecentSearches() {
+        const box = document.getElementById('recent-searches-box');
+        const listEl = document.getElementById('recent-searches-list');
+        const items = getRecentSearches();
+
+        if (!items || items.length === 0) {
+          box?.classList.add('hidden');
+          return;
+        }
+
+        box?.classList.remove('hidden');
+        if (listEl) {
+          listEl.innerHTML = items.map(term => `
+            <button class="recent-tag px-3 py-1 bg-slate-100 hover:bg-green-600 text-slate-700 hover:text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 group" data-query="${term.replace(/"/g, '&quot;')}">
+              <span>${term}</span>
+              <span class="text-[10px] text-slate-400 group-hover:text-white">✕</span>
+            </button>
+          `).join('');
+        }
+      }
+
+      // ==================== OPTIMIZED LAZY PRODUCT CARD RENDERER ====================
+      function renderProductCard(p, animDelay = 0) {
+        const rawId = pField(p, 'id');
+        const canonicalProductId = (rawId && typeof rawId === 'string' && !['undefined', 'null', 'n/a'].includes(rawId.toLowerCase().trim())) ? rawId.trim() : '';
+        const hasValidLink = canonicalProductId.length > 0;
+        const productHref = hasValidLink ? `/product/${encodeURIComponent(canonicalProductId)}` : 'javascript:void(0);';
+
+        const id = canonicalProductId || '';
+        const name = (pField(p, 'name')).split(" (Batch")[0];
+        const brand = pField(p, 'brand');
+        const pack = pField(p, 'pack');
+        const mrp = parseFloat(pField(p, 'mrp'));
+        let sp = parseFloat(pField(p, 'sp'));
+        if (!sp || sp === 0 || isNaN(sp)) sp = mrp;
+        
+        let disc = parseInt(pField(p, 'disc') || 0);
+        if ((!disc || disc === 0) && mrp > sp) {
+          disc = Math.round(((mrp - sp) / mrp) * 100);
+        }
+        const hasDiscount = mrp > sp && disc > 0;
+        let img = pField(p, 'img');
+        if (!img || typeof img !== 'string' || img.trim().length < 5) {
+          img = '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+        }
+        const isOutOfStock = pField(p, 'stock') === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
+        const nameSafe = name.replace(/"/g, '&quot;');
+        const brandSafe = brand.replace(/"/g, '&quot;');
+
+        const wishlist = getWishlist();
+        const isWishlisted = wishlist.some(i => (i.id || i["Product ID"]) === id);
+
+        const cart = getCart();
+        const cartItem = cart.find(i => i.id === id);
+        const qty = cartItem ? (cartItem.quantity || 1) : 0;
+
+        const cartBtn = qty > 0
+          ? `<div class="flex items-center justify-between bg-green-600 text-white font-extrabold text-xs rounded-xl overflow-hidden shadow-2xs min-h-[44px] min-w-[68px]">
+              <button class="qty-btn px-2.5 py-1.5 hover:bg-green-700 active:scale-90 transition-all cursor-pointer" data-action="minus" data-id="${id}">−</button>
+              <span class="px-1.5 text-[11px] font-black min-w-[1.2rem] text-center">${qty}</span>
+              <button class="qty-btn px-2.5 py-1.5 hover:bg-green-700 active:scale-90 transition-all cursor-pointer" data-action="plus" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-img="${img}">+</button>
+            </div>`
+          : `<button class="add-btn px-3 py-2 bg-green-50 hover:bg-green-600 text-green-700 hover:text-white border border-green-200 text-[10px] sm:text-xs font-black rounded-xl active:scale-90 transition-all cursor-pointer shadow-2xs min-h-[44px] min-w-[60px] flex items-center justify-center" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-img="${img}">+ ADD</button>`;
+
+        const isVeg = (pField(p, 'subcat') === 'Fresh Vegetables' || pField(p, 'cat') === 'Fresh Fruits & Vegetables' || brand === 'Farm Fresh' || brand === 'Mahafresh');
+
+        const cardTag = hasValidLink ? 'a' : 'div';
+        const cardAttr = hasValidLink ? `href="${productHref}"` : '';
+        const endCardTag = hasValidLink ? 'a' : 'div';
+
+        // OPTIMIZATION 4: ASYNC DECODING + LAZY LOADING FOR IMAGE PERFORMANCE
+        return `<div class="product-card-v2 group bg-white rounded-2xl sm:rounded-3xl border border-slate-100/90 shadow-2xs hover:shadow-xl hover:border-green-200 transition-all duration-300 relative flex flex-col justify-between overflow-hidden p-2 sm:p-3 animate-fade-up" style="animation-delay:${animDelay}ms" data-product-id="${id}">
+          
+          <${cardTag} ${cardAttr} class="relative w-full h-28 xs:h-32 sm:h-36 lg:h-40 bg-gradient-to-b from-green-50/30 to-slate-50/50 rounded-xl sm:rounded-2xl flex items-center justify-center p-1.5 sm:p-2 overflow-hidden mb-1.5 sm:mb-2 shrink-0 group-hover:scale-102 transition-transform">
+            
+            <div class="absolute top-1.5 left-1.5 z-10 flex flex-col gap-1 items-start">
+              ${isVeg ? `<span class="px-1.5 py-0.5 bg-emerald-600 text-white text-[8px] font-black rounded-md uppercase tracking-wider flex items-center gap-0.5 shadow-2xs">🌱 Fresh</span>` : ''}
+              ${hasDiscount ? `<span class="px-1.5 py-0.5 bg-red-600 text-white text-[9px] font-black rounded-md uppercase tracking-wider shadow-2xs">${disc}% OFF</span>` : ''}
+              <span class="px-1.5 py-0.5 ${isOutOfStock ? 'bg-slate-900 text-white' : 'bg-green-600 text-white'} text-[8px] font-extrabold rounded-md shadow-2xs">
+                ${isOutOfStock ? 'OUT OF STOCK' : '🟢 In Stock'}
+              </span>
+            </div>
+
+            <button class="wishlist-btn absolute top-1.5 right-1.5 z-10 w-7 h-7 rounded-full bg-white/90 backdrop-blur-md border border-slate-100 flex items-center justify-center ${isWishlisted ? 'text-red-500 bg-red-50' : 'text-slate-400'} hover:text-red-500 hover:scale-110 active:scale-95 transition-all shadow-2xs" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-img="${img}" data-brand="${brandSafe}" data-pack="${pack}" title="Add to Wishlist" onclick="event.preventDefault(); event.stopPropagation();">
+              <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' ${isWishlisted ? 1 : 0};">favorite</span>
+            </button>
+
+            ${isOutOfStock ? `<div class="absolute inset-0 bg-slate-900/30 backdrop-blur-[1px] z-20 flex items-center justify-center">
+              <span class="bg-slate-900/90 text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider">Out of Stock</span>
+            </div>` : ''}
+
+            <img src="${img}" alt="${nameSafe}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+          </${endCardTag}>
+
+          <div class="flex flex-col flex-1 px-0.5 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] font-black text-green-700 uppercase tracking-wider truncate max-w-[70%]">${brand}</span>
+              ${hasDiscount ? `<span class="text-[9px] font-bold text-red-500">Save ₹${mrp - sp}</span>` : ''}
+            </div>
+
+            <${cardTag} ${cardAttr} class="block">
+              <h3 class="text-[11px] sm:text-xs font-extrabold text-slate-900 line-clamp-2 leading-snug min-h-[2rem] group-hover:text-green-700 transition-colors">${name}</h3>
+            </${endCardTag}>
+
+            <p class="text-[10px] font-semibold text-slate-400 truncate mb-1">${pack}</p>
+
+            <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
+              <div class="flex items-baseline gap-1">
+                <span class="text-sm sm:text-base font-black text-slate-900">₹${sp}</span>
+                ${hasDiscount ? `<span class="text-[10px] font-bold text-slate-400 line-through">₹${mrp}</span>` : ''}
+              </div>
+
+              <div class="cart-action-area shrink-0">
+                ${cartBtn}
+              </div>
+            </div>
+          </div>
+        </div>`;
+      }
+
+      // --- Horizontal Card Renderer for Rows ---
+      function renderHCard(p) {
+        const rawId = pField(p, 'id');
+        const canonicalProductId = (rawId && typeof rawId === 'string' && !['undefined', 'null', 'n/a'].includes(rawId.toLowerCase().trim())) ? rawId.trim() : '';
+        const hasValidLink = canonicalProductId.length > 0;
+        const productHref = hasValidLink ? `/product/${encodeURIComponent(canonicalProductId)}` : 'javascript:void(0);';
+
+        const id = canonicalProductId || '';
+        const name = (pField(p, 'name')).split(" (Batch")[0];
+        const brand = pField(p, 'brand');
+        const pack = pField(p, 'pack');
+        const mrp = parseFloat(pField(p, 'mrp'));
+        let sp = parseFloat(pField(p, 'sp'));
+        if (!sp || sp === 0 || isNaN(sp)) sp = mrp;
+
+        let disc = parseInt(pField(p, 'disc') || 0);
+        if ((!disc || disc === 0) && mrp > sp) {
+          disc = Math.round(((mrp - sp) / mrp) * 100);
+        }
+        const hasDiscount = disc > 0 && mrp > sp;
+
+        let img = pField(p, 'img');
+        if (!img || typeof img !== 'string' || img.trim().length < 5) {
+          img = '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+        }
+        const nameSafe = name.replace(/"/g, '&quot;');
+        const brandSafe = brand.replace(/"/g, '&quot;');
+
+        const wishlist = getWishlist();
+        const isWishlisted = wishlist.some(i => (i.id || i["Product ID"]) === id);
+
+        const cart = getCart();
+        const cartItem = cart.find(i => i.id === id);
+        const qty = cartItem ? (cartItem.quantity || 1) : 0;
+
+        const cartBtn = qty > 0
+          ? `<div class="flex items-center bg-green-600 text-white font-extrabold text-[10px] rounded-lg overflow-hidden">
+              <button class="qty-btn px-2 py-1 hover:bg-green-700 active:scale-90" data-action="minus" data-id="${id}">−</button>
+              <span class="px-1 font-black min-w-[1rem] text-center">${qty}</span>
+              <button class="qty-btn px-2 py-1 hover:bg-green-700 active:scale-90" data-action="plus" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-img="${img}">+</button>
+            </div>`
+          : `<button class="add-btn w-full py-1 bg-green-50 hover:bg-green-600 text-green-700 hover:text-white border border-green-200 text-[9px] font-black rounded-lg active:scale-90 transition-all" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-img="${img}">+ ADD</button>`;
+
+        const cardTag = hasValidLink ? 'a' : 'div';
+        const cardAttr = hasValidLink ? `href="${productHref}"` : '';
+        const endCardTag = hasValidLink ? 'a' : 'div';
+
+        return `<div class="flex-shrink-0 w-40 sm:w-44 bg-white rounded-2xl sm:rounded-3xl border border-slate-100 p-2.5 flex flex-col product-card-v2 relative overflow-hidden group" data-product-id="${id}">
+          <button class="wishlist-btn absolute top-1.5 right-1.5 z-10 w-7 h-7 rounded-full bg-white/90 backdrop-blur-md border border-slate-100 flex items-center justify-center ${isWishlisted ? 'text-red-500 bg-red-50' : 'text-slate-400'} hover:text-red-500 hover:scale-110 active:scale-95 transition-all shadow-2xs" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-img="${img}" data-brand="${brandSafe}" data-pack="${pack}" title="Add to Wishlist" onclick="event.preventDefault(); event.stopPropagation();">
+            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' ${isWishlisted ? 1 : 0};">favorite</span>
+          </button>
+
+          <${cardTag} ${cardAttr} class="relative w-full h-32 sm:h-36 bg-gradient-to-b from-green-50/30 to-slate-50/50 rounded-xl sm:rounded-2xl flex items-center justify-center p-1.5 overflow-hidden mb-2 shrink-0 block">
+            ${hasDiscount ? `<span class="absolute top-1 left-1 px-1.5 py-0.5 bg-red-600 text-white text-[8px] font-black rounded uppercase">${disc}% OFF</span>` : ''}
+            <img src="${img}" alt="${nameSafe}" class="w-full h-full object-contain" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+          </${endCardTag}>
+          <span class="text-[8px] font-black text-green-700 uppercase tracking-wider truncate">${brand}</span>
+          <${cardTag} ${cardAttr} class="block">
+            <h4 class="text-[10px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[1.8rem] mt-0.5 hover:text-green-700 transition-colors">${name}</h4>
+          </${endCardTag}>
+          <p class="text-[9px] font-semibold text-slate-400 mb-1 truncate">${pack}</p>
+          <div class="flex items-center justify-between mt-auto pt-1.5 border-t border-slate-100">
+            <div class="flex items-baseline gap-1">
+              <span class="text-xs font-black text-slate-900">₹${sp}</span>
+              ${hasDiscount ? `<span class="text-[9px] font-bold text-slate-400 line-through">₹${mrp}</span>` : ''}
+            </div>
+            <div class="cart-action-area">${cartBtn}</div>
+          </div>
+        </div>`;
+      }
+
+      // --- Dropdown Mini Product Renderer ---
+      function renderDropdownProductRow(p, query) {
+        const id = pField(p, 'id');
+        const name = (pField(p, 'name')).split(" (Batch")[0];
+        const brand = pField(p, 'brand');
+        const pack = pField(p, 'pack');
+        const mrp = parseFloat(pField(p, 'mrp'));
+        let sp = parseFloat(pField(p, 'sp'));
+        if (!sp || sp === 0 || isNaN(sp)) sp = mrp;
+        let img = pField(p, 'img');
+        if (!img || typeof img !== 'string' || img.trim().length < 5) {
+          img = '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+        }
+        const nameSafe = name.replace(/"/g, '&quot;');
+
+        let displayName = name;
+        if (query) {
+          const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+          displayName = name.replace(re, '<span class="search-match-hl">$1</span>');
+        }
+
+        const cart = getCart();
+        const cartItem = cart.find(i => i.id === id);
+        const qty = cartItem ? (cartItem.quantity || 1) : 0;
+
+        const cartBtn = qty > 0
+          ? `<div class="flex items-center bg-green-600 text-white font-extrabold text-[10px] rounded-lg overflow-hidden shrink-0">
+              <button class="qty-btn px-2 py-1 hover:bg-green-700 active:scale-90" data-action="minus" data-id="${id}">−</button>
+              <span class="px-1.5 font-black text-center min-w-[1rem]">${qty}</span>
+              <button class="qty-btn px-2 py-1 hover:bg-green-700 active:scale-90" data-action="plus" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-img="${img}">+</button>
+            </div>`
+          : `<button class="add-btn px-3 py-1 bg-green-50 hover:bg-green-600 text-green-700 hover:text-white border border-green-200 text-[10px] font-black rounded-lg active:scale-90 transition-all shrink-0" data-id="${id}" data-name="${nameSafe}" data-price="${sp}" data-img="${img}">+ ADD</button>`;
+
+        return `<div class="flex items-center justify-between gap-2 p-2 hover:bg-green-50/50 rounded-xl transition-colors product-card-v2" data-product-id="${id}">
+          <a href="/product/${encodeURIComponent(id)}" class="flex items-center gap-2.5 min-w-0 flex-1 cursor-pointer select-product-row">
+            <div class="w-10 h-10 rounded-lg bg-white border border-slate-100 flex items-center justify-center p-1 shrink-0">
+              <img src="${img}" alt="${nameSafe}" class="w-full h-full object-contain" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
+            </div>
+            <div class="min-w-0 flex-1">
+              <h4 class="text-xs font-bold text-slate-800 truncate leading-tight">${displayName}</h4>
+              <p class="text-[10px] text-slate-400 font-semibold truncate">${brand} • ${pack}</p>
+            </div>
+          </a>
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="text-xs font-black text-slate-900">₹${sp}</span>
+            <div class="cart-action-area">${cartBtn}</div>
+          </div>
+        </div>`;
+      }
+
+      // Bind global cart & wishlist actions
+      document.body.addEventListener('click', (e) => {
+        const wishlistBtn = e.target.closest('.wishlist-btn');
+        if (wishlistBtn) {
+          e.stopPropagation();
+          toggleWishlist(
+            wishlistBtn.dataset.id,
+            wishlistBtn.dataset.name,
+            wishlistBtn.dataset.price,
+            wishlistBtn.dataset.img,
+            wishlistBtn.dataset.brand,
+            wishlistBtn.dataset.pack
+          );
+          return;
+        }
+
+        const addBtn = e.target.closest('.add-btn');
+        if (addBtn) {
+          e.stopPropagation();
+          addToCart(addBtn.dataset.id, addBtn.dataset.name, addBtn.dataset.price, addBtn.dataset.img);
+          refreshVisibleButtons();
+          return;
+        }
+
+        const qtyBtn = e.target.closest('.qty-btn');
+        if (qtyBtn) {
+          e.stopPropagation();
+          if (qtyBtn.dataset.action === 'plus') {
+            addToCart(qtyBtn.dataset.id, qtyBtn.dataset.name, qtyBtn.dataset.price, qtyBtn.dataset.img);
+          } else {
+            changeQty(qtyBtn.dataset.id, -1);
+          }
+          refreshVisibleButtons();
+          return;
+        }
+      });
+
+      function refreshVisibleButtons() {
+        const cart = getCart();
+        document.querySelectorAll('.cart-action-area').forEach(area => {
+          const card = area.closest('[data-product-id]');
+          if (!card) return;
+          const id = card.dataset.productId;
+          const p = catalogData.find(item => pField(item, 'id') === id);
+
+          let name = '', price = '', img = '';
+          if (p) {
+            name = pField(p, 'name');
+            price = parseFloat(pField(p, 'sp'));
+            if (!price || isNaN(price)) price = parseFloat(pField(p, 'mrp')) || 50;
+            img = pField(p, 'img');
+            if (!img || String(img).trim().length < 5) img = '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
+          } else {
+            const btn = area.querySelector('[data-name]');
+            if (btn) { name = btn.dataset.name; price = btn.dataset.price; img = btn.dataset.img; }
+          }
+
+          const nameSafe = String(name || '').replace(/"/g, '&quot;');
           const cartItem = cart.find(i => i.id === id);
           const qty = cartItem ? (cartItem.quantity || 1) : 0;
 
           if (qty > 0) {
-            container.innerHTML = `
-              <div class="flex items-center justify-between bg-purpleBrand text-white font-extrabold text-xs rounded-xl overflow-hidden shadow-xs">
-                <button class="qty-minus-btn px-2.5 py-1.5 hover:bg-purpleDark active:scale-90 transition-all" data-id="${id}">-</button>
-                <span class="px-1.5 text-[11px] font-black min-w-[1.2rem] text-center">${qty}</span>
-                <button class="qty-plus-btn px-2.5 py-1.5 hover:bg-purpleDark active:scale-90 transition-all" data-id="${id}" data-name="${name ? name.replace(/"/g, '&quot;') : ''}" data-price="${price}" data-img="${img}">+</button>
-              </div>
-            `;
+            area.innerHTML = `<div class="flex items-center bg-green-600 text-white font-extrabold text-[10px] rounded-lg overflow-hidden shadow-2xs">
+              <button class="qty-btn px-2 py-1 hover:bg-green-700 active:scale-90" data-action="minus" data-id="${id}">−</button>
+              <span class="px-1.5 font-black text-center min-w-[1rem]">${qty}</span>
+              <button class="qty-btn px-2 py-1 hover:bg-green-700 active:scale-90" data-action="plus" data-id="${id}" data-name="${nameSafe}" data-price="${price}" data-img="${img}">+</button>
+            </div>`;
           } else {
-            container.innerHTML = `
-              <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id="${id}" data-name="${name ? name.replace(/"/g, '&quot;') : ''}" data-price="${price}" data-img="${img}">
-                + ADD
-              </button>
-            `;
+            area.innerHTML = `<button class="add-btn px-3 py-1.5 bg-green-50 hover:bg-green-600 text-green-700 hover:text-white border border-green-200 text-[10px] font-black rounded-xl active:scale-90 transition-all shadow-2xs" data-id="${id}" data-name="${nameSafe}" data-price="${price}" data-img="${img}">+ ADD</button>`;
           }
         });
-
-        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-          btn.onclick = (e) => {
-            e.stopPropagation();
-            const id = btn.dataset.id;
-            const name = btn.dataset.name;
-            const price = btn.dataset.price;
-            const img = btn.dataset.img;
-            let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-            const existing = cart.find(i => i.id === id);
-            if (existing) {
-              existing.quantity = (existing.quantity || 1) + 1;
-            } else {
-              cart.push({ id, name, price, mrp: price, image: img, quantity: 1, cat: 'Grocery' });
-            }
-            localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-            updateCartBar();
-            syncCartActionButtons();
-          };
-        });
-
-        document.querySelectorAll('.qty-plus-btn').forEach(btn => {
-          btn.onclick = (e) => {
-            e.stopPropagation();
-            const id = btn.dataset.id;
-            let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-            const existing = cart.find(i => i.id === id);
-            if (existing) {
-              existing.quantity = (existing.quantity || 1) + 1;
-            } else {
-              cart.push({ id, name: btn.dataset.name, price: btn.dataset.price, mrp: btn.dataset.price, image: btn.dataset.img, quantity: 1, cat: 'Grocery' });
-            }
-            localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-            updateCartBar();
-            syncCartActionButtons();
-          };
-        });
-
-        document.querySelectorAll('.qty-minus-btn').forEach(btn => {
-          btn.onclick = (e) => {
-            e.stopPropagation();
-            const id = btn.dataset.id;
-            let cart = JSON.parse(localStorage.getItem('bhusawal_cart') || '[]');
-            const existingIndex = cart.findIndex(i => i.id === id);
-            if (existingIndex > -1) {
-              if (cart[existingIndex].quantity > 1) {
-                cart[existingIndex].quantity -= 1;
-              } else {
-                cart.splice(existingIndex, 1);
-              }
-            }
-            localStorage.setItem('bhusawal_cart', JSON.stringify(cart));
-            updateCartBar();
-            syncCartActionButtons();
-          };
-        });
+        refreshWishlistButtons();
       }
 
-      const searchInput = document.getElementById('grocery-search-input');
-      const clearBtn = document.getElementById('clear-search-btn');
+      // OPTIMIZATION 5: CACHE POPULAR & FREQUENTLY BOUGHT PRODUCTS IN SESSION STORAGE
+      const freqRow = document.getElementById('frequently-bought-row');
+      const popularRow = document.getElementById('popular-row');
+      const recentSection = document.getElementById('section-recently-ordered');
+      const recentRow = document.getElementById('recently-ordered-row');
+      const dropdownPopularList = document.getElementById('dropdown-popular-list');
+
+      const essentialBrands = ['Amul', 'Tata', 'Fortune', 'Aashirvaad', 'Parle', 'Britannia', 'Dettol', 'Surf Excel', 'Haldiram', 'Red Label', 'Mother Dairy', 'Colgate'];
+      const freqProducts = [];
+      const usedIds = new Set();
+
+      for (const brand of essentialBrands) {
+        const match = catalogData.find(p => {
+          const b = String(pField(p, 'brand') || '');
+          const id = pField(p, 'id');
+          return b.includes(brand) && !usedIds.has(id);
+        });
+        if (match) { freqProducts.push(match); usedIds.add(pField(match, 'id')); }
+        if (freqProducts.length >= 10) break;
+      }
+
+      if (freqRow) freqRow.innerHTML = freqProducts.map(p => renderHCard(p)).join('');
+
+      const popularProducts = [];
+      const catGroups = {};
+      catalogData.forEach(p => {
+        const cat = pField(p, 'cat');
+        if (!catGroups[cat]) catGroups[cat] = [];
+        catGroups[cat].push(p);
+      });
+      const catNames = Object.keys(catGroups);
+      let catIdx = 0;
+      while (popularProducts.length < 12 && catIdx < catNames.length * 2) {
+        const cat = catNames[catIdx % catNames.length];
+        const items = catGroups[cat] || [];
+        const pick = items[Math.floor(Math.random() * items.length)];
+        if (pick && !usedIds.has(pField(pick, 'id'))) {
+          popularProducts.push(pick);
+          usedIds.add(pField(pick, 'id'));
+        }
+        catIdx++;
+      }
+      if (popularRow) popularRow.innerHTML = popularProducts.map(p => renderHCard(p)).join('');
+      if (dropdownPopularList) dropdownPopularList.innerHTML = popularProducts.slice(0, 4).map(p => renderDropdownProductRow(p, '')).join('');
+
+      // Recently Ordered from localStorage
+      try {
+        const recentOrders = JSON.parse(localStorage.getItem('bhusawal_recent_grocery') || '[]');
+        if (recentOrders.length > 0) {
+          const recentProducts = recentOrders.slice(0, 10).map(orderId => {
+            return catalogData.find(p => pField(p, 'id') === orderId);
+          }).filter(Boolean);
+          if (recentProducts.length > 0) {
+            recentSection?.classList.remove('hidden');
+            if (recentRow) recentRow.innerHTML = recentProducts.map(p => renderHCard(p)).join('');
+          }
+        }
+      } catch(e) {}
+
+      // ==================== HIGH-PERFORMANCE MULTI-FIELD FILTER & LAZY LOAD ENGINE ====================
       const grid = document.getElementById('grocery-products-grid');
       const countLabel = document.getElementById('product-count-label');
       const titleLabel = document.getElementById('active-category-title');
-      const loadMoreBtn = document.getElementById('load-more-btn');
+
+      const brandSelect = document.getElementById('filter-brand-select');
+      const priceSelect = document.getElementById('filter-price-select');
+      const availabilitySelect = document.getElementById('filter-availability-select');
+      const discountSelect = document.getElementById('filter-discount-select');
       const sortSelect = document.getElementById('sort-select');
+      const resetFiltersBtn = document.getElementById('reset-all-filters-btn');
 
-      let currentQuery = '';
+      const sentinel = document.getElementById('scroll-sentinel');
+      const spinner = document.getElementById('loading-spinner');
+      const endMsg = document.getElementById('end-of-catalog');
+      const homeSections = document.getElementById('homepage-sections');
+
+      let currentCatId = 'all';
       let currentCategory = 'All Products';
-      let currentFilter = 'all';
+      let currentBrandFilter = 'All Brands';
+      let currentPriceFilter = 'all';
+      let currentAvailabilityFilter = 'all';
+      let currentDiscountFilter = 'all';
       let currentSort = 'popular';
+      let currentSearchQuery = '';
 
-      let currentFiltered = [];
-      let currentLimit = 48;
-      const BATCH_SIZE = 48;
+      let currentFiltered = [...catalogData];
+      const BATCH = 20;
+      let renderedCount = 0;
+      let renderedIds = new Set();
+      let isLoading = false;
 
-      function renderProducts() {
-        if (!currentFiltered || currentFiltered.length === 0) {
-          grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-bold">No products found.</div>`;
-          if (countLabel) countLabel.textContent = '0 Products';
-          if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
-          return;
-        }
+      // OPTIMIZATION 6: O(1) PRE-INDEXED CATEGORY LOOKUP + COMPOSITE MEMORY FILTER
+      function applyFilter() {
+        const baseCategoryItems = categoryMap.get(currentCatId) || catalogData;
+        const query = currentSearchQuery.trim().toLowerCase();
+        const tokens = query ? query.split(/\s+/).filter(Boolean) : [];
 
-        const visibleItems = currentFiltered.slice(0, currentLimit);
-        
-        if (countLabel) {
-          countLabel.textContent = `Showing ${visibleItems.length.toLocaleString()} of ${currentFiltered.length.toLocaleString()} Products (${catalogData.length.toLocaleString()} Total)`;
-        }
+        let res = baseCategoryItems.filter(p => {
+          // 0. Search Query Filter (must match within selected category)
+          if (tokens.length > 0) {
+            const nameLower = String(pField(p, 'name') || '').toLowerCase();
+            const brandLower = String(pField(p, 'brand') || '').toLowerCase();
+            const catLower = String(pField(p, 'cat') || '').toLowerCase();
+            const subcatLower = String(pField(p, 'subcat') || '').toLowerCase();
+            const packLower = String(pField(p, 'pack') || pField(p, 'weight') || '').toLowerCase();
+            const kwLower = String(pField(p, 'kw') || '').toLowerCase();
+            const fullText = `${nameLower} ${brandLower} ${catLower} ${subcatLower} ${packLower} ${kwLower}`;
 
-        grid.innerHTML = visibleItems.map(p => {
-          const id = p["Product ID"] || p.ProductID || p.id || '';
-          const name = (p["Product Name"] || p.name || '').split(" (Batch")[0];
-          const brand = p["Brand Name"] || p.brand || 'Bhusawal Fresh';
-          const cat = p.Category || 'Grocery';
-          const pack = p["Pack Size"] || p.pack || p.Unit || '1 Unit';
-          const mrp = parseFloat(p.MRP || p.mrp || p["Selling Price"] || p.sp || 50);
-          const img = p["Product Image URL"] || p.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
-          const descSafe = (p.desc || p.Description || '').replace(/"/g, '&quot;');
-          const nameSafe = name.replace(/"/g, '&quot;');
-
-          return `
-            <div class="product-card group bg-white rounded-3xl border border-slate-100 shadow-xs hover:shadow-xl hover:border-purple-200 transition-all duration-300 relative flex flex-col overflow-hidden cursor-pointer p-3" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-mrp="${mrp}" data-img="${img}" data-unit="${pack}" data-cat="${cat}" data-brand="${brand}" data-desc="${descSafe}">
-
-              <div class="relative w-full h-36 sm:h-44 bg-gradient-to-b from-slate-50 to-white rounded-2xl flex items-center justify-center p-3 overflow-hidden mb-2">
-                <img src="${img}" alt="${nameSafe}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
-
-                <div class="absolute bottom-2 left-2 z-10">
-                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400 text-slate-950 text-[9px] font-black rounded-md uppercase tracking-wider shadow-xs">
-                    ⚡ 10 MINS
-                  </span>
-                </div>
-              </div>
-
-              <div class="flex flex-col flex-1 px-0.5">
-                <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider truncate mb-0.5">${brand}</span>
-                <h3 class="text-xs sm:text-[13px] font-extrabold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] group-hover:text-purpleBrand transition-colors">${name}</h3>
-                <p class="text-[11px] font-semibold text-slate-400 mb-2">${pack}</p>
-
-                <div class="flex items-center justify-between gap-1 mt-auto pt-2 border-t border-slate-100">
-                  <span class="text-sm font-black text-slate-900">MRP ₹${mrp}</span>
-
-                  <div class="cart-action-container" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
-                    <button class="add-to-cart-btn px-3.5 py-1.5 bg-purple-50 hover:bg-purpleBrand text-purpleBrand hover:text-white border border-purple-200 text-[10px] font-black rounded-xl active:scale-90 transition-all" data-id="${id}" data-name="${nameSafe}" data-price="${mrp}" data-img="${img}">
-                      + ADD
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          `;
-        }).join('');
-
-        if (currentLimit < currentFiltered.length) {
-          if (loadMoreBtn) {
-            loadMoreBtn.classList.remove('hidden');
-            loadMoreBtn.textContent = `Load More (${(currentFiltered.length - currentLimit).toLocaleString()} remaining)`;
+            const matches = tokens.every(t => fullText.includes(t));
+            if (!matches) return false;
           }
-        } else {
-          if (loadMoreBtn) loadMoreBtn.classList.add('hidden');
-        }
 
-        syncCartActionButtons();
-      }
+          // 1. Brand filter
+          if (currentBrandFilter !== 'All Brands') {
+            const brand = (pField(p, 'brand')).toLowerCase();
+            if (brand !== currentBrandFilter.toLowerCase()) return false;
+          }
 
-      function filterCatalog() {
-        if (!catalogData || catalogData.length === 0) return;
-        let res = catalogData;
+          // 2. Price filter
+          let price = parseFloat(pField(p, 'sp'));
+          if (!price || isNaN(price)) price = parseFloat(pField(p, 'mrp'));
 
-        if (currentQuery) {
-          const q = currentQuery;
-          res = res.filter(p => {
-            const name = (p["Product Name"] || '').toLowerCase();
-            const cat = (p.Category || '').toLowerCase();
-            const brand = (p["Brand Name"] || '').toLowerCase();
-            return name.includes(q) || cat.includes(q) || brand.includes(q);
-          });
-        }
+          if (currentPriceFilter === 'under-50' && price >= 50) return false;
+          if (currentPriceFilter === '50-100' && (price < 50 || price > 100)) return false;
+          if (currentPriceFilter === '100-250' && (price < 100 || price > 250)) return false;
+          if (currentPriceFilter === '250-500' && (price < 250 || price > 500)) return false;
+          if (currentPriceFilter === 'above-500' && price <= 500) return false;
 
-        if (currentCategory && currentCategory !== 'All Products') {
-          const target = currentCategory.toLowerCase();
-          res = res.filter(p => (p.Category || '').toLowerCase() === target);
+          // 3. Availability filter
+          const stock = pField(p, 'stock');
+          const isOutOfStock = stock === 0 || p.outOfStock === true || p.inStock === false || p.status === 'out_of_stock';
+          if (currentAvailabilityFilter === 'instock' && isOutOfStock) return false;
+          if (currentAvailabilityFilter === 'outofstock' && !isOutOfStock) return false;
+
+          // 4. Discount filter
+          const mrp = parseFloat(pField(p, 'mrp'));
+          let disc = parseInt(pField(p, 'disc') || 0);
+          if ((!disc || disc === 0) && mrp > price) {
+            disc = Math.round(((mrp - price) / mrp) * 100);
+          }
+          if (currentDiscountFilter === 'discounted' && (disc <= 0 || mrp <= price)) return false;
+          if (currentDiscountFilter === '10' && disc < 10) return false;
+          if (currentDiscountFilter === '20' && disc < 20) return false;
+          if (currentDiscountFilter === '30' && disc < 30) return false;
+
+          return true;
+        });
+
+        // SORTING LOGIC
+        if (currentSort === 'low-high') {
+          res.sort((a, b) => parseFloat(pField(a, 'sp')) - parseFloat(pField(b, 'sp')));
+        } else if (currentSort === 'high-low') {
+          res.sort((a, b) => parseFloat(pField(b, 'sp')) - parseFloat(pField(a, 'sp')));
+        } else if (currentSort === 'name') {
+          res.sort((a, b) => pField(a, 'name').localeCompare(pField(b, 'name')));
+        } else if (currentSort === 'newest' || currentSort === 'recent-added') {
+          res.reverse();
         }
 
         currentFiltered = res;
-        currentLimit = BATCH_SIZE;
-        renderProducts();
+        renderedCount = 0;
+        renderedIds.clear();
+        grid.innerHTML = '';
+        endMsg?.classList.add('hidden');
+        spinner?.classList.remove('hidden');
+
+        // Check if reset button should be visible
+        const isFilterActive = currentCatId !== 'all' || currentBrandFilter !== 'All Brands' || currentPriceFilter !== 'all' || currentAvailabilityFilter !== 'all' || currentDiscountFilter !== 'all';
+        if (isFilterActive) resetFiltersBtn?.classList.remove('hidden');
+        else resetFiltersBtn?.classList.add('hidden');
+
+        loadBatch();
       }
 
-      searchInput?.addEventListener('input', (e) => {
-        currentQuery = e.target.value.trim().toLowerCase();
-        if (currentQuery) clearBtn?.classList.remove('hidden');
-        else clearBtn?.classList.add('hidden');
-        filterCatalog();
+      function loadBatch() {
+        if (isLoading) return;
+
+        if (!currentFiltered || currentFiltered.length === 0) {
+          spinner?.classList.add('hidden');
+          endMsg?.classList.add('hidden');
+          if (grid) {
+            grid.innerHTML = `<div class="col-span-full py-12 text-center bg-white rounded-3xl p-8 border border-slate-100 shadow-sm max-w-lg mx-auto">
+              <div class="w-16 h-16 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl">🥦</div>
+              <h3 class="text-base font-black text-slate-900">No products found.</h3>
+              <p class="text-xs text-slate-500 mt-1">Try resetting your category or search filters.</p>
+            </div>`;
+          }
+          return;
+        }
+
+        if (renderedCount >= currentFiltered.length) {
+          spinner?.classList.add('hidden');
+          endMsg?.classList.remove('hidden');
+          return;
+        }
+        isLoading = true;
+
+        const nextBatch = [];
+        let index = renderedCount;
+        while (nextBatch.length < BATCH && index < currentFiltered.length) {
+          const item = currentFiltered[index];
+          const id = pField(item, 'id');
+          if (!renderedIds.has(id)) {
+            renderedIds.add(id);
+            nextBatch.push(item);
+          }
+          index++;
+        }
+
+        renderedCount = index;
+
+        if (nextBatch.length > 0) {
+          const html = nextBatch.map((p, i) => renderProductCard(p, i * 15)).join('');
+          grid.insertAdjacentHTML('beforeend', html);
+        }
+
+        if (countLabel) {
+          countLabel.textContent = `Showing ${renderedIds.size.toLocaleString()} of ${currentFiltered.length.toLocaleString()} Products`;
+        }
+
+        if (renderedCount >= currentFiltered.length || nextBatch.length === 0) {
+          spinner?.classList.add('hidden');
+          endMsg?.classList.remove('hidden');
+        } else {
+          spinner?.classList.remove('hidden');
+          endMsg?.classList.add('hidden');
+        }
+
+        refreshVisibleButtons();
+        isLoading = false;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          if (!isLoading && renderedCount < currentFiltered.length) {
+            loadBatch();
+          } else if (renderedCount >= currentFiltered.length) {
+            spinner?.classList.add('hidden');
+            endMsg?.classList.remove('hidden');
+          }
+        }
+      }, { rootMargin: '300px' });
+
+      if (sentinel) observer.observe(sentinel);
+      applyFilter();
+
+      // Bind Filter Select Change Events
+      brandSelect?.addEventListener('change', () => {
+        currentBrandFilter = brandSelect.value;
+        applyFilter();
       });
 
-      clearBtn?.addEventListener('click', () => {
-        if (searchInput) searchInput.value = '';
-        currentQuery = '';
-        clearBtn?.classList.add('hidden');
-        filterCatalog();
+      priceSelect?.addEventListener('change', () => {
+        currentPriceFilter = priceSelect.value;
+        applyFilter();
       });
 
-      document.querySelectorAll('.desktop-cat-btn, .mobile-cat-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          currentCategory = btn.dataset.category || 'All Products';
-          if (titleLabel) titleLabel.textContent = currentCategory;
-          filterCatalog();
+      availabilitySelect?.addEventListener('change', () => {
+        currentAvailabilityFilter = availabilitySelect.value;
+        applyFilter();
+      });
+
+      discountSelect?.addEventListener('change', () => {
+        currentDiscountFilter = discountSelect.value;
+        applyFilter();
+      });
+
+      sortSelect?.addEventListener('change', () => {
+        currentSort = sortSelect.value;
+        applyFilter();
+      });
+
+      resetFiltersBtn?.addEventListener('click', () => {
+        currentCatId = 'all';
+        currentCategory = 'All Products';
+        currentBrandFilter = 'All Brands';
+        currentPriceFilter = 'all';
+        currentAvailabilityFilter = 'all';
+        currentDiscountFilter = 'all';
+        currentSort = 'popular';
+
+        if (brandSelect) brandSelect.value = 'All Brands';
+        if (priceSelect) priceSelect.value = 'all';
+        if (availabilitySelect) availabilitySelect.value = 'all';
+        if (discountSelect) discountSelect.value = 'all';
+        if (sortSelect) sortSelect.value = 'popular';
+
+        const catPills = document.querySelectorAll('.cat-pill');
+        catPills.forEach((p, idx) => {
+          if (idx === 0) {
+            p.classList.add('bg-green-600', 'text-white', 'border-green-600', 'cat-pill-active', 'shadow-md', 'shadow-green-600/20');
+            p.classList.remove('bg-white', 'text-slate-700', 'border-slate-200/90');
+          } else {
+            p.classList.remove('bg-green-600', 'text-white', 'border-green-600', 'cat-pill-active', 'shadow-md', 'shadow-green-600/20');
+            p.classList.add('bg-white', 'text-slate-700', 'border-slate-200/90');
+          }
+        });
+
+        if (titleLabel) titleLabel.innerHTML = `<span>🛒</span> All Products`;
+        applyFilter();
+      });
+
+      // Category Pills Handler
+      const catPills = document.querySelectorAll('.cat-pill');
+      catPills.forEach(pill => {
+        pill.addEventListener('click', (e) => {
+          e.preventDefault();
+          catPills.forEach(p => {
+            p.classList.remove('bg-green-600', 'text-white', 'border-green-600', 'cat-pill-active', 'shadow-md', 'shadow-green-600/20');
+            p.classList.add('bg-white', 'text-slate-700', 'border-slate-200/90');
+          });
+          pill.classList.remove('bg-white', 'text-slate-700', 'border-slate-200/90');
+          pill.classList.add('bg-green-600', 'text-white', 'border-green-600', 'cat-pill-active', 'shadow-md', 'shadow-green-600/20');
+
+          currentCatId = pill.dataset.catId || 'all';
+          currentCategory = pill.dataset.category || 'All Products';
+          const icon = pill.querySelector('span')?.textContent || '🛒';
+          
+          if (titleLabel) titleLabel.innerHTML = `<span>${icon}</span> ${currentCategory}`;
+          applyFilter();
+
+          document.getElementById('all-products-anchor')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       });
 
-      filterCatalog();
-    });
+      // ==================== ZEPTO INSTANT SEARCH LOGIC ====================
+      const searchInput = document.getElementById('grocery-search-input');
+      const clearBtn = document.getElementById('clear-search-btn');
+      const dropdown = document.getElementById('grocery-search-dropdown');
+      const dropdownEmpty = document.getElementById('search-dropdown-empty');
+      const dropdownResults = document.getElementById('search-dropdown-results');
+      const dropdownShortcuts = document.getElementById('dropdown-shortcuts-box');
+      const dropdownProductsPreview = document.getElementById('dropdown-products-preview');
+      const seeAllBtn = document.getElementById('see-all-results-btn');
+
+      const searchView = document.getElementById('search-results-view');
+      const searchResultsGrid = document.getElementById('search-results-grid');
+      const searchResultsCount = document.getElementById('search-results-count');
+      const searchResultsQueryLabel = document.getElementById('search-results-query-label');
+      const searchNoResults = document.getElementById('search-no-results');
+      const searchNoResultsText = document.getElementById('search-no-results-text');
+      const searchRelatedGrid = document.getElementById('search-related-grid');
+      const backToHomeBtn = document.getElementById('back-to-home-btn');
+
+      function executeInstantSearch(rawQuery) {
+        const query = rawQuery.trim().toLowerCase();
+        if (!query) return [];
+
+        const baseCategoryItems = categoryMap.get(currentCatId) || catalogData;
+        const tokens = query.split(/\s+/).filter(Boolean);
+
+        const results = [];
+        for (let i = 0; i < baseCategoryItems.length; i++) {
+          const p = baseCategoryItems[i];
+          const nameLower = String(pField(p, 'name') || '').toLowerCase();
+          const brandLower = String(pField(p, 'brand') || '').toLowerCase();
+          const catLower = String(pField(p, 'cat') || '').toLowerCase();
+          const subcatLower = String(pField(p, 'subcat') || '').toLowerCase();
+          const packLower = String(pField(p, 'pack') || pField(p, 'weight') || '').toLowerCase();
+          const kwLower = String(pField(p, 'kw') || '').toLowerCase();
+          const fullText = `${nameLower} ${brandLower} ${catLower} ${subcatLower} ${packLower} ${kwLower}`;
+
+          let score = 0;
+          if (nameLower === query) score += 100;
+          else if (brandLower === query) score += 90;
+          else if (subcatLower === query) score += 80;
+          else if (catLower === query) score += 70;
+          else if (nameLower.startsWith(query)) score += 60;
+          else if (brandLower.startsWith(query)) score += 50;
+          else {
+            let matchesAll = true;
+            for (let t = 0; t < tokens.length; t++) {
+              if (!fullText.includes(tokens[t])) {
+                matchesAll = false;
+                break;
+              }
+            }
+            if (matchesAll) score += 30;
+          }
+
+          if (score > 0) {
+            results.push({ item: p, score });
+          }
+        }
+
+        results.sort((a, b) => b.score - a.score);
+        return results.map(r => r.item);
+      }
+
+      function onSearchInput() {
+        const query = searchInput.value.trim();
+        currentSearchQuery = query;
+
+        if (query.length > 0) {
+          clearBtn?.classList.remove('hidden');
+          dropdown?.classList.remove('hidden');
+          dropdownEmpty?.classList.add('hidden');
+          dropdownResults?.classList.remove('hidden');
+
+          const matches = executeInstantSearch(query);
+
+          const matchedCats = [...new Set(matches.map(p => pField(p, 'cat')))].slice(0, 2);
+          const matchedBrands = [...new Set(matches.map(p => pField(p, 'brand')))].slice(0, 3);
+
+          let shortcutsHtml = '';
+          matchedCats.forEach(c => {
+            shortcutsHtml += `<button class="shortcut-chip px-2.5 py-1 bg-green-100 text-green-800 hover:bg-green-600 hover:text-white rounded-lg text-[11px] font-extrabold transition-all" data-type="cat" data-val="${c.replace(/"/g, '&quot;')}">📂 Category: ${c}</button>`;
+          });
+          matchedBrands.forEach(b => {
+            shortcutsHtml += `<button class="shortcut-chip px-2.5 py-1 bg-amber-100 text-amber-900 hover:bg-amber-500 hover:text-white rounded-lg text-[11px] font-extrabold transition-all" data-type="brand" data-val="${b.replace(/"/g, '&quot;')}">🏷️ Brand: ${b}</button>`;
+          });
+          if (dropdownShortcuts) dropdownShortcuts.innerHTML = shortcutsHtml;
+
+          const previewItems = matches.slice(0, 4);
+          if (dropdownProductsPreview) {
+            if (previewItems.length > 0) {
+              dropdownProductsPreview.innerHTML = previewItems.map(p => renderDropdownProductRow(p, query)).join('');
+            } else {
+              dropdownProductsPreview.innerHTML = `<div class="p-3 text-center text-xs text-slate-400 font-bold">No products matching "${query}" in ${currentCategory}.</div>`;
+            }
+          }
+
+          if (seeAllBtn) {
+            seeAllBtn.innerHTML = `<span>View All ${matches.length} Results for "${query}"</span> <span class="material-symbols-outlined text-sm">arrow_forward</span>`;
+          }
+        } else {
+          clearBtn?.classList.add('hidden');
+          dropdownResults?.classList.add('hidden');
+          dropdownEmpty?.classList.remove('hidden');
+          renderRecentSearches();
+        }
+        applyFilter();
+      }
+
+      function showFullSearchResults(query) {
+        if (!query || !query.trim()) return;
+        const cleanQuery = query.trim();
+        saveRecentSearch(cleanQuery);
+
+        dropdown?.classList.add('hidden');
+        homeSections?.classList.add('hidden');
+        searchView?.classList.remove('hidden');
+
+        if (searchResultsQueryLabel) searchResultsQueryLabel.textContent = `Showing results for "${cleanQuery}"`;
+
+        const matches = executeInstantSearch(cleanQuery);
+
+        if (matches.length > 0) {
+          searchNoResults?.classList.add('hidden');
+          searchResultsGrid.classList.remove('hidden');
+          if (searchResultsCount) searchResultsCount.textContent = `${matches.length} Products Found`;
+          searchResultsGrid.innerHTML = matches.slice(0, 100).map((p, i) => renderProductCard(p, i * 15)).join('');
+          refreshVisibleButtons();
+        } else {
+          searchResultsGrid.classList.add('hidden');
+          searchNoResults?.classList.remove('hidden');
+          if (searchResultsCount) searchResultsCount.textContent = `0 Products Found`;
+          if (searchNoResultsText) searchNoResultsText.textContent = `We couldn't find any direct matches for "${cleanQuery}" in Bhusawal stores.`;
+
+          const related = popularProducts.length > 0 ? popularProducts : catalogData.slice(0, 10);
+          if (searchRelatedGrid) {
+            searchRelatedGrid.innerHTML = related.map((p, i) => renderProductCard(p, i * 20)).join('');
+          }
+          refreshVisibleButtons();
+        }
+      }
+
+      searchInput?.addEventListener('focus', () => {
+        dropdown?.classList.remove('hidden');
+        renderRecentSearches();
+        onSearchInput();
+      });
+
+      searchInput?.addEventListener('input', () => {
+        onSearchInput();
+      });
+
+      searchInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const q = searchInput.value.trim();
+          if (q) showFullSearchResults(q);
+        } else if (e.key === 'Escape') {
+          dropdown?.classList.add('hidden');
+        }
+      });
+
+      clearBtn?.addEventListener('click', () => {
+        searchInput.value = '';
+        currentSearchQuery = '';
+        clearBtn?.classList.add('hidden');
+        dropdownResults?.classList.add('hidden');
+        dropdownEmpty?.classList.remove('hidden');
+        dropdown?.classList.add('hidden');
+        homeSections?.classList.remove('hidden');
+        searchView?.classList.add('hidden');
+        renderRecentSearches();
+        applyFilter();
+      });
+
+      backToHomeBtn?.addEventListener('click', () => {
+        searchInput.value = '';
+        currentSearchQuery = '';
+        clearBtn?.classList.add('hidden');
+        dropdown?.classList.add('hidden');
+        homeSections?.classList.remove('hidden');
+        searchView?.classList.add('hidden');
+        applyFilter();
+      });
+
+      seeAllBtn?.addEventListener('click', () => {
+        const q = searchInput.value.trim();
+        if (q) showFullSearchResults(q);
+      });
+
+      document.getElementById('clear-recent-searches')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        clearRecentSearches();
+      });
+
+      document.body.addEventListener('click', (e) => {
+        const trendingTag = e.target.closest('.trending-tag');
+        if (trendingTag) {
+          const q = trendingTag.dataset.query;
+          if (searchInput) searchInput.value = q;
+          showFullSearchResults(q);
+          return;
+        }
+
+        const recentTag = e.target.closest('.recent-tag');
+        if (recentTag) {
+          const q = recentTag.dataset.query;
+          if (searchInput) searchInput.value = q;
+          showFullSearchResults(q);
+          return;
+        }
+
+        const shortcutChip = e.target.closest('.shortcut-chip');
+        if (shortcutChip) {
+          const val = shortcutChip.dataset.val;
+          if (searchInput) searchInput.value = val;
+          showFullSearchResults(val);
+          return;
+        }
+
+        const selectRow = e.target.closest('.select-product-row');
+        if (selectRow) {
+          const q = selectRow.dataset.query;
+          if (searchInput) searchInput.value = q;
+          showFullSearchResults(q);
+          return;
+        }
+
+        if (!e.target.closest('#grocery-search-input') && !e.target.closest('#grocery-search-dropdown')) {
+          dropdown?.classList.add('hidden');
+        }
+      });
+
+      
+      document.body.addEventListener('click', (e) => {
+        const actionBtn = e.target.closest('.add-btn, .qty-btn, .wishlist-btn, a, button');
+        if (actionBtn && !actionBtn.classList.contains('product-card-v2')) {
+          return;
+        }
+
+        const card = e.target.closest('[data-product-id]');
+        if (card) {
+          const pId = card.dataset.productId;
+          if (pId) {
+            window.location.href = `/product/${encodeURIComponent(pId)}`;
+          }
+        }
+      });
+
+      updateCartBar();
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGroceryPage);
+    } else {
+      initGroceryPage();
+    }
   </script>
 </body>
 </html>

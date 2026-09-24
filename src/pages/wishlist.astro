@@ -1,5 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
 import catalog from '../../public/grocery_catalog.json';
 
 // Initial recommendations if wishlist is cleared
@@ -18,6 +17,9 @@ const catalogRecommendations = catalog.slice(0, 8);
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
   
   <script is:inline>
     tailwind.config = {
@@ -152,10 +154,7 @@ const catalogRecommendations = catalog.slice(0, 8);
     </div>
 
   </main>
-
-  <Switcher />
-
-  <!-- CLIENT-SIDE WISHLIST ENGINE -->
+<!-- CLIENT-SIDE WISHLIST ENGINE -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -164,7 +163,7 @@ const catalogRecommendations = catalog.slice(0, 8);
       // Sample fallback wishlist items if localStorage is empty
       const SAMPLE_WISHLIST = [
         { id: 'W1', name: 'Amul Taaza Toned Milk (500 ml)', price: 27, mrp: 27, image: 'https://www.bbassets.com/media/uploads/p/l/306926_4-amul-taaza-toned-milk.jpg', pack: '500 ml', brand: 'Amul', stock: 'in_stock' },
-        { id: 'W2', name: 'Bhusawal Premium Golden Bananas (1 Dozen)', price: 60, mrp: 60, image: '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg', pack: '1 Dozen', brand: 'Bhusawal Fresh', stock: 'in_stock' },
+        { id: 'BC-000003', name: 'Fortune Sunlite Sunflower Oil (1 L Pouch)', price: 135, mrp: 150, image: 'https://www.bbassets.com/media/uploads/p/l/274262_14-fortune-sunlite-refined-sunflower-oil.jpg', pack: '1 L Pouch', brand: 'Fortune', stock: 'in_stock' },
         { id: 'W3', name: 'Fortune Sunlite Sunflower Oil (1 L Pouch)', price: 135, mrp: 135, image: 'https://www.bbassets.com/media/uploads/p/l/274262_14-fortune-sunlite-refined-sunflower-oil.jpg', pack: '1 L Pouch', brand: 'Fortune', stock: 'in_stock' },
         { id: 'W4', name: 'Brooke Bond Red Label Tea Box (250 g)', price: 140, mrp: 140, image: 'https://www.bbassets.com/media/uploads/p/l/266542_9-brooke-bond-red-label-tea.jpg', pack: '250 g Box', brand: 'Red Label', stock: 'out_of_stock' }
       ];
@@ -223,16 +222,25 @@ const catalogRecommendations = catalog.slice(0, 8);
 
         let html = '';
         filtered.forEach(item => {
-          const id = item.id || ('W-' + Math.random());
-          const name = item.name || 'Saved Product';
+          const rawId = item["Product ID"] || item.id || item.sku || item.ProductID;
+          const canonicalProductId = (rawId && typeof rawId === 'string' && !['undefined', 'null', 'n/a'].includes(rawId.toLowerCase().trim())) ? rawId.trim() : '';
+          const hasValidLink = canonicalProductId.length > 0;
+          const productHref = hasValidLink ? `/product/${encodeURIComponent(canonicalProductId)}` : 'javascript:void(0);';
+
+          const id = canonicalProductId || item.id || ('W-' + Math.random());
+          const name = item.displayName || item.name || 'Saved Product';
           const brand = item.brand || 'Bhusawal Connect';
           const pack = item.pack || item.unit || '1 Unit';
           const mrp = parseFloat(item.mrp || item.MRP || item.price || 0);
           const img = item.image || item.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
           const isOutOfStock = item.stock === 'out_of_stock' || item.stock === 0 || item.inStock === false;
 
+          const linkTag = hasValidLink ? 'a' : 'div';
+          const linkAttr = hasValidLink ? `href="${productHref}"` : '';
+          const endLinkTag = hasValidLink ? 'a' : 'div';
+
           html += `
-            <div class="bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-lg hover:border-purple-200 transition-all relative group">
+            <div class="bg-white rounded-3xl border border-slate-100 p-3 flex flex-col justify-between shadow-xs hover:shadow-lg hover:border-purple-200 transition-all relative group cursor-pointer" data-product-id="${id}">
               
               <!-- Remove Heart Button -->
               <button class="btn-remove-wishlist absolute top-3 right-3 w-8 h-8 rounded-full bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white flex items-center justify-center transition-all z-10 shadow-xs" data-id="${id}" title="Remove from wishlist">
@@ -241,7 +249,7 @@ const catalogRecommendations = catalog.slice(0, 8);
 
               <div>
                 <!-- Image Container -->
-                <div class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-3 flex items-center justify-center border border-slate-100 relative overflow-hidden">
+                <${linkTag} ${linkAttr} class="w-full aspect-square bg-slate-50/80 rounded-2xl p-2 mb-3 flex items-center justify-center border border-slate-100 relative overflow-hidden block">
                   <img loading="lazy" src="${img}" alt="${name}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                   
                   <!-- Stock Status Badge -->
@@ -252,13 +260,14 @@ const catalogRecommendations = catalog.slice(0, 8);
                       <span class="px-2 py-0.5 bg-emerald-500/90 backdrop-blur-sm text-white text-[9px] font-black rounded-md uppercase">In Stock</span>
                     `}
                   </div>
-                </div>
+                </${endLinkTag}>
 
                 <!-- Product Information -->
                 <div class="space-y-1 px-1">
                   <span class="text-[10px] font-extrabold text-purpleBrand uppercase tracking-wider block">${brand}</span>
-                  <h3 class="text-xs sm:text-[13px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem]">${name}</h3>
-                  <p class="text-[11px] font-semibold text-slate-400">${pack}</p>
+                  <${linkTag} ${linkAttr} class="block">
+                    <h3 class="text-xs sm:text-[13px] font-bold text-slate-800 line-clamp-2 leading-snug min-h-[2.2rem] hover:text-purpleBrand transition-colors">${name}</h3>
+                  </${endLinkTag}>
                 </div>
               </div>
 
@@ -286,6 +295,19 @@ const catalogRecommendations = catalog.slice(0, 8);
       }
 
       function bindWishlistActions() {
+        document.body.addEventListener('click', (e) => {
+          const actionBtn = e.target.closest('.btn-remove-wishlist, .btn-move-to-cart, .add-rec-wishlist-btn, a, button');
+          if (actionBtn && !actionBtn.classList.contains('group')) return;
+
+          const card = e.target.closest('[data-product-id]');
+          if (card) {
+            const pId = card.dataset.productId;
+            if (pId) {
+              window.location.href = `/product/${encodeURIComponent(pId)}`;
+            }
+          }
+        });
+
         // Remove Item
         document.querySelectorAll('.btn-remove-wishlist').forEach(btn => {
           btn.onclick = () => {

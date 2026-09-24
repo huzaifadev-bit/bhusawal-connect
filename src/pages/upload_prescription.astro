@@ -1,5 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
 ---
 
 <!DOCTYPE html>
@@ -41,6 +40,9 @@ import Switcher from '../components/Switcher.astro';
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     html { scroll-behavior: smooth; }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="pb-32 max-w-4xl mx-auto min-h-screen text-slate-800 antialiased bg-white">
@@ -204,10 +206,7 @@ import Switcher from '../components/Switcher.astro';
     </div>
 
   </main>
-
-  <Switcher />
-
-  <script is:inline>
+<script is:inline>
     (function() {
       var cameraInput = document.getElementById('camera-input');
       var galleryInput = document.getElementById('gallery-input');

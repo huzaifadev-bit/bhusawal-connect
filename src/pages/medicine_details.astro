@@ -1,5 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
 ---
 
 <!DOCTYPE html>
@@ -40,6 +39,9 @@ import Switcher from '../components/Switcher.astro';
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="min-h-screen pb-32 text-slate-800 antialiased bg-white">
@@ -142,10 +144,7 @@ import Switcher from '../components/Switcher.astro';
     </div>
 
   </main>
-
-  <Switcher />
-
-  <!-- CLIENT-SIDE DETAILS & CART ENGINE -->
+<!-- CLIENT-SIDE DETAILS & CART ENGINE -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -186,15 +185,34 @@ import Switcher from '../components/Switcher.astro';
 
       const urlParams = new URLSearchParams(window.location.search);
       const reqId = urlParams.get('id') || 'M1';
+      const paramName = urlParams.get('name');
+      const paramPrice = parseFloat(urlParams.get('price') || '0');
 
-      // Sample dataset lookup or default fallback
       const catalog = [
         DEFAULT_MEDICINE,
         { id: 'M2', name: 'Crocin Advance 500mg', brand: 'GSK', salt: 'Paracetamol (500mg)', category: 'Cold & Fever', price: 28, mrp: 30, rating: 4.7, pack: 'Strip of 15 Tablets', rxRequired: false, image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80', desc: 'Fast pain relief tablet with Optizorb technology for rapid absorption.' },
         { id: 'M3', name: 'Allegra 120mg Anti-Allergy', brand: 'Sanofi', salt: 'Fexofenadine (120mg)', category: 'Cold & Fever', price: 195, mrp: 210, rating: 4.9, pack: 'Strip of 10 Tablets', rxRequired: true, image: 'https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=800&q=80', desc: 'Provides non-drowsy relief from allergy symptoms like sneezing, runny nose, and itchy eyes.' }
       ];
 
-      const currentItem = catalog.find(i => i.id === reqId) || DEFAULT_MEDICINE;
+      let foundItem = catalog.find(i => i.id === reqId);
+      if (!foundItem && paramName) {
+        foundItem = {
+          id: reqId,
+          name: paramName,
+          brand: urlParams.get('brand') || 'Pharmacy Essential',
+          salt: urlParams.get('salt') || 'Active Healthcare Formulation',
+          category: urlParams.get('category') || 'Medicine',
+          price: paramPrice || 50,
+          mrp: parseFloat(urlParams.get('mrp') || (paramPrice ? String(paramPrice * 1.1) : '60')),
+          rating: 4.8,
+          pack: urlParams.get('pack') || '1 Unit',
+          rxRequired: urlParams.get('rxRequired') === 'true' || urlParams.get('rx') === 'true',
+          image: urlParams.get('img') || urlParams.get('image') || DEFAULT_MEDICINE.image,
+          desc: urlParams.get('desc') || 'High quality certified pharmaceutical product available for quick home delivery in Bhusawal.'
+        };
+      }
+
+      const currentItem = foundItem || DEFAULT_MEDICINE;
 
       // Populate UI
       document.getElementById('med-title').textContent = currentItem.name;
@@ -205,10 +223,15 @@ import Switcher from '../components/Switcher.astro';
       document.getElementById('med-price').textContent = `₹${currentItem.price}`;
       document.getElementById('med-mrp').textContent = `₹${currentItem.mrp}`;
       document.getElementById('med-desc').textContent = currentItem.desc;
-      document.getElementById('med-img').src = currentItem.image;
+      const imgEl = document.getElementById('med-img');
+      if (imgEl) {
+        imgEl.src = currentItem.image;
+        imgEl.onerror = function() { this.src = '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg'; };
+      }
 
-      if (currentItem.rxRequired) {
-        document.getElementById('rx-badge').classList.remove('hidden');
+      const rxBadge = document.getElementById('rx-badge');
+      if (rxBadge) {
+        rxBadge.classList.toggle('hidden', !currentItem.rxRequired);
       }
 
       function updateStepperUI() {

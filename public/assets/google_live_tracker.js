@@ -1,4 +1,4 @@
-// Bhusawal Connect Production Google Maps Live Delivery Tracking Engine
+// Bhusawal Connect Production Google Maps Live Delivery Tracking Engine with Smooth Uber/Zepto Animation
 (function(window) {
   class GoogleLiveTracker {
     constructor(containerId, options = {}) {
@@ -14,7 +14,7 @@
       this.routePolyline = null;
       this.directionsService = null;
       this.directionsRenderer = null;
-      this.animFrameId = null;
+      this.animator = null;
 
       this.lastNotifiedDist = Infinity;
       this.onNotification = options.onNotification || function() {};
@@ -64,7 +64,7 @@
 
         // Rider Marker (Scooter SVG)
         const scooterSvg = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="#7c3aed" stroke="#ffffff" stroke-width="1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="#10B981" stroke="#ffffff" stroke-width="1.5">
             <path d="M19 13h-4l-2-5H8l-1 2H3v3h2a2 2 0 1 0 4 0h6a2 2 0 1 0 4 0h2v-2z"/>
             <circle cx="7" cy="16" r="2"/>
             <circle cx="17" cy="16" r="2"/>
@@ -80,6 +80,14 @@
           }
         });
 
+        // Initialize Smooth Uber/Zepto Animator
+        if (window.BhusawalSmoothRiderAnimator) {
+          this.animator = new window.BhusawalSmoothRiderAnimator(this.riderMarker, {
+            initialLat: this.riderPos.lat,
+            initialLng: this.riderPos.lng
+          });
+        }
+
         // Automatically zoom to fit both markers
         const bounds = new google.maps.LatLngBounds();
         bounds.extend(this.storePos);
@@ -91,7 +99,7 @@
         this.directionsRenderer = new google.maps.DirectionsRenderer({
           map: this.map,
           suppressMarkers: true,
-          polylineOptions: { strokeColor: '#7c3aed', strokeWeight: 6, strokeOpacity: 0.85 }
+          polylineOptions: { strokeColor: '#3B82F6', strokeWeight: 6, strokeOpacity: 0.85 }
         });
 
         this.calculateRoute();
@@ -111,7 +119,7 @@
       }).addTo(this.map);
 
       L.marker([this.storePos.lat, this.storePos.lng], {
-        icon: L.divIcon({ html: '<div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-sm shadow-md">🏪</div>', iconSize: [32, 32] })
+        icon: L.divIcon({ html: '<div class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center text-sm shadow-md">🏪</div>', iconSize: [32, 32] })
       }).addTo(this.map);
 
       L.marker([this.custPos.lat, this.custPos.lng], {
@@ -119,17 +127,27 @@
       }).addTo(this.map);
 
       this.riderMarker = L.marker([this.riderPos.lat, this.riderPos.lng], {
-        icon: L.divIcon({ html: '<div class="w-10 h-10 rounded-full bg-purple-700 text-white flex items-center justify-center text-xl shadow-xl">🛵</div>', iconSize: [40, 40] })
+        icon: L.divIcon({
+          className: 'uber-style-rider-pin',
+          html: '<div class="rider-pin-icon w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xl shadow-2xl border-2 border-white transition-all duration-100" style="transform-origin: center center;">🛵</div>',
+          iconSize: [40, 40],
+          iconAnchor: [20, 20]
+        })
       }).addTo(this.map);
 
-      this.routePolyline = L.polyline([
-        [this.storePos.lat, this.storePos.lng],
-        [21.0470, 75.7890],
-        [21.0495, 75.7930],
-        [this.custPos.lat, this.custPos.lng]
-      ], { color: '#7c3aed', weight: 6 }).addTo(this.map);
+      // Initialize Smooth Uber/Zepto Animator
+      if (window.BhusawalSmoothRiderAnimator) {
+        this.animator = new window.BhusawalSmoothRiderAnimator(this.riderMarker, {
+          initialLat: this.riderPos.lat,
+          initialLng: this.riderPos.lng
+        });
+      }
 
-      this.map.fitBounds(this.routePolyline.getBounds(), { padding: [40, 40] });
+      const bounds = L.latLngBounds([
+        [this.storePos.lat, this.storePos.lng],
+        [this.custPos.lat, this.custPos.lng]
+      ]);
+      this.map.fitBounds(bounds, { padding: [50, 50] });
     }
 
     calculateRoute() {
@@ -149,54 +167,35 @@
       });
     }
 
-    // Smooth position interpolation via requestAnimationFrame over 800ms
-    updateRiderLocation(targetLat, targetLng, heading = 0) {
-      const startLat = this.riderPos.lat;
-      const startLng = this.riderPos.lng;
-      const startTime = performance.now();
-      const duration = 800; // ms
-
-      if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
-
-      const step = (now) => {
-        const elapsed = now - startTime;
-        const progress = Math.min(1, elapsed / duration);
-        const currentLat = startLat + (targetLat - startLat) * progress;
-        const currentLng = startLng + (targetLng - startLng) * progress;
-
-        this.riderPos = { lat: currentLat, lng: currentLng, heading };
-
-        if (window.google && window.google.maps && this.riderMarker instanceof google.maps.Marker) {
-          this.riderMarker.setPosition(new google.maps.LatLng(currentLat, currentLng));
-        } else if (this.riderMarker && typeof this.riderMarker.setLatLng === 'function') {
-          this.riderMarker.setLatLng([currentLat, currentLng]);
+    // Uber / Blinkit / Zepto Smooth Rider Animation Engine (60 FPS Interpolation, Bearing Rotation, Zero Jumping)
+    updateRiderLocation(targetLat, targetLng, heading = 0, roadPath = null) {
+      if (this.animator) {
+        this.animator.animateTo({ lat: targetLat, lng: targetLng }, roadPath, 2800);
+      } else {
+        if (this.riderMarker && typeof this.riderMarker.setLatLng === 'function') {
+          this.riderMarker.setLatLng([targetLat, targetLng]);
         }
+      }
 
-        if (progress < 1) {
-          this.animFrameId = requestAnimationFrame(step);
-        } else {
-          // Distance calculation & proximity alerts
-          const distMeters = this.getHaversineMeters(targetLat, targetLng, this.custPos.lat, this.custPos.lng);
-          
-          if (distMeters <= 500 && this.lastNotifiedDist > 500) {
-            this.onNotification('500M_NEARBY', 'Rider is approaching your area (< 500m away)');
-          }
-          if (distMeters <= 300 && this.lastNotifiedDist > 300) {
-            this.onNotification('300M_NEARBY', 'Rider is nearby (< 300m away). Please prepare to receive your order!');
-          }
-          if (distMeters <= 100 && this.lastNotifiedDist > 100) {
-            this.onNotification('100M_DOORSTEP', 'Rider is at your doorstep (< 100m)!');
-          }
-          if (distMeters <= 30) {
-            this.onNotification('DELIVERED', 'Order Delivered!');
-          }
+      this.riderPos = { lat: targetLat, lng: targetLng, heading: heading };
 
-          this.lastNotifiedDist = distMeters;
-          this.calculateRoute();
-        }
-      };
+      // Distance calculation & proximity alerts
+      const distMeters = this.getHaversineMeters(targetLat, targetLng, this.custPos.lat, this.custPos.lng);
+      
+      if (distMeters <= 500 && this.lastNotifiedDist > 500) {
+        this.onNotification('500M_NEARBY', 'Rider is approaching your area (< 500m away)');
+      }
+      if (distMeters <= 300 && this.lastNotifiedDist > 300) {
+        this.onNotification('300M_NEARBY', 'Rider is nearby (< 300m away). Please prepare to receive your order!');
+      }
+      if (distMeters <= 100 && this.lastNotifiedDist > 100) {
+        this.onNotification('100M_DOORSTEP', 'Rider is at your doorstep (< 100m)!');
+      }
+      if (distMeters <= 30) {
+        this.onNotification('DELIVERED', 'Order Delivered!');
+      }
 
-      this.animFrameId = requestAnimationFrame(step);
+      this.lastNotifiedDist = distMeters;
     }
 
     getHaversineMeters(lat1, lon1, lat2, lon2) {
@@ -210,6 +209,20 @@
     }
 
     subscribeRealtime() {
+      const handleTelemetry = () => {
+        if (window.RealtimeGPSTelemetry) {
+          const telemetry = window.RealtimeGPSTelemetry.getLatestTelemetry();
+          if (telemetry && telemetry.lat && telemetry.lng) {
+            this.updateRiderLocation(parseFloat(telemetry.lat), parseFloat(telemetry.lng), telemetry.heading || 0);
+            this.onEtaUpdate(telemetry.etaMins, telemetry.distanceRemainingKm, telemetry.currentRoad);
+            this.onStatusChange(telemetry.orderStatus);
+          }
+        }
+      };
+
+      window.addEventListener('gpsTelemetryUpdated', handleTelemetry);
+      window.addEventListener('storage', handleTelemetry);
+
       if (window.BhusawalRealtime) {
         window.BhusawalRealtime.on('rider-location', (pos) => {
           if (pos && pos.lat && pos.lng) {

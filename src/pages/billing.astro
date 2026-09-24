@@ -1,5 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
 import catalog from '../../public/grocery_catalog.json';
 
 const recommendations = catalog.slice(0, 4);
@@ -47,6 +46,9 @@ const recommendations = catalog.slice(0, 4);
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     #leaflet-map { height: 200px; width: 100%; border-radius: 1rem; z-index: 1; }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="min-h-screen pb-32 text-slate-800 antialiased">
@@ -352,10 +354,7 @@ const recommendations = catalog.slice(0, 4);
       </button>
     </div>
   </div>
-
-  <Switcher />
-
-  <!-- CLIENT-SIDE CHECKOUT ENGINE & MAP -->
+<!-- CLIENT-SIDE CHECKOUT ENGINE & MAP -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -423,9 +422,8 @@ const recommendations = catalog.slice(0, 4);
             c.classList.remove('border-2', 'border-purpleBrand', 'bg-purple-50/50');
             c.classList.add('border', 'border-slate-200', 'bg-white');
           });
-          card.classList.replace('border', 'border-2');
-          card.classList.replace('border-slate-200', 'border-purpleBrand');
-          card.classList.replace('bg-white', 'bg-purple-50/50');
+          card.classList.remove('border', 'border-slate-200', 'bg-white');
+          card.classList.add('border-2', 'border-purpleBrand', 'bg-purple-50/50');
 
           selectedAddress = card.dataset.address;
           const displayEl = document.getElementById('display-selected-address');
@@ -496,8 +494,8 @@ const recommendations = catalog.slice(0, 4);
         cart.forEach(item => {
           const name = item.name || 'Grocery Product';
           const qty = item.quantity || 1;
-          const mrpPrice = parseFloat(item.mrp || item.MRP || item.price || 0);
-          const itemTotal = Math.round(mrpPrice * qty);
+          const actualPrice = parseFloat(item.price || item.mrp || item.MRP || 0);
+          const itemTotal = Math.round(actualPrice * qty);
           subtotal += itemTotal;
           const img = item.image || item.img || '/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';
 
@@ -507,7 +505,7 @@ const recommendations = catalog.slice(0, 4);
                 <img loading="lazy" src="${img}" alt="${name}" class="w-9 h-9 object-contain rounded-lg border border-slate-100 p-0.5 flex-shrink-0" onerror="this.onerror=null;this.src='/assets/c183e18c0ed9f3d665c77b7c2d692a70.jpg';" />
                 <div class="min-w-0 flex-1">
                   <h4 class="font-extrabold text-slate-800 truncate">${name}</h4>
-                  <p class="text-[10px] text-slate-400 font-bold">Qty: ${qty} × ₹${mrpPrice}</p>
+                  <p class="text-[10px] text-slate-400 font-bold">Qty: ${qty} × ₹${actualPrice}</p>
                 </div>
               </div>
               <span class="font-black text-slate-900 flex-shrink-0">₹${itemTotal}</span>
@@ -557,25 +555,32 @@ const recommendations = catalog.slice(0, 4);
 
       function executeOrderPlacement() {
         const cart = getCartItems();
-        const subtotal = cart.reduce((sum, i) => sum + (parseFloat(i.mrp || i.MRP || i.price || 0) * (i.quantity || 1)), 0);
+        const subtotal = cart.reduce((sum, i) => sum + (parseFloat(i.price || i.mrp || 0) * (i.quantity || 1)), 0);
         const grandTotal = Math.round(subtotal + 30 + 5 + selectedTipAmount);
         const orderId = 'BHU-' + Math.floor(100000 + Math.random() * 900000);
 
         const orderRecord = {
           id: orderId,
+          type: 'STANDARD',
           date: new Date().toISOString(),
           items: cart,
           address: selectedAddress,
+          lat: 21.0478,
+          lng: 75.7896,
+          payment: selectedPaymentMethod === 'upi' ? '📱 Instant UPI' : (selectedPaymentMethod === 'cod' ? '💵 Cash on Delivery' : '💳 Card/NetBanking'),
           paymentMethod: selectedPaymentMethod,
           total: grandTotal,
-          status: 'Confirmed'
+          status: 'Confirmed',
+          assignedRider: 'Rahul Ramesh Patil',
+          riderPhone: '9876543210'
         };
 
-        // Save order in history
+        // Save order in history and active order
         try {
           const orders = JSON.parse(localStorage.getItem('bhusawal_orders') || '[]');
           orders.unshift(orderRecord);
           localStorage.setItem('bhusawal_orders', JSON.stringify(orders));
+          localStorage.setItem('bhusawal_active_order', JSON.stringify(orderRecord));
         } catch(e) {}
 
         // Clear cart

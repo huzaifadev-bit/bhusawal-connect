@@ -7,7 +7,14 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "colab": "node scripts/colab_bridge/cli.js ask",
+    "colab:job:create": "node scripts/colab_bridge/cli.js create-job",
+    "colab:job:status": "node scripts/colab_bridge/cli.js status",
+    "colab:job:watch": "node scripts/colab_bridge/cli.js watch",
+    "colab:job:list": "node scripts/colab_bridge/cli.js list",
+    "colab:sheet:init": "node scripts/colab_bridge/cli.js init-sheet",
+    "colab:sheet:push": "node scripts/colab_bridge/cli.js push-catalog"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.3",

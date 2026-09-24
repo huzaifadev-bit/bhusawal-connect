@@ -1,5 +1,4 @@
 ---
-import Switcher from '../components/Switcher.astro';
 ---
 
 <!DOCTYPE html>
@@ -36,6 +35,9 @@ import Switcher from '../components/Switcher.astro';
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
     h1, h2, h3, h4, .font-display { font-family: 'Outfit', sans-serif; }
   </style>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
 </head>
 
 <body class="min-h-screen pb-24 text-slate-800 antialiased flex items-center justify-center p-4">
@@ -89,7 +91,7 @@ import Switcher from '../components/Switcher.astro';
 
     <!-- ACTION BUTTONS -->
     <div class="space-y-3 pt-2">
-      <a href="/track_order" class="w-full py-3.5 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs sm:text-sm rounded-2xl shadow-lg shadow-purple-900/15 active:scale-95 transition-all flex items-center justify-center gap-2">
+      <a id="conf-track-btn" href="/track_order" class="w-full py-3.5 bg-purpleBrand hover:bg-purpleDark text-white font-black text-xs sm:text-sm rounded-2xl shadow-lg shadow-purple-900/15 active:scale-95 transition-all flex items-center justify-center gap-2">
         <span class="material-symbols-outlined text-base">near_me</span>
         <span>Track Live Delivery Rider</span>
       </a>
@@ -107,20 +109,35 @@ import Switcher from '../components/Switcher.astro';
     </div>
 
   </div>
-
-  <Switcher />
-
-  <script is:inline>
+<script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
-      const orderId = params.get('orderId') || ('#BHU-' + Math.floor(100000 + Math.random() * 900000));
-      const total = params.get('total') || '340';
+      let orderId = params.get('orderId');
+      
+      let activeOrder = null;
+      try {
+        activeOrder = JSON.parse(localStorage.getItem('bhusawal_active_order') || 'null');
+      } catch(e) {}
+
+      if (!orderId && activeOrder) {
+        orderId = activeOrder.id;
+      }
+
+      if (!orderId) {
+        orderId = 'BHU-' + Math.floor(100000 + Math.random() * 900000);
+      }
 
       const idEl = document.getElementById('conf-order-id');
       const totalEl = document.getElementById('conf-total');
+      const addrEl = document.getElementById('conf-address');
+      const trackBtn = document.getElementById('conf-track-btn');
 
       if (idEl) idEl.textContent = '#' + orderId.replace('#', '');
-      if (totalEl) totalEl.textContent = '₹' + total;
+      if (activeOrder) {
+        if (totalEl) totalEl.textContent = '₹' + activeOrder.total;
+        if (addrEl) addrEl.textContent = activeOrder.address || 'Bhusawal, Maharashtra';
+      }
+      if (trackBtn) trackBtn.href = `/track_order?id=${orderId}`;
     });
   </script>
 </body>

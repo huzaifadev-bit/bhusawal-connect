@@ -1,0 +1,73 @@
+{
+  "Atta Rice Dal": [
+    "Atta & Flours",
+    "Dal & Pulses",
+    "General Essentials",
+    "Rice & Poha"
+  ],
+  "Baby Care": [
+    "Baby Care & Diapers"
+  ],
+  "Bakery": [
+    "Bread & Bakery"
+  ],
+  "Beverages": [
+    "General Essentials",
+    "Soft Drinks & Juices"
+  ],
+  "Biscuits": [
+    "Biscuits & Cookies"
+  ],
+  "Cigarettes": [
+    "Cigarettes"
+  ],
+  "Cleaning": [
+    "General Essentials"
+  ],
+  "Cold Drinks": [
+    "Beverages",
+    "Water & Beverages"
+  ],
+  "Dairy": [
+    "Butter, Ghee & Cheese",
+    "General Essentials",
+    "Milk, Dahi & Paneer"
+  ],
+  "Fresh Fruits": [
+    "Fresh Fruits",
+    "General Essentials",
+    "Spices & Masalas"
+  ],
+  "Fresh Vegetables": [
+    "Daily Vegetables",
+    "Fresh Vegetables",
+    "General Essentials"
+  ],
+  "Health & Wellness": [
+    "General Essentials"
+  ],
+  "Household": [
+    "Cleaning & Utilities"
+  ],
+  "Masala": [
+    "Spices & Masalas"
+  ],
+  "Oil & Ghee": [
+    "Edible Oils",
+    "General Essentials"
+  ],
+  "Personal Care": [
+    "General Essentials",
+    "Grooming & Hygiene"
+  ],
+  "Pet Care": [
+    "General Essentials"
+  ],
+  "Snacks": [
+    "Chips & Snacks",
+    "General Essentials"
+  ],
+  "Tea & Coffee": [
+    "Tea & Coffee"
+  ]
+}

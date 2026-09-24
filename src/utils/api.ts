@@ -1,6 +1,6 @@
 // Bhusawal Connect Web Dashboard / Client API Integration Utility
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = '/api';
 
 /**
  * Make API requests to the Bhusawal Connect Node.js backend.
