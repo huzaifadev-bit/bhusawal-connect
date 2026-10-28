@@ -20,6 +20,8 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const accessToken = body.accessToken || body['access-token'] || body.token || '';
+    const phone = body.phone || body.mobile || body.identifier || '';
+
     if (!accessToken || typeof accessToken !== 'string' || !accessToken.trim()) {
       return new Response(
         JSON.stringify({
@@ -46,8 +48,19 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const result = await verifyMsg91WidgetAccessToken(accessToken);
-    const statusCode = result.success ? 200 : (result.errorCode === 'MISSING_ACCESS_TOKEN' ? 400 : 422);
+    const result = await verifyMsg91WidgetAccessToken(accessToken, phone);
+    let statusCode = 200;
+    if (!result.success) {
+      if (result.errorCode === 'MISSING_ACCESS_TOKEN' || result.errorCode === 'INVALID_TOKEN_SIZE') {
+        statusCode = 400;
+      } else if (result.errorCode === 'PHONE_NUMBER_MISMATCH') {
+        statusCode = 403;
+      } else if (result.errorCode === 'MSG91_NOT_CONFIGURED') {
+        statusCode = 503;
+      } else {
+        statusCode = 422;
+      }
+    }
 
     return new Response(JSON.stringify(result), {
       status: statusCode,
@@ -70,19 +83,18 @@ export const POST: APIRoute = async ({ request }) => {
   }
 };
 
-export const ALL: APIRoute = async ({ request }) => {
-  if (request.method !== 'POST') {
-    return new Response(
-      JSON.stringify({
-        success: false,
-        message: 'Method not allowed. Only POST requests are supported.',
-      }),
-      {
-        status: 405,
-        headers: { 'Content-Type': 'application/json', 'Allow': 'POST' },
-      }
-    );
-  }
-  return POST({ request } as any);
+export const GET: APIRoute = async () => {
+  return new Response(
+    JSON.stringify({
+      service: 'Bhusawal Connect MSG91 Widget Token Verification API (Alias)',
+      status: 'Ready',
+      method: 'POST',
+      body: { accessToken: '<widget_access_token>', phone: '+919876543210' },
+    }),
+    {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 };
 

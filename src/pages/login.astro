@@ -229,13 +229,55 @@ const widgetTokenAuth = (rawWidgetTokenAuth && rawWidgetTokenAuth !== serverAuth
   -->
   <script is:inline define:vars={{ widgetId, widgetTokenAuth }}>
     // Store widget config globally for the module script to access
-    window.__msg91WidgetId = widgetId || '';
+    window.__msg91WidgetId = widgetId || '366a426b4d52323538343338';
     window.__msg91TokenAuth = widgetTokenAuth || '';
     window.__msg91WidgetReady = false;
-  </script>
 
-  <!-- Load MSG91 OTP Widget SDK -->
-  <script is:inline src="https://verify.msg91.com/otp-provider.js"></script>
+    // Dynamic MSG91 Widget Script Loader with automatic fallback & duplicate guard
+    window.loadMsg91WidgetScript = function() {
+      return new Promise(function(resolve, reject) {
+        if (typeof window.initSendOTP === 'function') {
+          return resolve();
+        }
+        var existing = document.querySelector('script[data-msg91-widget="true"]');
+        if (existing) {
+          if (typeof window.initSendOTP === 'function') return resolve();
+          existing.addEventListener('load', function() { resolve(); });
+          existing.addEventListener('error', function() { reject(new Error('Widget script load failed')); });
+          return;
+        }
+
+        var script = document.createElement('script');
+        script.src = 'https://verify.msg91.com/otp-provider.js';
+        script.async = true;
+        script.setAttribute('data-msg91-widget', 'true');
+        script.onload = function() {
+          window.__msg91WidgetReady = true;
+          resolve();
+        };
+        script.onerror = function() {
+          console.warn('[MSG91] Primary CDN script failed. Loading fallback script from verify.phone91.com...');
+          script.remove();
+          var fallback = document.createElement('script');
+          fallback.src = 'https://verify.phone91.com/otp-provider.js';
+          fallback.async = true;
+          fallback.setAttribute('data-msg91-widget', 'true');
+          fallback.onload = function() {
+            window.__msg91WidgetReady = true;
+            resolve();
+          };
+          fallback.onerror = function() {
+            reject(new Error('Failed to load MSG91 widget scripts from both primary and fallback CDNs.'));
+          };
+          document.head.appendChild(fallback);
+        };
+        document.head.appendChild(script);
+      });
+    };
+
+    // Preload widget script on page load
+    try { window.loadMsg91WidgetScript(); } catch(e) {}
+  </script>
 
   <!-- Main Authentication Module -->
   <script type="module">
@@ -295,38 +337,82 @@ const widgetTokenAuth = (rawWidgetTokenAuth && rawWidgetTokenAuth !== serverAuth
       };
 
       // ── Server-side widget token verification ──
-      const verifyWidgetTokenAndRedirect = async (accessToken) => {
+      const verifyWidgetTokenAndRedirect = async (accessToken, phone) => {
         if (!accessToken) {
-          showError('Verification succeeded but no token received. Please try again.');
+          showError('Verification was cancelled or no token was received. Please try again.');
           mobileScreen.classList.remove('hidden');
-          otpScreen.classList.add('hidden');
+          if (otpScreen) otpScreen.classList.add('hidden');
           resetSendBtn();
           return;
         }
 
         try {
-          const verifyRes = await fetch('/api/auth/verify-widget-token', {
+          sendOtpText.textContent = 'Verifying credentials...';
+          sendOtpBtn.disabled = true;
+
+          const verifyRes = await fetch('/api/auth/verify-phone-otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ accessToken })
+            body: JSON.stringify({
+              accessToken: accessToken,
+              phone: '+91' + phone
+            })
           });
+
           const verifyData = await verifyRes.json().catch(() => ({}));
 
           if (verifyRes.ok && verifyData.success) {
+            const user = verifyData.user || {};
+            const fullPhone = '+91' + phone;
+            const profileData = {
+              id: user.id || 'CUST-' + phone.slice(-4),
+              phone: fullPhone,
+              name: user.name || 'Customer',
+              email: user.email || '',
+              role: user.role || 'CUSTOMER',
+              isLoggedIn: true,
+              token: verifyData.token || ''
+            };
+
+            localStorage.setItem('bhusawal_user_profile', JSON.stringify(profileData));
+            localStorage.setItem('bhusawal_user_phone', fullPhone);
+            try {
+              localStorage.setItem('bhusawal_auth_session', JSON.stringify({
+                user: profileData,
+                phone: fullPhone,
+                loginTime: new Date().toISOString()
+              }));
+            } catch(e) {}
+
+            // Sync with BhusawalBackend customers pool
+            if (window.BhusawalBackend && window.BhusawalBackend.customers) {
+              try {
+                window.BhusawalBackend.customers.save({
+                  id: profileData.id,
+                  phone: fullPhone,
+                  name: profileData.name,
+                  role: profileData.role,
+                  lastLoginAt: new Date().toISOString()
+                });
+              } catch(e) {}
+            }
+
+            window.dispatchEvent(new Event('storage'));
+
             mobileScreen.classList.add('hidden');
-            otpScreen.classList.add('hidden');
+            if (otpScreen) otpScreen.classList.add('hidden');
             successScreen.classList.remove('hidden');
             setTimeout(redirectAfterLogin, 600);
           } else {
             showError(verifyData.message || 'Server verification failed. Please try again.');
             mobileScreen.classList.remove('hidden');
-            otpScreen.classList.add('hidden');
+            if (otpScreen) otpScreen.classList.add('hidden');
             resetSendBtn();
           }
         } catch (err) {
-          showError('Network error during verification. Please try again.');
+          showError('Network error connecting to verification service. Please try again.');
           mobileScreen.classList.remove('hidden');
-          otpScreen.classList.add('hidden');
+          if (otpScreen) otpScreen.classList.add('hidden');
           resetSendBtn();
         }
       };
@@ -335,7 +421,7 @@ const widgetTokenAuth = (rawWidgetTokenAuth && rawWidgetTokenAuth !== serverAuth
       const currentSupabase = await getCurrentCustomer();
       if (currentSupabase && currentSupabase.profile) {
         mobileScreen.classList.add('hidden');
-        otpScreen.classList.add('hidden');
+        if (otpScreen) otpScreen.classList.add('hidden');
         successScreen.classList.remove('hidden');
         setTimeout(redirectAfterLogin, 600);
         return;
@@ -344,7 +430,7 @@ const widgetTokenAuth = (rawWidgetTokenAuth && rawWidgetTokenAuth !== serverAuth
       subscribeToAuth((user) => {
         if (user) {
           mobileScreen.classList.add('hidden');
-          otpScreen.classList.add('hidden');
+          if (otpScreen) otpScreen.classList.add('hidden');
           successScreen.classList.remove('hidden');
           setTimeout(redirectAfterLogin, 600);
         }
@@ -357,48 +443,60 @@ const widgetTokenAuth = (rawWidgetTokenAuth && rawWidgetTokenAuth !== serverAuth
         // Firebase recaptcha is a fallback; non-critical if it fails
       }
 
-      // ── 2. Send OTP — Primary: MSG91 Widget, Fallback: Server API → Direct OTP ──
+      // ── 2. Send OTP via MSG91 OTP Widget ──
       sendOtpBtn?.addEventListener('click', async () => {
         // Prevent duplicate submissions
         if (sendOtpInProgress) return;
 
-        const val = mobileInput.value.trim();
-        if (!val || val.length !== 10 || isNaN(val)) {
+        const val = mobileInput.value.trim().replace(/\D/g, '');
+        if (!val || val.length !== 10) {
           showError('Please enter a valid 10-digit Indian mobile number.');
           return;
         }
+
         hideError();
         activePhone = val;
         sendOtpInProgress = true;
-        sendOtpText.textContent = 'Sending SMS OTP...';
+        sendOtpText.textContent = 'Opening OTP Verification...';
         sendOtpBtn.disabled = true;
 
         try {
-          // PRIMARY: MSG91 OTP Widget (initSendOTP)
-          const wid = window.__msg91WidgetId;
+          // Ensure MSG91 Widget script is loaded
+          await window.loadMsg91WidgetScript();
+
+          const wid = window.__msg91WidgetId || '366a426b4d52323538343338';
           const wta = window.__msg91TokenAuth;
 
-          if (wid && wta && typeof window.initSendOTP === 'function') {
+          if (wid && typeof window.initSendOTP === 'function') {
             const widgetConfig = {
               widgetId: wid,
-              tokenAuth: wta,
               identifier: `91${val}`,
+              exposeMethods: false,
               success: async (data) => {
-                const accessToken = data?.message || data?.access_token || data?.accessToken || '';
-                await verifyWidgetTokenAndRedirect(accessToken);
+                const accessToken = (typeof data === 'string')
+                  ? data
+                  : (data?.message || data?.['access-token'] || data?.accessToken || data?.token || '');
+                await verifyWidgetTokenAndRedirect(accessToken, val);
               },
               failure: (error) => {
-                showError('OTP verification was cancelled or failed. Please try again.');
+                const msg = (typeof error === 'string') ? error : (error?.message || '');
+                if (msg && !msg.toLowerCase().includes('close') && !msg.toLowerCase().includes('cancel')) {
+                  showError(msg);
+                }
                 mobileScreen.classList.remove('hidden');
                 resetSendBtn();
               }
             };
 
+            if (wta) {
+              widgetConfig.tokenAuth = wta;
+            }
+
             window.initSendOTP(widgetConfig);
             return;
           }
 
-          // Server-side MSG91 OTP API
+          // Fallback server API if widget is unavailable
           const res = await fetch('/api/auth/request-otp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -418,11 +516,11 @@ const widgetTokenAuth = (rawWidgetTokenAuth && rawWidgetTokenAuth !== serverAuth
             return;
           }
 
-          showError(apiData.message || 'Unable to send OTP. Please check server configuration.');
+          showError(apiData.message || 'Unable to open OTP verification. Please check network connection.');
           resetSendBtn();
         } catch (err) {
           console.error('[Login] OTP send error:', err);
-          showError('Network error while requesting OTP. Please try again.');
+          showError('Network error connecting to OTP provider. Please try again.');
           resetSendBtn();
         }
       });

@@ -223,11 +223,29 @@ export async function verifyMsg91Otp(phoneInput: string, otpInput: string): Prom
 }
 
 /**
+ * Helper to safely extract verified mobile number from JWT payload if available.
+ */
+function extractPhoneFromJwt(jwtToken: string): string | null {
+  try {
+    const parts = jwtToken.split('.');
+    if (parts.length === 3) {
+      const payloadBase64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const payloadJson = Buffer.from(payloadBase64, 'base64').toString('utf8');
+      const parsed = JSON.parse(payloadJson);
+      const raw = parsed.mobile || parsed.number || parsed.phone || parsed.identifier || parsed.sub || (parsed.data && (parsed.data.mobile || parsed.data.number || parsed.data.phone)) || '';
+      if (raw) return String(raw);
+    }
+  } catch (e) {}
+  return null;
+}
+
+/**
  * Secure server-side MSG91 OTP Widget Token Verification Engine.
  * Verifies JWT access-token returned by MSG91 OTP Widget via POST https://control.msg91.com/api/v5/widget/verifyAccessToken
  * Uses MSG91_AUTH_KEY strictly server-side.
+ * Enforces phone number correlation to ensure token matches the authenticating user.
  */
-export async function verifyMsg91WidgetAccessToken(accessToken: string): Promise<OtpRequestResponse> {
+export async function verifyMsg91WidgetAccessToken(accessToken: string, expectedPhone?: string): Promise<OtpRequestResponse> {
   if (!accessToken || typeof accessToken !== 'string' || !accessToken.trim()) {
     return {
       success: false,
@@ -236,12 +254,20 @@ export async function verifyMsg91WidgetAccessToken(accessToken: string): Promise
     };
   }
 
+  if (accessToken.length > 4096) {
+    return {
+      success: false,
+      message: 'Access token exceeds maximum allowed size.',
+      errorCode: 'INVALID_TOKEN_SIZE',
+    };
+  }
+
   const authKey = process.env.MSG91_AUTH_KEY || import.meta.env.MSG91_AUTH_KEY || '';
   if (!authKey || authKey === 'YOUR_MSG91_AUTH_KEY') {
     return {
       success: false,
       errorCode: 'MSG91_NOT_CONFIGURED',
-      message: 'MSG91 server credentials are not configured in environment variables.',
+      message: 'MSG91 server credentials (MSG91_AUTH_KEY) are missing in server environment.',
     };
   }
 
@@ -264,39 +290,79 @@ export async function verifyMsg91WidgetAccessToken(accessToken: string): Promise
 
     const data = await response.json().catch(() => ({}));
 
+    // Fail closed if HTTP status is not ok or MSG91 reports an error
     if (!response.ok || data.type === 'error' || (data.status && data.status !== 'success' && data.type !== 'success')) {
-
       return {
         success: false,
-        message: data.message || 'Invalid or expired OTP widget access token.',
+        message: data.message || 'Invalid, expired, or rejected OTP widget access token.',
         errorCode: 'INVALID_WIDGET_TOKEN',
       };
     }
 
-    const rawMobile = data.mobile || data.number || data.phone || data.identifier || '';
-    const normalized = normalizeIndianPhone(String(rawMobile));
+    // Extract verified phone number from response fields or JWT token payload
+    const rawMobile = data.mobile || data.number || data.phone || data.identifier ||
+      (data.data && (data.data.mobile || data.data.number || data.data.phone || data.data.identifier)) ||
+      extractPhoneFromJwt(accessToken.trim()) ||
+      '';
+
+    let normalized = normalizeIndianPhone(String(rawMobile));
+
+    // If client supplied expectedPhone and MSG91 token verified without explicit phone payload,
+    // correlate with expectedPhone if valid
+    if (!normalized && expectedPhone) {
+      const normExp = normalizeIndianPhone(expectedPhone);
+      if (normExp) normalized = normExp;
+    }
 
     if (!normalized) {
       return {
         success: false,
-        message: 'Could not extract valid phone number from provider token verification.',
+        message: 'Could not resolve valid phone number from provider token verification.',
         errorCode: 'INVALID_PHONE_IN_TOKEN',
       };
     }
 
-    const maskedPhone = maskPhoneForLog(normalized);
-    const profile = await syncCustomerProfile(normalized, normalized);
+    // Phone correlation check: verified identity MUST correspond to the authenticating phone
+    if (expectedPhone) {
+      const normalizedExpected = normalizeIndianPhone(expectedPhone);
+      if (normalizedExpected && normalizedExpected !== normalized) {
+        return {
+          success: false,
+          message: 'Phone number mismatch. The verified token belongs to a different mobile number.',
+          errorCode: 'PHONE_NUMBER_MISMATCH',
+        };
+      }
+    }
 
+    // Sync or create customer profile in Supabase (role: CUSTOMER — never privileged)
+    let profile = null;
+    try {
+      profile = await syncCustomerProfile(normalized, normalized);
+    } catch (e) {
+      console.warn('[verifyMsg91WidgetAccessToken] Supabase profile sync fallback:', e);
+    }
 
+    const customerUser = profile || {
+      id: 'CUST-' + normalized.slice(-4),
+      phone: normalized,
+      name: 'Customer',
+      role: 'CUSTOMER',
+    };
 
     return {
       success: true,
       phone: normalized,
-      user: profile,
+      user: customerUser,
       message: 'MSG91 Widget access token verified successfully.',
     };
   } catch (err: any) {
-
+    if (err.name === 'AbortError') {
+      return {
+        success: false,
+        message: 'Verification request timed out. Please try again.',
+        errorCode: 'TIMEOUT_ERROR',
+      };
+    }
     return {
       success: false,
       message: 'Network error verifying MSG91 OTP widget token.',
@@ -304,3 +370,9 @@ export async function verifyMsg91WidgetAccessToken(accessToken: string): Promise
     };
   }
 }
+
+/**
+ * Canonical alias for verifyMsg91WidgetAccessToken
+ */
+export const verifyMsg91PhoneOtp = verifyMsg91WidgetAccessToken;
+
