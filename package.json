@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "vercel-build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "colab": "node scripts/colab_bridge/cli.js ask",
