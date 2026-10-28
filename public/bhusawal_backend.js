@@ -10,8 +10,21 @@
  * Real-Time Broadcasting: BroadcastChannel('bhusawal_realtime_sync')
  */
 
-(function(window) {
+(function(root, factory) {
+  var backendInstance = factory(root);
+  if (typeof exports === 'object' && typeof module !== 'undefined') {
+    module.exports = backendInstance;
+  }
+  if (typeof root !== 'undefined') {
+    root.BhusawalBackend = backendInstance;
+  }
+  if (typeof globalThis !== 'undefined') {
+    globalThis.BhusawalBackend = backendInstance;
+  }
+})(typeof globalThis !== 'undefined' ? globalThis : (typeof window !== 'undefined' ? window : this), function(root) {
   'use strict';
+
+  var rootScope = root || (typeof window !== 'undefined' ? window : (typeof globalThis !== 'undefined' ? globalThis : this));
 
   // Shared Central Database Storage Keys
   var DB_KEYS = {
@@ -54,15 +67,17 @@
   }
 
   // Storage fallback for cross-tab sync if BroadcastChannel unavailable
-  window.addEventListener('storage', function(e) {
-    if (e.key === DB_KEYS.ORDERS) {
-      emitRealTimeEvent('ORDERS_SYNCED', BhusawalBackend.orders.getAll());
-    } else if (e.key === DB_KEYS.RIDERS) {
-      emitRealTimeEvent('RIDERS_SYNCED', BhusawalBackend.riders.getAll());
-    } else if (e.key === DB_KEYS.NOTIFICATIONS) {
-      emitRealTimeEvent('NOTIFICATIONS_SYNCED', BhusawalBackend.notifications.getAll());
-    }
-  });
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('storage', function(e) {
+      if (e.key === DB_KEYS.ORDERS) {
+        emitRealTimeEvent('ORDERS_SYNCED', BhusawalBackend.orders.getAll());
+      } else if (e.key === DB_KEYS.RIDERS) {
+        emitRealTimeEvent('RIDERS_SYNCED', BhusawalBackend.riders.getAll());
+      } else if (e.key === DB_KEYS.NOTIFICATIONS) {
+        emitRealTimeEvent('NOTIFICATIONS_SYNCED', BhusawalBackend.notifications.getAll());
+      }
+    });
+  }
 
   if (channel) {
     channel.onmessage = function(e) {
@@ -74,18 +89,26 @@
     };
   }
 
-  // Universal Helper for JSON LocalStorage
+  // Universal Helper for JSON LocalStorage with in-memory fallback
+  var memoryDb = {};
+
   function readCollection(key, defaultVal) {
     try {
-      var data = localStorage.getItem(key);
-      if (data) return JSON.parse(data);
+      if (typeof localStorage !== 'undefined') {
+        var data = localStorage.getItem(key);
+        if (data) return JSON.parse(data);
+      }
     } catch(e) {}
-    return defaultVal || [];
+    if (memoryDb[key]) return JSON.parse(JSON.stringify(memoryDb[key]));
+    return defaultVal !== undefined ? defaultVal : [];
   }
 
   function writeCollection(key, data) {
+    memoryDb[key] = JSON.parse(JSON.stringify(data));
     try {
-      localStorage.setItem(key, JSON.stringify(data));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(key, JSON.stringify(data));
+      }
     } catch(e) {}
   }
 
@@ -95,7 +118,7 @@
 
     // Access Master Relational Database Engine
     db: function() {
-      return window.BhusawalMasterDB;
+      return rootScope.BhusawalMasterDB;
     },
 
     // Subscribe to real-time events
@@ -135,8 +158,8 @@
         writeCollection(DB_KEYS.ORDERS, orders);
 
         // Sync into Master Relational DB tbl_orders
-        if (window.BhusawalMasterDB) {
-          window.BhusawalMasterDB.insertRecord('tbl_orders', orderData, 'ORD');
+        if (rootScope.BhusawalMasterDB) {
+          rootScope.BhusawalMasterDB.insertRecord('tbl_orders', orderData, 'ORD');
         }
 
         // Recalculate customer behavior metrics
@@ -148,10 +171,10 @@
         emitRealTimeEvent('ORDERS_SYNCED', orders);
 
         // Unified Notification System: Order Placed
-        if (window.BhusawalUnifiedNotificationSystem) {
-          window.BhusawalUnifiedNotificationSystem.send({ targetRole: 'customer', type: 'order', title: 'Order Placed', message: 'Your order ' + orderData.id + ' has been placed successfully!', link: '/track_order?id=' + orderData.id });
-          window.BhusawalUnifiedNotificationSystem.send({ targetRole: 'admin', type: 'order', title: 'New Order Received', message: 'Order ' + orderData.id + ' from ' + (orderData.customerName || 'Customer') + ' — ₹' + (orderData.total || orderData.amount || '0'), link: '/admin' });
-          window.BhusawalUnifiedNotificationSystem.send({ targetRole: 'shop', type: 'order', title: 'New Order Alert', message: 'Prepare order ' + orderData.id + ' — ' + (orderData.items ? orderData.items.length + ' items' : ''), link: '/admin' });
+        if (rootScope.BhusawalUnifiedNotificationSystem) {
+          rootScope.BhusawalUnifiedNotificationSystem.send({ targetRole: 'customer', type: 'order', title: 'Order Placed', message: 'Your order ' + orderData.id + ' has been placed successfully!', link: '/track_order?id=' + orderData.id });
+          rootScope.BhusawalUnifiedNotificationSystem.send({ targetRole: 'admin', type: 'order', title: 'New Order Received', message: 'Order ' + orderData.id + ' from ' + (orderData.customerName || 'Customer') + ' — ₹' + (orderData.total || orderData.amount || '0'), link: '/admin' });
+          rootScope.BhusawalUnifiedNotificationSystem.send({ targetRole: 'shop', type: 'order', title: 'New Order Alert', message: 'Prepare order ' + orderData.id + ' — ' + (orderData.items ? orderData.items.length + ' items' : ''), link: '/admin' });
         }
 
         return orderData;
@@ -170,8 +193,8 @@
           }
           writeCollection(DB_KEYS.ORDERS, orders);
 
-          if (window.BhusawalMasterDB) {
-            window.BhusawalMasterDB.updateRecord('tbl_orders', orderId, { status: status });
+          if (rootScope.BhusawalMasterDB) {
+            rootScope.BhusawalMasterDB.updateRecord('tbl_orders', orderId, { status: status });
           }
 
           // Recalculate analytics on status update
@@ -187,12 +210,180 @@
       },
 
       assignRider: function(orderId, riderId, riderName, riderPhone) {
+        var order = this.getById(orderId);
+        if (!order) return { success: false, error: 'Order not found' };
+
+        // RACE CONDITION / DUPLICATE ASSIGNMENT GUARD (SCENARIO 15):
+        if (order.riderId && order.riderId !== riderId) {
+          console.warn('⚠️ Race condition blocked: Order #' + orderId + ' already assigned to Rider ' + order.riderId);
+          return { success: false, error: 'Order already accepted by another partner', raceConditionBlocked: true, assignedRiderId: order.riderId };
+        }
+
+        // SERVER-SIDE DISPATCH GUARD: Passenger exclusivity & multi-order capacity
+        var engine = (typeof BslFleetEngine !== 'undefined' ? BslFleetEngine : (root && root.BslFleetEngine ? root.BslFleetEngine : (typeof globalThis !== 'undefined' && globalThis.BslFleetEngine ? globalThis.BslFleetEngine : null)));
+        if (engine) {
+          var rider = BhusawalBackend.riders.getById(riderId);
+          if (rider) {
+            var check = engine.canReceiveOrder(rider, order);
+            if (!check.canReceive) {
+              console.warn('⚠️ Server-Side Dispatch Guard Blocked Assignment:', check.reason);
+              return { success: false, error: check.reason, blocked: true };
+            }
+          }
+        }
+
+        // Attach order to rider's active orders & update state
+        var riderObj = BhusawalBackend.riders.getById(riderId);
+        if (riderObj) {
+          if (!Array.isArray(riderObj.activeOrders)) riderObj.activeOrders = [];
+          var exists = riderObj.activeOrders.some(function(o) { return o.id === orderId; });
+          if (!exists) {
+            riderObj.activeOrders.push(order);
+          }
+          riderObj.activeOrderId = orderId;
+          riderObj.activeOrdersCount = riderObj.activeOrders.length;
+
+          var isPax = engine ? engine.isPassengerOrder(order) : (order.type === 'PASSENGER');
+          if (isPax) {
+            riderObj.state = 'PASSENGER_PICKUP';
+            riderObj.isPassengerLocked = true;
+          } else {
+            riderObj.state = riderObj.activeOrders.length > 1 ? 'MULTI_ORDER' : 'GOING_TO_PICKUP';
+          }
+          BhusawalBackend.riders.save(riderObj);
+        }
+
         return this.updateStatus(orderId, 'partner_accepted', {
           riderId: riderId,
           riderName: riderName,
           riderPhone: riderPhone,
           assignedAt: new Date().toISOString()
         });
+      },
+
+      rejectOrder: function(orderId, riderId, reason) {
+        var order = this.getById(orderId);
+        if (!order) return { success: false, error: 'Order not found' };
+        if (!Array.isArray(order.rejectedBy)) order.rejectedBy = [];
+        if (order.rejectedBy.indexOf(riderId) < 0) {
+          order.rejectedBy.push(riderId);
+        }
+        order.lastRejectedAt = new Date().toISOString();
+        var updated = this.updateStatus(orderId, order.status || 'placed', {
+          rejectedBy: order.rejectedBy,
+          lastRejectedReason: reason || 'Rider declined offer'
+        });
+        emitRealTimeEvent('ORDER_REJECTED_BY_RIDER', { orderId: orderId, riderId: riderId, reason: reason });
+        return { success: true, orderId: orderId, rejectedBy: order.rejectedBy, order: updated };
+      },
+
+      cancelByRider: function(orderId, riderId, reason) {
+        var order = this.getById(orderId);
+        if (!order) return { success: false, error: 'Order not found' };
+
+        var updated = this.updateStatus(orderId, 'escalated_reassign', {
+          riderId: null,
+          riderName: null,
+          riderPhone: null,
+          previousRiderId: riderId,
+          cancellationReason: reason || 'Rider cancelled active delivery',
+          cancelledByRiderAt: new Date().toISOString()
+        });
+
+        var rider = BhusawalBackend.riders.getById(riderId);
+        if (rider) {
+          if (Array.isArray(rider.activeOrders)) {
+            rider.activeOrders = rider.activeOrders.filter(function(o) { return o.id !== orderId; });
+          }
+          if (rider.activeOrderId === orderId) rider.activeOrderId = null;
+          rider.activeOrdersCount = Array.isArray(rider.activeOrders) ? rider.activeOrders.length : 0;
+          if (rider.activeOrdersCount === 0 && rider.state !== 'OFFLINE' && rider.state !== 'SUSPENDED') {
+            BhusawalBackend.riders.transitionState(rider, 'AVAILABLE');
+          } else {
+            BhusawalBackend.riders.save(rider);
+          }
+        }
+
+        emitRealTimeEvent('ORDER_ESCALATED_REASSIGN', { orderId: orderId, previousRiderId: riderId, reason: reason });
+        return { success: true, orderId: orderId, status: 'escalated_reassign', order: updated };
+      },
+
+      cancelByCustomer: function(orderId, reason) {
+        var order = this.getById(orderId);
+        if (!order) return { success: false, error: 'Order not found' };
+
+        var assignedRiderId = order.riderId;
+
+        var updated = this.updateStatus(orderId, 'cancelled', {
+          cancelledBy: 'customer',
+          cancelReason: reason || 'Customer cancelled order',
+          cancelledAt: new Date().toISOString()
+        });
+
+        if (assignedRiderId) {
+          var rider = BhusawalBackend.riders.getById(assignedRiderId);
+          if (rider) {
+            if (Array.isArray(rider.activeOrders)) {
+              rider.activeOrders = rider.activeOrders.filter(function(o) { return o.id !== orderId; });
+            }
+            if (rider.activeOrderId === orderId) rider.activeOrderId = null;
+            rider.activeOrdersCount = Array.isArray(rider.activeOrders) ? rider.activeOrders.length : 0;
+            if (rider.activeOrdersCount === 0 && rider.state !== 'OFFLINE' && rider.state !== 'SUSPENDED') {
+              BhusawalBackend.riders.transitionState(rider, 'AVAILABLE');
+            } else {
+              BhusawalBackend.riders.save(rider);
+            }
+          }
+
+          if (root && root.BhusawalUnifiedNotificationSystem) {
+            root.BhusawalUnifiedNotificationSystem.send({
+              targetRole: 'rider',
+              riderId: assignedRiderId,
+              type: 'order_cancelled',
+              title: 'Order Cancelled',
+              message: 'Customer cancelled order #' + orderId + (reason ? ' (' + reason + ')' : '')
+            });
+          }
+        }
+
+        emitRealTimeEvent('ORDER_CANCELLED_BY_CUSTOMER', { orderId: orderId, reason: reason });
+        return { success: true, orderId: orderId, status: 'cancelled', order: updated };
+      },
+
+      collectCodPayment: function(orderId, amountCollected, riderId) {
+        var order = this.getById(orderId);
+        if (!order) return { success: false, error: 'Order not found' };
+
+        var amount = Number(amountCollected !== undefined ? amountCollected : (order.total || order.amount || 0));
+
+        var updatedOrder = this.updateStatus(orderId, 'delivered', {
+          paymentStatus: 'PAID',
+          paymentMethod: 'COD',
+          codCollected: true,
+          codAmount: amount,
+          codCollectedAt: new Date().toISOString(),
+          completedAt: new Date().toISOString()
+        });
+
+        if (riderId) {
+          var rider = BhusawalBackend.riders.getById(riderId);
+          if (rider) {
+            rider.cashInHand = (rider.cashInHand || 0) + amount;
+            if (Array.isArray(rider.activeOrders)) {
+              rider.activeOrders = rider.activeOrders.filter(function(o) { return o.id !== orderId; });
+            }
+            if (rider.activeOrderId === orderId) rider.activeOrderId = null;
+            rider.activeOrdersCount = Array.isArray(rider.activeOrders) ? rider.activeOrders.length : 0;
+            if (rider.activeOrdersCount === 0 && rider.state !== 'OFFLINE') {
+              BhusawalBackend.riders.transitionState(rider, 'AVAILABLE');
+            } else {
+              BhusawalBackend.riders.save(rider);
+            }
+          }
+        }
+
+        emitRealTimeEvent('COD_PAYMENT_COLLECTED', { orderId: orderId, amount: amount, riderId: riderId });
+        return { success: true, order: updatedOrder, amountCollected: amount };
       }
     },
 
@@ -217,13 +408,50 @@
         }
         writeCollection(DB_KEYS.RIDERS, riders);
 
-        if (window.BhusawalMasterDB) {
-          window.BhusawalMasterDB.insertRecord('tbl_delivery_partners', riderData, 'RIDER');
+        if (rootScope.BhusawalMasterDB) {
+          rootScope.BhusawalMasterDB.insertRecord('tbl_delivery_partners', riderData, 'RIDER');
         }
 
         emitRealTimeEvent('RIDER_UPDATED', riderData);
         emitRealTimeEvent('RIDERS_SYNCED', riders);
         return riderData;
+      },
+
+      transitionState: function(riderOrId, targetState, context) {
+        var rider = (typeof riderOrId === 'object' && riderOrId !== null) ? riderOrId : this.getById(riderOrId);
+        if (!rider) return { success: false, error: 'Rider not found' };
+        if (rootScope.BslFleetEngine) {
+          var res = rootScope.BslFleetEngine.transitionRiderState(rider, targetState, context);
+          if (res.success) {
+            this.save(rider);
+          }
+          return res;
+        }
+        rider.state = targetState;
+        this.save(rider);
+        return { success: true, currentState: targetState };
+      },
+
+      canReceiveOrder: function(riderId, order) {
+        var rider = this.getById(riderId);
+        if (!rider) return { canReceive: false, reason: 'Rider not found' };
+        if (rootScope.BslFleetEngine) {
+          return rootScope.BslFleetEngine.canReceiveOrder(rider, order);
+        }
+        return { canReceive: rider.isOnline === true, reason: 'Legacy fallback check' };
+      },
+
+      canAcceptOrder: function(riderId, order) {
+        var rider = this.getById(riderId);
+        if (!rider) return { canAccept: false, reason: 'Rider not found' };
+        if (rootScope.BslFleetEngine) {
+          return rootScope.BslFleetEngine.canAcceptOrder(rider, order);
+        }
+        return { canAccept: rider.isOnline === true, reason: 'Legacy fallback check' };
+      },
+
+      fleetEngine: function() {
+        return rootScope.BslFleetEngine || null;
       }
     },
 
@@ -352,8 +580,8 @@
 
         writeCollection(DB_KEYS.CUSTOMERS, customers);
 
-        if (window.BhusawalMasterDB) {
-          window.BhusawalMasterDB.insertRecord('tbl_customers', custData, 'CUST');
+        if (rootScope.BhusawalMasterDB) {
+          rootScope.BhusawalMasterDB.insertRecord('tbl_customers', custData, 'CUST');
         }
 
         emitRealTimeEvent('CUSTOMERS_SYNCED', customers);
@@ -382,10 +610,10 @@
         }
         writeCollection(DB_KEYS.MERCHANTS, merchants);
 
-        if (window.BhusawalMasterDB) {
-          if (merchantData.category === 'Grocery') window.BhusawalMasterDB.insertRecord('tbl_partner_shops', merchantData, 'SHOP');
-          else if (merchantData.category === 'Restaurant') window.BhusawalMasterDB.insertRecord('tbl_restaurants', merchantData, 'REST');
-          else if (merchantData.category === 'Medical') window.BhusawalMasterDB.insertRecord('tbl_medical_stores', merchantData, 'MED');
+        if (rootScope.BhusawalMasterDB) {
+          if (merchantData.category === 'Grocery') rootScope.BhusawalMasterDB.insertRecord('tbl_partner_shops', merchantData, 'SHOP');
+          else if (merchantData.category === 'Restaurant') rootScope.BhusawalMasterDB.insertRecord('tbl_restaurants', merchantData, 'REST');
+          else if (merchantData.category === 'Medical') rootScope.BhusawalMasterDB.insertRecord('tbl_medical_stores', merchantData, 'MED');
         }
 
         emitRealTimeEvent('MERCHANTS_SYNCED', merchants);
@@ -415,8 +643,8 @@
         notifs.unshift(notif);
         writeCollection(DB_KEYS.NOTIFICATIONS, notifs);
 
-        if (window.BhusawalMasterDB) {
-          window.BhusawalMasterDB.insertRecord('tbl_notifications', notif, 'NOTIF');
+        if (rootScope.BhusawalMasterDB) {
+          rootScope.BhusawalMasterDB.insertRecord('tbl_notifications', notif, 'NOTIF');
         }
 
         emitRealTimeEvent('NOTIFICATION_SENT', notif);
@@ -434,8 +662,8 @@
       save: function(data) {
         writeCollection(DB_KEYS.SETTINGS, data);
 
-        if (window.BhusawalMasterDB) {
-          window.BhusawalMasterDB.insertRecord('tbl_settings', data, 'SETT');
+        if (rootScope.BhusawalMasterDB) {
+          rootScope.BhusawalMasterDB.insertRecord('tbl_settings', data, 'SETT');
         }
 
         emitRealTimeEvent('SETTINGS_UPDATED', data);
@@ -444,7 +672,7 @@
     }
   };
 
-  // Expose to window object
-  window.BhusawalBackend = BhusawalBackend;
+  // Return Singleton from factory
+  return BhusawalBackend;
+});
 
-})(window);

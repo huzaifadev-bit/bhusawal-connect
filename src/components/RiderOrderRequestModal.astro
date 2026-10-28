@@ -1,0 +1,130 @@
+---
+// Bhusawal Connect - Reusable Unified Rider Order Request Component
+// Supports all 6 order types: GROCERY, FOOD, MEDICINE, PARCEL, PICKUP_DROP, PASSENGER
+---
+
+<!-- ==================== REUSABLE UNIFIED ORDER REQUEST MODAL (25s COUNTDOWN) ==================== -->
+<div id="modal-unified-order-request" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+  
+  <!-- DYNAMIC THEMED CARD BOX -->
+  <div id="req-card-box" class="w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-3.5 border-2 border-slate-700 bg-slate-900 text-white transition-all">
+
+    <!-- 1. HEADER: SERVICE TYPE ICON, TITLE, BADGE, AND TIMER -->
+    <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-10 h-10 rounded-2xl bg-slate-800/90 border border-slate-700 flex items-center justify-center text-white shrink-0 shadow-inner">
+          <span id="req-service-icon" class="material-symbols-outlined text-2xl">two_wheeler</span>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5">
+            <h3 id="req-service-title" class="text-sm font-black text-white leading-tight truncate">GROCERY DELIVERY</h3>
+          </div>
+          <span id="req-service-badge" class="inline-block mt-0.5 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30">
+            GROCERY
+          </span>
+        </div>
+      </div>
+
+      <!-- COUNTDOWN TIMER BADGE -->
+      <div class="text-center bg-slate-950/90 px-3 py-1.5 rounded-xl border border-slate-800 shrink-0">
+        <span class="text-[9px] font-bold text-slate-400 block uppercase tracking-widest">Timeout</span>
+        <span id="req-timer-val" class="text-sm font-black text-amber-400 font-mono">25s</span>
+      </div>
+    </div>
+
+    <!-- 2. COUNTDOWN PROGRESS BAR -->
+    <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-800">
+      <div id="req-timer-bar" class="bg-gradient-to-r from-amber-500 to-emerald-500 h-1.5 w-full transition-all duration-1000 ease-linear"></div>
+    </div>
+
+    <!-- 3. PRIORITY / FRESHNESS / EMERGENCY INDICATOR -->
+    <div id="req-priority-container" class="p-2.5 rounded-xl border flex items-center gap-2 bg-slate-950/80 border-slate-800 text-slate-300 text-xs font-semibold">
+      <span class="material-symbols-outlined text-base shrink-0">info</span>
+      <span id="req-priority-text" class="text-[11px] leading-tight font-extrabold truncate">Standard Delivery (SLA: 35m)</span>
+    </div>
+
+    <!-- 4. PASSENGER EXCLUSIVITY WARNING (MANDATORY & VISUALLY PROMINENT FOR PASSENGER RIDES) -->
+    <div id="req-passenger-warning-banner" class="hidden bg-amber-400/20 border-2 border-amber-400/60 rounded-xl p-3 text-amber-200 text-xs space-y-1 shadow-lg">
+      <div class="flex items-center gap-1.5 font-black text-amber-300">
+        <span class="material-symbols-outlined text-base animate-pulse">lock</span>
+        <span>PASSENGER EXCLUSIVITY RULE</span>
+      </div>
+      <p class="text-[11px] font-bold leading-snug text-white">
+        "Accepting this ride will temporarily pause other order requests."
+      </p>
+      <p class="text-[10px] text-amber-300/80">
+        All grocery, food, medicine, and parcel dispatches are blocked until trip completion.
+      </p>
+    </div>
+
+    <!-- 5. LOCATION DETAILS: PICKUP & DROP WITH DISTANCES -->
+    <div class="space-y-2 text-xs bg-slate-950/70 p-3 rounded-2xl border border-slate-800/80">
+      
+      <!-- Pickup Address & Distance -->
+      <div class="flex items-start gap-2.5">
+        <div class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0 mt-0.5">
+          <span class="material-symbols-outlined text-xs">storefront</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center justify-between">
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Pickup</span>
+            <span id="req-pickup-dist" class="text-[10px] font-black text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded border border-amber-400/20">1.2 km away</span>
+          </div>
+          <p id="req-pickup-name" class="font-extrabold text-white text-xs truncate mt-0.5">Saijeevan Super Shoppy, Station Road</p>
+        </div>
+      </div>
+
+      <!-- Drop Address & Distance -->
+      <div class="flex items-start gap-2.5 pt-1.5 border-t border-slate-800">
+        <div class="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center justify-center shrink-0 mt-0.5">
+          <span class="material-symbols-outlined text-xs">location_on</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center justify-between">
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Customer Drop</span>
+            <span id="req-drop-dist" class="text-[10px] font-black text-blue-400 bg-blue-400/10 px-1.5 py-0.5 rounded border border-blue-400/20">Drop: 2.4 km</span>
+          </div>
+          <p id="req-drop-name" class="font-extrabold text-white text-xs truncate mt-0.5">Flat 302, Vardhaman Residency, Jamner Road</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 6. METRIC PILLS: ESTIMATED EARNINGS & TIME -->
+    <div class="grid grid-cols-2 gap-2">
+      <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 text-center">
+        <span class="text-[9px] font-bold text-slate-400 uppercase block tracking-wider">Estimated Earning</span>
+        <span id="req-earning-val" class="text-lg font-black text-emerald-400 font-display">₹38</span>
+      </div>
+      <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 text-center">
+        <span class="text-[9px] font-bold text-slate-400 uppercase block tracking-wider">Estimated Time</span>
+        <span id="req-time-val" class="text-sm font-black text-white mt-0.5 block">18 mins</span>
+      </div>
+    </div>
+
+    <!-- 7. RELEVANT PACKAGE / ORDER SPECIFICATIONS -->
+    <div id="req-package-info-box" class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/60 text-[11px] text-slate-300 flex items-center gap-2">
+      <span class="material-symbols-outlined text-slate-400 text-sm shrink-0">inventory</span>
+      <span id="req-package-info-text" class="font-semibold truncate">2 Bags • 8 Items (Fresh Produce & Groceries)</span>
+    </div>
+
+    <!-- 8. ACTIONS: DECLINE VS ACCEPT -->
+    <div class="grid grid-cols-2 gap-2.5 pt-1">
+      <button
+        id="btn-order-request-decline"
+        class="py-3.5 px-4 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 hover:text-white font-extrabold text-xs rounded-xl border border-slate-700 transition-all cursor-pointer text-center"
+      >
+        Decline
+      </button>
+
+      <button
+        id="btn-order-request-accept"
+        class="py-3.5 px-4 font-black text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer bg-emerald-600 hover:bg-emerald-500 text-white"
+      >
+        <span id="req-btn-accept-text">Accept Order</span>
+        <span class="material-symbols-outlined text-base">check_circle</span>
+      </button>
+    </div>
+
+  </div>
+</div>

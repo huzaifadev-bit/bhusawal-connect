@@ -14,6 +14,10 @@ import Switcher from '../components/Switcher.astro';
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" is:inline></script>
   <script src="/assets/realtime_sync.js" is:inline></script>
+  <script src="/bhusawal_master_db.js" is:inline></script>
+  <script src="/bhusawal_backend.js" is:inline></script>
+  <script src="/assets/bsl_rider_fleet_engine.js" is:inline></script>
+  <script src="/bhusawal_dispatch_engine.js" is:inline></script>
 
   <style>
     * { -webkit-tap-highlight-color: transparent; }
@@ -31,10 +35,13 @@ import Switcher from '../components/Switcher.astro';
         </div>
         <div>
           <h1 class="text-base font-black text-white leading-tight">Admin Fleet Control Center</h1>
-          <p class="text-xs font-bold text-slate-400">Real-Time Bhusawal Fleet Monitoring & Auto-Rider Dispatch Engine</p>
+          <p class="text-xs font-bold text-slate-400">ONE Shared Delivery Fleet • 16-Point Intelligent Dispatch Engine</p>
         </div>
       </div>
       <div class="flex items-center gap-3">
+        <a href="/dispatch_qa" class="bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/40 text-indigo-300 text-xs font-black px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all">
+          <span>🧪 Dispatch QA Audit</span>
+        </a>
         <span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-black px-3 py-1.5 rounded-full flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Real-time Fleet Sync Active
         </span>
@@ -48,26 +55,26 @@ import Switcher from '../components/Switcher.astro';
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
       <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-xl space-y-1">
         <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Active Fleet Riders</p>
-        <h2 class="text-2xl font-black text-emerald-400">3 Riders</h2>
-        <p class="text-[11px] text-slate-400 font-bold">2 Free • 1 On Delivery</p>
+        <h2 id="kpi-active-riders" class="text-2xl font-black text-emerald-400">3 Riders</h2>
+        <p class="text-[11px] text-slate-400 font-bold">Universal Fleet (All 6 Verticals)</p>
       </div>
 
       <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-xl space-y-1">
         <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Pending Orders</p>
         <h2 id="kpi-pending-orders" class="text-2xl font-black text-amber-400">0 Orders</h2>
-        <p class="text-[11px] text-slate-400 font-bold">Auto-Assigning Nearest</p>
+        <p class="text-[11px] text-slate-400 font-bold">16-Point Match Ready</p>
       </div>
 
       <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-xl space-y-1">
         <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Avg Bhusawal ETA</p>
         <h2 class="text-2xl font-black text-purple-400">8.4 Mins</h2>
-        <p class="text-[11px] text-slate-400 font-bold">Target: &lt; 10 Mins</p>
+        <p class="text-[11px] text-slate-400 font-bold">Traffic Congestion Factored</p>
       </div>
 
       <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-xl space-y-1">
-        <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Today Completed</p>
-        <h2 class="text-2xl font-black text-blue-400">142 Orders</h2>
-        <p class="text-[11px] text-slate-400 font-bold">100% On-Time Payout</p>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Dispatch Decisions</p>
+        <h2 id="kpi-dispatch-count" class="text-2xl font-black text-blue-400">0 Logged</h2>
+        <p class="text-[11px] text-slate-400 font-bold">Audit Trail Explainability</p>
       </div>
     </div>
 
@@ -78,18 +85,18 @@ import Switcher from '../components/Switcher.astro';
       <div class="lg:col-span-2 bg-slate-900 p-4 rounded-3xl border border-slate-800 shadow-xl space-y-3">
         <div class="flex items-center justify-between px-2">
           <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
-            <span>🗺️ Live Bhusawal Rider Fleet Map</span>
+            <span>🗺️ Live Bhusawal Shared Fleet Map</span>
           </h3>
-          <span class="text-[10px] font-extrabold text-slate-400">Updating GPS in Realtime</span>
+          <span class="text-[10px] font-extrabold text-slate-400">Centered on Bhusawal Metropolitan Service Area</span>
         </div>
-        <div id="admin-fleet-map" class="h-[500px] w-full rounded-2xl border border-slate-800"></div>
+        <div id="admin-fleet-map" class="h-[460px] w-full rounded-2xl border border-slate-800"></div>
       </div>
 
-      <!-- Pending Orders & Rider Dispatch Control (1 Column) -->
+      <!-- Active Riders & Quick Dispatch (1 Column) -->
       <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-xl space-y-4">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <h3 class="text-xs font-black text-white uppercase tracking-wider">⚡ Dispatch Management</h3>
-          <span class="bg-purple-500/20 text-purple-400 text-[10px] font-black px-2.5 py-0.5 rounded-full">Auto-Dispatch ON</span>
+          <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-black px-2.5 py-0.5 rounded-full">Shared Fleet Engine v3</span>
         </div>
 
         <!-- Rider Fleet Table -->
@@ -101,41 +108,167 @@ import Switcher from '../components/Switcher.astro';
               <p class="font-black text-white">Huzaifa Shaikh</p>
               <p class="text-[10px] text-emerald-400 font-bold" id="huzaifa-status">🟢 ONLINE • Free (Station Rd)</p>
             </div>
-            <button id="btn-assign-huzaifa" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-black px-3 py-1 rounded-xl hover:bg-emerald-500/30">Assign Order</button>
+            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-lg">Available</span>
           </div>
 
           <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80 flex items-center justify-between text-xs">
             <div>
               <p class="font-black text-white">Rahul Patil</p>
-              <p class="text-[10px] text-blue-400 font-bold">🔵 ON DELIVERY (#ORD-8921)</p>
+              <p class="text-[10px] text-blue-400 font-bold" id="rahul-status">🔵 ON DELIVERY (#ORD-8921)</p>
             </div>
-            <button class="bg-slate-700 text-slate-400 text-[10px] font-black px-3 py-1 rounded-xl">Busy</button>
+            <span class="bg-blue-500/10 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-2 py-0.5 rounded-lg">Delivering</span>
           </div>
 
           <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80 flex items-center justify-between text-xs">
             <div>
               <p class="font-black text-white">Vikas Mahajan</p>
-              <p class="text-[10px] text-emerald-400 font-bold">🟢 ONLINE • Free (Jamner Rd)</p>
+              <p class="text-[10px] text-emerald-400 font-bold" id="vikas-status">🟢 ONLINE • Free (Jamner Rd)</p>
             </div>
-            <button class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-black px-3 py-1 rounded-xl hover:bg-emerald-500/30">Assign Order</button>
+            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-lg">Available</span>
           </div>
         </div>
 
         <div class="border-t border-slate-800 pt-3 space-y-2">
           <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-wider">Auto-Rider Engine</h4>
-          <button id="btn-auto-assign" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-black text-xs py-2.5 rounded-xl shadow-md transition-all">
-            ⚡ Auto-Assign Pending Orders to Nearest Rider
+          <button id="btn-auto-assign" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-black text-xs py-3 rounded-xl shadow-lg shadow-purple-600/20 active:scale-98 transition-all flex items-center justify-center gap-2">
+            <span>⚡ Auto-Assign Pending Orders (16-Point Match)</span>
           </button>
         </div>
       </div>
 
     </div>
 
+    <!-- Admin Configuration & Dispatch Simulator Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Configuration Tuning Panel (bhusawal_fleet_config) -->
+      <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-xs font-black text-white uppercase tracking-wider">⚙️ Fleet Dispatch Parameters (Configurable)</h3>
+            <p class="text-[10px] text-slate-400">Stored centrally in bhusawal_fleet_config — runtime tunable</p>
+          </div>
+          <span class="text-[10px] bg-slate-800 text-slate-300 font-mono px-2 py-0.5 rounded-lg">Live Synced</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slate-300 block">Max Concurrent Orders</label>
+            <input type="number" id="cfg-max-orders" min="1" max="5" value="3" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-indigo-500" />
+            <p class="text-[10px] text-slate-500">Cap on stacked deliveries per rider</p>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slate-300 block">Max Detour Distance (km)</label>
+            <input type="number" step="0.1" id="cfg-max-detour-km" min="0.5" max="3.0" value="1.2" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-indigo-500" />
+            <p class="text-[10px] text-slate-500">Max allowable extra km for multi-order</p>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slate-300 block">Max Detour Time (mins)</label>
+            <input type="number" id="cfg-max-detour-time" min="2" max="15" value="6" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-indigo-500" />
+            <p class="text-[10px] text-slate-500">Max allowable delay to active orders</p>
+          </div>
+
+          <div class="space-y-1">
+            <label class="text-[11px] font-bold text-slate-300 block">Total Capacity Units</label>
+            <input type="number" id="cfg-total-capacity" min="5" max="15" value="10" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-indigo-500" />
+            <p class="text-[10px] text-slate-500">Two-wheeler volumetric cargo limit</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 pt-2">
+          <button id="btn-save-cfg" class="bg-indigo-600 hover:bg-indigo-500 text-white font-black text-xs px-4 py-2.5 rounded-xl transition-all shadow-md">
+            Save Fleet Configuration
+          </button>
+          <button id="btn-reset-cfg" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs px-4 py-2.5 rounded-xl transition-all">
+            Reset to Defaults
+          </button>
+          <span id="cfg-toast" class="text-xs font-bold text-emerald-400 opacity-0 transition-opacity">Saved successfully!</span>
+        </div>
+      </div>
+
+      <!-- Quick Dispatch Simulation & Test Trigger -->
+      <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="text-xs font-black text-white uppercase tracking-wider">🧪 Dispatch Simulation Sandbox</h3>
+            <p class="text-[10px] text-slate-400">Test order evaluation across all 16 criteria live</p>
+          </div>
+          <span class="text-[10px] bg-purple-500/20 text-purple-300 font-bold px-2 py-0.5 rounded-lg">Instant Match</span>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="text-[11px] font-bold text-slate-300 block mb-1">Select Order Vertical to Simulate</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button data-type="GROCERY" class="sim-type-btn bg-slate-800 border-2 border-slate-700 text-xs font-bold py-2 rounded-xl hover:border-emerald-500 text-white transition-all text-center">
+                🛒 Grocery
+              </button>
+              <button data-type="FOOD" class="sim-type-btn bg-slate-800 border-2 border-slate-700 text-xs font-bold py-2 rounded-xl hover:border-amber-500 text-white transition-all text-center">
+                🍔 Food
+              </button>
+              <button data-type="MEDICINE" class="sim-type-btn bg-slate-800 border-2 border-slate-700 text-xs font-bold py-2 rounded-xl hover:border-red-500 text-white transition-all text-center">
+                💊 Medicine
+              </button>
+              <button data-type="PARCEL" class="sim-type-btn bg-slate-800 border-2 border-slate-700 text-xs font-bold py-2 rounded-xl hover:border-blue-500 text-white transition-all text-center">
+                📦 Parcel
+              </button>
+              <button data-type="PICKUP_DROP" class="sim-type-btn bg-slate-800 border-2 border-slate-700 text-xs font-bold py-2 rounded-xl hover:border-cyan-500 text-white transition-all text-center">
+                🔄 Pick & Drop
+              </button>
+              <button data-type="PASSENGER" class="sim-type-btn bg-slate-800 border-2 border-slate-700 text-xs font-bold py-2 rounded-xl hover:border-purple-500 text-white transition-all text-center">
+                🛵 Passenger
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button id="btn-run-sim-dispatch" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs py-3 rounded-xl shadow-lg shadow-emerald-600/20 active:scale-98 transition-all flex items-center justify-center gap-2">
+              <span>🚀 Evaluate & Auto-Dispatch Sample Order</span>
+            </button>
+          </div>
+
+          <div id="sim-result-box" class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono hidden">
+            <!-- Simulated match feedback rendered here -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Explainable Dispatch Decision Audit Trail (bhusawal_dispatch_logs) -->
+    <div class="bg-slate-900 p-5 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="text-xs font-black text-white uppercase tracking-wider flex items-center gap-2">
+            <span>📋 Live Dispatch Decision Audit Trail & Explainability Matrix</span>
+          </h3>
+          <p class="text-[10px] text-slate-400">Complete audit log of order assignment decisions, score breakdowns & rejection reasons</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btn-refresh-logs" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-bold px-3 py-1.5 rounded-xl transition-all">
+            Refresh
+          </button>
+          <button id="btn-clear-logs" class="bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 text-[10px] font-bold px-3 py-1.5 rounded-xl transition-all">
+            Clear Logs
+          </button>
+        </div>
+      </div>
+
+      <!-- Logs Container -->
+      <div id="dispatch-logs-container" class="space-y-3">
+        <div class="text-center py-6 text-slate-500 text-xs">
+          No dispatch decisions logged yet. Run auto-dispatch or dispatch simulation to view audit decisions.
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
-      // Initialize Admin Map
+      // 1. Initialize Admin Map
       const adminMap = L.map('admin-fleet-map', { zoomControl: false }).setView([21.0478, 75.7896], 14);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -154,43 +287,245 @@ import Switcher from '../components/Switcher.astro';
         iconAnchor: [16, 16]
       });
 
-      const huzaifaMarker = L.marker([21.0455, 75.7858], { icon: freeRiderIcon }).addTo(adminMap).bindPopup("Huzaifa Shaikh (Station Rd)");
-      L.marker([21.0520, 75.7980], { icon: busyRiderIcon }).addTo(adminMap).bindPopup("Rahul Patil (ON DELIVERY)");
-      L.marker([21.0490, 75.7920], { icon: freeRiderIcon }).addTo(adminMap).bindPopup("Vikas Mahajan (Jamner Rd)");
+      const huzaifaMarker = L.marker([21.0455, 75.7858], { icon: freeRiderIcon }).addTo(adminMap).bindPopup("Huzaifa Shaikh (Station Rd) - Available");
+      const rahulMarker = L.marker([21.0520, 75.7980], { icon: busyRiderIcon }).addTo(adminMap).bindPopup("Rahul Patil (ON DELIVERY)");
+      const vikasMarker = L.marker([21.0490, 75.7920], { icon: freeRiderIcon }).addTo(adminMap).bindPopup("Vikas Mahajan (Jamner Rd) - Available");
 
       setTimeout(() => adminMap.invalidateSize(), 200);
 
-      function updateKPIs() {
-        try {
-          const pending = JSON.parse(localStorage.getItem('pending_rider_orders') || '[]');
-          document.getElementById('kpi-pending-orders').textContent = pending.length + ' Orders';
-        } catch(e) {}
+      // 2. Load Config into Inputs
+      function loadConfigUI() {
+        if (!window.BslFleetEngine) return;
+        const cfg = window.BslFleetEngine.getConfig();
+        document.getElementById('cfg-max-orders').value = cfg.maxDeliveryOrders || 3;
+        document.getElementById('cfg-max-detour-km').value = cfg.maxDetourDistanceKm || 1.2;
+        document.getElementById('cfg-max-detour-time').value = cfg.maxDetourTimeMins || 6;
+        document.getElementById('cfg-total-capacity').value = cfg.totalVehicleCapacityUnits || 10;
       }
 
-      updateKPIs();
+      loadConfigUI();
 
-      // Listen for Real-time GPS location updates from Huzaifa's Rider App
+      // 3. Save Config Handler
+      document.getElementById('btn-save-cfg').addEventListener('click', () => {
+        if (!window.BslFleetEngine) return;
+        const newCfg = {
+          maxDeliveryOrders: parseInt(document.getElementById('cfg-max-orders').value, 10) || 3,
+          maxDetourDistanceKm: parseFloat(document.getElementById('cfg-max-detour-km').value) || 1.2,
+          maxDetourTimeMins: parseInt(document.getElementById('cfg-max-detour-time').value, 10) || 6,
+          totalVehicleCapacityUnits: parseInt(document.getElementById('cfg-total-capacity').value, 10) || 10
+        };
+        window.BslFleetEngine.updateConfig(newCfg);
+
+        const toast = document.getElementById('cfg-toast');
+        toast.textContent = 'Configuration saved!';
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 2500);
+      });
+
+      // 4. Reset Config Handler
+      document.getElementById('btn-reset-cfg').addEventListener('click', () => {
+        if (!window.BslFleetEngine) return;
+        window.BslFleetEngine.resetConfig();
+        loadConfigUI();
+        const toast = document.getElementById('cfg-toast');
+        toast.textContent = 'Reset to defaults!';
+        toast.classList.remove('opacity-0');
+        setTimeout(() => toast.classList.add('opacity-0'), 2500);
+      });
+
+      // 5. Update KPI & Render Logs
+      function renderDispatchLogs() {
+        const engine = window.BslFleetEngine || window.BhusawalIntelligentDispatchEngine;
+        if (!engine) return;
+
+        const logs = engine.getDispatchLogs ? engine.getDispatchLogs() : [];
+        document.getElementById('kpi-dispatch-count').textContent = logs.length + ' Logged';
+
+        const container = document.getElementById('dispatch-logs-container');
+        if (logs.length === 0) {
+          container.innerHTML = '<div class="text-center py-6 text-slate-500 text-xs">No dispatch decisions logged yet.</div>';
+          return;
+        }
+
+        const icons = {
+          GROCERY: '🛒',
+          FOOD: '🍔',
+          MEDICINE: '💊',
+          PARCEL: '📦',
+          PICKUP_DROP: '🔄',
+          PASSENGER: '🛵'
+        };
+
+        var html = '';
+        for (var i = 0; i < Math.min(logs.length, 10); i++) {
+          var log = logs[i];
+          var typeIcon = icons[log.orderType] || '📦';
+          var timeStr = new Date(log.timestamp).toLocaleTimeString();
+          var bd = log.winnerBreakdown || {};
+
+          var candidatesHtml = '';
+          if (log.candidatesEvaluated) {
+            for (var c = 0; c < log.candidatesEvaluated.length; c++) {
+              var cand = log.candidatesEvaluated[c];
+              candidatesHtml += '<span class="inline-flex items-center gap-1 bg-slate-800 text-slate-300 px-2 py-0.5 rounded text-[10px] font-mono">' +
+                '<span>' + cand.riderName + ':</span>' +
+                '<span class="text-emerald-400 font-bold">' + cand.score.toFixed(1) + ' pts</span>' +
+                '<span class="text-slate-500">(' + cand.distanceKm + ' km, ' + cand.roadEtaMins + 'm)</span>' +
+              '</span> ';
+            }
+          }
+
+          var rejectionsHtml = '';
+          if (log.rejectedCandidates) {
+            for (var r = 0; r < log.rejectedCandidates.length; r++) {
+              var rej = log.rejectedCandidates[r];
+              rejectionsHtml += '<span class="inline-flex items-center gap-1 bg-red-950/40 text-red-400 border border-red-900/40 px-2 py-0.5 rounded text-[10px]">' +
+                '<span class="font-bold">' + rej.riderName + ':</span>' +
+                '<span>' + rej.reason + '</span>' +
+              '</span> ';
+            }
+          }
+
+          var winnerHtml = log.winnerRiderName ?
+            '<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-black px-2.5 py-0.5 rounded-lg flex items-center gap-1">' +
+              '<span>🏆</span> ' + log.winnerRiderName +
+              '<span class="text-emerald-400 font-mono text-[10px]">(' + (log.winnerScore ? log.winnerScore.toFixed(1) : '') + ' pts)</span>' +
+            '</span>' :
+            '<span class="bg-amber-500/20 text-amber-400 text-xs font-bold px-2 py-0.5 rounded-lg">Unassigned (No eligible candidate)</span>';
+
+          var breakdownChips = '';
+          if (bd.proximityScore !== undefined) {
+            breakdownChips = '<div class="flex flex-wrap items-center gap-1 text-[10px] font-mono ml-auto">' +
+              '<span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">+Prox ' + bd.proximityScore + '</span>' +
+              '<span class="bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">ETA ' + bd.etaPenalty + '</span>' +
+              '<span class="bg-slate-800 text-purple-300 px-1.5 py-0.5 rounded">+Prio ' + bd.priorityBonus + '</span>' +
+              '<span class="bg-slate-800 text-blue-300 px-1.5 py-0.5 rounded">+Fair ' + bd.fairnessBonus + '</span>' +
+              (bd.detourPenalty ? '<span class="bg-red-950 text-red-400 px-1.5 py-0.5 rounded">Detour ' + bd.detourPenalty + '</span>' : '') +
+              (bd.freshnessPenalty ? '<span class="bg-red-950 text-red-400 px-1.5 py-0.5 rounded">Freshness ' + bd.freshnessPenalty + '</span>' : '') +
+            '</div>';
+          }
+
+          html += '<div class="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 space-y-2">' +
+            '<div class="flex items-center justify-between">' +
+              '<div class="flex items-center gap-2">' +
+                '<span class="text-base">' + typeIcon + '</span>' +
+                '<span class="font-black text-white text-xs">Order #' + (log.orderId || 'N/A') + '</span>' +
+                '<span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded font-mono uppercase">' + log.orderType + '</span>' +
+              '</div>' +
+              '<span class="text-[10px] text-slate-500 font-mono">' + timeStr + '</span>' +
+            '</div>' +
+            '<div class="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-800/50">' +
+              '<span class="text-[11px] font-bold text-slate-400">Winner:</span>' +
+              winnerHtml +
+              breakdownChips +
+            '</div>' +
+            (candidatesHtml ? '<div class="pt-1"><div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Ranked Candidates:</div><div class="flex flex-wrap gap-1.5">' + candidatesHtml + '</div></div>' : '') +
+            (rejectionsHtml ? '<div class="pt-1"><div class="text-[10px] text-red-400 font-bold uppercase mb-1">Rejected Candidates (Explainability):</div><div class="flex flex-wrap gap-1.5">' + rejectionsHtml + '</div></div>' : '') +
+          '</div>';
+        }
+
+        container.innerHTML = html;
+      }
+
+      renderDispatchLogs();
+
+      document.getElementById('btn-refresh-logs').addEventListener('click', renderDispatchLogs);
+      document.getElementById('btn-clear-logs').addEventListener('click', () => {
+        if (window.BslFleetEngine) window.BslFleetEngine.clearDispatchLogs();
+        renderDispatchLogs();
+      });
+
+      // 6. Simulation Selection & Trigger
+      let selectedSimType = 'FOOD';
+      const simButtons = document.querySelectorAll('.sim-type-btn');
+      simButtons.forEach(btn => {
+        if (btn.dataset.type === selectedSimType) {
+          btn.classList.add('border-indigo-500', 'bg-indigo-950/40');
+        }
+        btn.addEventListener('click', () => {
+          simButtons.forEach(b => b.classList.remove('border-indigo-500', 'bg-indigo-950/40'));
+          btn.classList.add('border-indigo-500', 'bg-indigo-950/40');
+          selectedSimType = btn.dataset.type;
+        });
+      });
+
+      document.getElementById('btn-run-sim-dispatch').addEventListener('click', () => {
+        const engine = window.BhusawalIntelligentDispatchEngine || window.BslFleetEngine;
+        if (!engine) return;
+
+        const mockPool = [
+          { id: 'BHU-RIDER-1', name: 'Huzaifa Shaikh', isOnline: true, state: 'AVAILABLE', lat: 21.0455, lng: 75.7858, activeOrders: [], todayDeliveriesCount: 2, kycApproved: true, vehicleType: 'EV Scooter' },
+          { id: 'BHU-RIDER-2', name: 'Rahul Patil', isOnline: true, state: 'DELIVERING', lat: 21.0520, lng: 75.7980, activeOrders: [{ id: 'ORD-8921', type: 'GROCERY', dropLat: 21.0540, dropLng: 75.8010 }], todayDeliveriesCount: 6, kycApproved: true, vehicleType: 'Motorcycle' },
+          { id: 'BHU-RIDER-3', name: 'Vikas Mahajan', isOnline: true, state: 'AVAILABLE', lat: 21.0490, lng: 75.7920, activeOrders: [], todayDeliveriesCount: 0, kycApproved: true, vehicleType: 'EV Scooter' }
+        ];
+
+        const simOrder = {
+          id: 'SIM-' + Math.floor(1000 + Math.random() * 9000),
+          type: selectedSimType,
+          pickupLat: 21.0478,
+          pickupLng: 75.7896,
+          dropLat: 21.0425,
+          dropLng: 75.7980,
+          status: 'placed'
+        };
+
+        const result = engine.findBestRiderForOrder(simOrder, mockPool);
+        const resBox = document.getElementById('sim-result-box');
+        resBox.classList.remove('hidden');
+
+        if (result && result.selectedRider) {
+          resBox.innerHTML = '<div class="space-y-1">' +
+            '<div class="text-emerald-400 font-bold">✅ Matched: ' + result.selectedRider.name + '</div>' +
+            '<div>Distance: ' + result.distanceKm + ' km | ETA: ' + result.roadEtaMins + ' mins | Score: ' + result.score.toFixed(1) + ' pts</div>' +
+            '<div class="text-[10px] text-slate-400">Order #' + simOrder.id + ' (' + simOrder.type + ') successfully evaluated across 16 criteria.</div>' +
+          '</div>';
+        } else {
+          resBox.innerHTML = '<div class="text-amber-400 font-bold">⚠️ No eligible rider match found for ' + simOrder.type + ' order.</div>';
+        }
+
+        renderDispatchLogs();
+      });
+
+      // 7. Auto Assign Button
+      document.getElementById('btn-auto-assign').addEventListener('click', () => {
+        const engine = window.BhusawalIntelligentDispatchEngine || window.BslFleetEngine;
+        if (!engine) return;
+
+        let pending = [];
+        try {
+          pending = JSON.parse(localStorage.getItem('pending_rider_orders') || '[]');
+        } catch(e) {}
+
+        if (pending.length === 0) {
+          pending = [{
+            id: 'ORD-AUTO-' + Math.floor(1000 + Math.random() * 9000),
+            type: 'GROCERY',
+            pickupLat: 21.0478,
+            pickupLng: 75.7896,
+            status: 'placed'
+          }];
+        }
+
+        let assignedCount = 0;
+        pending.forEach(ord => {
+          const res = engine.findBestRiderForOrder(ord);
+          if (res && res.selectedRider) {
+            assignedCount++;
+          }
+        });
+
+        alert("Auto-assigned " + assignedCount + " order(s) via 16-point shared-fleet dispatch engine!");
+        renderDispatchLogs();
+      });
+
+      // Realtime Sync Listener
       if (window.BhusawalRealtime) {
         window.BhusawalRealtime.on('rider-location', (pos) => {
           if (pos && pos.lat && pos.lng) {
             huzaifaMarker.setLatLng([pos.lat, pos.lng]);
           }
         });
-
-        window.BhusawalRealtime.on('new-order', () => {
-          updateKPIs();
-        });
       }
-
-      // Auto Assign Button
-      document.getElementById('btn-auto-assign').addEventListener('click', () => {
-        const pending = JSON.parse(localStorage.getItem('pending_rider_orders') || '[]');
-        if (pending.length === 0) {
-          alert("No pending orders to assign right now!");
-          return;
-        }
-        alert("Auto-assigned " + pending.length + " order(s) to nearest available rider (Huzaifa Shaikh)!");
-      });
     });
   </script>
 

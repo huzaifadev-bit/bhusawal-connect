@@ -6,10 +6,13 @@ window.BhusawalSmartDispatcher = (function() {
   
   // Service Type Maximum Stack Limits (Never Overload)
   var MAX_ACTIVE_CAPACITY = {
-    'GROCERY': 2,
+    'GROCERY': 3,
     'FOOD': 2,
     'MEDICINE': 2,
-    'PARCEL': 1
+    'PARCEL': 1,
+    'PICKUP_DROP': 1,
+    'PASSENGER': 1,
+    'BIKE_RIDE': 1
   };
 
   // 1. Calculate Road Distance using Haversine * Road Winding Curvature Factor (1.35x)
@@ -160,12 +163,19 @@ window.BhusawalSmartDispatcher = (function() {
 
   // 4. CHECK RIDER CAPACITY (NEVER OVERLOAD)
   function canRiderAcceptOrderType(rider, serviceType) {
-    var typeKey = (serviceType || 'GROCERY').toUpperCase();
+    if (window.BslFleetEngine) {
+      var candidate = (typeof serviceType === 'object' && serviceType !== null) ? serviceType : { type: serviceType };
+      return window.BslFleetEngine.canReceiveOrder(rider, candidate).canReceive;
+    }
+
+    var typeKey = (typeof serviceType === 'object' && serviceType !== null)
+      ? (serviceType.type || serviceType.category || 'GROCERY').toUpperCase()
+      : (serviceType || 'GROCERY').toUpperCase();
     var maxAllowed = MAX_ACTIVE_CAPACITY[typeKey] || 2;
     var activeList = rider.activeOrders || [];
 
-    // Parcel is strictly 1 max
-    if (typeKey === 'PARCEL' && activeList.length >= 1) return false;
+    // Passenger / Parcel / Pickup-Drop are strictly 1 max
+    if ((typeKey === 'PARCEL' || typeKey === 'PASSENGER' || typeKey === 'BIKE_RIDE' || typeKey === 'PICKUP_DROP') && activeList.length >= 1) return false;
 
     // Count active orders of this type
     var countOfThisType = activeList.filter(function(o) {
@@ -183,13 +193,13 @@ window.BhusawalSmartDispatcher = (function() {
 
     var pool = getRiderPool();
 
-    // Step A: Qualification Filter Pipeline (Online + Verified + Active + Capacity Check)
+    // Step A: Qualification Filter Pipeline (Online + Verified + Active + Capacity & Exclusivity Check)
     var qualifiedRiders = pool.filter(function(rider) {
       return (
         rider.isOnline === true &&
         rider.isVerified === true &&
         rider.isActive === true &&
-        canRiderAcceptOrderType(rider, serviceType)
+        canRiderAcceptOrderType(rider, order)
       );
     });
 
