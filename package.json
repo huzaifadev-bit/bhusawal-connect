@@ -15,13 +15,19 @@
     "colab:job:watch": "node scripts/colab_bridge/cli.js watch",
     "colab:job:list": "node scripts/colab_bridge/cli.js list",
     "colab:sheet:init": "node scripts/colab_bridge/cli.js init-sheet",
-    "colab:sheet:push": "node scripts/colab_bridge/cli.js push-catalog"
+    "colab:sheet:push": "node scripts/colab_bridge/cli.js push-catalog",
+    "test:msg91": "npx tsx scripts/test_msg91_otp_auth.mjs",
+    "diagnose:msg91": "npx tsx scripts/diagnose_msg91_setup.mjs"
   },
   "dependencies": {
+    "@astrojs/vercel": "^8.2.11",
     "@supabase/supabase-js": "^2.112.3",
     "astro": "^5.0.0",
     "exceljs": "^4.4.0",
     "firebase": "^12.17.1",
     "isomorphic-git": "^1.41.4"
+  },
+  "engines": {
+    "node": "^20.0.0 || ^22.0.0"
   }
 }

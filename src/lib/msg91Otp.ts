@@ -1,10 +1,20 @@
-import { normalizeIndianPhone, syncCustomerProfile } from './customerAuth';
+import { normalizeIndianPhone, syncCustomerProfile } from './customerAuth.ts';
 
 // In-memory rate limiting cooldown cache (60 seconds per phone)
 const otpCooldownCache = new Map<string, number>();
 
 // In-memory failed verification attempt tracking (max 5 attempts per 10 mins)
 const verificationAttemptsCache = new Map<string, { count: number; timestamp: number }>();
+
+function getServerEnv(key: string): string {
+  if (typeof process !== 'undefined' && process.env && process.env[key]) {
+    return process.env[key] as string;
+  }
+  if (typeof import.meta !== 'undefined' && (import.meta as any)?.env && (import.meta as any).env[key]) {
+    return (import.meta as any).env[key] as string;
+  }
+  return '';
+}
 
 export interface OtpRequestResponse {
   success: boolean;
@@ -56,9 +66,9 @@ export async function requestMsg91Otp(phoneInput: string): Promise<OtpRequestRes
   }
 
   // Read credentials exclusively from server-side environment variables
-  const authKey = process.env.MSG91_AUTH_KEY || import.meta.env.MSG91_AUTH_KEY || '';
-  const templateId = process.env.MSG91_TEMPLATE_ID || import.meta.env.MSG91_TEMPLATE_ID || '';
-  const apiUrl = process.env.MSG91_OTP_API_URL || import.meta.env.MSG91_OTP_API_URL || 'https://control.msg91.com/api/v5/otp';
+  const authKey = getServerEnv('MSG91_AUTH_KEY');
+  const templateId = getServerEnv('MSG91_TEMPLATE_ID');
+  const apiUrl = getServerEnv('MSG91_OTP_API_URL') || 'https://control.msg91.com/api/v5/otp';
 
   const maskedPhone = maskPhoneForLog(normalized);
 
@@ -151,7 +161,7 @@ export async function verifyMsg91Otp(phoneInput: string, otpInput: string): Prom
     };
   }
 
-  const authKey = process.env.MSG91_AUTH_KEY || import.meta.env.MSG91_AUTH_KEY || '';
+  const authKey = getServerEnv('MSG91_AUTH_KEY');
 
   if (!authKey || authKey === 'YOUR_MSG91_AUTH_KEY') {
     return {
@@ -262,7 +272,7 @@ export async function verifyMsg91WidgetAccessToken(accessToken: string, expected
     };
   }
 
-  const authKey = process.env.MSG91_AUTH_KEY || import.meta.env.MSG91_AUTH_KEY || '';
+  const authKey = getServerEnv('MSG91_AUTH_KEY');
   if (!authKey || authKey === 'YOUR_MSG91_AUTH_KEY') {
     return {
       success: false,

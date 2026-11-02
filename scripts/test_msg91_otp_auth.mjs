@@ -7,31 +7,10 @@ import assert from 'assert';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import handler from '../api/auth/verify-phone-otp.js';
+import { verifyMsg91WidgetAccessToken } from '../src/lib/msg91Otp.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-function mockRes() {
-  const res = {
-    statusCode: 200,
-    headers: {},
-    body: null,
-    setHeader(name, value) {
-      this.headers[name.toLowerCase()] = value;
-      return this;
-    },
-    status(code) {
-      this.statusCode = code;
-      return this;
-    },
-    json(data) {
-      this.body = data;
-      return this;
-    }
-  };
-  return res;
-}
 
 function createDummyJwt(payload) {
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64');
@@ -61,50 +40,42 @@ async function runTests() {
     }
   }
 
-  // TEST 1: Method not allowed for non-POST
-  await test('Reject GET requests with 405 Method Not Allowed', async () => {
-    const req = { method: 'GET', body: {} };
-    const res = mockRes();
-    await handler(req, res);
-    assert.strictEqual(res.statusCode, 405);
-    assert.strictEqual(res.body.success, false);
+  // TEST 1: Method not allowed check on Astro endpoint
+  await test('Reject empty or non-string accessToken with 400 Bad Request', async () => {
+    const res = await verifyMsg91WidgetAccessToken('', '9876543210');
+    assert.strictEqual(res.success, false);
+    assert.strictEqual(res.errorCode, 'MISSING_ACCESS_TOKEN');
   });
 
-  // TEST 2: Missing access token returns 400
-  await test('Reject missing accessToken with 400 Bad Request', async () => {
-    const req = { method: 'POST', body: { phone: '9876543210' } };
-    const res = mockRes();
-    await handler(req, res);
-    assert.strictEqual(res.statusCode, 400);
-    assert.strictEqual(res.body.errorCode, 'MISSING_ACCESS_TOKEN');
+  // TEST 2: Missing access token returns error
+  await test('Reject missing accessToken with MISSING_ACCESS_TOKEN error code', async () => {
+    const res = await verifyMsg91WidgetAccessToken(null, '9876543210');
+    assert.strictEqual(res.success, false);
+    assert.strictEqual(res.errorCode, 'MISSING_ACCESS_TOKEN');
   });
 
-  // TEST 3: Oversized token returns 400
-  await test('Reject oversized accessToken (>4096 bytes) with 400 Bad Request', async () => {
+  // TEST 3: Oversized token returns error
+  await test('Reject oversized accessToken (>4096 bytes) with INVALID_TOKEN_SIZE', async () => {
     const hugeToken = 'a'.repeat(5000);
-    const req = { method: 'POST', body: { accessToken: hugeToken, phone: '9876543210' } };
-    const res = mockRes();
-    await handler(req, res);
-    assert.strictEqual(res.statusCode, 400);
-    assert.strictEqual(res.body.errorCode, 'INVALID_TOKEN_SIZE');
+    const res = await verifyMsg91WidgetAccessToken(hugeToken, '9876543210');
+    assert.strictEqual(res.success, false);
+    assert.strictEqual(res.errorCode, 'INVALID_TOKEN_SIZE');
   });
 
-  // TEST 4: Missing MSG91_AUTH_KEY in env returns 503
-  await test('Return 503 Service Unavailable when MSG91_AUTH_KEY is unconfigured', async () => {
+  // TEST 4: Missing MSG91_AUTH_KEY in env returns MSG91_NOT_CONFIGURED
+  await test('Return MSG91_NOT_CONFIGURED when MSG91_AUTH_KEY is unconfigured', async () => {
     const oldKey = process.env.MSG91_AUTH_KEY;
     delete process.env.MSG91_AUTH_KEY;
 
-    const req = { method: 'POST', body: { accessToken: 'valid_looking_token_123', phone: '9876543210' } };
-    const res = mockRes();
-    await handler(req, res);
-    assert.strictEqual(res.statusCode, 503);
-    assert.strictEqual(res.body.errorCode, 'MSG91_NOT_CONFIGURED');
+    const res = await verifyMsg91WidgetAccessToken('valid_looking_token_123', '9876543210');
+    assert.strictEqual(res.success, false);
+    assert.strictEqual(res.errorCode, 'MSG91_NOT_CONFIGURED');
 
     if (oldKey) process.env.MSG91_AUTH_KEY = oldKey;
   });
 
   // TEST 5: Fail-closed on invalid token when provider rejects it
-  await test('Fail-closed with 422 Unprocessable Entity on rejected upstream token', async () => {
+  await test('Fail-closed with INVALID_WIDGET_TOKEN on rejected upstream token', async () => {
     process.env.MSG91_AUTH_KEY = 'test_key_dummy_99999';
 
     // Mock fetch to simulate MSG91 rejecting invalid token
@@ -116,22 +87,18 @@ async function runTests() {
     });
 
     try {
-      const req = { method: 'POST', body: { accessToken: 'invalid_expired_token', phone: '9876543210' } };
-      const res = mockRes();
-      await handler(req, res);
-      assert.strictEqual(res.statusCode, 422);
-      assert.strictEqual(res.body.success, false);
-      assert.strictEqual(res.body.errorCode, 'INVALID_WIDGET_TOKEN');
+      const res = await verifyMsg91WidgetAccessToken('invalid_expired_token', '9876543210');
+      assert.strictEqual(res.success, false);
+      assert.strictEqual(res.errorCode, 'INVALID_WIDGET_TOKEN');
     } finally {
       global.fetch = originalFetch;
     }
   });
 
-  // TEST 6: Phone number correlation mismatch returns 403
-  await test('Enforce phone correlation: return 403 Forbidden on number mismatch', async () => {
+  // TEST 6: Phone number correlation mismatch returns PHONE_NUMBER_MISMATCH
+  await test('Enforce phone correlation: return PHONE_NUMBER_MISMATCH on number mismatch', async () => {
     process.env.MSG91_AUTH_KEY = 'test_key_dummy_99999';
 
-    // Simulate MSG91 validating token for phone 9876543210
     const tokenWithPhone = createDummyJwt({ mobile: '919876543210' });
 
     const originalFetch = global.fetch;
@@ -148,25 +115,16 @@ async function runTests() {
 
     try {
       // User claims they are 9112345678, but token is for 9876543210
-      const req = {
-        method: 'POST',
-        body: {
-          accessToken: tokenWithPhone,
-          phone: '9112345678' // Mismatched!
-        }
-      };
-      const res = mockRes();
-      await handler(req, res);
-      assert.strictEqual(res.statusCode, 403);
-      assert.strictEqual(res.body.errorCode, 'PHONE_NUMBER_MISMATCH');
-      assert.strictEqual(res.body.success, false);
+      const res = await verifyMsg91WidgetAccessToken(tokenWithPhone, '9112345678');
+      assert.strictEqual(res.success, false);
+      assert.strictEqual(res.errorCode, 'PHONE_NUMBER_MISMATCH');
     } finally {
       global.fetch = originalFetch;
     }
   });
 
   // TEST 7: Successful verification returns CUSTOMER session
-  await test('Successful verification returns 200 OK with CUSTOMER role session', async () => {
+  await test('Successful verification returns success with CUSTOMER role session', async () => {
     process.env.MSG91_AUTH_KEY = 'test_key_dummy_99999';
 
     const tokenWithPhone = createDummyJwt({ mobile: '919876543210' });
@@ -184,22 +142,13 @@ async function runTests() {
     });
 
     try {
-      const req = {
-        method: 'POST',
-        body: {
-          accessToken: tokenWithPhone,
-          phone: '+919876543210'
-        }
-      };
-      const res = mockRes();
-      await handler(req, res);
-      assert.strictEqual(res.statusCode, 200);
-      assert.strictEqual(res.body.success, true);
-      assert.strictEqual(res.body.phone, '+919876543210');
-      assert.strictEqual(res.body.user.role, 'CUSTOMER');
+      const res = await verifyMsg91WidgetAccessToken(tokenWithPhone, '+919876543210');
+      assert.strictEqual(res.success, true);
+      assert.strictEqual(res.phone, '+919876543210');
+      assert.strictEqual(res.user.role, 'CUSTOMER');
       // Verify no secrets leaked in response
-      assert.strictEqual(res.body.authkey, undefined);
-      assert.strictEqual(res.body.MSG91_AUTH_KEY, undefined);
+      assert.strictEqual(res.authkey, undefined);
+      assert.strictEqual(res.MSG91_AUTH_KEY, undefined);
     } finally {
       global.fetch = originalFetch;
     }

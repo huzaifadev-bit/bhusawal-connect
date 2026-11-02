@@ -160,28 +160,15 @@ async function runDiagnostics() {
   console.log('\n🛡️ STEP 4: Serverless Function & Security Guard Test');
   console.log('----------------------------------------------------');
 
-  const handler = (await import('../api/auth/verify-phone-otp.js')).default;
-
-  function mockRes() {
-    return {
-      statusCode: 200,
-      headers: {},
-      body: null,
-      setHeader(k, v) { this.headers[k] = v; return this; },
-      status(c) { this.statusCode = c; return this; },
-      json(d) { this.body = d; return this; }
-    };
-  }
+  const { verifyMsg91WidgetAccessToken } = await import('../src/lib/msg91Otp.ts');
 
   // Case A: Missing token
-  const resA = mockRes();
-  await handler({ method: 'POST', body: { phone: '9876543210' } }, resA);
-  console.log(`• Missing token check: HTTP ${resA.statusCode} (${resA.body?.errorCode}) - ${resA.statusCode === 400 ? '✅ CORRECT' : '❌ FAILED'}`);
+  const resA = await verifyMsg91WidgetAccessToken('', '9876543210');
+  console.log(`• Missing token check: (${resA.errorCode}) - ${resA.errorCode === 'MISSING_ACCESS_TOKEN' ? '✅ CORRECT' : '❌ FAILED'}`);
 
   // Case B: Oversized token
-  const resB = mockRes();
-  await handler({ method: 'POST', body: { accessToken: 'x'.repeat(4500), phone: '9876543210' } }, resB);
-  console.log(`• Oversized token guard (>4096): HTTP ${resB.statusCode} (${resB.body?.errorCode}) - ${resB.statusCode === 400 ? '✅ CORRECT' : '❌ FAILED'}`);
+  const resB = await verifyMsg91WidgetAccessToken('x'.repeat(4500), '9876543210');
+  console.log(`• Oversized token guard (>4096): (${resB.errorCode}) - ${resB.errorCode === 'INVALID_TOKEN_SIZE' ? '✅ CORRECT' : '❌ FAILED'}`);
 
   // Case C: Phone mismatch guard
   const dummyJwt = `${Buffer.from('{"alg":"HS256"}').toString('base64')}.${Buffer.from('{"mobile":"919876543210"}').toString('base64')}.sig`;
@@ -192,11 +179,10 @@ async function runDiagnostics() {
     json: async () => ({ status: 'success', mobile: '919876543210' })
   });
 
-  const resC = mockRes();
   process.env.MSG91_AUTH_KEY = authKey || 'mock_probe_auth_key';
-  await handler({ method: 'POST', body: { accessToken: dummyJwt, phone: '9111111111' } }, resC);
+  const resC = await verifyMsg91WidgetAccessToken(dummyJwt, '9111111111');
   global.fetch = origFetch;
-  console.log(`• Phone mismatch enforcement: HTTP ${resC.statusCode} (${resC.body?.errorCode}) - ${resC.statusCode === 403 ? '✅ CORRECT' : '❌ FAILED'}`);
+  console.log(`• Phone mismatch enforcement: (${resC.errorCode}) - ${resC.errorCode === 'PHONE_NUMBER_MISMATCH' ? '✅ CORRECT' : '❌ FAILED'}`);
 
   // ---------------------------------------------------------
   // 5. Client HTML Security Verification
