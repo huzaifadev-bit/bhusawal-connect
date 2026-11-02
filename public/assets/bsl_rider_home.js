@@ -1189,6 +1189,18 @@ window.BslRiderHome = (function() {
         if (nextSubtextEl) nextSubtextEl.textContent = computed.nextAction.subtext;
         if (nextPayoutEl) nextPayoutEl.textContent = `+₹${computed.nextAction.payout || 45}`;
         if (nextActionBtnText) nextActionBtnText.textContent = computed.nextAction.actionLabel || 'Advance';
+
+        // Toggle customer-supplied Google Maps link button
+        var mapsLinkContainer = document.getElementById('next-action-maps-link-container');
+        var mapsLinkBtn = document.getElementById('btn-next-action-maps-link');
+        if (mapsLinkContainer && mapsLinkBtn) {
+          if (computed.nextAction.googleMapsLink) {
+            mapsLinkContainer.classList.remove('hidden');
+            mapsLinkBtn.href = computed.nextAction.googleMapsLink;
+          } else {
+            mapsLinkContainer.classList.add('hidden');
+          }
+        }
       }
 
       // Update ACTIVE ROUTE SEQUENCED STOP LIST
@@ -1233,6 +1245,19 @@ window.BslRiderHome = (function() {
             priorityHtml = '<span class="text-[9px] font-black text-orange-300 bg-orange-500/20 px-1 rounded border border-orange-500/30">🔥 HOT FOOD</span>';
           }
 
+          var mapsLinkHtml = '';
+          if (stop.googleMapsLink) {
+            mapsLinkHtml = `
+              <div class="mt-1">
+                <a href="${stop.googleMapsLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-400 hover:text-emerald-300 underline" onclick="event.stopPropagation()">
+                  <span class="material-symbols-outlined text-xs">pin_drop</span>
+                  <span>Open in Google Maps</span>
+                  <span class="material-symbols-outlined text-[10px]">open_in_new</span>
+                </a>
+              </div>
+            `;
+          }
+
           var itemHtml = `
             <div class="p-2.5 rounded-xl border ${isCurrent ? 'bg-slate-900 border-blue-500/60 shadow-md ring-1 ring-blue-500/20' : 'bg-slate-950/60 border-slate-800/80 opacity-90'} flex items-center justify-between text-xs transition-all">
               <div class="flex items-center gap-2.5 min-w-0 flex-1">
@@ -1248,6 +1273,7 @@ window.BslRiderHome = (function() {
                   <p class="text-[10px] text-slate-300 truncate mt-0.5">
                     <strong class="text-slate-400">${isPickup ? 'Pickup:' : 'Drop:'}</strong> ${stop.address}
                   </p>
+                  ${mapsLinkHtml}
                 </div>
               </div>
 

@@ -233,6 +233,40 @@
             </div>
           </div>
 
+          <!-- OPTIONAL GOOGLE MAPS LOCATION LINK -->
+          <div class="space-y-2 pt-3 border-t border-slate-100" id="container-google-maps-link">
+            <label for="checkout-google-maps-link" class="text-xs font-black text-slate-800 flex items-center justify-between">
+              <span class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-blueBrand text-base">link</span>
+                <span>Google Maps Location Link (Optional)</span>
+              </span>
+              <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">Optional</span>
+            </label>
+            <div class="relative">
+              <input 
+                type="url" 
+                id="checkout-google-maps-link"
+                placeholder="Paste your Google Maps location link here" 
+                class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-9 pr-9 py-2.5 text-xs font-extrabold text-slate-900 outline-none focus:border-blueBrand focus:bg-white transition-all placeholder-slate-400"
+              />
+              <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-lg">pin_drop</span>
+              <button type="button" id="btn-clear-maps-link" class="hidden absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 transition-colors" title="Clear link">
+                <span class="material-symbols-outlined text-base">cancel</span>
+              </button>
+            </div>
+            <div id="google-maps-link-error" class="hidden text-[11px] font-bold text-rose-600 flex items-center gap-1 mt-1">
+              <span class="material-symbols-outlined text-xs">error</span>
+              <span>Please enter a valid Google Maps link (e.g. https://maps.app.goo.gl/... or https://maps.google.com/...)</span>
+            </div>
+            <div id="google-maps-link-success" class="hidden text-[11px] font-bold text-emerald-600 flex items-center gap-1 mt-1">
+              <span class="material-symbols-outlined text-xs">check_circle</span>
+              <span>Valid Google Maps location link attached</span>
+            </div>
+            <p class="text-[10px] font-semibold text-slate-400 leading-tight">
+              Tip: In Google Maps, tap Share on your location/house, copy the link, and paste here to guide delivery riders directly.
+            </p>
+          </div>
+
         </div>
 
         <!-- 2. PREFERRED MEDICAL STORE SECTION -->
@@ -586,6 +620,17 @@
           </div>
         </div>
 
+        <div>
+          <label class="text-[11px] font-black text-slate-700 block uppercase mb-1">Google Maps Location Link (Optional)</label>
+          <input 
+            type="url" 
+            id="field-modal-maps-link" 
+            placeholder="Paste your Google Maps location link here" 
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:border-blueBrand" 
+          />
+          <p id="modal-maps-link-error" class="hidden text-[10px] font-bold text-rose-600 mt-1">Please enter a valid Google Maps link (e.g. https://maps.app.goo.gl/...)</p>
+        </div>
+
         <div class="pt-2 flex items-center gap-2">
           <input type="checkbox" id="field-save-profile" checked class="accent-blueBrand w-4 h-4" />
           <label for="field-save-profile" class="text-xs font-bold text-slate-700">Save this address to my profile for future orders</label>
@@ -607,6 +652,78 @@
       let currentLat = 21.0478;
       let currentLng = 75.7896;
       let selectedAddressObject = null;
+
+      // Google Maps Location Link Validator (Accepts maps.google.com, google.com/maps, maps.app.goo.gl, etc.)
+      function isValidGoogleMapsUrl(url) {
+        if (!url || typeof url !== 'string') return true; // Optional field: empty is valid
+        const trimmed = url.trim();
+        if (trimmed === '') return true;
+        try {
+          let urlToTest = trimmed;
+          if (!/^https?:\/\//i.test(urlToTest)) {
+            urlToTest = 'https://' + urlToTest;
+          }
+          const parsed = new URL(urlToTest);
+          const host = parsed.hostname.toLowerCase();
+          
+          if (host === 'maps.app.goo.gl') return true;
+          if (host === 'goo.gl' && parsed.pathname.includes('maps')) return true;
+          if (/^maps\.google\.[a-z.]+$/.test(host)) return true;
+          if (/(^|\.)google\.[a-z.]+$/.test(host) && (parsed.pathname === '/maps' || parsed.pathname.startsWith('/maps/'))) return true;
+          return false;
+        } catch(e) {
+          return false;
+        }
+      }
+
+      function normalizeGoogleMapsUrl(url) {
+        if (!url || typeof url !== 'string') return '';
+        const trimmed = url.trim();
+        if (!trimmed) return '';
+        if (!/^https?:\/\//i.test(trimmed)) {
+          return 'https://' + trimmed;
+        }
+        return trimmed;
+      }
+
+      function validateMapsLinkInput(showErrorIfInvalid = true) {
+        const input = document.getElementById('checkout-google-maps-link');
+        const errEl = document.getElementById('google-maps-link-error');
+        const successEl = document.getElementById('google-maps-link-success');
+        const clearBtn = document.getElementById('btn-clear-maps-link');
+        if (!input) return true;
+
+        const val = input.value.trim();
+        if (clearBtn) {
+          if (val) clearBtn.classList.remove('hidden');
+          else clearBtn.classList.add('hidden');
+        }
+
+        if (!val) {
+          input.classList.remove('border-rose-400', 'focus:border-rose-500', 'bg-rose-50/20');
+          input.classList.remove('border-emerald-400', 'focus:border-emerald-500');
+          errEl?.classList.add('hidden');
+          successEl?.classList.add('hidden');
+          return true;
+        }
+
+        const valid = isValidGoogleMapsUrl(val);
+        if (valid) {
+          input.classList.remove('border-rose-400', 'focus:border-rose-500', 'bg-rose-50/20');
+          input.classList.add('border-emerald-400');
+          errEl?.classList.add('hidden');
+          successEl?.classList.remove('hidden');
+          return true;
+        } else {
+          if (showErrorIfInvalid) {
+            input.classList.add('border-rose-400', 'focus:border-rose-500', 'bg-rose-50/20');
+            input.classList.remove('border-emerald-400');
+            errEl?.classList.remove('hidden');
+          }
+          successEl?.classList.add('hidden');
+          return false;
+        }
+      }
 
       // Default Bhusawal addresses
       const DEFAULT_ADDRESSES = [
@@ -909,6 +1026,13 @@
           selAddrEl.textContent = `${addr.tag || 'Saved'}: ${addr.name || 'Customer'} (+91 ${addr.phone || '9923456789'}) - ${addr.full || ''}`;
         }
 
+        // Sync Google Maps location link if attached to this address
+        const mapsLinkInput = document.getElementById('checkout-google-maps-link');
+        if (mapsLinkInput && addr.googleMapsLink) {
+          mapsLinkInput.value = addr.googleMapsLink;
+          validateMapsLinkInput(false);
+        }
+
         // 1. Calculate Road Distance (km) from Store (lat: 21.0478, lng: 75.7896)
         const shopLat = 21.0478;
         const shopLng = 75.7896;
@@ -1044,6 +1168,7 @@
           document.getElementById('field-landmark').value = addressToEdit.landmark || '';
           document.getElementById('field-city').value = addressToEdit.city || 'Bhusawal';
           document.getElementById('field-pincode').value = addressToEdit.pincode || '425201';
+          document.getElementById('field-modal-maps-link').value = addressToEdit.googleMapsLink || '';
           setTagActive(addressToEdit.tag || 'Home');
         } else {
           if (modalTitle) modalTitle.textContent = "Add Complete Delivery Address";
@@ -1057,8 +1182,10 @@
           document.getElementById('field-landmark').value = "";
           document.getElementById('field-city').value = "Bhusawal";
           document.getElementById('field-pincode').value = "425201";
+          document.getElementById('field-modal-maps-link').value = "";
           setTagActive('Home');
         }
+        document.getElementById('modal-maps-link-error')?.classList.add('hidden');
 
         modal.classList.remove('hidden');
       }
@@ -1086,6 +1213,15 @@
         const city = document.getElementById('field-city').value;
         const pincode = document.getElementById('field-pincode').value;
 
+        const modalMapsRaw = (document.getElementById('field-modal-maps-link')?.value || '').trim();
+        if (modalMapsRaw !== '' && !isValidGoogleMapsUrl(modalMapsRaw)) {
+          document.getElementById('modal-maps-link-error')?.classList.remove('hidden');
+          document.getElementById('field-modal-maps-link')?.focus();
+          return;
+        }
+        document.getElementById('modal-maps-link-error')?.classList.add('hidden');
+        const modalMapsLink = normalizeGoogleMapsUrl(modalMapsRaw);
+
         const fullAddr = `${house}, ${building ? building + ', ' : ''}${street}, ${area}, ${landmark ? 'Near ' + landmark + ', ' : ''}${city} - ${pincode}`;
 
         let addresses = getSavedAddresses();
@@ -1097,6 +1233,7 @@
             addresses[idx] = {
               ...addresses[idx],
               name, phone, tag, house, building, street, area, landmark, city, pincode, full: fullAddr,
+              googleMapsLink: modalMapsLink,
               lat: currentLat, lng: currentLng
             };
             selectedAddressObject = addresses[idx];
@@ -1106,6 +1243,7 @@
           const newAddrObj = {
             id: 'A-' + Date.now(),
             name, phone, tag, house, building, street, area, landmark, city, pincode, full: fullAddr,
+            googleMapsLink: modalMapsLink,
             lat: currentLat, lng: currentLng
           };
           addresses.unshift(newAddrObj);
@@ -1116,6 +1254,13 @@
         localStorage.setItem('bhusawal_selected_address_id', selectedAddressObject.id);
         updateSelectedAddressUI(selectedAddressObject);
         renderSavedAddresses();
+
+        // Also update the checkout page input
+        const mainMapsInput = document.getElementById('checkout-google-maps-link');
+        if (mainMapsInput) {
+          mainMapsInput.value = modalMapsLink;
+          validateMapsLinkInput(false);
+        }
 
         document.getElementById('address-form-modal').classList.add('hidden');
       });
@@ -1505,6 +1650,17 @@
         const preferredStore = (document.getElementById('preferred-pharmacy-input')?.value || '').trim();
         const specialNotes = (document.getElementById('checkout-special-instructions')?.value || '').trim();
 
+        // Optional Google Maps Location Link
+        const rawMapsLink = (document.getElementById('checkout-google-maps-link')?.value || '').trim();
+        if (rawMapsLink !== '' && !isValidGoogleMapsUrl(rawMapsLink)) {
+          validateMapsLinkInput(true);
+          const inputEl = document.getElementById('checkout-google-maps-link');
+          inputEl?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          inputEl?.focus();
+          return;
+        }
+        const finalMapsLink = normalizeGoogleMapsUrl(rawMapsLink);
+
         const isMedicineOrder = cart.some(i => i.cat || i.category || i.brand || i.rxRequired);
         const hasRx = cart.some(item => item.rxRequired === true || item.rx === 'true');
 
@@ -1558,6 +1714,8 @@
           selectedAddressId: selectedAddressId,
           selectedAddress: selectedAddressObject ? selectedAddressObject.full : '',
           address: selectedAddressObject ? selectedAddressObject.full : '',
+          googleMapsLink: finalMapsLink,
+          google_maps_link: finalMapsLink,
           lat: currentLat,
           lng: currentLng,
           latitude: currentLat,
@@ -1603,6 +1761,22 @@
           window.location.href = `/track_order?id=${orderId}`;
         } else {
           window.location.href = `/order_confirmation?orderId=${orderId}`;
+        }
+      });
+
+      // Google Maps Location Link Input Listeners
+      const mapsInputEl = document.getElementById('checkout-google-maps-link');
+      mapsInputEl?.addEventListener('input', () => {
+        validateMapsLinkInput(true);
+      });
+      mapsInputEl?.addEventListener('blur', () => {
+        validateMapsLinkInput(true);
+      });
+      document.getElementById('btn-clear-maps-link')?.addEventListener('click', () => {
+        if (mapsInputEl) {
+          mapsInputEl.value = '';
+          validateMapsLinkInput(false);
+          mapsInputEl.focus();
         }
       });
 

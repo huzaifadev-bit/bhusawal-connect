@@ -920,6 +920,11 @@ import RiderOrderRequestModal from '../components/RiderOrderRequestModal.astro';
       });
 
       document.getElementById('btn-nav-customer')?.addEventListener('click', function() {
+        var mapsLink = (currentActiveOrder && (currentActiveOrder.googleMapsLink || currentActiveOrder.google_maps_link)) || '';
+        if (mapsLink) {
+          window.open(mapsLink, '_blank');
+          return;
+        }
         var dName = document.getElementById('active-order-drop')?.textContent || 'Khadaka Road, Bhusawal';
         if (window.BhusawalGoogleNav) {
           window.BhusawalGoogleNav.navigateToCustomer(21.0425, 75.7980, dName);

@@ -423,7 +423,7 @@
             html: '<div style="background:rgba(239,68,68,0.95);color:#fff;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:900;box-shadow:0 6px 16px rgba(239,68,68,0.5);border:2px solid #fff;white-space:nowrap;">📍 <span>Your Destination</span></div>',
             iconSize: [130, 32], iconAnchor: [65, 16]
           })
-        }).bindPopup(`<strong>📍 Customer Delivery Spot</strong><br>${custAddressLabel}`).addTo(trackerMap);
+        }).bindPopup(`<strong>📍 Customer Delivery Spot</strong><br>${custAddressLabel}${(activeOrder.googleMapsLink || activeOrder.google_maps_link) ? '<br><a href="' + (activeOrder.googleMapsLink || activeOrder.google_maps_link) + '" target="_blank" style="color:#2563eb;font-weight:bold;text-decoration:underline;">📍 Open in Google Maps ↗</a>' : ''}`).addTo(trackerMap);
 
         // 3. Delivery Partner Marker (🛵) with Uber/Blinkit Smooth Animation
         const riderMarker = L.marker([shopLat, shopLng], {

@@ -100,6 +100,13 @@ import Switcher from '../components/Switcher.astro';
               <p class="font-extrabold text-slate-400 text-[10px]">DELIVERY CUSTOMER</p>
               <h3 id="active-customer-name" class="font-black text-white">Sahil (Bhusawal Resident)</h3>
               <p id="active-customer-address" class="text-slate-400 text-[11px]">Shivaji Nagar, Bhusawal</p>
+              <div id="active-customer-maps-link-wrap" class="hidden mt-1.5">
+                <a id="btn-customer-maps-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-black transition-all">
+                  <span class="material-symbols-outlined text-sm">pin_drop</span>
+                  <span>Open in Google Maps</span>
+                  <span class="material-symbols-outlined text-[10px]">open_in_new</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -319,6 +326,19 @@ import Switcher from '../components/Switcher.astro';
       document.getElementById('active-pickup-store').textContent = currentActiveOrder.storeName || "Bhusawal Express Store";
       document.getElementById('active-customer-name').textContent = currentActiveOrder.customerName || "Sahil (Bhusawal Resident)";
       document.getElementById('active-customer-address').textContent = currentActiveOrder.address;
+
+      const mapsLink = currentActiveOrder.googleMapsLink || currentActiveOrder.google_maps_link || (currentActiveOrder.order_data && (currentActiveOrder.order_data.googleMapsLink || currentActiveOrder.order_data.google_maps_link)) || '';
+      const mapsWrap = document.getElementById('active-customer-maps-link-wrap');
+      const mapsBtn = document.getElementById('btn-customer-maps-link');
+      if (mapsWrap && mapsBtn) {
+        if (mapsLink) {
+          mapsWrap.classList.remove('hidden');
+          mapsBtn.href = mapsLink;
+        } else {
+          mapsWrap.classList.add('hidden');
+        }
+      }
+
       document.getElementById('active-customer-phone').textContent = currentActiveOrder.phone || "+91 74980 71274";
       document.getElementById('btn-call-cust').href = 'tel:' + (currentActiveOrder.phone || '7498071274');
       document.getElementById('active-order-items').textContent = currentActiveOrder.items || "1 Item";

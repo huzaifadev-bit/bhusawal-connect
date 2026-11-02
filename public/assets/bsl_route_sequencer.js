@@ -111,6 +111,7 @@
         payout: Number(ord.payout || ord.deliveryFee || 45),
         customerName: ord.customerName || ord.receiverName || 'Customer',
         customerPhone: ord.customerPhone || ord.receiverPhone || '9876543210',
+        googleMapsLink: ord.googleMapsLink || ord.google_maps_link || (ord.order_data && (ord.order_data.googleMapsLink || ord.order_data.google_maps_link)) || '',
         order: ord
       });
     });
@@ -336,7 +337,9 @@
       var actionLabel = isPickup ? 'Confirm Pickup' : 'Complete Delivery';
 
       var navTarget = encodeURIComponent(firstStop.address + ', Bhusawal');
-      var navUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + navTarget + '&travelmode=driving';
+      var navUrl = (!isPickup && firstStop.googleMapsLink)
+        ? firstStop.googleMapsLink
+        : ('https://www.google.com/maps/dir/?api=1&destination=' + navTarget + '&travelmode=driving');
 
       nextAction = {
         title: title,
@@ -351,6 +354,7 @@
         address: firstStop.address,
         payout: firstStop.payout,
         navUrl: navUrl,
+        googleMapsLink: firstStop.googleMapsLink || '',
         stop: firstStop
       };
     }
