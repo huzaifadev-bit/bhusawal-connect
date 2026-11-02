@@ -6,3 +6,9 @@ scratch
 backend/node_modules
 backend/prisma/dev.db-journal
 *.log
+*.zip
+*.xlsx
+*.csv
+.colab_cache
+.image_cache
+.jobs
