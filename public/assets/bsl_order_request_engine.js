@@ -420,6 +420,18 @@
     stopCountdown();
     closeModal();
 
+    // Server-side action dispatch
+    var riderId = state.id || 'BSL-RIDER-8942';
+    fetch('/api/rider/order-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        riderId: riderId,
+        orderId: req.id,
+        action: 'ACCEPT'
+      })
+    }).catch(function() {});
+
     if (!currentRequestData) return;
 
     var req = currentRequestData;
@@ -546,6 +558,19 @@
     if (currentRequestData) {
       var req = currentRequestData;
       console.log('Order request declined:', req.id, isTimeout ? '(Timeout)' : '(Manual)');
+
+      var state = getAuthState();
+      var riderId = state.id || 'BSL-RIDER-8942';
+      fetch('/api/rider/order-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          riderId: riderId,
+          orderId: req.id,
+          action: 'REJECT'
+        })
+      }).catch(function() {});
+
       currentRequestData = null;
     }
   }

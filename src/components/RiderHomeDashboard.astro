@@ -2,8 +2,8 @@
 // Bhusawal Connect - Rider Partner Home Screen & Live Fleet Dashboard
 ---
 
-<!-- ==================== VIEW 5: FULL RIDER DASHBOARD (MAP-FIRST LIVE INTERFACE) ==================== -->
-<section id="view-dashboard" class="hidden fixed inset-0 w-full h-[100dvh] flex flex-col bg-slate-950 overflow-hidden z-40">
+<!-- ==================== VIEW: FULL RIDER DASHBOARD (MAP-FIRST LIVE INTERFACE) ==================== -->
+<section id="view-dashboard" class="fixed inset-0 w-full h-[100dvh] flex flex-col bg-slate-950 overflow-hidden z-40">
   
   <!-- MAIN TABS CONTAINER -->
   <div class="relative w-full flex-1 overflow-hidden">
@@ -987,9 +987,13 @@
 
         <!-- 9. ADMIN SIMULATOR & LOGOUT -->
         <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 space-y-2.5">
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Admin Simulation & Session</span>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Partner Account & Session</span>
+          <button id="btn-switch-account" class="w-full py-2.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+            <span class="material-symbols-outlined text-sm">swap_horiz</span>
+            <span>Switch Partner Account / Login with Mobile</span>
+          </button>
           <div class="flex items-center gap-2">
-            <button id="btn-admin-toggle-approve" class="flex-1 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer">
+            <button id="btn-admin-toggle-approve" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer border border-slate-700">
               <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
               <span id="btn-admin-toggle-text">Toggle KYC Status</span>
             </button>

@@ -371,6 +371,7 @@ window.BslRiderHome = (function() {
     st.lat = lat;
     st.lng = lng;
     saveRiderState(st);
+    sendServerLocation(lat, lng);
   }
 
   // Graceful simulation drift when device GPS is unavailable or stationary
@@ -790,8 +791,391 @@ window.BslRiderHome = (function() {
     }, 2800);
   }
 
+  // ====================================================================
+  // SERVER API SYNCHRONIZATION HELPERS (PHASE 3 & PHASE 4)
+  // ====================================================================
+  function syncRiderServerStatus() {
+    var st = getRiderState();
+    var riderId = st.id || 'BSL-RIDER-8942';
+
+    fetch('/api/rider/status?riderId=' + encodeURIComponent(riderId))
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data && data.success && data.rider) {
+          st.isOnline = data.rider.isOnline;
+          st.state = data.rider.state;
+          if (Array.isArray(data.activeOrders)) {
+            st.activeOrders = data.activeOrders;
+          }
+          saveRiderState(st);
+          renderHomeView(st);
+        }
+      })
+      .catch(function(err) {});
+  }
+
+  function syncRiderEarnings() {
+    var st = getRiderState();
+    var riderId = st.id || 'BSL-RIDER-8942';
+
+    fetch('/api/rider/earnings?riderId=' + encodeURIComponent(riderId))
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data && data.success && data.today) {
+          st.todayEarnings = data.today.totalEarnings;
+          st.todayOrdersCount = data.today.completedOrders;
+          st.todayDistanceKm = parseFloat(data.today.kmTravelled) || st.todayDistanceKm || 18.4;
+          st.todayOnlineHours = parseFloat(data.today.dutyHours) || st.todayOnlineHours || 4.2;
+          if (data.wallet) {
+            st.walletBalance = data.wallet.balance;
+          }
+          saveRiderState(st);
+
+          var sumEarn = document.getElementById('summary-today-earnings');
+          var sumOrd = document.getElementById('summary-today-orders');
+          var sumDist = document.getElementById('summary-today-dist');
+          var sumTime = document.getElementById('summary-today-time');
+          var walletBal = document.getElementById('wallet-balance-val');
+          var walletEarn = document.getElementById('wallet-earnings-display');
+
+          if (sumEarn) sumEarn.textContent = '₹' + (st.todayEarnings || 0).toLocaleString('en-IN');
+          if (sumOrd) sumOrd.textContent = st.todayOrdersCount || 0;
+          if (sumDist) sumDist.textContent = (st.todayDistanceKm || 0) + ' km';
+          if (sumTime) sumTime.textContent = (st.todayOnlineHours || 0) + 'h';
+          if (walletBal) walletBal.textContent = '₹' + (st.walletBalance || 0).toLocaleString('en-IN');
+          if (walletEarn) walletEarn.textContent = '₹' + (st.todayEarnings || 0).toLocaleString('en-IN');
+        }
+      })
+      .catch(function(err) {});
+  }
+
+  function sendServerLocation(lat, lng) {
+    var st = getRiderState();
+    var riderId = st.id || 'BSL-RIDER-8942';
+
+    fetch('/api/rider/location', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ riderId: riderId, lat: lat, lng: lng })
+    }).catch(function() {});
+  }
+
+  // ====================================================================
+  // UNIFIED ORDERS TAB (ACTIVE DELIVERIES + AVAILABLE FLEET QUEUE)
+  // ====================================================================
+  function renderOrdersTab(state) {
+    state = state || getRiderState();
+    var container = document.getElementById('container-assigned-orders');
+    var badgeEl = document.getElementById('tab-orders-count-badge');
+    if (!container) return;
+
+    container.innerHTML = '<div class="flex items-center justify-center p-8 text-slate-400 text-xs font-bold"><span class="material-symbols-outlined animate-spin mr-2">sync</span> Loading live Bhusawal fleet queue...</div>';
+
+    var riderId = state.id || 'BSL-RIDER-8942';
+
+    fetch('/api/rider/orders?riderId=' + encodeURIComponent(riderId))
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (!data || !data.success) {
+          renderOrdersTabFallback(state, container, badgeEl);
+          return;
+        }
+
+        var activeOrders = data.activeOrders || [];
+        var availableOrders = data.availableOrders || [];
+        var isPassengerLocked = !!data.passengerExclusiveActive;
+
+        if (badgeEl) {
+          badgeEl.textContent = activeOrders.length > 0
+            ? (activeOrders.length + ' Active | ' + availableOrders.length + ' in Queue')
+            : (availableOrders.length + ' Available in Queue');
+        }
+
+        renderOrdersTabMarkup(container, activeOrders, availableOrders, isPassengerLocked, state);
+      })
+      .catch(function(err) {
+        renderOrdersTabFallback(state, container, badgeEl);
+      });
+  }
+
+  function renderOrdersTabFallback(state, container, badgeEl) {
+    var activeOrders = state.activeOrders || [];
+    if (activeOrders.length === 0 && state.activeOrderId) {
+      activeOrders = [state.activeOrder || { id: state.activeOrderId, type: 'GROCERY' }];
+    }
+    if (badgeEl) {
+      badgeEl.textContent = activeOrders.length > 0 ? (activeOrders.length + ' Active') : '0 Available';
+    }
+    renderOrdersTabMarkup(container, activeOrders, [], !!state.isPassengerLocked, state);
+  }
+
+  function renderOrdersTabMarkup(container, activeOrders, availableOrders, isPassengerLocked, state) {
+    container.innerHTML = '';
+
+    // A. PASSENGER EXCLUSIVE WARNING BANNER
+    if (isPassengerLocked) {
+      var lockBanner = document.createElement('div');
+      lockBanner.className = 'p-3.5 bg-gradient-to-r from-amber-950/80 to-slate-900 border-2 border-amber-400 rounded-2xl flex items-center gap-3 shadow-lg';
+      lockBanner.innerHTML = `
+        <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center font-black shrink-0">
+          <span class="material-symbols-outlined text-xl">two_wheeler</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h4 class="text-xs font-black text-amber-300 uppercase tracking-wider">Passenger Exclusive Trip Active</h4>
+          <p class="text-[11px] text-slate-300 font-semibold mt-0.5">Rapido Captain Mode: All regular delivery offers are paused until the passenger is dropped off.</p>
+        </div>
+      `;
+      container.appendChild(lockBanner);
+    }
+
+    // B. ACTIVE ASSIGNED ORDERS SECTION
+    if (activeOrders.length > 0) {
+      var activeHeader = document.createElement('div');
+      activeHeader.className = 'flex items-center justify-between text-xs font-black text-blue-400 uppercase tracking-wider pt-1';
+      activeHeader.innerHTML = `
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+          <span>Active Assigned Orders (${activeOrders.length})</span>
+        </span>
+        <span class="text-[10px] text-slate-400 font-bold">In-Progress</span>
+      `;
+      container.appendChild(activeHeader);
+
+      activeOrders.forEach(function(ord) {
+        var card = document.createElement('div');
+        card.className = 'bg-slate-900/95 rounded-2xl p-4 border border-blue-500/40 shadow-xl space-y-3';
+
+        var type = (ord.serviceType || ord.type || 'GROCERY').toUpperCase();
+        var isPassenger = (type === 'PASSENGER' || type === 'BIKE_RIDE');
+        var badgeColor = isPassenger ? 'bg-amber-400 text-slate-950' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30';
+        var statusLabel = ord.status || 'ASSIGNED';
+        var payout = Number(ord.payout || ord.fare || ord.totalAmount || 45);
+        var custName = ord.customerName || ord.passengerName || 'Customer';
+        var custPhone = ord.customerPhone || ord.phone || '9876543210';
+        var pickupLoc = ord.pickupAddress || ord.pickupName || ord.store || 'Bhusawal Store';
+        var dropLoc = ord.dropAddress || ord.address || 'Bhusawal Destination';
+        var mapsLink = ord.googleMapsLink || ord.google_maps_link || '';
+
+        var mapsBtnHtml = '';
+        if (mapsLink) {
+          mapsBtnHtml = `
+            <a href="${mapsLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-black hover:bg-emerald-500/30 transition-all">
+              <span class="material-symbols-outlined text-sm">pin_drop</span>
+              <span>Open in Google Maps ↗</span>
+            </a>
+          `;
+        }
+
+        var actionBtnHtml = '';
+        if (isPassenger) {
+          if (statusLabel === 'ACCEPTED' || statusLabel === 'GOING_TO_PICKUP') {
+            actionBtnHtml = `<button onclick="window.advanceOrderAction('${ord.id}', 'PASSENGER_START')" class="flex-1 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">Confirm Passenger Onboarded</button>`;
+          } else {
+            actionBtnHtml = `<button onclick="window.advanceOrderAction('${ord.id}', 'PASSENGER_COMPLETE')" class="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">Complete Ride & Collect ₹${payout}</button>`;
+          }
+        } else {
+          if (statusLabel === 'ACCEPTED' || statusLabel === 'GOING_TO_PICKUP') {
+            actionBtnHtml = `<button onclick="window.advanceOrderAction('${ord.id}', 'PICKUP')" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">Confirm Pickup</button>`;
+          } else {
+            actionBtnHtml = `<button onclick="window.advanceOrderAction('${ord.id}', 'DELIVER')" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">Complete Delivery (+₹${payout})</button>`;
+          }
+        }
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-black uppercase ${badgeColor}">
+                ${isPassenger ? '🛵 PASSENGER RIDE' : '📦 ' + type}
+              </span>
+              <span class="text-xs font-extrabold text-white">#${ord.id}</span>
+            </div>
+            <span class="text-xs font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+              +₹${payout}
+            </span>
+          </div>
+
+          <div class="space-y-1.5 text-xs">
+            <div class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-sm text-blue-400 shrink-0 mt-0.5">storefront</span>
+              <p class="text-slate-300 truncate"><strong class="text-slate-400">Pickup:</strong> ${pickupLoc}</p>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-sm text-emerald-400 shrink-0 mt-0.5">location_on</span>
+              <p class="text-slate-200 truncate"><strong class="text-slate-400">Drop:</strong> ${dropLoc}</p>
+            </div>
+            <div class="flex items-center justify-between pt-1 border-t border-slate-800/80 text-[11px] text-slate-400">
+              <span>Customer: <strong class="text-white">${custName}</strong></span>
+              <span>Status: <strong class="text-blue-300">${statusLabel}</strong></span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-1 flex-wrap">
+            ${mapsBtnHtml}
+            <a href="tel:${custPhone}" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold inline-flex items-center gap-1 transition-all">
+              <span class="material-symbols-outlined text-sm">call</span> Call
+            </a>
+            ${actionBtnHtml}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // C. AVAILABLE ORDERS IN BHUSAWAL DISPATCH QUEUE
+    if (!isPassengerLocked && availableOrders.length > 0) {
+      var queueHeader = document.createElement('div');
+      queueHeader.className = 'flex items-center justify-between text-xs font-black text-emerald-400 uppercase tracking-wider pt-3';
+      queueHeader.innerHTML = `
+        <span class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">hub</span>
+          <span>Bhusawal Shared Fleet Queue (${availableOrders.length} Available)</span>
+        </span>
+        <span class="text-[10px] text-slate-400 font-bold">1-Tap Accept</span>
+      `;
+      container.appendChild(queueHeader);
+
+      availableOrders.forEach(function(ord) {
+        var card = document.createElement('div');
+        card.className = 'bg-slate-900/90 rounded-2xl p-4 border border-slate-800 hover:border-emerald-500/50 shadow-lg space-y-3 transition-all';
+
+        var type = (ord.serviceType || ord.type || 'GROCERY').toUpperCase();
+        var isPassenger = (type === 'PASSENGER' || type === 'BIKE_RIDE');
+        var payout = Number(ord.payout || ord.fare || ord.totalAmount || 45);
+        var dist = ord.distanceKm || '2.2';
+        var eta = ord.etaMins || '15';
+        var pickupLoc = ord.pickupAddress || ord.pickupName || ord.store || 'Bhusawal Store';
+        var dropLoc = ord.dropAddress || ord.address || 'Bhusawal Destination';
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-md text-[10px] font-black uppercase bg-slate-800 text-slate-300 border border-slate-700">
+                ${isPassenger ? '🛵 PASSENGER' : '📦 ' + type}
+              </span>
+              <span class="text-xs font-extrabold text-white">#${ord.id}</span>
+            </div>
+            <div class="text-right">
+              <span class="text-sm font-black text-emerald-400 font-display">+₹${payout}</span>
+              <span class="text-[10px] text-slate-400 block">${dist} km • ~${eta}m</span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5 text-xs">
+            <p class="text-slate-300 truncate"><strong class="text-slate-500">From:</strong> ${pickupLoc}</p>
+            <p class="text-slate-300 truncate"><strong class="text-slate-500">To:</strong> ${dropLoc}</p>
+          </div>
+
+          <div class="pt-1 flex items-center gap-2">
+            <button onclick="window.acceptOrderFromQueue('${ord.id}')" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-slate-950 font-black text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-sm">check_circle</span>
+              <span>ACCEPT & ADD TO ROUTE (+₹${payout})</span>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    } else if (!isPassengerLocked && activeOrders.length === 0) {
+      var emptyEl = document.createElement('div');
+      emptyEl.className = 'text-center p-8 bg-slate-900/60 rounded-2xl border border-slate-800/80 space-y-2';
+      emptyEl.innerHTML = `
+        <div class="w-12 h-12 rounded-2xl bg-slate-800 text-slate-400 flex items-center justify-center mx-auto text-2xl font-black">
+          <span class="material-symbols-outlined">inbox</span>
+        </div>
+        <h4 class="text-sm font-black text-white">No active orders right now</h4>
+        <p class="text-xs text-slate-400 max-w-xs mx-auto">Stay ONLINE to receive nearby Grocery, Food, Medicine, Parcel and Passenger ride requests in Bhusawal.</p>
+      `;
+      container.appendChild(emptyEl);
+    }
+  }
+
+  // GLOBAL ACTIONS FOR BUTTONS
+  window.acceptOrderFromQueue = function(orderId) {
+    var st = getRiderState();
+    var riderId = st.id || 'BSL-RIDER-8942';
+
+    showToast('Accepting order #' + orderId + '...', false);
+
+    fetch('/api/rider/order-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        riderId: riderId,
+        orderId: orderId,
+        action: 'ACCEPT'
+      })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (!data.success) {
+        showToast(data.message || 'Could not accept order.', true);
+        alert('⚠️ ' + data.message);
+        return;
+      }
+
+      showToast(data.message || 'Order accepted!', false);
+
+      if (data.activeOrders) {
+        st.activeOrders = data.activeOrders;
+      }
+      if (data.rider) {
+        st.state = data.rider.state;
+        st.isOnline = data.rider.isOnline;
+      }
+      saveRiderState(st);
+
+      renderOrdersTab(st);
+      renderHomeView(st);
+    })
+    .catch(function(err) {
+      showToast('Network error accepting order.', true);
+    });
+  };
+
+  window.advanceOrderAction = function(orderId, action) {
+    var st = getRiderState();
+    var riderId = st.id || 'BSL-RIDER-8942';
+
+    fetch('/api/rider/order-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        riderId: riderId,
+        orderId: orderId,
+        action: action
+      })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (!data.success) {
+        showToast(data.message || 'Error updating order.', true);
+        return;
+      }
+
+      showToast(data.message || 'Action completed!', false);
+
+      if (data.activeOrders) {
+        st.activeOrders = data.activeOrders;
+      }
+      if (data.rider) {
+        st.state = data.rider.state;
+        st.todayEarnings = data.rider.todayEarningsAmount;
+        st.todayOrdersCount = data.rider.todayCompletedCount;
+        st.walletBalance = data.rider.walletBalance;
+      }
+      saveRiderState(st);
+
+      renderOrdersTab(st);
+      renderHomeView(st);
+      syncRiderEarnings();
+    })
+    .catch(function(err) {
+      showToast('Network error advancing order.', true);
+    });
+  };
+
   function renderEarningsSection(state) {
     state = state || getRiderState();
+    syncRiderEarnings();
     var period = state.earningsTimeframe || 'today';
     var breakdown = (state.breakdown && state.breakdown[period]) || {
       total: state.todayEarnings || 684,
@@ -1312,14 +1696,33 @@ window.BslRiderHome = (function() {
     // A. Duty Toggle Button (Top Header & Offline CTA)
     function toggleDuty() {
       var st = getRiderState();
-      st.isOnline = !st.isOnline;
-      st.state = st.isOnline ? 'AVAILABLE' : 'OFFLINE';
-      if (!st.isOnline) {
+      var nextDuty = !st.isOnline;
+      st.isOnline = nextDuty;
+      st.state = nextDuty ? (st.activeOrders && st.activeOrders.length > 0 ? 'DELIVERING' : 'AVAILABLE') : 'OFFLINE';
+      if (!nextDuty) {
         st.activeOrderId = null;
         st.activeOrders = [];
       }
       saveRiderState(st);
       renderHomeView(st);
+
+      // Server sync
+      var riderId = st.id || 'BSL-RIDER-8942';
+      fetch('/api/rider/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ riderId: riderId, isOnline: nextDuty })
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data && data.success && data.rider) {
+          st.state = data.rider.state;
+          st.isOnline = data.rider.isOnline;
+          saveRiderState(st);
+          renderHomeView(st);
+        }
+      })
+      .catch(function() {});
     }
 
     document.getElementById('btn-toggle-duty')?.addEventListener('click', toggleDuty);
@@ -1349,6 +1752,8 @@ window.BslRiderHome = (function() {
         // Trigger tab-specific refresh
         if (targetTab === 'home' && map) {
           setTimeout(function() { map.invalidateSize(); }, 150);
+        } else if (targetTab === 'orders') {
+          renderOrdersTab(getRiderState());
         } else if (targetTab === 'earnings') {
           renderEarningsSection(getRiderState());
         } else if (targetTab === 'profile') {
@@ -1401,6 +1806,18 @@ window.BslRiderHome = (function() {
 
       var stop = currentNextAction.stop;
       var wasPickup = (stop.stopType === 'PICKUP');
+      var riderId = st.id || 'BSL-RIDER-8942';
+
+      // Send to server API
+      fetch('/api/rider/order-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          riderId: riderId,
+          orderId: stop.orderId,
+          action: wasPickup ? 'PICKUP' : 'DELIVER'
+        })
+      }).catch(function() {});
 
       if (window.BslRouteSequencer) {
         st.activeOrders = window.BslRouteSequencer.advanceStop(activeOrders, stop);
@@ -1676,6 +2093,18 @@ window.BslRiderHome = (function() {
         st.activeOrders = [curRide];
         saveRiderState(st);
 
+        // Sync with server API
+        var riderId = st.id || 'BSL-RIDER-8942';
+        fetch('/api/rider/order-action', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            riderId: riderId,
+            orderId: curRide.id,
+            action: 'PASSENGER_START'
+          })
+        }).catch(function() {});
+
         if (window.BhusawalBackend) {
           window.BhusawalBackend.riders.save({
             id: st.id || 'BHU-RIDER-8942',
@@ -1763,6 +2192,24 @@ window.BslRiderHome = (function() {
       if (modal) modal.classList.add('hidden');
 
       var st = getRiderState();
+      var curRide = (st.activeOrders && st.activeOrders[0]) || {};
+      var riderId = st.id || 'BSL-RIDER-8942';
+
+      // Send PASSENGER_COMPLETE to server
+      if (curRide.id) {
+        fetch('/api/rider/order-action', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            riderId: riderId,
+            orderId: curRide.id,
+            action: 'PASSENGER_COMPLETE'
+          })
+        }).then(function() {
+          syncRiderEarnings();
+        }).catch(function() {});
+      }
+
       st.state = 'AVAILABLE';
       st.isPassengerLocked = false;
       st.activeOrderId = null;
@@ -2085,6 +2532,8 @@ window.BslRiderHome = (function() {
     bindInteractions();
     var state = getRiderState();
     renderHomeView(state);
+    syncRiderServerStatus();
+    syncRiderEarnings();
   }
 
   return {

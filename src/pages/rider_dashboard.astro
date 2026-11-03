@@ -1,419 +1,87 @@
 ---
-import Switcher from '../components/Switcher.astro';
+// Bhusawal Connect - Official Delivery Partner & Captain App (Dashboard Route)
+import RiderHomeDashboard from '../components/RiderHomeDashboard.astro';
+import RiderOrderRequestModal from '../components/RiderOrderRequestModal.astro';
 ---
 
-<html class="light" lang="en">
+<!DOCTYPE html>
+<html lang="en" class="light">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Delivery Partner App - Bhusawal Connect</title>
-  <script src="/assets/03ba5d9f9e95fc3599acebcbe7e5fb9a.js" is:inline></script>
-  <link href="/assets/31a15fd7aedbddede41c276e836f7170.css" rel="stylesheet" />
-  <link href="/assets/a39f5c6fcbb87b419667ec984d2e579a.css" rel="stylesheet" />
-  <script src="/assets/realtime_sync.js" is:inline></script>
-  <style>
-    * { -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f8fafc; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-  </style>
-</head>
-<body class="bg-slate-900 min-h-screen pb-24 text-slate-100">
-
-  <!-- Rider Header -->
-  <header class="bg-slate-800/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-700 px-4 py-3">
-    <div class="max-w-md mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-black">
-          🛵
-        </div>
-        <div>
-          <h1 class="text-sm font-black text-white leading-tight">Huzaifa Shaikh (Rider)</h1>
-          <p class="text-[10px] font-bold text-slate-400">Bhusawal Zone • ID #HZ-7498</p>
-        </div>
-      </div>
-      <!-- Availability Toggle Button -->
-      <div class="flex items-center gap-2">
-        <div id="gps-status-badge" class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-black px-2.5 py-1 rounded-full flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-          <span id="gps-status-text">📍 GPS Active</span>
-        </div>
-        <button id="btn-toggle-duty" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
-          <span class="w-2 h-2 rounded-full bg-slate-950 animate-pulse"></span>
-          <span id="duty-status-text">ONLINE</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-md mx-auto px-4 mt-4 space-y-4">
-
-    <!-- Earnings Overview Card -->
-    <div class="bg-slate-800 rounded-3xl p-5 border border-slate-700/80 shadow-xl space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-700/60 pb-3">
-        <div>
-          <p class="text-[10px] uppercase tracking-wider font-extrabold text-slate-400">Today's Earnings</p>
-          <h2 class="text-2xl font-black text-emerald-400 mt-0.5">₹480.00</h2>
-        </div>
-        <div class="text-right">
-          <p class="text-[10px] uppercase tracking-wider font-extrabold text-slate-400">Completed</p>
-          <p class="text-lg font-black text-white">8 Deliveries</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-3 gap-2 text-center pt-1">
-        <div class="bg-slate-900/60 p-2.5 rounded-2xl border border-slate-700/50">
-          <p class="text-[9px] font-bold text-slate-400">Duty Hours</p>
-          <p class="text-xs font-black text-white mt-0.5">4.2 hrs</p>
-        </div>
-        <div class="bg-slate-900/60 p-2.5 rounded-2xl border border-slate-700/50">
-          <p class="text-[9px] font-bold text-slate-400">Tips Earned</p>
-          <p class="text-xs font-black text-emerald-400 mt-0.5">₹80.00</p>
-        </div>
-        <div class="bg-slate-900/60 p-2.5 rounded-2xl border border-slate-700/50">
-          <p class="text-[9px] font-bold text-slate-400">Rating</p>
-          <p class="text-xs font-black text-amber-400 mt-0.5">★ 4.95</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Active Delivery Order Container -->
-    <div id="active-order-section" class="hidden">
-      <div class="bg-emerald-950/40 border border-emerald-500/40 rounded-3xl p-5 space-y-4 shadow-xl">
-        <div class="flex items-center justify-between">
-          <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider">Active Delivery</span>
-          <span id="active-order-id" class="text-xs font-black text-slate-300">#ORD-000000</span>
-        </div>
-
-        <div class="space-y-3 text-xs">
-          <div class="flex items-start gap-3">
-            <span class="text-base">🏪</span>
-            <div>
-              <p class="font-extrabold text-slate-400 text-[10px]">PICKUP STORE</p>
-              <h3 id="active-pickup-store" class="font-black text-white">Bhusawal Express Store</h3>
-              <p class="text-slate-400 text-[11px]">Station Road, Bhusawal</p>
-            </div>
-          </div>
-          <div class="border-l-2 border-dashed border-slate-700 ml-2.5 my-1 h-4"></div>
-          <div class="flex items-start gap-3">
-            <span class="text-base">📍</span>
-            <div>
-              <p class="font-extrabold text-slate-400 text-[10px]">DELIVERY CUSTOMER</p>
-              <h3 id="active-customer-name" class="font-black text-white">Sahil (Bhusawal Resident)</h3>
-              <p id="active-customer-address" class="text-slate-400 text-[11px]">Shivaji Nagar, Bhusawal</p>
-              <div id="active-customer-maps-link-wrap" class="hidden mt-1.5">
-                <a id="btn-customer-maps-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 rounded-xl text-xs font-black transition-all">
-                  <span class="material-symbols-outlined text-sm">pin_drop</span>
-                  <span>Open in Google Maps</span>
-                  <span class="material-symbols-outlined text-[10px]">open_in_new</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Customer Phone & Action Buttons -->
-        <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-2xl border border-slate-700/60">
-          <div>
-            <p class="text-[10px] font-bold text-slate-400">Customer Phone</p>
-            <p id="active-customer-phone" class="text-xs font-black text-emerald-400">+91 74980 71274</p>
-          </div>
-          <div class="flex items-center gap-2">
-            <a id="btn-call-cust" href="tel:7498071274" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-xl text-xs font-bold flex items-center gap-1 active:scale-95">
-              <span class="material-symbols-outlined text-sm">call</span> Call
-            </a>
-          </div>
-        </div>
-
-        <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-700/60 flex items-center justify-between">
-          <div>
-            <p class="text-[10px] font-bold text-slate-400">Order Items</p>
-            <p id="active-order-items" class="text-xs font-black text-slate-200">1 Item</p>
-          </div>
-          <div class="text-right">
-            <p class="text-[10px] font-bold text-slate-400">Your Earning</p>
-            <p id="active-order-earning" class="text-sm font-black text-emerald-400">₹60.00</p>
-          </div>
-        </div>
-
-        <!-- Order Step Advancement Button -->
-        <button id="btn-next-step" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs py-3 rounded-2xl shadow-lg active:scale-95 transition-all">
-          1. Arrived at Pickup Store
-        </button>
-      </div>
-    </div>
-
-    <!-- Available Incoming Orders List -->
-    <div class="space-y-3">
-      <div class="flex items-center justify-between">
-        <h3 class="text-xs font-black text-slate-300 uppercase tracking-wider flex items-center gap-2">
-          <span>🔔 Incoming Delivery Requests</span>
-          <span id="incoming-count-badge" class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-0.5 rounded-full font-black">0</span>
-        </h3>
-        <button id="btn-refresh-orders" class="text-[10px] font-extrabold text-slate-400 hover:text-white flex items-center gap-1">
-          <span class="material-symbols-outlined text-sm">refresh</span> Refresh
-        </button>
-      </div>
-
-      <div id="incoming-orders-container" class="space-y-3">
-        <!-- Rendered dynamically -->
-      </div>
-    </div>
-
-  </main>
-
-  <!-- High-Priority Incoming Order Alert Modal -->
-  <div id="rider-order-popup-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border-2 border-emerald-500 rounded-3xl max-w-md w-full p-6 space-y-5 relative shadow-2xl text-center animate-in zoom-in-95 duration-200">
-      <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl animate-bounce border border-emerald-500/40">
-        🔔
-      </div>
-      <div>
-        <span class="bg-emerald-500 text-slate-950 font-black text-[10px] px-3 py-1 rounded-full uppercase tracking-widest">New Order Request</span>
-        <h2 class="text-xl font-black text-white mt-2">New Delivery Order Available!</h2>
-        <p class="text-xs text-slate-400 font-bold mt-1">Accept now to claim delivery payout!</p>
-      </div>
-
-      <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 text-left space-y-2">
-        <div class="flex justify-between text-xs font-extrabold">
-          <span class="text-slate-400">Order ID:</span>
-          <span id="popup-order-id" class="text-emerald-400">#ORD-123456</span>
-        </div>
-        <div class="flex justify-between text-xs font-extrabold">
-          <span class="text-slate-400">Delivery Address:</span>
-          <span id="popup-order-address" class="text-white truncate max-w-[180px]">Shivaji Nagar</span>
-        </div>
-        <div class="flex justify-between text-xs font-extrabold">
-          <span class="text-slate-400">Items:</span>
-          <span id="popup-order-items" class="text-slate-300 truncate max-w-[180px]">2 items</span>
-        </div>
-        <div class="flex justify-between text-xs font-black border-t border-slate-700/80 pt-2 mt-2">
-          <span class="text-slate-300">Rider Payout:</span>
-          <span id="popup-order-payout" class="text-emerald-400 text-sm">₹60.00</span>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-3 pt-2">
-        <button id="btn-decline-popup" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-extrabold text-xs py-3 rounded-2xl active:scale-95 transition-all">
-          Pass / Decline
-        </button>
-        <button id="btn-accept-popup" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs py-3 rounded-2xl shadow-lg active:scale-95 transition-all">
-          ⚡ ACCEPT ORDER
-        </button>
-      </div>
-    </div>
-  </div>
-
+  <title>Bhusawal Connect | Delivery Partner & Captain Dashboard</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script is:inline src="https://cdn.tailwindcss.com"></script>
   <script is:inline>
-    let isOnline = true;
-    let currentPendingOrders = [];
-    let currentActiveOrder = null;
-    let watchId = null;
-
-    // Start continuous GPS watching & Realtime Broadcast
-    function startGPSWatch() {
-      if (!navigator.geolocation) return;
-      watchId = navigator.geolocation.watchPosition((pos) => {
-        const coords = {
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-          riderId: 'HZ-7498',
-          heading: pos.coords.heading || 0
-        };
-        if (window.BhusawalRealtime) {
-          window.BhusawalRealtime.emit('rider-location', coords);
-        }
-        document.getElementById('gps-status-text').textContent = '📍 GPS Active';
-      }, (err) => {
-        document.getElementById('gps-status-text').textContent = '📍 GPS Standby';
-      }, { enableHighAccuracy: true, maximumAge: 2000, timeout: 5000 });
-    }
-
-    function stopGPSWatch() {
-      if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId);
-        watchId = null;
-      }
-      document.getElementById('gps-status-text').textContent = '📍 GPS Stopped';
-    }
-
-    startGPSWatch();
-
-    function loadPendingOrders() {
-      const stored = localStorage.getItem('pending_rider_orders');
-      currentPendingOrders = stored ? JSON.parse(stored) : [];
-      renderOrdersList();
-    }
-
-    function renderOrdersList() {
-      const container = document.getElementById('incoming-orders-container');
-      const badge = document.getElementById('incoming-count-badge');
-      badge.textContent = currentPendingOrders.length;
-
-      if (!isOnline) {
-        container.innerHTML = '<div class="bg-slate-800/60 rounded-3xl p-6 text-center border border-slate-700/50 text-slate-400 text-xs font-bold">You are currently OFFLINE. Toggle duty switch to receive new orders.</div>';
-        return;
-      }
-
-      if (currentPendingOrders.length === 0) {
-        container.innerHTML = '<div class="bg-slate-800/60 rounded-3xl p-6 text-center border border-slate-700/50 text-slate-400 text-xs font-bold">No new orders in Bhusawal area right now. Waiting for customer orders... ⏳</div>';
-        return;
-      }
-
-      let html = '';
-      currentPendingOrders.forEach(ord => {
-        html += `
-          <div class="bg-slate-800 border border-slate-700 rounded-3xl p-4 space-y-3 hover:border-emerald-500/50 transition-all shadow-lg">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-black text-emerald-400">${ord.id}</span>
-              <span class="text-[10px] text-slate-400 font-bold">${ord.timestamp || 'Just now'}</span>
-            </div>
-            <div class="text-xs space-y-1">
-              <p class="font-extrabold text-white">📍 ${ord.address}</p>
-              <p class="text-[11px] text-slate-400 truncate">🛍️ ${ord.items || 'Grocery Items'}</p>
-            </div>
-            <div class="flex items-center justify-between border-t border-slate-700/60 pt-3">
-              <div>
-                <p class="text-[9px] text-slate-400 font-bold">Payout</p>
-                <p class="text-sm font-black text-emerald-400">₹${ord.riderEarning || 60}</p>
-              </div>
-              <button onclick="acceptOrder('${ord.id}')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs px-4 py-2 rounded-xl active:scale-95 transition-all">
-                Accept Delivery ⚡
-              </button>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    window.acceptOrder = (orderId) => {
-      const idx = currentPendingOrders.findIndex(o => o.id === orderId);
-      if (idx !== -1) {
-        currentActiveOrder = currentPendingOrders.splice(idx, 1)[0];
-        currentActiveOrder.status = "RIDER_ASSIGNED";
-        currentActiveOrder.step = 1;
-        currentActiveOrder.riderName = "Huzaifa Shaikh";
-        currentActiveOrder.riderPhone = "7498071274";
-        
-        localStorage.setItem('pending_rider_orders', JSON.stringify(currentPendingOrders));
-        localStorage.setItem('active_rider_order', JSON.stringify(currentActiveOrder));
-        localStorage.setItem('last_active_order', JSON.stringify(currentActiveOrder));
-
-        if (window.BhusawalRealtime) {
-          window.BhusawalRealtime.emit('order-status', { orderId: currentActiveOrder.id, status: 'RIDER_ASSIGNED' });
-        }
-        
-        document.getElementById('rider-order-popup-modal').classList.add('hidden');
-        renderActiveOrder();
-        renderOrdersList();
-      }
-    };
-
-    function renderActiveOrder() {
-      const activeSection = document.getElementById('active-order-section');
-      const storedActive = localStorage.getItem('active_rider_order');
-      if (storedActive) {
-        currentActiveOrder = JSON.parse(storedActive);
-      }
-
-      if (!currentActiveOrder) {
-        activeSection.classList.add('hidden');
-        return;
-      }
-
-      activeSection.classList.remove('hidden');
-      document.getElementById('active-order-id').textContent = currentActiveOrder.id;
-      document.getElementById('active-pickup-store').textContent = currentActiveOrder.storeName || "Bhusawal Express Store";
-      document.getElementById('active-customer-name').textContent = currentActiveOrder.customerName || "Sahil (Bhusawal Resident)";
-      document.getElementById('active-customer-address').textContent = currentActiveOrder.address;
-
-      const mapsLink = currentActiveOrder.googleMapsLink || currentActiveOrder.google_maps_link || (currentActiveOrder.order_data && (currentActiveOrder.order_data.googleMapsLink || currentActiveOrder.order_data.google_maps_link)) || '';
-      const mapsWrap = document.getElementById('active-customer-maps-link-wrap');
-      const mapsBtn = document.getElementById('btn-customer-maps-link');
-      if (mapsWrap && mapsBtn) {
-        if (mapsLink) {
-          mapsWrap.classList.remove('hidden');
-          mapsBtn.href = mapsLink;
-        } else {
-          mapsWrap.classList.add('hidden');
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            riderPrimary: '#2563EB',
+            riderPrimaryDark: '#1D4ED8',
+            riderPrimaryLight: '#EFF6FF',
+            riderSuccess: '#16A34A',
+            riderWarning: '#F59E0B',
+            riderError: '#DC2626'
+          }
         }
       }
-
-      document.getElementById('active-customer-phone').textContent = currentActiveOrder.phone || "+91 74980 71274";
-      document.getElementById('btn-call-cust').href = 'tel:' + (currentActiveOrder.phone || '7498071274');
-      document.getElementById('active-order-items').textContent = currentActiveOrder.items || "1 Item";
-      document.getElementById('active-order-earning').textContent = '₹' + (currentActiveOrder.riderEarning || 60);
-
-      const stepBtn = document.getElementById('btn-next-step');
-      const step = currentActiveOrder.step || 1;
-
-      if (step === 1) {
-        stepBtn.textContent = "1. Arrived at Store (Confirm Pickup)";
-      } else if (step === 2) {
-        stepBtn.textContent = "2. Order Picked Up (Start Navigation)";
-      } else if (step === 3) {
-        stepBtn.textContent = "3. Arrived at Customer Location (Deliver)";
-      } else if (step === 4) {
-        stepBtn.textContent = "🎉 Delivery Complete!";
-        stepBtn.className = "w-full bg-slate-700 text-emerald-400 font-black text-xs py-3 rounded-2xl cursor-default";
-      }
     }
-
-    document.getElementById('btn-next-step').addEventListener('click', () => {
-      if (!currentActiveOrder) return;
-      let step = currentActiveOrder.step || 1;
-      if (step < 4) {
-        step++;
-        currentActiveOrder.step = step;
-        if (step === 2) currentActiveOrder.status = "REACHED_STORE";
-        if (step === 3) currentActiveOrder.status = "PICKED_UP";
-        if (step === 4) {
-          currentActiveOrder.status = "DELIVERED";
-          localStorage.removeItem('active_rider_order');
-          stopGPSWatch(); // Automatically stop location updates after delivery is completed
-        } else {
-          localStorage.setItem('active_rider_order', JSON.stringify(currentActiveOrder));
-        }
-        localStorage.setItem('last_active_order', JSON.stringify(currentActiveOrder));
-
-        if (window.BhusawalRealtime) {
-          window.BhusawalRealtime.emit('order-status', { orderId: currentActiveOrder.id, status: currentActiveOrder.status });
-        }
-
-        renderActiveOrder();
-      }
-    });
-
-    // Toggle Duty
-    const dutyBtn = document.getElementById('btn-toggle-duty');
-    const dutyText = document.getElementById('duty-status-text');
-
-    dutyBtn.addEventListener('click', () => {
-      isOnline = !isOnline;
-      if (isOnline) {
-        dutyText.textContent = "ONLINE";
-        dutyBtn.className = "bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 transition-all active:scale-95";
-        startGPSWatch();
-      } else {
-        dutyText.textContent = "OFFLINE";
-        dutyBtn.className = "bg-rose-500/20 text-rose-400 border border-rose-500/40 font-black text-xs px-3.5 py-1.5 rounded-full flex items-center gap-1.5 transition-all active:scale-95";
-        stopGPSWatch();
-      }
-      renderOrdersList();
-    });
-
-    // Check incoming orders via Realtime sync
-    if (window.BhusawalRealtime) {
-      window.BhusawalRealtime.on('new-order', (ord) => {
-        loadPendingOrders();
-      });
-    }
-
-    // Init load
-    loadPendingOrders();
-    renderActiveOrder();
   </script>
 
-  <Switcher />
+  <!-- Google Fonts & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  
+  <!-- LEAFLET MAPS FOR LIVE BHUSAWAL FLEET INTERFACE -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+  <!-- BSL CONNECT FLEET CORE SCRIPTS -->
+  <script is:inline src="/assets/bsl_rider_fleet_engine.js"></script>
+  <script is:inline src="/assets/bsl_route_sequencer.js"></script>
+  <script is:inline src="/assets/bsl_rider_home.js"></script>
+  <script is:inline src="/assets/bsl_order_request_engine.js"></script>
+  <script is:inline src="/assets/smart_assignment_engine.js"></script>
+  <script is:inline src="/assets/delivery_workflow_engine.js"></script>
+  <script is:inline src="/assets/rider_push_notifications.js"></script>
+  <script is:inline src="/assets/google_navigation_engine.js"></script>
+  <script is:inline src="/bhusawal_master_db.js"></script>
+  <script is:inline src="/bhusawal_backend.js"></script>
+  <script is:inline src="/bhusawal_dispatch_engine.js"></script>
+  <script is:inline src="/bhusawal_notifications.js"></script>
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #020617;
+      color: #F8FAFC;
+    }
+    .font-display { font-family: 'Outfit', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen overflow-hidden selection:bg-blue-600 selection:text-white">
+
+  <!-- ==================== 1. FULL RIDER DASHBOARD (MAP-FIRST APPLICATION) ==================== -->
+  <RiderHomeDashboard />
+
+  <!-- ==================== 2. REUSABLE UNIFIED ORDER REQUEST ALERT MODAL ==================== -->
+  <RiderOrderRequestModal />
+
+  <!-- ==================== RIDER APP CONTROLLER SCRIPT ==================== -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize BslRiderHome Captain Application Immediately
+      if (window.BslRiderHome) {
+        window.BslRiderHome.start();
+      }
+    });
+  </script>
 </body>
 </html>

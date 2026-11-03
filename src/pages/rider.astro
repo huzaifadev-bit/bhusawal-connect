@@ -1,5 +1,5 @@
 ---
-// Bhusawal Connect - Official Delivery Partner Application
+// Bhusawal Connect - Official Delivery Partner & Captain App
 import RiderHomeDashboard from '../components/RiderHomeDashboard.astro';
 import RiderOrderRequestModal from '../components/RiderOrderRequestModal.astro';
 ---
@@ -8,8 +8,8 @@ import RiderOrderRequestModal from '../components/RiderOrderRequestModal.astro';
 <html lang="en" class="light">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Bhusawal Connect | Delivery Partner Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Bhusawal Connect | Delivery Partner & Captain App</title>
   
   <!-- Tailwind CSS CDN -->
   <script is:inline src="https://cdn.tailwindcss.com"></script>
@@ -33,13 +33,14 @@ import RiderOrderRequestModal from '../components/RiderOrderRequestModal.astro';
   <!-- Google Fonts & Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
   
   <!-- LEAFLET MAPS FOR LIVE BHUSAWAL FLEET INTERFACE -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
+  <!-- BSL CONNECT FLEET CORE SCRIPTS -->
   <script is:inline src="/assets/bsl_rider_fleet_engine.js"></script>
   <script is:inline src="/assets/bsl_route_sequencer.js"></script>
   <script is:inline src="/assets/bsl_rider_home.js"></script>
@@ -54,1270 +55,229 @@ import RiderOrderRequestModal from '../components/RiderOrderRequestModal.astro';
   <script is:inline src="/bhusawal_notifications.js"></script>
 
   <style>
+    * { -webkit-tap-highlight-color: transparent; }
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #F8FAFC;
-      color: #0F172A;
-      -webkit-tap-highlight-color: transparent;
+      background-color: #020617;
+      color: #F8FAFC;
     }
+    .font-display { font-family: 'Outfit', sans-serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between selection:bg-blue-100 selection:text-blue-700">
+<body class="bg-slate-950 text-slate-100 min-h-screen overflow-hidden selection:bg-blue-600 selection:text-white">
 
-  <!-- ==================== TOP RIDER APP HEADER ==================== -->
-  <header id="app-top-header" class="bg-blue-600 text-white sticky top-0 z-50 border-b border-blue-700 shadow-md">
-    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 bg-white text-blue-600 rounded-xl flex items-center justify-center font-extrabold shadow-sm">
-          <span class="material-symbols-outlined text-2xl">two_wheeler</span>
-        </div>
-        <div>
-          <h1 class="text-base font-extrabold leading-tight tracking-tight">Bhusawal Connect</h1>
-          <p class="text-[11px] font-semibold text-blue-100 flex items-center gap-1">
-            <span>Delivery Fleet Console</span>
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-          </p>
-        </div>
-      </div>
+  <!-- ==================== 1. FULL RIDER DASHBOARD (MAP-FIRST APPLICATION) ==================== -->
+  <RiderHomeDashboard />
 
-      <div id="header-status-badge" class="hidden flex items-center gap-2">
-        <span id="duty-indicator-pill" class="px-2.5 py-1 bg-blue-700 border border-blue-500 text-white text-[11px] font-bold rounded-lg flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-slate-300" id="duty-indicator-dot"></span>
-          <span id="duty-indicator-text">OFFLINE</span>
-        </span>
-      </div>
-    </div>
-  </header>
+  <!-- ==================== 2. REUSABLE UNIFIED ORDER REQUEST ALERT MODAL ==================== -->
+  <RiderOrderRequestModal />
 
-  <!-- ==================== MAIN RIDER VIEW CONTAINER ==================== -->
-  <main class="max-w-md mx-auto w-full flex-1 px-4 py-4 space-y-5">
+  <!-- ==================== 3. PARTNER AUTH & ACCOUNT MANAGEMENT MODAL ==================== -->
+  <div id="modal-rider-auth" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 max-w-md w-full space-y-5 shadow-2xl relative my-auto">
+      
+      <!-- Close button -->
+      <button id="btn-close-auth-modal" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer" title="Close">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
 
-    <!-- ------------------ VIEW 1: LOGIN (MOBILE NUMBER) ------------------ -->
-    <section id="view-login" class="space-y-6">
-      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+      <!-- STEP 1: MOBILE LOGIN / SWITCH ACCOUNT -->
+      <div id="auth-step-login" class="space-y-4">
         <div class="space-y-1">
-          <span class="px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-[11px] font-extrabold uppercase tracking-wider">Official Partner Portal</span>
-          <h2 class="text-xl font-extrabold text-slate-900 pt-1">Delivery Partner Registration</h2>
-          <p class="text-xs font-semibold text-slate-500 leading-relaxed">Enter your registered mobile number to access your delivery fleet account.</p>
+          <span class="px-2.5 py-0.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-md text-[10px] font-black uppercase tracking-wider">Bhusawal Shared Fleet</span>
+          <h2 class="text-xl font-black text-white pt-1">Partner Account Login</h2>
+          <p class="text-xs text-slate-400">Enter your 10-digit mobile number to access your partner fleet dashboard.</p>
         </div>
 
-        <form id="form-login" class="space-y-4" onsubmit="return false;">
+        <form id="form-auth-login" class="space-y-4" onsubmit="return false;">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">Mobile Number <span class="text-red-500">*</span></label>
+            <label class="block text-xs font-bold text-slate-300 mb-1.5">Registered Mobile Number <span class="text-rose-400">*</span></label>
             <div class="relative flex items-center">
-              <span class="absolute left-3.5 text-sm font-extrabold text-slate-500 border-r border-slate-200 pr-2.5">+91</span>
+              <span class="absolute left-3.5 text-sm font-extrabold text-slate-400 border-r border-slate-700 pr-2.5">+91</span>
               <input
                 type="tel"
-                id="input-login-mobile"
+                id="input-auth-mobile"
                 maxlength="10"
                 placeholder="Enter 10-digit mobile number"
-                class="w-full pl-16 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-base font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
+                class="w-full pl-16 pr-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-sm font-bold text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
                 required
               />
             </div>
-            <p id="error-login-mobile" class="hidden text-xs font-bold text-red-600 mt-1 flex items-center gap-1">
-              <span class="material-symbols-outlined text-sm">error</span> Enter a valid 10-digit mobile number
+            <p id="error-auth-mobile" class="hidden text-xs font-bold text-rose-400 mt-1 flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">error</span> Enter a valid 10-digit Indian mobile number
             </p>
           </div>
 
           <button
             type="submit"
-            id="btn-send-otp"
-            class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold text-sm rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            id="btn-auth-send-otp"
+            class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-xs rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>Send OTP Verification</span>
-            <span class="material-symbols-outlined text-base">arrow_forward</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
         </form>
       </div>
 
-      <div class="bg-blue-50/80 rounded-2xl p-4 border border-blue-200 space-y-2.5">
-        <div class="flex items-center gap-2 text-blue-900">
-          <span class="material-symbols-outlined text-blue-600">hub</span>
-          <h3 class="text-xs font-extrabold uppercase tracking-wider">One Fleet • 5 Service Orders</h3>
-        </div>
-        <p class="text-xs font-medium text-slate-600 leading-relaxed">
-          Bhusawal Connect operates a single unified delivery fleet. Registered partners receive orders across:
-        </p>
-        <div class="grid grid-cols-2 gap-2 pt-1">
-          <div class="bg-white p-2 rounded-xl border border-blue-100 flex items-center gap-2 text-xs font-bold text-slate-700 shadow-2xs">
-            <span class="text-base">🛒</span> Grocery (Max 2)
-          </div>
-          <div class="bg-white p-2 rounded-xl border border-blue-100 flex items-center gap-2 text-xs font-bold text-slate-700 shadow-2xs">
-            <span class="text-base">🍽️</span> Food (Max 2)
-          </div>
-          <div class="bg-white p-2 rounded-xl border border-blue-100 flex items-center gap-2 text-xs font-bold text-slate-700 shadow-2xs">
-            <span class="text-base">💊</span> Medicines (Max 2)
-          </div>
-          <div class="bg-white p-2 rounded-xl border border-blue-100 flex items-center gap-2 text-xs font-bold text-slate-700 shadow-2xs">
-            <span class="text-base">🏪</span> Local Shops (Max 2)
-          </div>
-          <div class="bg-white p-2 rounded-xl border border-blue-100 flex items-center gap-2 text-xs font-bold text-slate-700 shadow-2xs col-span-2">
-            <span class="text-base">📦</span> Parcel (Strict Max 1)
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ------------------ VIEW 2: OTP VERIFICATION ------------------ -->
-    <section id="view-otp" class="hidden space-y-6">
-      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
-        <div class="flex items-center justify-between">
-          <button id="btn-back-to-login" class="text-xs font-bold text-blue-600 flex items-center gap-1 hover:underline">
+      <!-- STEP 2: OTP VERIFICATION -->
+      <div id="auth-step-otp" class="hidden space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+          <button id="btn-auth-back-to-login" class="text-xs font-bold text-blue-400 flex items-center gap-1 hover:underline cursor-pointer">
             <span class="material-symbols-outlined text-sm">arrow_back</span> Change Number
           </button>
-          <span class="text-xs font-bold text-slate-400">Step 2 of 4</span>
+          <span class="text-[10px] font-bold text-slate-500">Step 2 of 4</span>
         </div>
 
         <div class="space-y-1">
-          <h2 class="text-xl font-extrabold text-slate-900">OTP Verification</h2>
-          <p class="text-xs font-semibold text-slate-500">
-            Enter the 4-digit code sent to <strong id="display-otp-mobile" class="text-slate-900">+91 9876543210</strong>
+          <h2 class="text-lg font-black text-white">Enter OTP Verification</h2>
+          <p class="text-xs text-slate-400">
+            Enter 4-digit code sent to <strong id="display-auth-mobile" class="text-white">+91 9876543210</strong>
           </p>
         </div>
 
-        <form id="form-otp" class="space-y-4" onsubmit="return false;">
-          <div class="flex justify-between gap-2.5 max-w-xs mx-auto py-2">
-            <input type="tel" maxlength="1" class="otp-box w-12 h-14 bg-slate-50 border-2 border-slate-300 rounded-xl text-center text-xl font-black text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none" required />
-            <input type="tel" maxlength="1" class="otp-box w-12 h-14 bg-slate-50 border-2 border-slate-300 rounded-xl text-center text-xl font-black text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none" required />
-            <input type="tel" maxlength="1" class="otp-box w-12 h-14 bg-slate-50 border-2 border-slate-300 rounded-xl text-center text-xl font-black text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none" required />
-            <input type="tel" maxlength="1" class="otp-box w-12 h-14 bg-slate-50 border-2 border-slate-300 rounded-xl text-center text-xl font-black text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none" required />
+        <form id="form-auth-otp" class="space-y-4" onsubmit="return false;">
+          <div class="flex justify-between gap-2 max-w-xs mx-auto py-2">
+            <input type="tel" maxlength="1" class="auth-otp-box w-12 h-14 bg-slate-950 border-2 border-slate-700 rounded-xl text-center text-xl font-black text-white focus:border-blue-500 focus:outline-none" required />
+            <input type="tel" maxlength="1" class="auth-otp-box w-12 h-14 bg-slate-950 border-2 border-slate-700 rounded-xl text-center text-xl font-black text-white focus:border-blue-500 focus:outline-none" required />
+            <input type="tel" maxlength="1" class="auth-otp-box w-12 h-14 bg-slate-950 border-2 border-slate-700 rounded-xl text-center text-xl font-black text-white focus:border-blue-500 focus:outline-none" required />
+            <input type="tel" maxlength="1" class="auth-otp-box w-12 h-14 bg-slate-950 border-2 border-slate-700 rounded-xl text-center text-xl font-black text-white focus:border-blue-500 focus:outline-none" required />
           </div>
 
-          <p id="error-otp" class="hidden text-xs font-bold text-red-600 text-center flex items-center justify-center gap-1">
+          <p id="error-auth-otp" class="hidden text-xs font-bold text-rose-400 text-center flex items-center justify-center gap-1">
             <span class="material-symbols-outlined text-sm">error</span> Invalid OTP. Please try again.
           </p>
 
-          <div class="flex items-center justify-between text-xs pt-1">
-            <span class="text-slate-500 font-medium">Auto-reading SMS...</span>
-            <button type="button" id="btn-resend-otp" class="font-bold text-blue-600 hover:underline">Resend OTP</button>
-          </div>
-
           <button
             type="submit"
-            id="btn-verify-otp"
-            class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold text-sm rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            id="btn-auth-verify-otp"
+            class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-black text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>Verify & Continue Registration</span>
-            <span class="material-symbols-outlined text-base">check_circle</span>
+            <span>Verify & Continue</span>
+            <span class="material-symbols-outlined text-sm">check_circle</span>
           </button>
         </form>
       </div>
-    </section>
 
-    <!-- ------------------ VIEW 3: ONBOARDING & PERSONAL DETAILS ------------------ -->
-    <section id="view-onboarding" class="hidden space-y-6">
-      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5">
-        <div class="space-y-1 border-b border-slate-100 pb-3">
-          <span class="px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-md text-[11px] font-extrabold uppercase tracking-wider">Step 3 of 4</span>
-          <h2 class="text-xl font-extrabold text-slate-900 pt-1">Partner Personal Profile</h2>
-          <p class="text-xs font-semibold text-slate-500">Provide personal, vehicle, and work availability details.</p>
+      <!-- STEP 3: ONBOARDING DETAILS -->
+      <div id="auth-step-onboarding" class="hidden space-y-4">
+        <div class="space-y-1 border-b border-slate-800 pb-2">
+          <span class="text-[10px] font-bold text-slate-500 uppercase">Step 3 of 4</span>
+          <h2 class="text-lg font-black text-white">Partner & Vehicle Profile</h2>
         </div>
 
-        <form id="form-onboarding" class="space-y-4" onsubmit="return false;">
+        <form id="form-auth-onboarding" class="space-y-3" onsubmit="return false;">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Full Name <span class="text-red-500">*</span></label>
-            <input
-              type="text"
-              id="input-full-name"
-              placeholder="e.g. Rahul Ramesh Patil"
-              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
-              required
-            />
+            <label class="block text-xs font-bold text-slate-300 mb-1">Full Name <span class="text-rose-400">*</span></label>
+            <input type="text" id="input-auth-name" placeholder="Rahul Ramesh Patil" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-blue-500" required />
           </div>
 
-          <div class="grid grid-cols-2 gap-3">
+          <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">Emergency Contact <span class="text-red-500">*</span></label>
-              <input
-                type="tel"
-                id="input-emergency-phone"
-                maxlength="10"
-                placeholder="10-digit mobile"
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
-                required
-              />
+              <label class="block text-xs font-bold text-slate-300 mb-1">Bike Number <span class="text-rose-400">*</span></label>
+              <input type="text" id="input-auth-bike" placeholder="MH 19 AX 4892" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold text-white uppercase focus:outline-none focus:border-blue-500" required />
             </div>
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">City <span class="text-red-500">*</span></label>
-              <input
-                type="text"
-                id="input-city"
-                value="Bhusawal"
-                readonly
-                class="w-full px-3.5 py-2.5 bg-slate-100 border border-slate-300 rounded-xl text-sm font-extrabold text-slate-700 cursor-not-allowed"
-              />
+              <label class="block text-xs font-bold text-slate-300 mb-1">DL Number <span class="text-rose-400">*</span></label>
+              <input type="text" id="input-auth-dl" placeholder="MH19 2021004892" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold text-white uppercase focus:outline-none focus:border-blue-500" required />
             </div>
-          </div>
-
-          <!-- TWO-WHEELER AUTOMATIC SELECTION (Bhusawal Connect supports Two-Wheelers only) -->
-          <div class="bg-blue-50/70 p-3 rounded-xl border border-blue-200 flex items-center justify-between text-xs">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-blue-600 text-lg">two_wheeler</span>
-              <div>
-                <span class="font-extrabold text-slate-900 block">Two-Wheeler Fleet (Bike / Scooter)</span>
-                <span class="text-[10px] text-slate-500 font-semibold block">Default fleet vehicle type</span>
-              </div>
-            </div>
-            <span class="px-2 py-0.5 bg-blue-600 text-white rounded text-[10px] font-black uppercase">Standard</span>
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Vehicle Registration Number <span class="text-slate-400 font-normal">(Optional)</span></label>
-            <input
-              type="text"
-              id="input-bike-no"
-              placeholder="e.g. MH 19 AX 4892"
-              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white uppercase"
-            />
+            <label class="block text-xs font-bold text-slate-300 mb-1">UPI ID for Payouts <span class="text-rose-400">*</span></label>
+            <input type="text" id="input-auth-upi" placeholder="rahulpatil@okaxis" class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-xs font-bold text-white focus:outline-none focus:border-blue-500" required />
           </div>
 
           <button
             type="submit"
-            id="btn-save-onboarding"
-            class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold text-sm rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer mt-2"
+            id="btn-auth-save-profile"
+            class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-slate-950 font-black text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
           >
-            <span>Proceed to Document Upload</span>
-            <span class="material-symbols-outlined text-base">arrow_forward</span>
+            <span>Save & Enter Captain App</span>
+            <span class="material-symbols-outlined text-sm">done_all</span>
           </button>
         </form>
       </div>
-    </section>
 
-    <!-- ------------------ VIEW 4: DOCUMENTATION & KYC UPLOAD ------------------ -->
-    <section id="view-kyc" class="hidden space-y-6">
-      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-5">
-        <div class="space-y-1 border-b border-slate-100 pb-3">
-          <span class="px-2.5 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-md text-[11px] font-extrabold uppercase tracking-wider">Step 4 of 4</span>
-          <h2 class="text-xl font-extrabold text-slate-900 pt-1">Document Upload & Payout Setup</h2>
-          <p class="text-xs font-semibold text-slate-500">Upload profile photo, verification documents, and bank details for Admin review.</p>
-        </div>
+    </div>
+  </div>
 
-        <form id="form-kyc" class="space-y-4" onsubmit="return false;">
-
-          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-blue-600 text-base">account_circle</span> Profile Photo <span class="text-red-500">*</span>
-              </span>
-              <span id="badge-photo-status" class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Required</span>
-            </div>
-            <input type="file" id="file-photo" accept="image/*" class="w-full text-xs font-semibold text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-extrabold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" required />
-            <div id="preview-photo" class="hidden h-24 bg-white rounded-lg border border-slate-200 overflow-hidden flex items-center justify-center p-1">
-              <img id="img-preview-photo" src="" alt="Profile Photo Preview" class="max-h-full object-contain rounded-lg" />
-            </div>
-          </div>
-
-          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-blue-600 text-base">fingerprint</span> Aadhaar Card <span class="text-red-500">*</span>
-              </span>
-              <span id="badge-aadhaar-status" class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Required</span>
-            </div>
-            <input
-              type="text"
-              id="input-aadhaar-no"
-              maxlength="12"
-              placeholder="Enter 12-digit Aadhaar Number"
-              class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600"
-              required
-            />
-            <input type="file" id="file-aadhaar" accept="image/*" class="w-full text-xs font-semibold text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-extrabold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" required />
-          </div>
-
-          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
-            <span class="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-blue-600 text-base">description</span> RC Book / Vehicle Document <span class="text-slate-400 font-normal">(Optional)</span>
-            </span>
-            <input type="file" id="file-rc" accept="image/*" class="w-full text-xs font-semibold text-slate-600 file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:text-[11px] file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer" />
-          </div>
-
-          <div class="border-t border-slate-100 pt-3 space-y-3">
-            <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-emerald-600 text-base">account_balance</span> Bank Account & UPI ID <span class="text-red-500">*</span>
-            </h3>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">UPI ID (Google Pay / PhonePe / Paytm) <span class="text-red-500">*</span></label>
-              <input
-                type="text"
-                id="input-upi-id"
-                placeholder="e.g. 9876543210@paytm"
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
-                required
-              />
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Bank Account No. <span class="text-red-500">*</span></label>
-                <input
-                  type="text"
-                  id="input-bank-acc"
-                  placeholder="30894218942"
-                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white"
-                  required
-                />
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">IFSC Code <span class="text-red-500">*</span></label>
-                <input
-                  type="text"
-                  id="input-bank-ifsc"
-                  placeholder="SBIN0000324"
-                  class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white uppercase"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            id="btn-submit-kyc"
-            class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-extrabold text-sm rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer mt-2"
-          >
-            <span>Submit Registration for Admin Approval</span>
-            <span class="material-symbols-outlined text-base">verified_user</span>
-          </button>
-        </form>
-      </div>
-    </section>
-
-    <!-- ------------------ VIEW 5: FULL RIDER DASHBOARD (MAP-FIRST LIVE FLEET INTERFACE) ------------------ -->
-    <RiderHomeDashboard />
-  </main>
-
-  <!-- ==================== REUSABLE UNIFIED ORDER REQUEST MODAL ==================== -->
-  <RiderOrderRequestModal />
-
-  <!-- ==================== RIDER APP FOOTER ==================== -->
-  <footer id="app-bottom-footer" class="bg-white border-t border-slate-200 py-3 text-center text-xs font-bold text-slate-400">
-    <p>Bhusawal Connect Delivery Partner Platform • Fleet v2.7</p>
-  </footer>
-
-  <!-- ==================== CLIENT AUTHENTICATION & DASHBOARD ENGINE ==================== -->
+  <!-- ==================== RIDER APP CONTROLLER SCRIPT ==================== -->
   <script is:inline>
-    (function() {
-      // Key storage identifiers
-      var AUTH_KEY = 'bhusawal_rider_auth';
-      var ORDERS_KEY = 'bhusawal_orders';
-
-      // Default state engine
-      function getAuthState() {
-        try {
-          var data = JSON.parse(localStorage.getItem(AUTH_KEY) || 'null');
-          if (data && typeof data === 'object') return data;
-        } catch(e) {}
-        return {
-          isLoggedIn: false,
-          phone: '',
-          fullName: '',
-          email: '',
-          emergencyPhone: '',
-          city: 'Bhusawal',
-          area: 'Main Market & Municipal Complex',
-          availability: 'Full Time (8 - 10 Hours Daily)',
-          vehicleType: 'EV Scooter',
-          bikeNo: '',
-          dlNo: '',
-          aadhaarNo: '',
-          photoUrl: '',
-          kycSubmitted: false,
-          kycApproved: false,
-          upiId: '',
-          bankAcc: '',
-          bankIfsc: '',
-          isOnline: false,
-          walletBalance: 1240,
-          activeOrderId: null,
-          stackedOrders: []
-        };
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. Initialize BslRiderHome Captain Application Immediately
+      if (window.BslRiderHome) {
+        window.BslRiderHome.start();
       }
 
-      function saveAuthState(state) {
-        localStorage.setItem(AUTH_KEY, JSON.stringify(state));
+      // 2. Wire Auth / Account Switch Modal
+      var authModal = document.getElementById('modal-rider-auth');
+      var closeAuthBtn = document.getElementById('btn-close-auth-modal');
+      var btnSwitchAccount = document.getElementById('btn-switch-account');
+      var btnTopProfile = document.getElementById('btn-top-profile');
+
+      function openAuthModal() {
+        if (authModal) authModal.classList.remove('hidden');
+      }
+      function closeAuthModal() {
+        if (authModal) authModal.classList.add('hidden');
       }
 
-      function getLiveOrders() {
-        try {
-          var list = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
-          return Array.isArray(list) ? list : [];
-        } catch(e) { return []; }
-      }
-
-      function saveLiveOrders(orders) {
-        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-        window.dispatchEvent(new Event('orderUpdated'));
-        window.dispatchEvent(new Event('storage'));
-      }
-
-      // Views & Layout Elements
-      var viewLogin = document.getElementById('view-login');
-      var viewOtp = document.getElementById('view-otp');
-      var viewOnboarding = document.getElementById('view-onboarding');
-      var viewKyc = document.getElementById('view-kyc');
-      var viewDashboard = document.getElementById('view-dashboard');
-      var headerStatusBadge = document.getElementById('header-status-badge');
-      var appTopHeader = document.getElementById('app-top-header');
-      var appBottomFooter = document.getElementById('app-bottom-footer');
-
-      function hideAllViews() {
-        if (viewLogin) viewLogin.classList.add('hidden');
-        if (viewOtp) viewOtp.classList.add('hidden');
-        if (viewOnboarding) viewOnboarding.classList.add('hidden');
-        if (viewKyc) viewKyc.classList.add('hidden');
-        if (viewDashboard) viewDashboard.classList.add('hidden');
-        if (headerStatusBadge) headerStatusBadge.classList.add('hidden');
-        if (appTopHeader) appTopHeader.classList.remove('hidden');
-        if (appBottomFooter) appBottomFooter.classList.remove('hidden');
-      }
-
-      function renderAppView() {
-        hideAllViews();
-        var state = getAuthState();
-
-        if (!state.isLoggedIn) {
-          if (viewLogin) viewLogin.classList.remove('hidden');
-          return;
-        }
-
-        if (!state.fullName || !state.bikeNo || !state.dlNo) {
-          if (viewOnboarding) viewOnboarding.classList.remove('hidden');
-          return;
-        }
-
-        if (!state.kycSubmitted) {
-          if (viewKyc) viewKyc.classList.remove('hidden');
-          return;
-        }
-
-        // Show Dashboard - Map-First Live Experience
-        if (appTopHeader) appTopHeader.classList.add('hidden');
-        if (appBottomFooter) appBottomFooter.classList.add('hidden');
-        if (viewDashboard) viewDashboard.classList.remove('hidden');
-        if (headerStatusBadge) headerStatusBadge.classList.remove('hidden');
-
-        // Start BSL Rider Home controller
-        if (window.BslRiderHome) {
-          window.BslRiderHome.start();
-        }
-
-        updateDashboardUI(state);
-      }
-
-      function updateDashboardUI(state) {
-        var avatarEl = document.getElementById('dash-avatar');
-        if (avatarEl) {
-          if (state.photoUrl) {
-            avatarEl.innerHTML = `<img src="${state.photoUrl}" alt="Photo" class="w-full h-full object-cover" />`;
-          } else {
-            var initials = 'RP';
-            if (state.fullName) {
-              var parts = state.fullName.trim().split(/\s+/);
-              initials = parts.length > 1 ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase() : parts[0].substring(0, 2).toUpperCase();
-            }
-            avatarEl.textContent = initials;
-          }
-        }
-
-        var driverName = document.getElementById('dash-driver-name');
-        if (driverName) driverName.textContent = state.fullName || 'Rahul Ramesh Patil';
-
-        var phoneEl = document.getElementById('dash-phone');
-        if (phoneEl) phoneEl.textContent = state.phone ? ('+91 ' + state.phone) : '+91 9876543210';
-
-        var vehSummary = document.getElementById('dash-vehicle-summary');
-        if (vehSummary) vehSummary.textContent = state.vehicleType || '⚡ EV Scooter';
-
-        var bikeNoEl = document.getElementById('dash-bike-no');
-        if (bikeNoEl) bikeNoEl.textContent = state.bikeNo || 'MH 19 AX 4892';
-
-        var upiTag = document.getElementById('wallet-upi-tag');
-        if (upiTag) upiTag.textContent = state.upiId || 'rahulpatil@okaxis';
-
-        var balVal = document.getElementById('wallet-balance-val');
-        if (balVal) balVal.textContent = '₹' + (state.walletBalance || 1240).toLocaleString('en-IN');
-
-        // ADMIN APPROVAL GATE & DUTY TOGGLE (guarded for backward compatibility)
-        var pendingCard = document.getElementById('pending-approval-card');
-        var activeCard = document.getElementById('active-approval-card');
-        var dutyContainer = document.getElementById('duty-card-container');
-        var dutyTitle = document.getElementById('duty-title');
-        var dutyIconBox = document.getElementById('duty-icon-box');
-        var btnDuty = document.getElementById('btn-toggle-duty');
-        var btnDutyText = document.getElementById('btn-duty-text');
-        var dutyHelpText = document.getElementById('duty-help-text');
-        var indicatorDot = document.getElementById('duty-indicator-dot');
-        var indicatorText = document.getElementById('duty-indicator-text');
-
-        if (!state.kycApproved) {
-          if (pendingCard) pendingCard.classList.remove('hidden');
-          if (activeCard) activeCard.classList.add('hidden');
-
-          if (dutyContainer) dutyContainer.className = 'bg-white rounded-2xl p-4 border-2 border-slate-200 shadow-md transition-colors opacity-75';
-          if (dutyTitle) {
-            dutyTitle.textContent = 'APPROVAL PENDING';
-            dutyTitle.className = 'text-2xl font-black text-amber-600 tracking-tight';
-          }
-          if (dutyIconBox) dutyIconBox.className = 'w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl font-black shadow-inner';
-          
-          if (btnDuty && !window.BslRiderHome) {
-            btnDuty.disabled = true;
-            btnDuty.className = 'w-full py-4 bg-slate-200 text-slate-400 font-black text-lg rounded-xl shadow-none cursor-not-allowed flex items-center justify-center gap-2';
-            if (btnDutyText) btnDutyText.textContent = 'DUTY DISABLED (PENDING APPROVAL)';
-          }
-          if (dutyHelpText) dutyHelpText.innerHTML = '<span class="material-symbols-outlined text-sm">lock</span> Admin verification required before going online';
-          
-          if (indicatorDot) indicatorDot.className = 'w-2 h-2 rounded-full bg-amber-400';
-          if (indicatorText) indicatorText.textContent = 'PENDING';
-        } else {
-          if (pendingCard) pendingCard.classList.add('hidden');
-          if (activeCard) activeCard.classList.remove('hidden');
-          if (btnDuty && !window.BslRiderHome) btnDuty.disabled = false;
-
-          if (state.isOnline) {
-            if (state.activeOrderId) {
-              // 🟡 ONLINE - Busy (On Delivery)
-              if (dutyContainer) dutyContainer.className = 'bg-amber-500 rounded-2xl p-4 border-2 border-amber-600 shadow-xl text-white transition-colors';
-              if (dutyTitle) {
-                dutyTitle.textContent = 'ONLINE – BUSY';
-                dutyTitle.className = 'text-2xl font-black text-white tracking-tight';
-              }
-              if (dutyIconBox) dutyIconBox.className = 'w-12 h-12 rounded-2xl bg-white text-amber-600 flex items-center justify-center text-2xl font-black shadow-md';
-              if (btnDuty && !window.BslRiderHome) {
-                btnDuty.className = 'w-full py-4 bg-white hover:bg-amber-50 active:scale-95 text-amber-800 font-black text-lg rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
-                if (btnDutyText) btnDutyText.textContent = 'GO OFFLINE (LOCKED WHILE DELIVERING)';
-              }
-              if (dutyHelpText) {
-                dutyHelpText.innerHTML = '🟡 ONLINE – Busy (On Delivery # ' + state.activeOrderId + ')';
-                dutyHelpText.className = 'text-[11px] font-bold text-white text-center mt-2.5';
-              }
-              if (indicatorDot) indicatorDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-300 animate-ping';
-              if (indicatorText) indicatorText.textContent = 'ONLINE – Busy (On Delivery)';
-            } else {
-              // 🟢 ONLINE - Available
-              if (dutyContainer) dutyContainer.className = 'bg-emerald-500 rounded-2xl p-4 border-2 border-emerald-600 shadow-xl text-white transition-colors';
-              if (dutyTitle) {
-                dutyTitle.textContent = 'YOU ARE ONLINE';
-                dutyTitle.className = 'text-2xl font-black text-white tracking-tight';
-              }
-              if (dutyIconBox) dutyIconBox.className = 'w-12 h-12 rounded-2xl bg-white text-emerald-600 flex items-center justify-center text-2xl font-black shadow-md';
-              if (btnDuty && !window.BslRiderHome) {
-                btnDuty.className = 'w-full py-4 bg-white hover:bg-emerald-50 active:scale-95 text-emerald-700 font-black text-lg rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
-                if (btnDutyText) btnDutyText.textContent = 'GO OFFLINE';
-              }
-              if (dutyHelpText) {
-                dutyHelpText.innerHTML = '🟢 ONLINE – Available for new orders across Bhusawal';
-                dutyHelpText.className = 'text-[11px] font-bold text-white text-center mt-2.5';
-              }
-              if (indicatorDot) indicatorDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
-              if (indicatorText) indicatorText.textContent = 'ONLINE – Available';
-            }
-          } else {
-            // ⚪ OFFLINE
-            if (dutyContainer) dutyContainer.className = 'bg-white rounded-2xl p-4 border-2 border-slate-200 shadow-md transition-colors';
-            if (dutyTitle) {
-              dutyTitle.textContent = 'YOU ARE OFFLINE';
-              dutyTitle.className = 'text-2xl font-black text-slate-900 tracking-tight';
-            }
-            if (dutyIconBox) dutyIconBox.className = 'w-12 h-12 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center text-2xl font-black shadow-inner';
-            if (btnDuty && !window.BslRiderHome) {
-              btnDuty.className = 'w-full py-4 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-lg rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer';
-              if (btnDutyText) btnDutyText.textContent = 'GO ONLINE NOW';
-            }
-            if (dutyHelpText) {
-              dutyHelpText.innerHTML = '⚪ OFFLINE – Hidden from dispatch queue';
-              dutyHelpText.className = 'text-[11px] font-bold text-slate-500 text-center mt-2.5';
-            }
-            if (indicatorDot) indicatorDot.className = 'w-2.5 h-2.5 rounded-full bg-slate-300';
-            if (indicatorText) indicatorText.textContent = 'OFFLINE';
-          }
-        }
-
-        if (window.BslRiderHome) {
-          window.BslRiderHome.renderHomeView(state);
-        }
-
-        refreshOrdersData(state);
-      }
-
-      var multiOrderTimerInterval = null;
-      var multiOrderPendingData = null;
-
-      function triggerMultiOrderPopup(orderData) {
-        if (window.BslOrderRequestEngine) {
-          window.BslOrderRequestEngine.showOrderRequest(orderData);
-          return;
-        }
-        multiOrderPendingData = orderData;
-        var modal = document.getElementById('modal-multi-order-dispatch');
-        if (!modal) return;
-
-        var moPickup = document.getElementById('mo-pickup-name');
-        if (moPickup) moPickup.textContent = orderData.pickupAddress || 'Royal Biryani, Station Road';
-        var moDrop = document.getElementById('mo-drop-address');
-        if (moDrop) moDrop.textContent = orderData.dropAddress || 'Khadaka Road, Bhusawal';
-        var moDist = document.getElementById('mo-extra-dist');
-        if (moDist) moDist.textContent = '+' + (orderData.extraDistanceKm || '1.2') + ' km detour';
-        var moPayout = document.getElementById('mo-extra-payout');
-        if (moPayout) moPayout.textContent = '+₹' + (orderData.extraEarnings || '40') + ' Payout';
-
-        modal.classList.remove('hidden');
-
-        var secondsLeft = 20;
-        var timerVal = document.getElementById('multi-order-timer-val');
-        var timerBar = document.getElementById('multi-order-timer-bar');
-
-        if (timerVal) timerVal.textContent = '20s';
-        if (timerBar) timerBar.style.width = '100%';
-
-        if (multiOrderTimerInterval) clearInterval(multiOrderTimerInterval);
-
-        multiOrderTimerInterval = setInterval(function() {
-          secondsLeft--;
-          if (timerVal) timerVal.textContent = secondsLeft + 's';
-          if (timerBar) timerBar.style.width = (secondsLeft / 20 * 100) + '%';
-
-          if (secondsLeft <= 0) {
-            clearInterval(multiOrderTimerInterval);
-            modal.classList.add('hidden');
-          }
-        }, 1000);
-      }
-
-      function refreshOrdersData(state) {
-        var orders = getLiveOrders();
-
-        var completedCount = 0;
-        var pendingCount = 0;
-        var cancelledCount = 0;
-        var todayEarnings = 0;
-
-        var availableQueue = [];
-        var currentActiveOrder = null;
-
-        orders.forEach(function(ord) {
-          var st = (ord.status || '').toLowerCase();
-
-          if (st === 'delivered' || st === 'completed') {
-            completedCount++;
-            var payout = parseFloat(ord.deliveryFee || ord.payout || 45);
-            todayEarnings += payout;
-          } else if (st === 'cancelled' || st === 'rejected') {
-            cancelledCount++;
-          } else {
-            pendingCount++;
-            if (state && state.activeOrderId && (ord.id === state.activeOrderId || ord.orderId === state.activeOrderId)) {
-              currentActiveOrder = ord;
-            } else {
-              availableQueue.push(ord);
-            }
-          }
-        });
-
-        // Update KPI counters safely
-        var kpiComp = document.getElementById('kpi-completed-count');
-        if (kpiComp) kpiComp.textContent = completedCount;
-        var kpiPend = document.getElementById('kpi-pending-count');
-        if (kpiPend) kpiPend.textContent = pendingCount;
-        var kpiCanc = document.getElementById('kpi-cancelled-count');
-        if (kpiCanc) kpiCanc.textContent = cancelledCount;
-        var kpiEarn = document.getElementById('kpi-earnings-today');
-        if (kpiEarn) kpiEarn.textContent = '₹' + todayEarnings.toLocaleString('en-IN');
-        var kpiSub = document.getElementById('kpi-payout-subtitle');
-        if (kpiSub) kpiSub.textContent = completedCount + ' Orders Delivered Today';
-
-        // Update Summary HUD in BSL Rider Home
-        if (window.BslRiderHome) {
-          state.todayEarnings = todayEarnings;
-          state.todayOrdersCount = completedCount;
-          window.BslRiderHome.renderHomeView(state);
-        }
-
-        // ACTIVE ORDER CARD RENDERING (if section exists)
-        var secActive = document.getElementById('section-active-order');
-        if (secActive) {
-          if (currentActiveOrder && state.isOnline) {
-            secActive.classList.remove('hidden');
-            var aId = document.getElementById('active-order-id');
-            if (aId) aId.textContent = '#' + (currentActiveOrder.id || currentActiveOrder.orderId || 'BHU-89210');
-            var aType = document.getElementById('active-order-type-badge');
-            if (aType) aType.textContent = (currentActiveOrder.type || currentActiveOrder.category || 'GROCERY').toUpperCase() + ' ORDER';
-            var aPayout = document.getElementById('active-order-payout-badge');
-            if (aPayout) aPayout.textContent = 'Payout: ₹' + (currentActiveOrder.deliveryFee || currentActiveOrder.payout || 45);
-            var aPickup = document.getElementById('active-order-pickup');
-            if (aPickup) aPickup.textContent = currentActiveOrder.pickupAddress || currentActiveOrder.store || 'Sai Jeevan Super Mall, Station Road';
-            var aDrop = document.getElementById('active-order-drop');
-            if (aDrop) aDrop.textContent = currentActiveOrder.dropAddress || currentActiveOrder.address || 'Khadaka Road, Bhusawal';
-            var aCust = document.getElementById('active-order-customer');
-            if (aCust) aCust.textContent = 'Customer: ' + (currentActiveOrder.customerName || currentActiveOrder.receiverName || 'Amit Sharma');
-            
-            var callLink = document.getElementById('active-order-call');
-            if (callLink) callLink.href = 'tel:' + (currentActiveOrder.customerPhone || currentActiveOrder.receiverPhone || '9876543210');
-
-            secActive.dataset.orderId = currentActiveOrder.id || currentActiveOrder.orderId;
-            secActive.dataset.otp = currentActiveOrder.otp || '1234';
-            secActive.dataset.step = currentActiveOrder.stageStep || 2;
-
-            // 10-STAGE WORKFLOW STATE
-            var currentStep = parseInt(currentActiveOrder.stageStep || 2);
-            var stageInfo = window.BhusawalDeliveryWorkflow 
-              ? window.BhusawalDeliveryWorkflow.getStageInfo(currentStep) 
-              : { step: 2, id: 'PARTNER_ACCEPTED', label: 'Partner Accepted', actionBtnText: 'Start Route to Pickup', desc: 'Partner accepted order request' };
-
-            var badgeEl = document.getElementById('wf-stage-step-badge');
-            var idEl = document.getElementById('wf-stage-id');
-            var labelEl = document.getElementById('wf-stage-label');
-            var descEl = document.getElementById('wf-stage-desc');
-            var actionTextEl = document.getElementById('btn-wf-action-text');
-
-            if (badgeEl) badgeEl.textContent = 'Stage ' + currentStep + ' of 10';
-            if (idEl) idEl.textContent = stageInfo.id;
-            if (labelEl) labelEl.textContent = stageInfo.label;
-            if (descEl) descEl.textContent = stageInfo.desc;
-            if (actionTextEl) actionTextEl.textContent = stageInfo.actionBtnText;
-
-            var otpContainer = document.getElementById('container-otp-verification');
-            var btnAdvance = document.getElementById('btn-advance-workflow-stage');
-
-            if (currentStep === 8) {
-              if (otpContainer) otpContainer.classList.remove('hidden');
-              if (btnAdvance) btnAdvance.classList.add('hidden');
-            } else {
-              if (otpContainer) otpContainer.classList.add('hidden');
-              if (btnAdvance) btnAdvance.classList.remove('hidden');
-            }
-          } else {
-            secActive.classList.add('hidden');
-          }
-        }
-
-        // QUEUE RENDERING FOR TAB 2 (ORDERS)
-        var queueContainer = document.getElementById('container-assigned-orders');
-        var queueCountBadge = document.getElementById('tab-orders-count-badge') || document.getElementById('queue-count-badge');
-        if (queueCountBadge) queueCountBadge.textContent = availableQueue.length + ' Available';
-
-        if (queueContainer) {
-          if (availableQueue.length === 0) {
-            queueContainer.innerHTML = `
-              <div class="bg-slate-900/80 p-5 rounded-2xl text-center border border-slate-800">
-                <span class="material-symbols-outlined text-slate-500 text-3xl">moped</span>
-                <p class="text-xs font-bold text-slate-300 mt-2">No pending orders in Bhusawal queue</p>
-                <p class="text-[10px] text-slate-500 mt-0.5">New incoming orders from Grocery, Food, Medicine & Rides will appear here.</p>
-              </div>
-            `;
-          } else {
-            queueContainer.innerHTML = availableQueue.map(function(ord) {
-              var ordId = ord.id || ord.orderId || 'BHU-100';
-              var payout = ord.deliveryFee || ord.payout || 45;
-              var type = (ord.type || ord.category || 'ORDER').toUpperCase();
-              var drop = ord.dropAddress || ord.address || 'Bhusawal';
-              var store = ord.pickupAddress || ord.store || 'Bhusawal Store';
-
-              return `
-                <div class="bg-slate-900 p-3.5 rounded-2xl border border-slate-800 flex items-center justify-between text-xs shadow-md">
-                  <div class="min-w-0 flex-1 pr-2">
-                    <div class="flex items-center gap-1.5">
-                      <span class="font-black text-white">#${ordId}</span>
-                      <span class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 rounded text-[10px] font-black border border-blue-500/30">${type}</span>
-                    </div>
-                    <p class="text-[11px] text-slate-300 font-bold truncate mt-1">📍 ${drop}</p>
-                    <p class="text-[10px] text-slate-500 truncate">🏪 ${store}</p>
-                    <span class="text-[11px] font-black text-emerald-400 mt-1 inline-block">Earn ₹${payout}</span>
-                  </div>
-                  <button class="btn-accept-order px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow transition-all active:scale-95 cursor-pointer shrink-0" data-id="${ordId}">
-                    Accept
-                  </button>
-                </div>
-              `;
-            }).join('');
-
-            queueContainer.querySelectorAll('.btn-accept-order').forEach(function(btn) {
-              btn.addEventListener('click', function() {
-                var id = btn.dataset.id;
-                var st = getAuthState();
-                st.activeOrderId = id;
-                st.state = 'DELIVERING';
-                saveAuthState(st);
-
-                var ords = getLiveOrders();
-                ords.forEach(function(o) {
-                  if (o.id === id || o.orderId === id) {
-                    o.status = 'Out for Delivery';
-                    o.rider = st.fullName || 'Rahul Patil';
-                  }
-                });
-                saveLiveOrders(ords);
-                if (window.BslRiderHome) window.BslRiderHome.renderHomeView(st);
-                renderAppView();
-              });
-            });
-          }
-        }
-
-        // NOTIFICATIONS FEED
-        var notifContainer = document.getElementById('container-notifications-list');
-        if (notifContainer) {
-          var recentOrders = orders.slice(0, 3);
-          if (recentOrders.length === 0) {
-            notifContainer.innerHTML = `
-              <div class="p-2 text-center text-slate-400 font-medium text-[11px]">
-                No dispatch notifications yet.
-              </div>
-            `;
-          } else {
-            notifContainer.innerHTML = recentOrders.map(function(o) {
-              return `
-                <div class="bg-blue-50/60 p-2.5 rounded-xl border border-blue-100 flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-blue-600 text-base">local_shipping</span>
-                    <div>
-                      <p class="font-bold text-slate-800 text-[11px]">Order #${o.id || o.orderId || 'BHU-100'} Dispatch Alert</p>
-                      <p class="text-[10px] text-slate-500 font-semibold">${o.status || 'Received'} • ${o.type || 'Order'}</p>
-                    </div>
-                  </div>
-                  <span class="text-[10px] font-bold text-slate-400">Just Now</span>
-                </div>
-              `;
-            }).join('');
-          }
-        }
-      }
-
-      // --- MULTI-ORDER ACCEPT & REJECT HANDLERS ---
-      document.getElementById('btn-reject-multi-order')?.addEventListener('click', function() {
-        if (multiOrderTimerInterval) clearInterval(multiOrderTimerInterval);
-        document.getElementById('modal-multi-order-dispatch')?.classList.add('hidden');
-      });
-
-      document.getElementById('btn-accept-multi-order')?.addEventListener('click', function() {
-        if (multiOrderTimerInterval) clearInterval(multiOrderTimerInterval);
-        document.getElementById('modal-multi-order-dispatch')?.classList.add('hidden');
-
-        var st = getAuthState();
-        var extraPayout = multiOrderPendingData ? parseInt(multiOrderPendingData.extraEarnings || 40) : 40;
-
-        // Add to active stacked list & add payout
-        st.walletBalance = (st.walletBalance || 1240) + extraPayout;
-        saveAuthState(st);
-
-        alert('✅ Multi-Order Accepted! Added to your delivery sequence (+₹' + extraPayout + ' Payout). Route sequence optimized automatically.');
-        renderAppView();
-      });
-
-      // --- ONE-TAP GOOGLE MAPS NAVIGATION HANDLERS ---
-      document.getElementById('btn-nav-pickup')?.addEventListener('click', function() {
-        var pName = document.getElementById('active-order-pickup')?.textContent || 'Sai Jeevan Super Mall, Station Road';
-        if (window.BhusawalGoogleNav) {
-          window.BhusawalGoogleNav.navigateToPickup(21.0478, 75.7896, pName);
-        } else {
-          window.open('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(pName) + '&travelmode=driving&dir_action=navigate', '_blank');
-        }
-      });
-
-      document.getElementById('btn-nav-customer')?.addEventListener('click', function() {
-        var mapsLink = (currentActiveOrder && (currentActiveOrder.googleMapsLink || currentActiveOrder.google_maps_link)) || '';
-        if (mapsLink) {
-          window.open(mapsLink, '_blank');
-          return;
-        }
-        var dName = document.getElementById('active-order-drop')?.textContent || 'Khadaka Road, Bhusawal';
-        if (window.BhusawalGoogleNav) {
-          window.BhusawalGoogleNav.navigateToCustomer(21.0425, 75.7980, dName);
-        } else {
-          window.open('https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(dName) + '&travelmode=driving&dir_action=navigate', '_blank');
-        }
-      });
-
-      // --- PUSH NOTIFICATION SIMULATOR & PERMISSION HANDLERS ---
-      document.getElementById('btn-request-web-push-perm')?.addEventListener('click', function() {
-        if (window.BhusawalRiderPush) {
-          window.BhusawalRiderPush.requestPermission();
-          alert('🔔 Web Push Notification permission requested!');
-        }
-      });
-
-      document.querySelectorAll('.btn-trigger-push').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          var type = btn.dataset.type;
-          if (!window.BhusawalRiderPush) return;
-
-          if (type === 'NEW_ORDER') window.BhusawalRiderPush.notifyNewOrder('BHU-89210', 'Sai Jeevan Super Mall, Station Road');
-          else if (type === 'NEARBY_ORDER') window.BhusawalRiderPush.notifyNearbyOrder('BHU-99120', 'Royal Biryani, Station Road', 40);
-          else if (type === 'ORDER_CANCELLED') window.BhusawalRiderPush.notifyOrderCancelled('BHU-89210');
-          else if (type === 'CUSTOMER_CALLED') window.BhusawalRiderPush.notifyCustomerCalled('Amit Sharma', '9876543210');
-          else if (type === 'ADMIN_MESSAGE') window.BhusawalRiderPush.notifyAdminMessage('📢 High order volume near Station Road! Extra ₹15 surge incentive per delivery active.');
-          else if (type === 'LOW_BATTERY') window.BhusawalRiderPush.notifyLowBattery(18);
-          else if (type === 'NAV_STARTED') window.BhusawalRiderPush.notifyNavStarted('Sai Jeevan Super Mall, Station Road');
-          else if (type === 'NAV_COMPLETED') window.BhusawalRiderPush.notifyNavCompleted('Khadaka Road, Bhusawal');
-
-          renderAppView();
-        });
-      });
-
-      window.addEventListener('riderNotificationReceived', function() {
-        renderAppView();
-      });
-
-      // --- 10-STAGE WORKFLOW ADVANCE HANDLER ---
-      document.getElementById('btn-advance-workflow-stage')?.addEventListener('click', function() {
-        var secActive = document.getElementById('section-active-order');
-        if (!secActive) return;
-        var orderId = secActive.dataset.orderId;
-        var currentStep = parseInt(secActive.dataset.step || 2);
-        var nextStep = currentStep + 1;
-
-        if (window.BhusawalDeliveryWorkflow && orderId) {
-          window.BhusawalDeliveryWorkflow.advanceDeliveryStage(orderId, nextStep);
-          renderAppView();
-        }
-      });
-
-      // --- COMPLETE DELIVERY OTP HANDLER ---
-      document.getElementById('btn-complete-delivery')?.addEventListener('click', function() {
-        var inputOtp = document.getElementById('input-delivery-otp');
-        var errorOtp = document.getElementById('error-delivery-otp');
-        var secActive = document.getElementById('section-active-order');
-
-        var enteredOtp = inputOtp ? inputOtp.value.trim() : '';
-        var actualOtp = secActive ? secActive.dataset.otp : '1234';
-
-        if (enteredOtp !== actualOtp && enteredOtp !== '1234') {
-          if (errorOtp) errorOtp.classList.remove('hidden');
-          return;
-        }
-
-        if (errorOtp) errorOtp.classList.add('hidden');
-
-        var st = getAuthState();
-        var orderId = secActive.dataset.orderId;
-
-        if (window.BhusawalDeliveryWorkflow && orderId) {
-          window.BhusawalDeliveryWorkflow.advanceDeliveryStage(orderId, 10);
-        }
-
-        // Sync order status directly to Central Master Backend
-        if (window.BhusawalBackend && orderId) {
-          window.BhusawalBackend.orders.updateStatus(orderId, 'Delivered', {
-            completedAt: new Date().toISOString(),
-            deliveredByRider: st.fullName || 'Rahul Patil'
-          });
-        }
-
-        // Log Payout & Transaction in Master Relational DB
-        if (window.BhusawalMasterDB && orderId) {
-          window.BhusawalMasterDB.insertRecord('tbl_payouts', {
-            partnerType: 'RIDER',
-            partnerId: st.id || 'RIDER-2001',
-            orderId: orderId,
-            amount: 45,
-            status: 'SETTLED',
-            disbursedAt: new Date().toISOString()
-          }, 'PAYOUT');
-
-          window.BhusawalMasterDB.insertRecord('tbl_transactions', {
-            type: 'PAYOUT',
-            amount: 45,
-            entityType: 'RIDER',
-            entityId: st.id || 'RIDER-2001',
-            status: 'CREDITED',
-            timestamp: new Date().toISOString()
-          }, 'TXN');
-        }
-
-        var ords = getLiveOrders();
-        ords.forEach(function(o) {
-          if (o.id === orderId || o.orderId === orderId) {
-            o.status = 'Delivered';
-            o.stageStep = 10;
-            o.stageId = 'PAYMENT_COMPLETED';
-          }
-        });
-        saveLiveOrders(ords);
-
-        st.walletBalance = (st.walletBalance || 1240) + 45;
-        st.activeOrderId = null;
-        saveAuthState(st);
-
-        alert('🎉 Delivery Completed! Stage 10: Payment Completed. ₹45 payout recorded in master backend.');
-        renderAppView();
-      });
-
-      // --- INSTANT CASHOUT HANDLER ---
-      document.getElementById('btn-wallet-cashout')?.addEventListener('click', function() {
-        var st = getAuthState();
-        var bal = st.walletBalance || 1240;
-        if (bal <= 0) {
-          alert('Your wallet balance is ₹0.');
-          return;
-        }
-        alert('✅ Instant UPI Cashout of ₹' + bal.toLocaleString('en-IN') + ' initiated to ' + (st.upiId || 'rahulpatil@okaxis') + '. Funds will reflect in 5 minutes!');
-        st.walletBalance = 0;
-        saveAuthState(st);
-        renderAppView();
-      });
-
-      // --- FORM & AUTH EVENT HANDLERS ---
-      var formLogin = document.getElementById('form-login');
-      var inputLoginMobile = document.getElementById('input-login-mobile');
-      var errorLoginMobile = document.getElementById('error-login-mobile');
-
-      formLogin.addEventListener('submit', function(e) {
+      if (closeAuthBtn) closeAuthBtn.addEventListener('click', closeAuthModal);
+      if (btnSwitchAccount) btnSwitchAccount.addEventListener('click', openAuthModal);
+      if (btnTopProfile) btnTopProfile.addEventListener('click', openAuthModal);
+
+      // Auth Steps
+      var stepLogin = document.getElementById('auth-step-login');
+      var stepOtp = document.getElementById('auth-step-otp');
+      var stepOnboard = document.getElementById('auth-step-onboarding');
+
+      document.getElementById('form-auth-login')?.addEventListener('submit', function(e) {
         e.preventDefault();
-        var phoneVal = inputLoginMobile.value.trim();
-        if (!/^[6-9]\d{9}$/.test(phoneVal)) {
-          errorLoginMobile.classList.remove('hidden');
-          return;
+        var phone = document.getElementById('input-auth-mobile').value.trim();
+        if (phone.length === 10) {
+          document.getElementById('display-auth-mobile').textContent = '+91 ' + phone;
+          stepLogin.classList.add('hidden');
+          stepOtp.classList.remove('hidden');
         }
-        errorLoginMobile.classList.add('hidden');
-
-        var tempState = getAuthState();
-        tempState.phone = phoneVal;
-        saveAuthState(tempState);
-
-        document.getElementById('display-otp-mobile').textContent = '+91 ' + phoneVal;
-        hideAllViews();
-        viewOtp.classList.remove('hidden');
       });
 
-      var otpBoxes = document.querySelectorAll('.otp-box');
-      otpBoxes.forEach(function(box, idx) {
-        box.addEventListener('input', function() {
-          if (box.value.length === 1 && idx < otpBoxes.length - 1) {
-            otpBoxes[idx + 1].focus();
-          }
-        });
-        box.addEventListener('keydown', function(e) {
-          if (e.key === 'Backspace' && !box.value && idx > 0) {
-            otpBoxes[idx - 1].focus();
-          }
-        });
+      document.getElementById('btn-auth-back-to-login')?.addEventListener('click', function() {
+        stepOtp.classList.add('hidden');
+        stepLogin.classList.remove('hidden');
       });
 
-      document.getElementById('btn-back-to-login').addEventListener('click', function() {
-        hideAllViews();
-        viewLogin.classList.remove('hidden');
-      });
-
-      document.getElementById('form-otp').addEventListener('submit', function(e) {
+      document.getElementById('form-auth-otp')?.addEventListener('submit', function(e) {
         e.preventDefault();
-        var otpCode = Array.from(otpBoxes).map(function(b) { return b.value; }).join('');
-        if (otpCode.length < 4) {
-          document.getElementById('error-otp').classList.remove('hidden');
-          return;
-        }
-        document.getElementById('error-otp').classList.add('hidden');
-
-        var state = getAuthState();
-        state.isLoggedIn = true;
-        saveAuthState(state);
-        renderAppView();
+        stepOtp.classList.add('hidden');
+        stepOnboard.classList.remove('hidden');
       });
 
-      document.getElementById('form-onboarding').addEventListener('submit', function(e) {
+      document.getElementById('form-auth-onboarding')?.addEventListener('submit', function(e) {
         e.preventDefault();
-        var state = getAuthState();
-        state.fullName = document.getElementById('input-full-name').value.trim();
-        state.emergencyPhone = document.getElementById('input-emergency-phone').value.trim();
-        state.city = document.getElementById('input-city').value.trim();
-        state.bikeNo = document.getElementById('input-bike-no') ? document.getElementById('input-bike-no').value.trim().toUpperCase() : 'MH 19 AX 4892';
-        state.vehicleType = 'Bike/Scooter (Two-Wheeler)';
+        var name = document.getElementById('input-auth-name').value.trim();
+        var bike = document.getElementById('input-auth-bike').value.trim().toUpperCase();
+        var dl = document.getElementById('input-auth-dl').value.trim().toUpperCase();
+        var upi = document.getElementById('input-auth-upi').value.trim();
 
-        saveAuthState(state);
-        renderAppView();
-      });
+        var st = (window.BslRiderHome && window.BslRiderHome.getRiderState) ? window.BslRiderHome.getRiderState() : {};
+        if (name) st.fullName = name;
+        if (bike) st.bikeNo = bike;
+        if (dl) st.dlNo = dl;
+        if (upi) st.upiId = upi;
+        st.isLoggedIn = true;
+        st.kycApproved = true;
 
-      var filePhoto = document.getElementById('file-photo');
-      var uploadedPhotoDataUrl = '';
-      if (filePhoto) {
-        filePhoto.addEventListener('change', function() {
-          if (filePhoto.files && filePhoto.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-              uploadedPhotoDataUrl = e.target.result;
-              document.getElementById('img-preview-photo').src = uploadedPhotoDataUrl;
-              document.getElementById('preview-photo').classList.remove('hidden');
-            };
-            reader.readAsDataURL(filePhoto.files[0]);
-          }
-        });
-      }
-
-      document.getElementById('form-kyc').addEventListener('submit', function(e) {
-        e.preventDefault();
-        var state = getAuthState();
-        state.aadhaarNo = document.getElementById('input-aadhaar-no').value.trim();
-        state.upiId = document.getElementById('input-upi-id').value.trim();
-        state.bankAcc = document.getElementById('input-bank-acc').value.trim();
-        state.bankIfsc = document.getElementById('input-bank-ifsc').value.trim().toUpperCase();
-        if (uploadedPhotoDataUrl) state.photoUrl = uploadedPhotoDataUrl;
-
-        state.kycSubmitted = true;
-        state.kycApproved = false;
-
-        saveAuthState(state);
-        renderAppView();
-      });
-
-      var btnDutyLegacy = document.getElementById('btn-toggle-duty');
-      if (btnDutyLegacy && !window.BslRiderHome) {
-        btnDutyLegacy.addEventListener('click', function() {
-          var state = getAuthState();
-          if (!state.kycApproved) return;
-
-          if (state.isOnline && state.activeOrderId) {
-            alert("You have an active delivery. Complete or transfer the order before going offline.");
-            return;
-          }
-
-          state.isOnline = !state.isOnline;
-          saveAuthState(state);
-
-          if (window.BhusawalBackend) {
-            window.BhusawalBackend.riders.save({
-              id: state.id || 'BHU-RIDER-01',
-              name: state.fullName || 'Rahul Patil',
-              phone: state.phone || '+91 98765 00001',
-              isOnline: state.isOnline,
-              vehicleType: state.vehicleType || 'Bike/Scooter',
-              bikeNo: state.bikeNo || 'MH 19 AX 4892',
-              isVerified: !!state.kycApproved,
-              kycStatus: state.kycApproved ? 'approved' : 'pending'
-            });
-          }
-
-          updateDashboardUI(state);
-        });
-      }
-
-      var btnAdminApproveLegacy = document.getElementById('btn-admin-toggle-approve');
-      if (btnAdminApproveLegacy && !window.BslRiderHome) {
-        btnAdminApproveLegacy.addEventListener('click', function() {
-          var state = getAuthState();
-          state.kycApproved = true;
-          saveAuthState(state);
-
-          if (window.BhusawalBackend) {
-            window.BhusawalBackend.riders.save({
-              id: state.id || 'BHU-RIDER-01',
-              name: state.fullName || 'Rahul Patil',
-              phone: state.phone || '+91 98765 00001',
-              isOnline: state.isOnline,
-              isVerified: true,
-              kycStatus: 'approved'
-            });
-          }
-
-          updateDashboardUI(state);
-        });
-      }
-
-      document.getElementById('btn-admin-revoke')?.addEventListener('click', function() {
-        var state = getAuthState();
-        state.kycApproved = false;
-        state.isOnline = false;
-        saveAuthState(state);
-        updateDashboardUI(state);
-      });
-
-      document.getElementById('btn-edit-kyc').addEventListener('click', function() {
-        hideAllViews();
-        viewOnboarding.classList.remove('hidden');
-      });
-
-      document.getElementById('btn-rider-logout').addEventListener('click', function() {
-        localStorage.removeItem(AUTH_KEY);
-        renderAppView();
-      });
-
-      window.addEventListener('storage', function() {
-        var state = getAuthState();
-        if (state.isLoggedIn && state.kycSubmitted) {
-          refreshOrdersData(state);
+        if (window.BslRiderHome && window.BslRiderHome.saveRiderState) {
+          window.BslRiderHome.saveRiderState(st);
+          window.BslRiderHome.renderHomeView(st);
         }
+
+        closeAuthModal();
+        alert('🎉 Partner account updated successfully! Welcome to BSL Connect Captain App.');
       });
-
-      // 3-SECOND REAL-TIME GPS TELEMETRY EMITTER
-      var bhusawalRoadWaypoints = [
-        { lat: 21.0450, lng: 75.7850, road: 'Varangaon Road, Bhusawal', distance: '2.8 km', eta: '12 mins', speed: '32 km/h' },
-        { lat: 21.0465, lng: 75.7872, road: 'Station Road Square, Bhusawal', distance: '2.1 km', eta: '9 mins', speed: '28 km/h' },
-        { lat: 21.0478, lng: 75.7896, road: 'Jamner Road Market, Bhusawal', distance: '1.4 km', eta: '6 mins', speed: '30 km/h' },
-        { lat: 21.0495, lng: 75.7918, road: 'Civil Hospital Road, Bhusawal', distance: '0.8 km', eta: '3 mins', speed: '24 km/h' },
-        { lat: 21.0512, lng: 75.7940, road: 'Ordnance Factory Gate, Bhusawal', distance: '0.2 km', eta: '1 min', speed: '18 km/h' }
-      ];
-      var waypointIdx = 0;
-
-      setInterval(function() {
-        var state = getAuthState();
-        if (state.isLoggedIn && state.isOnline && window.BhusawalBackend) {
-          var wp = bhusawalRoadWaypoints[waypointIdx];
-          waypointIdx = (waypointIdx + 1) % bhusawalRoadWaypoints.length;
-
-          window.BhusawalBackend.riders.updateLocation(
-            state.id || 'RIDER-2001',
-            wp.lat,
-            wp.lng,
-            wp.road
-          );
-
-          // Broadcast rich telemetry payload every 3 seconds
-          if (window.BhusawalBackend.subscribe) {
-            try {
-              var channel = new BroadcastChannel('bhusawal_realtime_sync');
-              channel.postMessage({
-                type: 'RIDER_LOCATION_UPDATED',
-                payload: {
-                  riderId: state.id || 'RIDER-2001',
-                  riderName: state.fullName || 'Rahul Patil',
-                  lat: wp.lat,
-                  lng: wp.lng,
-                  speed: wp.speed,
-                  currentRoad: wp.road,
-                  remainingDistance: wp.distance,
-                  etaMins: wp.eta,
-                  batteryLevel: '88%',
-                  timestamp: Date.now()
-                }
-              });
-            } catch(e) {}
-          }
-        }
-      }, 3000);
-
-      window.addEventListener('orderUpdated', function() {
-        var state = getAuthState();
-        if (state.isLoggedIn && state.kycSubmitted) {
-          refreshOrdersData(state);
-        }
-      });
-
-      // INITIALIZE APP VIEW ON LOAD
-      renderAppView();
-
-      // Subscribe to Centralized Real-Time Backend Event Bus
-      if (window.BhusawalBackend) {
-        window.BhusawalBackend.subscribe('ORDERS_SYNCED', function() {
-          var state = getAuthState();
-          if (state.isLoggedIn && state.kycSubmitted) refreshOrdersData(state);
-        });
-        window.BhusawalBackend.subscribe('ORDER_CREATED', function(o) {
-          var state = getAuthState();
-          if (state.isLoggedIn && state.kycSubmitted) {
-            refreshOrdersData(state);
-            showRiderToast('⚡ New Order Placed in Bhusawal: #' + o.id, 'bolt');
-          }
-        });
-        window.BhusawalBackend.subscribe('ORDER_UPDATED', function() {
-          var state = getAuthState();
-          if (state.isLoggedIn && state.kycSubmitted) refreshOrdersData(state);
-        });
-      }
-
-    })();
+    });
   </script>
 </body>
 </html>
