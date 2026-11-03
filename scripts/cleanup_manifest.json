@@ -1,0 +1,610 @@
+{
+  "timestamp": "2026-11-03T18:15:40.949Z",
+  "totalFilesDeleted": 120,
+  "totalBytesReclaimed": 58714630,
+  "totalMBReclaimed": "55.99",
+  "deletedItems": [
+    {
+      "path": "public/food_images",
+      "type": "directory",
+      "count": 199,
+      "sizeMB": "43.28"
+    },
+    {
+      "path": "public/product_images",
+      "type": "directory",
+      "count": 25,
+      "sizeMB": "3.50"
+    },
+    {
+      "path": "public/food_catalog_backup_step4.json",
+      "type": "file",
+      "sizeKB": "204.7"
+    },
+    {
+      "path": "public/all_product_names.txt",
+      "type": "file",
+      "sizeKB": "112.9"
+    },
+    {
+      "path": "public/cigarette_catalog_draft.json",
+      "type": "file",
+      "sizeKB": "14.3"
+    },
+    {
+      "path": "public/assets/0ec179dea726eb0d6e9df071c662a4be.css",
+      "type": "file",
+      "sizeKB": "9.0"
+    },
+    {
+      "path": "public/assets/address_manager.js",
+      "type": "file",
+      "sizeKB": "6.0"
+    },
+    {
+      "path": "public/assets/ai_address_validator.js",
+      "type": "file",
+      "sizeKB": "2.2"
+    },
+    {
+      "path": "public/assets/delivery_zone.js",
+      "type": "file",
+      "sizeKB": "1.3"
+    },
+    {
+      "path": "public/assets/google_address_manager.js",
+      "type": "file",
+      "sizeKB": "5.3"
+    },
+    {
+      "path": "public/assets/google_places_search.js",
+      "type": "file",
+      "sizeKB": "9.9"
+    },
+    {
+      "path": "public/assets/zepto_search.js",
+      "type": "file",
+      "sizeKB": "22.8"
+    },
+    {
+      "path": "public/assets/bike_ride_auto_hero.jpg",
+      "type": "file",
+      "sizeKB": "718.9"
+    },
+    {
+      "path": "public/assets/bike_ride_hero.jpg",
+      "type": "file",
+      "sizeKB": "518.1"
+    },
+    {
+      "path": "public/assets/dinshaws_milk.png",
+      "type": "file",
+      "sizeKB": "728.5"
+    },
+    {
+      "path": "public\\assets\\04df3e116962fdd663423a1af8082891.jpg",
+      "type": "file",
+      "sizeKB": "33.6"
+    },
+    {
+      "path": "public\\assets\\12b56aa1b66489273ae73c61d82999e2.jpg",
+      "type": "file",
+      "sizeKB": "50.0"
+    },
+    {
+      "path": "public\\assets\\204c96c472dfa0c7cae8c9f08a05a9e4.jpg",
+      "type": "file",
+      "sizeKB": "31.4"
+    },
+    {
+      "path": "public\\assets\\2072155ac5871ec246546e9b1b3615c6.png",
+      "type": "file",
+      "sizeKB": "303.6"
+    },
+    {
+      "path": "public\\assets\\2622b69a510ca33deafadb18f229cdae.jpg",
+      "type": "file",
+      "sizeKB": "50.4"
+    },
+    {
+      "path": "public\\assets\\2ee87136c461cfeec184f86727bb8175.jpg",
+      "type": "file",
+      "sizeKB": "18.9"
+    },
+    {
+      "path": "public\\assets\\36473b25e66a3caeb42a3b1cd036f3b6.jpg",
+      "type": "file",
+      "sizeKB": "23.5"
+    },
+    {
+      "path": "public\\assets\\3c1d7d235563048e76ffef4606d7a7af.jpg",
+      "type": "file",
+      "sizeKB": "89.0"
+    },
+    {
+      "path": "public\\assets\\493cb24f09df36fedd961c411acc20cf.png",
+      "type": "file",
+      "sizeKB": "317.3"
+    },
+    {
+      "path": "public\\assets\\4ee3dbeb8ec369e3e412716e49d3b5ad.png",
+      "type": "file",
+      "sizeKB": "385.5"
+    },
+    {
+      "path": "public\\assets\\5d873d95ca770d96586a69717e3ac4be.jpg",
+      "type": "file",
+      "sizeKB": "37.4"
+    },
+    {
+      "path": "public\\assets\\65997cf4c2f0cfe68eafa8e9b4641de2.png",
+      "type": "file",
+      "sizeKB": "525.3"
+    },
+    {
+      "path": "public\\assets\\796038e85b0ed92ef28d99fadbb29ba3.jpg",
+      "type": "file",
+      "sizeKB": "70.0"
+    },
+    {
+      "path": "public\\assets\\8b40c56e80ef11aa0285733e78c313f7.jpg",
+      "type": "file",
+      "sizeKB": "44.1"
+    },
+    {
+      "path": "public\\assets\\9bd7215ebcf9a61eea5be1ef3574174c.jpg",
+      "type": "file",
+      "sizeKB": "49.3"
+    },
+    {
+      "path": "public\\assets\\9c7ca33de432141e60b04a70b26a6d9c.png",
+      "type": "file",
+      "sizeKB": "301.3"
+    },
+    {
+      "path": "public\\assets\\a1927aa6bf131da3ab4133381f603e40.png",
+      "type": "file",
+      "sizeKB": "280.7"
+    },
+    {
+      "path": "public\\assets\\a4159d3fb2e0b376a58be6207986e2c4.png",
+      "type": "file",
+      "sizeKB": "266.5"
+    },
+    {
+      "path": "public\\assets\\aa324c61c49b2d7f1756b38af766b445.jpg",
+      "type": "file",
+      "sizeKB": "54.5"
+    },
+    {
+      "path": "public\\assets\\b78a5e7f95873739d5d52c1df72f73b6.png",
+      "type": "file",
+      "sizeKB": "344.7"
+    },
+    {
+      "path": "public\\assets\\b8a6b3300632eec740dfafd7fb5ebde4.png",
+      "type": "file",
+      "sizeKB": "317.9"
+    },
+    {
+      "path": "public\\assets\\c10be8f447fd494ae823382a123c3d19.png",
+      "type": "file",
+      "sizeKB": "295.0"
+    },
+    {
+      "path": "public\\assets\\d270925ae8ee44f7629839d7a9574312.jpg",
+      "type": "file",
+      "sizeKB": "49.3"
+    },
+    {
+      "path": "public\\assets\\d2e4a772beaf7eaf37dbbc3f89d85936.png",
+      "type": "file",
+      "sizeKB": "350.3"
+    },
+    {
+      "path": "public\\assets\\d343ccc14e92e8c2c560bc3a944b9c31.jpg",
+      "type": "file",
+      "sizeKB": "53.2"
+    },
+    {
+      "path": "public\\assets\\d3f93301e6c18d7528982b640c82f5f8.jpg",
+      "type": "file",
+      "sizeKB": "12.9"
+    },
+    {
+      "path": "public\\assets\\d686bc969706f3bd6cf093f663be9579.jpg",
+      "type": "file",
+      "sizeKB": "21.5"
+    },
+    {
+      "path": "public\\assets\\d7675b63f792cfc45e79761ff4fd8bd6.png",
+      "type": "file",
+      "sizeKB": "325.1"
+    },
+    {
+      "path": "public\\assets\\e31fb490ea65e1e8e0d30012e7e3ad4f.png",
+      "type": "file",
+      "sizeKB": "284.7"
+    },
+    {
+      "path": "public\\assets\\e3241a3ee12ab053f6c14cc48144a87d.jpg",
+      "type": "file",
+      "sizeKB": "56.9"
+    },
+    {
+      "path": "public\\assets\\eb07c0498924dba72c7bd001cdd7232d.jpg",
+      "type": "file",
+      "sizeKB": "69.8"
+    },
+    {
+      "path": "public\\assets\\eb6e2b75fac9c0724341e63abc3b5100.jpg",
+      "type": "file",
+      "sizeKB": "87.5"
+    },
+    {
+      "path": "public\\assets\\f284ced291248a512b01237a00e74f30.png",
+      "type": "file",
+      "sizeKB": "342.8"
+    },
+    {
+      "path": "public\\assets\\f81c99f9cc2f950e8418709344a7c088.png",
+      "type": "file",
+      "sizeKB": "295.3"
+    },
+    {
+      "path": "public\\assets\\fc8e3c77b476a19b4fcebf2fcd4536c1.jpg",
+      "type": "file",
+      "sizeKB": "51.0"
+    },
+    {
+      "path": "new_images.csv",
+      "type": "file",
+      "sizeKB": "0.2"
+    },
+    {
+      "path": "test_sample_catalog.csv",
+      "type": "file",
+      "sizeKB": "0.5"
+    },
+    {
+      "path": "test_sample_output.csv",
+      "type": "file",
+      "sizeKB": "3.6"
+    },
+    {
+      "path": "test_sample_output.xlsx",
+      "type": "file",
+      "sizeKB": "7.4"
+    },
+    {
+      "path": "temp_qa_payload.json",
+      "type": "file",
+      "sizeKB": "14.9"
+    },
+    {
+      "path": "store.js",
+      "type": "file",
+      "sizeKB": "20.1"
+    },
+    {
+      "path": "scripts/check_assets_temp.mjs",
+      "type": "file",
+      "sizeKB": "0.2"
+    },
+    {
+      "path": "scripts/check_all_asset_refs.mjs",
+      "type": "file",
+      "sizeKB": "1.6"
+    },
+    {
+      "path": "script_search_results.txt",
+      "type": "file",
+      "sizeKB": "26.2"
+    },
+    {
+      "path": "snippet_matches.txt",
+      "type": "file",
+      "sizeKB": "6.2"
+    },
+    {
+      "path": "word_matches.txt",
+      "type": "file",
+      "sizeKB": "30.6"
+    },
+    {
+      "path": "urls_debug.txt",
+      "type": "file",
+      "sizeKB": "0.6"
+    },
+    {
+      "path": "url_snippets.txt",
+      "type": "file",
+      "sizeKB": "129.1"
+    },
+    {
+      "path": "product_img_debug.txt",
+      "type": "file",
+      "sizeKB": "23.0"
+    },
+    {
+      "path": "parse_results.txt",
+      "type": "file",
+      "sizeKB": "8.2"
+    },
+    {
+      "path": "p_urls.txt",
+      "type": "file",
+      "sizeKB": "3.5"
+    },
+    {
+      "path": "extracted_urls.txt",
+      "type": "file",
+      "sizeKB": "17.0"
+    },
+    {
+      "path": "script_0.txt",
+      "type": "file",
+      "sizeKB": "0.4"
+    },
+    {
+      "path": "script_1.txt",
+      "type": "file",
+      "sizeKB": "0.2"
+    },
+    {
+      "path": "script_2.txt",
+      "type": "file",
+      "sizeKB": "0.4"
+    },
+    {
+      "path": "script_3.txt",
+      "type": "file",
+      "sizeKB": "491.3"
+    },
+    {
+      "path": "script_4.txt",
+      "type": "file",
+      "sizeKB": "0.5"
+    },
+    {
+      "path": "script_5.txt",
+      "type": "file",
+      "sizeKB": "0.3"
+    },
+    {
+      "path": "script_6.txt",
+      "type": "file",
+      "sizeKB": "0.1"
+    },
+    {
+      "path": "script_7.txt",
+      "type": "file",
+      "sizeKB": "0.2"
+    },
+    {
+      "path": "script_8.txt",
+      "type": "file",
+      "sizeKB": "41.0"
+    },
+    {
+      "path": "script_9.txt",
+      "type": "file",
+      "sizeKB": "0.8"
+    },
+    {
+      "path": "script_10.txt",
+      "type": "file",
+      "sizeKB": "0.1"
+    },
+    {
+      "path": "script_11.txt",
+      "type": "file",
+      "sizeKB": "0.0"
+    },
+    {
+      "path": "script_12.txt",
+      "type": "file",
+      "sizeKB": "0.1"
+    },
+    {
+      "path": "script_13.txt",
+      "type": "file",
+      "sizeKB": "0.0"
+    },
+    {
+      "path": "apply_zepto_instamart_packshots.py",
+      "type": "file",
+      "sizeKB": "9.8"
+    },
+    {
+      "path": "audit_all_products_and_images.py",
+      "type": "file",
+      "sizeKB": "6.1"
+    },
+    {
+      "path": "check_every_single_product.py",
+      "type": "file",
+      "sizeKB": "2.4"
+    },
+    {
+      "path": "export_product_names.py",
+      "type": "file",
+      "sizeKB": "1.6"
+    },
+    {
+      "path": "fast_audit_all_products_and_images.py",
+      "type": "file",
+      "sizeKB": "5.3"
+    },
+    {
+      "path": "fast_match_local_images.py",
+      "type": "file",
+      "sizeKB": "4.5"
+    },
+    {
+      "path": "fix_astro_public_urls.py",
+      "type": "file",
+      "sizeKB": "2.9"
+    },
+    {
+      "path": "fix_image_url_encoding.py",
+      "type": "file",
+      "sizeKB": "2.7"
+    },
+    {
+      "path": "generate_exact_product_packshots.py",
+      "type": "file",
+      "sizeKB": "6.3"
+    },
+    {
+      "path": "image_engine.py",
+      "type": "file",
+      "sizeKB": "18.6"
+    },
+    {
+      "path": "instant_packshot_matcher.py",
+      "type": "file",
+      "sizeKB": "8.0"
+    },
+    {
+      "path": "match_local_images.py",
+      "type": "file",
+      "sizeKB": "5.1"
+    },
+    {
+      "path": "sync_astro_catalog.py",
+      "type": "file",
+      "sizeKB": "3.8"
+    },
+    {
+      "path": "update_all_product_images.py",
+      "type": "file",
+      "sizeKB": "4.9"
+    },
+    {
+      "path": "update_single_product_image.py",
+      "type": "file",
+      "sizeKB": "2.0"
+    },
+    {
+      "path": "verify_zepto_instamart_compliance.py",
+      "type": "file",
+      "sizeKB": "2.6"
+    },
+    {
+      "path": "brand_identity_repair_report.md",
+      "type": "file",
+      "sizeKB": "13.6"
+    },
+    {
+      "path": "cart_checkout_qa_report.md",
+      "type": "file",
+      "sizeKB": "5.6"
+    },
+    {
+      "path": "catalog_repair_preview_report.md",
+      "type": "file",
+      "sizeKB": "16.3"
+    },
+    {
+      "path": "category_wise_deep_audit_report.md",
+      "type": "file",
+      "sizeKB": "14.5"
+    },
+    {
+      "path": "duplicate_variant_audit_report.md",
+      "type": "file",
+      "sizeKB": "14.3"
+    },
+    {
+      "path": "final_data_integrity_audit_report.md",
+      "type": "file",
+      "sizeKB": "12.4"
+    },
+    {
+      "path": "final_full_catalog_validation_report.md",
+      "type": "file",
+      "sizeKB": "12.3"
+    },
+    {
+      "path": "maaza_catalog_verification_report.md",
+      "type": "file",
+      "sizeKB": "21.6"
+    },
+    {
+      "path": "map_system_complete_qa_report.md",
+      "type": "file",
+      "sizeKB": "1.5"
+    },
+    {
+      "path": "master_catalog_index_rebuild_report.md",
+      "type": "file",
+      "sizeKB": "2.1"
+    },
+    {
+      "path": "master_catalog_validation_report.md",
+      "type": "file",
+      "sizeKB": "7.3"
+    },
+    {
+      "path": "mrp_variant_scaling_audit_report.md",
+      "type": "file",
+      "sizeKB": "11.0"
+    },
+    {
+      "path": "product_catalog_data_audit_report.md",
+      "type": "file",
+      "sizeKB": "19.5"
+    },
+    {
+      "path": "product_database_audit_report.md",
+      "type": "file",
+      "sizeKB": "7.3"
+    },
+    {
+      "path": "product_display_name_update_report.md",
+      "type": "file",
+      "sizeKB": "10.3"
+    },
+    {
+      "path": "product_duplicate_groups_report.md",
+      "type": "file",
+      "sizeKB": "17.8"
+    },
+    {
+      "path": "product_image_precision_audit_report.md",
+      "type": "file",
+      "sizeKB": "1.1"
+    },
+    {
+      "path": "product_image_validation_report.md",
+      "type": "file",
+      "sizeKB": "16.3"
+    },
+    {
+      "path": "product_mrp_repair_report.md",
+      "type": "file",
+      "sizeKB": "18.0"
+    },
+    {
+      "path": "product_quantity_variant_repair_report.md",
+      "type": "file",
+      "sizeKB": "11.6"
+    },
+    {
+      "path": "quantity_mismatch_correction_report.md",
+      "type": "file",
+      "sizeKB": "6.5"
+    },
+    {
+      "path": "scripts/build_master_catalog_excel.js",
+      "type": "file",
+      "sizeKB": "39.5"
+    },
+    {
+      "path": "scripts/test_msg91_otp_auth.cjs",
+      "type": "file",
+      "sizeKB": "0.0"
+    }
+  ]
+}
