@@ -249,9 +249,10 @@ window.BslRiderHome = (function() {
       attributionControl: false
     }).setView([currentGPS.lat, currentGPS.lng], 15);
 
-    // High performance CartoDB Voyager tiles (smooth raster rendering on mid/low-range phones)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19
+    // Clean high-performance OpenStreetMap tiles (no watermarks, fast loading on mobile)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
     }).addTo(map);
 
     // Service Area Boundary
@@ -1437,6 +1438,39 @@ window.BslRiderHome = (function() {
     var dutyHeadline = document.getElementById('duty-banner-headline');
     var dutySubtext = document.getElementById('duty-banner-subtext');
 
+    // 5-Vertical Shared Fleet Service Badges
+    var badgeGrocery = document.getElementById('fleet-service-grocery');
+    var badgeFood = document.getElementById('fleet-service-food');
+    var badgeMedicine = document.getElementById('fleet-service-medicine');
+    var badgeParcel = document.getElementById('fleet-service-parcel');
+    var badgePassenger = document.getElementById('fleet-service-passenger');
+
+    function updateServiceBadge(badgeEl, isOnline, isLocked, isExclusive, activeText) {
+      if (!badgeEl) return;
+      var subText = badgeEl.querySelector('.svc-status-text');
+      if (!isOnline) {
+        badgeEl.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/60 border border-slate-800 text-slate-500 text-[10px] font-bold shrink-0';
+        if (subText) subText.textContent = 'Offline';
+      } else if (isLocked) {
+        badgeEl.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-400 opacity-60 text-[10px] font-bold shrink-0';
+        if (subText) subText.textContent = '🔒 Paused';
+      } else if (isExclusive) {
+        badgeEl.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-400/25 border-2 border-amber-400 text-amber-300 text-[10px] font-black shrink-0 animate-pulse shadow-md shadow-amber-400/20';
+        if (subText) subText.textContent = '⚡ In Ride';
+      } else {
+        var colors = {
+          'fleet-service-grocery': 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
+          'fleet-service-food': 'bg-orange-500/15 border-orange-500/30 text-orange-300',
+          'fleet-service-medicine': 'bg-teal-500/15 border-teal-500/30 text-teal-300',
+          'fleet-service-parcel': 'bg-indigo-500/15 border-indigo-500/30 text-indigo-300',
+          'fleet-service-passenger': 'bg-amber-500/15 border-amber-500/30 text-amber-300'
+        };
+        var colorClass = colors[badgeEl.id] || 'bg-blue-500/15 border-blue-500/30 text-blue-300';
+        badgeEl.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[10px] font-black shrink-0 ' + colorClass;
+        if (subText) subText.textContent = activeText || 'Active';
+      }
+    }
+
     // CASE 1: OFF DUTY / OFFLINE
     if (!state.isOnline) {
       if (dutyBtn) {
@@ -1447,6 +1481,12 @@ window.BslRiderHome = (function() {
       if (dutyHeadline) dutyHeadline.textContent = "You're offline. You won't receive new orders.";
       if (dutySubtext) dutySubtext.textContent = 'Turn duty ON to receive deliveries and rides across Bhusawal.';
       cardOffline.classList.remove('hidden');
+
+      // Update 5 verticals to offline
+      [badgeGrocery, badgeFood, badgeMedicine, badgeParcel, badgePassenger].forEach(function(b) {
+        updateServiceBadge(b, false, false, false);
+      });
+
       renderDynamicRouteMap([], state);
       return;
     }
@@ -1472,6 +1512,21 @@ window.BslRiderHome = (function() {
       state.isPassengerLocked ||
       (window.BslFleetEngine && window.BslFleetEngine.isPassengerMode(state))
     );
+
+    // Update 5 verticals based on mode
+    if (isPassengerMode) {
+      updateServiceBadge(badgeGrocery, true, true, false);
+      updateServiceBadge(badgeFood, true, true, false);
+      updateServiceBadge(badgeMedicine, true, true, false);
+      updateServiceBadge(badgeParcel, true, true, false);
+      updateServiceBadge(badgePassenger, true, false, true);
+    } else {
+      updateServiceBadge(badgeGrocery, true, false, false, 'Active');
+      updateServiceBadge(badgeFood, true, false, false, 'Active');
+      updateServiceBadge(badgeMedicine, true, false, false, 'Active');
+      updateServiceBadge(badgeParcel, true, false, false, 'Active');
+      updateServiceBadge(badgePassenger, true, false, false, 'Active');
+    }
 
     // -------------------------------------------------------------
     // CASE 2A: PASSENGER TRIP ACTIVE (100% EXCLUSIVE WORKFLOW)

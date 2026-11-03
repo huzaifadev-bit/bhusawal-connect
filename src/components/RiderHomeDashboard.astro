@@ -1,9 +1,10 @@
 ---
 // Bhusawal Connect - Rider Partner Home Screen & Live Fleet Dashboard
+// Inspired by Blinkit Captain, Zomato Delivery Partner and Uber Driver UX
 ---
 
 <!-- ==================== VIEW: FULL RIDER DASHBOARD (MAP-FIRST LIVE INTERFACE) ==================== -->
-<section id="view-dashboard" class="fixed inset-0 w-full h-[100dvh] flex flex-col bg-slate-950 overflow-hidden z-40">
+<section id="view-dashboard" class="fixed inset-0 w-full h-[100dvh] flex flex-col bg-slate-950 overflow-hidden z-40 selection:bg-blue-600 selection:text-white">
   
   <!-- MAIN TABS CONTAINER -->
   <div class="relative w-full flex-1 overflow-hidden">
@@ -12,48 +13,54 @@
     <div id="tab-content-home" class="tab-page absolute inset-0 w-full h-full flex flex-col overflow-hidden">
       
       <!-- 1. LIVE BHUSAWAL LEAFLET MAP CANVAS -->
-      <div id="rider-live-map" class="absolute inset-0 w-full h-full z-0 bg-slate-900"></div>
+      <div id="rider-live-map" class="absolute inset-0 w-full h-full z-0 bg-slate-950"></div>
 
-      <!-- 2. TOP FLOATING AREA -->
+      <!-- 2. TOP FLOATING COMMAND BAR -->
       <div class="relative z-20 mx-3 mt-3 max-w-md w-[calc(100%-1.5rem)] self-center pointer-events-auto">
-        <div class="bg-slate-900/90 backdrop-blur-md rounded-2xl p-3 border border-slate-700/70 shadow-2xl space-y-2.5">
+        <div class="bg-slate-900/95 backdrop-blur-xl rounded-2xl p-3 border border-slate-800/90 shadow-2xl space-y-2.5">
           
           <div class="flex items-center justify-between">
             <!-- Brand logo & Captain Title -->
             <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 bg-blue-600 text-white rounded-xl flex items-center justify-center font-black shadow-md shadow-blue-500/30">
+              <div class="w-10 h-10 bg-gradient-to-tr from-blue-700 to-blue-500 text-white rounded-xl flex items-center justify-center font-black shadow-lg shadow-blue-600/30 border border-blue-400/30">
                 <span class="material-symbols-outlined text-xl">two_wheeler</span>
               </div>
               <div>
                 <h1 class="text-sm font-black text-white leading-tight tracking-tight flex items-center gap-1.5">
-                  <span>BSL Connect</span>
+                  <span>Bhusawal Connect</span>
                   <span class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 text-[9px] font-black rounded uppercase border border-blue-500/30">CAPTAIN</span>
                 </h1>
-                <p class="text-[10px] font-semibold text-slate-400">Bhusawal Shared Fleet</p>
+                <p class="text-[10px] font-semibold text-slate-400 flex items-center gap-1">
+                  <span>Shared Fleet • Bhusawal</span>
+                  <span class="inline-block w-1 h-1 rounded-full bg-slate-600"></span>
+                  <span class="text-emerald-400 font-bold flex items-center gap-0.5">
+                    <span class="material-symbols-outlined text-[11px]">verified</span> KYC
+                  </span>
+                </p>
               </div>
             </div>
 
             <!-- Right Header Actions: Notification Bell + Profile Avatar -->
             <div class="flex items-center gap-2">
-              <button id="btn-top-notif" class="relative w-9 h-9 rounded-xl bg-slate-800 text-slate-300 hover:text-white border border-slate-700 flex items-center justify-center transition-colors active:scale-95 cursor-pointer" title="Alerts">
+              <button id="btn-top-notif" class="relative w-9 h-9 rounded-xl bg-slate-800/90 text-slate-300 hover:text-white border border-slate-700 flex items-center justify-center transition-all active:scale-95 cursor-pointer shadow-sm" title="Alerts">
                 <span class="material-symbols-outlined text-lg">notifications</span>
                 <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
               </button>
-              <button id="btn-top-profile" class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-extrabold text-xs flex items-center justify-center border border-blue-400/30 shadow-sm active:scale-95 cursor-pointer" title="Profile">
+              <button id="btn-top-profile" class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white font-black text-xs flex items-center justify-center border border-blue-400/40 shadow-md active:scale-95 cursor-pointer" title="Profile">
                 <span id="top-avatar-initials">RP</span>
               </button>
             </div>
           </div>
 
           <!-- PROMINENT ON DUTY / OFF DUTY CONTROL -->
-          <div class="border-t border-slate-800/80 pt-2 flex items-center justify-between gap-2">
+          <div class="border-t border-slate-800/80 pt-2 flex items-center justify-between gap-2.5">
             <div class="min-w-0 flex-1">
               <p id="duty-banner-headline" class="text-xs font-black text-white truncate">You're available for orders.</p>
-              <p id="duty-banner-subtext" class="text-[10px] font-medium text-slate-400 truncate">Receiving Grocery, Food, Medicine & Rides</p>
+              <p id="duty-banner-subtext" class="text-[10px] font-semibold text-slate-400 truncate">Receiving Grocery, Food, Medicine, Parcel & Rides</p>
             </div>
             <button
               id="btn-toggle-duty"
-              class="shrink-0 px-3.5 py-2 rounded-xl font-black text-xs flex items-center gap-1.5 shadow-md transition-all active:scale-95 cursor-pointer bg-emerald-500 hover:bg-emerald-600 text-slate-950 shadow-emerald-500/20"
+              class="shrink-0 px-4 py-2 rounded-xl font-black text-xs flex items-center gap-2 shadow-lg transition-all active:scale-95 cursor-pointer bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/25 border border-emerald-400/50"
             >
               <span class="w-2.5 h-2.5 rounded-full bg-slate-950 animate-pulse" id="duty-btn-dot"></span>
               <span id="btn-duty-text">🟢 ON DUTY</span>
@@ -65,50 +72,92 @@
 
       <!-- 3. HOME SUMMARY HUD (Today's Earnings, Completed, Distance, Online Time) -->
       <div class="relative z-20 mx-3 mt-2 max-w-md w-[calc(100%-1.5rem)] self-center pointer-events-auto">
-        <div class="bg-slate-900/85 backdrop-blur-md rounded-xl p-2.5 border border-slate-800 shadow-xl grid grid-cols-4 gap-1 text-center">
+        <div class="bg-slate-900/90 backdrop-blur-xl rounded-2xl p-2.5 border border-slate-800 shadow-xl grid grid-cols-4 gap-1 text-center">
           <div class="px-1 border-r border-slate-800">
-            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Earnings</span>
-            <span id="summary-today-earnings" class="text-sm font-black text-emerald-400 font-display">₹640</span>
+            <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">Today</span>
+            <span id="summary-today-earnings" class="text-sm font-black text-emerald-400 font-display">₹684</span>
           </div>
           <div class="px-1 border-r border-slate-800">
-            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Orders</span>
+            <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">Orders</span>
             <span id="summary-today-orders" class="text-sm font-black text-white">6</span>
           </div>
           <div class="px-1 border-r border-slate-800">
-            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Distance</span>
-            <span id="summary-today-dist" class="text-sm font-black text-blue-400">18.4 km</span>
+            <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">Distance</span>
+            <span id="summary-today-dist" class="text-sm font-black text-sky-400">18.4 km</span>
           </div>
           <div class="px-1">
-            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Online</span>
+            <span class="text-[9px] font-extrabold text-slate-400 uppercase tracking-wider block">Online</span>
             <span id="summary-today-time" class="text-sm font-black text-purple-400">4.2h</span>
           </div>
         </div>
       </div>
 
-      <!-- 4. FLOATING MAP UTILITY CONTROLS (Accuracy Badge, Follow/Recenter, Hotspots, Zoom In/Out) -->
+      <!-- 4. FIVE-VERTICAL SERVICE STATUS INDICATOR STRIP -->
+      <div class="relative z-20 mx-3 mt-2 max-w-md w-[calc(100%-1.5rem)] self-center pointer-events-auto">
+        <div class="bg-slate-900/85 backdrop-blur-md rounded-xl p-2 border border-slate-800 shadow-lg flex items-center justify-between gap-1 overflow-x-auto no-scrollbar">
+          
+          <!-- 1. GROCERY -->
+          <div id="fleet-service-grocery" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[10px] font-black shrink-0 transition-all">
+            <span class="material-symbols-outlined text-xs text-emerald-400">shopping_basket</span>
+            <span>Grocery</span>
+            <span class="svc-status-text text-[9px] font-bold opacity-80">Active</span>
+          </div>
+
+          <!-- 2. FOOD -->
+          <div id="fleet-service-food" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-orange-500/15 border border-orange-500/30 text-orange-300 text-[10px] font-black shrink-0 transition-all">
+            <span class="material-symbols-outlined text-xs text-orange-400">restaurant</span>
+            <span>Food</span>
+            <span class="svc-status-text text-[9px] font-bold opacity-80">Active</span>
+          </div>
+
+          <!-- 3. MEDICINE -->
+          <div id="fleet-service-medicine" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-teal-500/15 border border-teal-500/30 text-teal-300 text-[10px] font-black shrink-0 transition-all">
+            <span class="material-symbols-outlined text-xs text-teal-400">medical_services</span>
+            <span>Medicine</span>
+            <span class="svc-status-text text-[9px] font-bold opacity-80">Active</span>
+          </div>
+
+          <!-- 4. PARCEL -->
+          <div id="fleet-service-parcel" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-[10px] font-black shrink-0 transition-all">
+            <span class="material-symbols-outlined text-xs text-indigo-400">inventory_2</span>
+            <span>Parcel</span>
+            <span class="svc-status-text text-[9px] font-bold opacity-80">Active</span>
+          </div>
+
+          <!-- 5. BIKE TAXI / PASSENGER -->
+          <div id="fleet-service-passenger" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-black shrink-0 transition-all">
+            <span class="material-symbols-outlined text-xs text-amber-400">two_wheeler</span>
+            <span>Bike Taxi</span>
+            <span class="svc-status-text text-[9px] font-bold opacity-80">Active</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 5. FLOATING MAP UTILITY CONTROLS -->
       <!-- Left: GPS Accuracy & Connection Status Pill -->
-      <div id="badge-gps-accuracy" class="absolute left-3 top-44 z-20 pointer-events-auto">
-        <button id="btn-gps-accuracy-info" title="GPS Status & Accuracy (Click to refresh)" class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 backdrop-blur-md text-white border border-slate-700/80 shadow-xl flex items-center gap-1.5 text-[11px] font-black hover:bg-slate-800 transition-all cursor-pointer">
+      <div id="badge-gps-accuracy" class="absolute left-3 top-52 z-20 pointer-events-auto">
+        <button id="btn-gps-accuracy-info" title="GPS Status & Accuracy" class="px-2.5 py-1.5 rounded-xl bg-slate-900/90 backdrop-blur-md text-white border border-slate-700/80 shadow-xl flex items-center gap-1.5 text-[11px] font-black hover:bg-slate-800 transition-all cursor-pointer">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" id="gps-status-dot"></span>
-          <span id="gps-accuracy-text">GPS: ±8m</span>
+          <span id="gps-accuracy-text">GPS: ±8m Active</span>
         </button>
       </div>
 
       <!-- Right: Touch-Friendly Map Controls Cluster -->
-      <div class="absolute right-3 top-44 z-20 flex flex-col gap-2 pointer-events-auto">
+      <div class="absolute right-3 top-52 z-20 flex flex-col gap-2 pointer-events-auto">
         <!-- Recenter / Auto-Follow Toggle -->
-        <button id="btn-map-recenter" title="Auto-Follow Rider / Recenter Map" class="w-10 h-10 rounded-xl bg-slate-900/90 text-blue-400 border-2 border-blue-500 shadow-xl flex items-center justify-center hover:bg-slate-800 active:scale-95 transition-all cursor-pointer relative">
+        <button id="btn-map-recenter" title="Recenter on Captain Location" class="w-10 h-10 rounded-xl bg-slate-900/95 backdrop-blur-md text-blue-400 border border-blue-500/60 shadow-xl flex items-center justify-center hover:bg-slate-800 active:scale-95 transition-all cursor-pointer relative">
           <span class="material-symbols-outlined text-lg">my_location</span>
           <span id="recenter-follow-indicator" class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-blue-500 ring-2 ring-slate-900 animate-ping"></span>
         </button>
 
         <!-- Demand Hotspots Toggle -->
-        <button id="btn-map-hotspots" title="Toggle Demand Hotspots" class="w-10 h-10 rounded-xl bg-slate-900/90 text-amber-400 border border-slate-700/80 shadow-xl flex items-center justify-center hover:bg-slate-800 active:scale-95 transition-all cursor-pointer">
+        <button id="btn-map-hotspots" title="Toggle Demand Hotspots" class="w-10 h-10 rounded-xl bg-slate-900/95 backdrop-blur-md text-amber-400 border border-slate-700 shadow-xl flex items-center justify-center hover:bg-slate-800 active:scale-95 transition-all cursor-pointer">
           <span class="material-symbols-outlined text-lg">local_fire_department</span>
         </button>
 
-        <!-- Ergonomic Thumb Zoom Controls -->
-        <div class="flex flex-col rounded-xl bg-slate-900/90 border border-slate-700/80 shadow-xl overflow-hidden">
+        <!-- Thumb Zoom Controls -->
+        <div class="flex flex-col rounded-xl bg-slate-900/95 backdrop-blur-md border border-slate-700 shadow-xl overflow-hidden">
           <button id="btn-map-zoom-in" title="Zoom In" class="w-10 h-9 text-slate-200 hover:text-white hover:bg-slate-800 flex items-center justify-center border-b border-slate-800 active:scale-95 transition-all cursor-pointer">
             <span class="material-symbols-outlined text-base">add</span>
           </button>
@@ -118,28 +167,28 @@
         </div>
       </div>
 
-      <!-- 5. DYNAMIC HOME STATE DRAWER (Floats over map above bottom nav) -->
+      <!-- 6. DYNAMIC HOME STATE DRAWER (Floats over map above bottom nav) -->
       <div class="absolute bottom-20 left-3 right-3 z-20 max-w-md mx-auto pointer-events-auto">
         
         <!-- STATE A: OFFLINE STATE -->
-        <div id="state-offline-card" class="hidden bg-slate-900/95 backdrop-blur-md rounded-2xl p-4 border border-slate-700 shadow-2xl space-y-3">
+        <div id="state-offline-card" class="hidden bg-slate-900/95 backdrop-blur-xl rounded-2xl p-4 border border-slate-700 shadow-2xl space-y-3">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center">
+            <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center shrink-0">
               <span class="material-symbols-outlined text-2xl">bedtime</span>
             </div>
             <div>
-              <h3 class="text-sm font-black text-white">You're offline</h3>
-              <p class="text-[11px] font-semibold text-slate-400 leading-snug">You won't receive new delivery or ride requests.</p>
+              <h3 class="text-sm font-black text-white">You're Currently Offline</h3>
+              <p class="text-[11px] font-semibold text-slate-400 leading-snug">Go online to receive delivery requests & passenger rides across Bhusawal.</p>
             </div>
           </div>
-          <button id="btn-go-online-cta" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-sm rounded-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer">
+          <button id="btn-go-online-cta" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm rounded-xl shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer">
             <span class="material-symbols-outlined text-base">bolt</span>
             <span>GO ON DUTY NOW</span>
           </button>
         </div>
 
         <!-- STATE B: AVAILABLE STATE (LOOKING FOR ORDERS) -->
-        <div id="state-available-card" class="bg-slate-900/95 backdrop-blur-md rounded-2xl p-4 border border-slate-700 shadow-2xl space-y-3">
+        <div id="state-available-card" class="bg-slate-900/95 backdrop-blur-xl rounded-2xl p-4 border border-slate-700/80 shadow-2xl space-y-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2.5">
               <span class="relative flex h-3 w-3">
@@ -147,45 +196,47 @@
                 <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
               </span>
               <div>
-                <h3 class="text-sm font-black text-white">You're online</h3>
-                <p class="text-[11px] font-bold text-emerald-400">Looking for nearby orders...</p>
+                <h3 class="text-sm font-black text-white">Looking for Nearby Orders</h3>
+                <p class="text-[11px] font-extrabold text-emerald-400">Shared Fleet Radar Active</p>
               </div>
             </div>
-            <span class="text-[10px] font-extrabold text-slate-400 bg-slate-800 px-2 py-0.5 rounded-md border border-slate-700">
-              ⚡ Station Road Surge
+            <span class="text-[10px] font-extrabold text-amber-300 bg-amber-500/15 px-2.5 py-1 rounded-lg border border-amber-500/30 flex items-center gap-1">
+              <span>⚡ Station Road Surge</span>
             </span>
           </div>
 
-          <!-- Radar Simulation Ticker -->
-          <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800/80 flex items-center justify-between text-xs">
+          <!-- Radar Scanning Ticker -->
+          <div class="bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
             <div class="flex items-center gap-2 text-slate-300">
-              <span class="material-symbols-outlined text-blue-400 text-sm animate-spin">sync</span>
+              <span class="material-symbols-outlined text-blue-400 text-sm animate-spin">radar</span>
               <span class="text-[11px] font-bold">Scanning 3 km radius in Bhusawal</span>
             </div>
-            <span class="text-[10px] font-extrabold text-blue-300 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">6 verticals</span>
+            <span class="text-[10px] font-extrabold text-blue-300 bg-blue-500/15 px-2 py-0.5 rounded-md border border-blue-500/25">5 Verticals</span>
           </div>
 
-          <!-- Quick Simulation Chips Bar (To test each state easily) -->
+          <!-- Collapsible Dispatch Simulation Drawer (For Rapid Verification) -->
           <div class="border-t border-slate-800/80 pt-2">
-            <p class="text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Simulate Incoming Request:</p>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[9px] font-black uppercase tracking-wider text-slate-400">Incoming Dispatch Simulator:</span>
+              <span class="text-[9px] text-blue-400 font-bold">1-Tap Test</span>
+            </div>
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
-              <button class="btn-quick-sim px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold rounded-lg border border-slate-700 shrink-0 transition-all active:scale-95 cursor-pointer" data-sim="GROCERY">🛒 Grocery</button>
-              <button class="btn-quick-sim px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold rounded-lg border border-slate-700 shrink-0 transition-all active:scale-95 cursor-pointer" data-sim="FOOD">🍔 Food</button>
-              <button class="btn-quick-sim px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-[10px] font-bold rounded-lg border border-rose-500/30 shrink-0 transition-all active:scale-95 cursor-pointer" data-sim="MEDICINE">💊 Medicine</button>
-              <button class="btn-quick-sim px-2.5 py-1 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-[10px] font-bold rounded-lg border border-indigo-500/30 shrink-0 transition-all active:scale-95 cursor-pointer" data-sim="PARCEL">📦 Parcel</button>
-              <button class="btn-quick-sim px-2.5 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 text-[10px] font-bold rounded-lg border border-cyan-500/30 shrink-0 transition-all active:scale-95 cursor-pointer" data-sim="PICKUP_DROP">🔄 Pickup & Drop</button>
+              <button class="btn-quick-sim px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-[10px] font-black rounded-lg border border-emerald-500/30 shrink-0 transition-all active:scale-95 cursor-pointer" data-sim="GROCERY">🛒 Grocery</button>
+              <button class="btn-quick-sim px-2.5 py-1 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 text-[10px] font-black rounded-lg border border-orange-500/30 shrink-0 transition-all active:scale-95 cursor-pointer" data-sim="FOOD">🍔 Food</button>
+              <button class="btn-quick-sim px-2.5 py-1 bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 text-[10px] font-black rounded-lg border border-teal-500/30 shrink-0 transition-all active:scale-95 cursor-pointer" data-sim="MEDICINE">💊 Medicine</button>
+              <button class="btn-quick-sim px-2.5 py-1 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-[10px] font-black rounded-lg border border-indigo-500/30 shrink-0 transition-all active:scale-95 cursor-pointer" data-sim="PARCEL">📦 Parcel</button>
               <button class="btn-quick-sim px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-[10px] rounded-lg border border-amber-300 shrink-0 transition-all active:scale-95 cursor-pointer shadow-sm shadow-amber-400/20" data-sim="PASSENGER">🛵 Passenger Ride</button>
             </div>
           </div>
         </div>
 
-                <!-- STATE C: ACTIVE ROUTE & MULTI-ORDER HUD (INTELLIGENT SEQUENCER) -->
-        <div id="state-active-route-card" class="hidden bg-slate-900/95 backdrop-blur-md rounded-2xl p-3.5 border-2 border-blue-500 shadow-2xl space-y-3">
+        <!-- STATE C: ACTIVE ROUTE & MULTI-ORDER HUD (INTELLIGENT SEQUENCER) -->
+        <div id="state-active-route-card" class="hidden bg-slate-900/95 backdrop-blur-xl rounded-2xl p-4 border-2 border-blue-500 shadow-2xl space-y-3">
           
           <!-- Top Batch Header & Total Earning -->
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <div class="flex items-center gap-2">
-              <span id="route-batch-badge" class="px-2 py-0.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-md text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
+              <span id="route-batch-badge" class="px-2.5 py-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-lg text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping"></span>
                 <span id="route-batch-count-text">ACTIVE ROUTE (1 ORDER)</span>
               </span>
@@ -263,24 +314,24 @@
           <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800">
             <button id="btn-view-all-active-orders" class="py-2 px-2 bg-slate-800/90 hover:bg-slate-800 text-slate-200 text-[11px] font-extrabold rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer">
               <span class="material-symbols-outlined text-xs text-blue-400">receipt_long</span>
-              <span>View all active orders</span>
+              <span>View All Tasks</span>
             </button>
             <button id="btn-view-optimized-route" class="py-2 px-2 bg-slate-800/90 hover:bg-slate-800 text-slate-200 text-[11px] font-extrabold rounded-xl border border-slate-700 flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer">
               <span class="material-symbols-outlined text-xs text-purple-400">route</span>
-              <span>View optimized route</span>
+              <span>View Route</span>
             </button>
           </div>
 
           <!-- MULTI-ORDER SIMULATION TESTING CONTROLS (BACKEND GUARDED) -->
           <div class="bg-slate-950/70 p-2 rounded-xl border border-slate-800/80 space-y-1">
             <div class="flex items-center justify-between text-[9px] font-black uppercase tracking-wider text-slate-400">
-              <span>Add to Route (Backend Guarded):</span>
+              <span>Stack Compatible Orders:</span>
               <span class="text-emerald-400 font-bold">Max 3</span>
             </div>
             <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
               <button class="btn-stack-sim px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold rounded-lg border border-slate-700 shrink-0 active:scale-95 cursor-pointer" data-stack="GROCERY">➕ Grocery</button>
               <button class="btn-stack-sim px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold rounded-lg border border-slate-700 shrink-0 active:scale-95 cursor-pointer" data-stack="FOOD">➕ Food</button>
-              <button class="btn-stack-sim px-2 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-[10px] font-bold rounded-lg border border-rose-500/30 shrink-0 active:scale-95 cursor-pointer" data-stack="MEDICINE">➕ Medicine</button>
+              <button class="btn-stack-sim px-2 py-1 bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 text-[10px] font-bold rounded-lg border border-teal-500/30 shrink-0 active:scale-95 cursor-pointer" data-stack="MEDICINE">➕ Medicine</button>
               <button class="btn-stack-sim px-2 py-1 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-[10px] font-bold rounded-lg border border-indigo-500/30 shrink-0 active:scale-95 cursor-pointer" data-stack="PARCEL">➕ Parcel</button>
             </div>
           </div>
@@ -307,8 +358,8 @@
           <div class="bg-amber-400/20 border-2 border-amber-400/50 rounded-xl p-2.5 flex items-center gap-2.5 text-amber-200 text-xs font-black shadow-inner">
             <span class="material-symbols-outlined text-amber-400 text-xl shrink-0 animate-pulse">lock</span>
             <div>
-              <span class="text-white block font-black uppercase tracking-wider text-[11px]">🔒 PASSENGER MODE</span>
-              <span class="text-amber-200/90 text-[10px] font-bold block">Other orders are paused while you have a passenger.</span>
+              <span class="text-white block font-black uppercase tracking-wider text-[11px]">🔒 EXCLUSIVE PASSENGER MODE</span>
+              <span class="text-amber-200/90 text-[10px] font-bold block">Other delivery orders are locked until passenger drop.</span>
             </div>
           </div>
 
@@ -320,7 +371,7 @@
                 <span class="text-[10px] font-bold text-amber-400 flex items-center gap-1 mt-0.5">
                   <span>★ 4.9 Verified Passenger</span>
                   <span class="text-slate-500">•</span>
-                  <span class="text-slate-400">Helmet Mandatory</span>
+                  <span class="text-slate-400">Helmet Provided</span>
                 </span>
               </div>
               <a id="card-passenger-call" href="tel:9876543210" class="px-3 py-1.5 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-xl text-xs font-black flex items-center gap-1 shadow-sm active:scale-95 transition-all">
@@ -375,7 +426,7 @@
 
     </div>
 
-    <!-- ==================== TAB 2: ORDERS ==================== -->
+    <!-- ==================== TAB 2: ORDERS (ACTIVE & DISPATCH QUEUE) ==================== -->
     <div id="tab-content-orders" class="tab-page hidden absolute inset-0 w-full h-full overflow-y-auto p-4 pb-24 space-y-4 bg-slate-950 text-slate-100">
       <div class="max-w-md mx-auto space-y-4 pt-2">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -406,10 +457,10 @@
               <span>Partner Earnings & Wallet</span>
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             </h2>
-            <p class="text-xs text-slate-400 font-medium">One unified wallet across all 6 Bhusawal services</p>
+            <p class="text-xs text-slate-400 font-medium">One unified wallet across all 5 Bhusawal services</p>
           </div>
           <span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-lg text-[10px] font-black uppercase tracking-wider">
-            Combined Fleet
+            Shared Fleet
           </span>
         </div>
 
@@ -424,7 +475,7 @@
               </div>
               <div>
                 <span class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">Available Wallet Balance</span>
-                <span class="text-[11px] text-emerald-400/90 font-bold">Single Fleet Account (All 6 Services)</span>
+                <span class="text-[11px] text-emerald-400/90 font-bold">Single Fleet Account (All 5 Verticals)</span>
               </div>
             </div>
             <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-black border border-emerald-500/30">
@@ -534,18 +585,18 @@
           </div>
         </div>
 
-        <!-- 5. BREAKDOWN BY SERVICE (6 VERTICALS) -->
+        <!-- 5. BREAKDOWN BY SERVICE (5 Canonical Verticals) -->
         <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 space-y-3">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <div>
               <h3 class="text-xs font-black uppercase tracking-wider text-slate-200">Earnings by Service</h3>
-              <p class="text-[10px] text-slate-400">Breakdown across all 6 BSL Connect services</p>
+              <p class="text-[10px] text-slate-400">Breakdown across all 5 BSL Connect verticals</p>
             </div>
             <span id="breakdown-total-jobs-count" class="text-xs font-extrabold text-blue-400">12 Jobs Total</span>
           </div>
 
           <div id="container-service-breakdown" class="space-y-2.5">
-            <!-- Dynamically populated or rendered 6 canonical services -->
+            <!-- Dynamically populated or rendered canonical services -->
           </div>
         </div>
 
@@ -597,44 +648,14 @@
           </div>
 
           <div id="container-payout-history" class="space-y-2 text-xs">
-            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
-              <div class="flex items-center gap-2">
-                <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
-                  <span class="material-symbols-outlined text-sm">north_east</span>
-                </div>
-                <div>
-                  <span class="font-extrabold text-white block">Instant UPI Withdrawal</span>
-                  <span class="text-[10px] text-slate-400">To rahulpatil@okaxis • Ref #BSL-5892</span>
-                </div>
-              </div>
-              <div class="text-right">
-                <span class="font-black text-emerald-400 block font-display">₹500</span>
-                <span class="text-[9px] text-slate-500 font-bold">Completed</span>
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
-              <div class="flex items-center gap-2">
-                <div class="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
-                  <span class="material-symbols-outlined text-sm">account_balance</span>
-                </div>
-                <div>
-                  <span class="font-extrabold text-white block">Nightly Fleet Auto-Settlement</span>
-                  <span class="text-[10px] text-slate-400">To SBI A/C ••••8942</span>
-                </div>
-              </div>
-              <div class="text-right">
-                <span class="font-black text-slate-200 block font-display">₹1,120</span>
-                <span class="text-[9px] text-slate-500 font-bold">Settled Yesterday</span>
-              </div>
-            </div>
+            <!-- Dynamically populated -->
           </div>
         </div>
 
       </div>
     </div>
 
-    <!-- ==================== TAB 4: PROFILE ==================== -->
+    <!-- ==================== TAB 4: PROFILE & SETTINGS ==================== -->
     <div id="tab-content-profile" class="tab-page hidden absolute inset-0 w-full h-full overflow-y-auto p-4 pb-28 space-y-4 bg-slate-950 text-slate-100">
       <div class="max-w-md mx-auto space-y-4 pt-1">
         
@@ -642,10 +663,10 @@
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
           <div>
             <h2 class="text-base font-black text-white flex items-center gap-1.5">
-              <span>Partner Profile</span>
+              <span>Captain Profile & Settings</span>
               <span class="material-symbols-outlined text-base text-blue-400">verified</span>
             </h2>
-            <p class="text-xs text-slate-400 font-medium">Bhusawal unified fleet partner credentials</p>
+            <p class="text-xs text-slate-400 font-medium">Bhusawal shared fleet partner credentials</p>
           </div>
           <span class="px-2 py-1 bg-blue-500/10 text-blue-300 border border-blue-500/30 rounded-lg text-[10px] font-black uppercase tracking-wider">
             Fleet Captain
@@ -674,7 +695,7 @@
                 <div class="flex items-center gap-2 mt-1">
                   <span class="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-2 py-0.5 rounded border border-emerald-500/30" id="kyc-badge-display">
                     <span class="material-symbols-outlined text-xs">check_circle</span>
-                    KYC Approved & Active
+                    KYC Verified
                   </span>
                   <span class="text-xs font-black text-amber-400 flex items-center gap-0.5">
                     ★ 4.9 <span class="text-[10px] text-slate-400 font-semibold">(128 reviews)</span>
@@ -686,44 +707,44 @@
 
           <div class="grid grid-cols-2 gap-2 text-xs pt-1">
             <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Registered Phone</span>
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Registered Mobile</span>
               <span id="dash-phone" class="font-extrabold text-slate-200">+91 9876543210</span>
             </div>
             <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Assigned Operating Hub</span>
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Operating Hub</span>
               <span class="font-extrabold text-slate-200">Station Road & Main Market</span>
             </div>
           </div>
         </div>
 
-        <!-- 2. REGISTERED VEHICLE DETAILS -->
+        <!-- 2. REGISTERED TWO-WHEELER VEHICLE -->
         <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 space-y-3">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
             <h4 class="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
               <span class="material-symbols-outlined text-sm text-blue-400">two_wheeler</span>
-              <span>Registered Two-Wheeler</span>
+              <span>Registered Fleet Vehicle</span>
             </h4>
             <span class="text-[10px] font-black text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-              100% Electric
+              Active Two-Wheeler
             </span>
           </div>
 
           <div class="grid grid-cols-2 gap-2 text-xs">
             <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
               <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Vehicle Model</span>
-              <span class="font-extrabold text-white">⚡ EV Scooter (Ather 450X)</span>
+              <span class="font-extrabold text-white">Hero Splendor / EV</span>
             </div>
             <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
               <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Plate / Registration</span>
               <span id="dash-bike-no" class="font-extrabold text-white">MH 19 AX 4892</span>
             </div>
             <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Carrier Capacity</span>
-              <span class="font-extrabold text-slate-200">10 Cargo Units (Bag + Footboard)</span>
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Cargo Capacity</span>
+              <span class="font-extrabold text-slate-200">Up to 3 Concurrent Deliveries</span>
             </div>
             <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800">
               <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Passenger Pillion</span>
-              <span class="font-extrabold text-slate-200">Approved (Footrests & Helmet)</span>
+              <span class="font-extrabold text-slate-200">Approved (Helmet Included)</span>
             </div>
           </div>
         </div>
@@ -748,257 +769,41 @@
                 </div>
               </div>
               <span class="text-[10px] font-extrabold text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                <span class="material-symbols-outlined text-xs">check</span> Verified
+                <span class="material-symbols-outlined text-xs">done</span> Verified
               </span>
             </div>
 
             <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/70 border border-slate-800/80">
               <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm text-slate-400">contact_emergency</span>
+                <span class="material-symbols-outlined text-sm text-slate-400">drive_eta</span>
                 <div>
-                  <span class="font-bold text-white block">Driving License (DL)</span>
-                  <span class="text-[10px] text-slate-400">MH19 20220018942</span>
+                  <span class="font-bold text-white block">Driving License (MCWG)</span>
+                  <span class="text-[10px] text-slate-400">MH19 2021004892</span>
                 </div>
               </div>
               <span class="text-[10px] font-extrabold text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                <span class="material-symbols-outlined text-xs">check</span> Verified
-              </span>
-            </div>
-
-            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/70 border border-slate-800/80">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm text-slate-400">description</span>
-                <div>
-                  <span class="font-bold text-white block">Vehicle Registration (RC)</span>
-                  <span class="text-[10px] text-slate-400">MH-19-AX-4892</span>
-                </div>
-              </div>
-              <span class="text-[10px] font-extrabold text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                <span class="material-symbols-outlined text-xs">check</span> Verified
-              </span>
-            </div>
-
-            <div class="flex items-center justify-between p-2 rounded-xl bg-slate-950/70 border border-slate-800/80">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm text-slate-400">security</span>
-                <div>
-                  <span class="font-bold text-white block">Commercial Insurance</span>
-                  <span class="text-[10px] text-slate-400">Valid till Aug 2027</span>
-                </div>
-              </div>
-              <span class="text-[10px] font-extrabold text-emerald-400 flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                <span class="material-symbols-outlined text-xs">check</span> Active
+                <span class="material-symbols-outlined text-xs">done</span> Active
               </span>
             </div>
           </div>
         </div>
 
-        <!-- 4. BANK & UPI SETTLEMENT DETAILS -->
+        <!-- 4. SAFETY, SUPPORT & LOGOUT -->
         <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 space-y-3">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-            <h4 class="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-sm text-emerald-400">account_balance</span>
-              <span>Bank & Settlement Accounts</span>
-            </h4>
-            <button id="btn-edit-bank-upi" class="text-xs text-blue-400 hover:text-blue-300 font-black flex items-center gap-0.5 cursor-pointer">
-              <span class="material-symbols-outlined text-xs">edit</span> Edit
-            </button>
-          </div>
-
-          <div class="space-y-2 text-xs">
-            <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
-              <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Primary UPI Handle</span>
-                <span id="profile-upi-display" class="font-extrabold text-white">rahulpatil@okaxis</span>
-              </div>
-              <span class="text-[10px] font-extrabold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                Primary (Instant)
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-300">Captain Support & Session</h4>
+          
+          <div class="space-y-2">
+            <a href="tel:+919876543210" class="w-full py-2.5 px-3 bg-slate-800/80 hover:bg-slate-800 text-slate-200 text-xs font-bold rounded-xl border border-slate-700 flex items-center justify-between transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm text-blue-400">support_agent</span>
+                <span>Bhusawal Fleet Support Desk</span>
               </span>
-            </div>
-
-            <div class="bg-slate-950/70 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
-              <div>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Bank Name & Branch</span>
-                <span class="font-extrabold text-white">State Bank of India (Bhusawal Main)</span>
-                <span class="text-[10px] text-slate-400 block mt-0.5">A/C: ••••••••••8942 • IFSC: SBIN0000324</span>
-              </div>
-              <span class="text-[10px] font-extrabold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">
-                Daily Auto
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 5. FLEET PERFORMANCE SCORECARD -->
-        <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-md space-y-2.5">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-            <h4 class="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-sm text-amber-400">social_leaderboard</span>
-              <span>Fleet Performance Scorecard</span>
-            </h4>
-            <span class="text-[10px] font-black text-blue-400">Top 5% in Bhusawal</span>
-          </div>
-
-          <div class="grid grid-cols-4 gap-2 text-center text-xs pt-1">
-            <div class="bg-slate-950/70 p-2 rounded-xl border border-slate-800">
-              <span class="text-base font-black text-white font-display">99.4%</span>
-              <span class="text-[9px] font-bold text-slate-400 block">On-Time</span>
-            </div>
-            <div class="bg-slate-950/70 p-2 rounded-xl border border-slate-800">
-              <span class="text-base font-black text-white font-display">98.5%</span>
-              <span class="text-[9px] font-bold text-slate-400 block">Acceptance</span>
-            </div>
-            <div class="bg-slate-950/70 p-2 rounded-xl border border-slate-800">
-              <span class="text-base font-black text-emerald-400 font-display">100%</span>
-              <span class="text-[9px] font-bold text-slate-400 block">Safety</span>
-            </div>
-            <div class="bg-slate-950/70 p-2 rounded-xl border border-slate-800">
-              <span class="text-base font-black text-amber-400 font-display">486</span>
-              <span class="text-[9px] font-bold text-slate-400 block">Trips Done</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 6. DELIVERY & TRIP HISTORY QUICK VIEW -->
-        <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 space-y-3">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-            <h4 class="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-sm text-blue-400">local_shipping</span>
-              <span>Recent Delivery & Trip History</span>
-            </h4>
-            <span class="text-[10px] text-slate-400 font-bold">Last Completed</span>
-          </div>
-
-          <div id="container-recent-history-list" class="space-y-2 text-xs">
-            <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <span class="text-base">🛵</span>
-                <div>
-                  <span class="font-extrabold text-white block">Passenger Ride • Station to Jamner Rd</span>
-                  <span class="text-[10px] text-slate-400">Completed 45m ago • Amit S.</span>
-                </div>
-              </div>
-              <span class="font-black text-emerald-400 font-display">₹55</span>
-            </div>
-
-            <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <span class="text-base">🍔</span>
-                <div>
-                  <span class="font-extrabold text-white block">Food Delivery • Moonlight Restaurant</span>
-                  <span class="text-[10px] text-slate-400">Completed 1.5h ago • Order #ORD-8421</span>
-                </div>
-              </div>
-              <span class="font-black text-emerald-400 font-display">₹62</span>
-            </div>
-
-            <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <span class="text-base">🛒</span>
-                <div>
-                  <span class="font-extrabold text-white block">Grocery Delivery • Saijeevan Super Shoppy</span>
-                  <span class="text-[10px] text-slate-400">Completed 3h ago • Order #ORD-7712</span>
-                </div>
-              </div>
-              <span class="font-black text-emerald-400 font-display">₹48</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 7. PARTNER SUPPORT & EMERGENCY ASSISTANCE -->
-        <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 space-y-2.5">
-          <h4 class="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 border-b border-slate-800 pb-2">
-            <span class="material-symbols-outlined text-sm text-blue-400">headset_mic</span>
-            <span>Rider Support & Assistance</span>
-          </h4>
-
-          <div class="grid grid-cols-2 gap-2 text-xs">
-            <a href="tel:9876543210" class="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center gap-2 transition-all cursor-pointer">
-              <span class="material-symbols-outlined text-base text-blue-400">call</span>
-              <div>
-                <span class="font-extrabold text-white block">Rider Helpline</span>
-                <span class="text-[10px] text-slate-400">24/7 Call Center</span>
-              </div>
+              <span class="material-symbols-outlined text-xs text-slate-400">call</span>
             </a>
-            <a href="https://wa.me/919876543210?text=Hi%20BSL%20Fleet%20Support" target="_blank" class="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 flex items-center gap-2 transition-all cursor-pointer">
-              <span class="material-symbols-outlined text-base text-emerald-400">chat</span>
-              <div>
-                <span class="font-extrabold text-white block">WhatsApp Help</span>
-                <span class="text-[10px] text-slate-400">Quick chat</span>
-              </div>
-            </a>
-          </div>
 
-          <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex items-start gap-2 text-xs">
-            <span class="material-symbols-outlined text-sm text-slate-400 mt-0.5">location_on</span>
-            <div>
-              <span class="font-extrabold text-slate-200 block">Bhusawal Fleet Hub:</span>
-              <span class="text-[10px] text-slate-400">Station Road, Near Central Bus Stand, Bhusawal (Open 7 AM - 11 PM)</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 8. APP SETTINGS & PREFERENCES -->
-        <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 space-y-3">
-          <h4 class="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5 border-b border-slate-800 pb-2">
-            <span class="material-symbols-outlined text-sm text-slate-400">settings</span>
-            <span>Preferences & Settings</span>
-          </h4>
-
-          <div class="space-y-2.5 text-xs">
-            <!-- Order Chime Toggle -->
-            <div class="flex items-center justify-between">
-              <div>
-                <span class="font-bold text-white block">Order Alert Sound</span>
-                <span class="text-[10px] text-slate-400">Play chime when order offer arrives</span>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="setting-order-chime" checked class="sr-only peer">
-                <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-
-            <!-- Map Hotspots Toggle -->
-            <div class="flex items-center justify-between border-t border-slate-800/80 pt-2">
-              <div>
-                <span class="font-bold text-white block">Map Demand Hotspots</span>
-                <span class="text-[10px] text-slate-400">Show high-order zones on map</span>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" id="setting-map-hotspots" checked class="sr-only peer">
-                <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-
-            <!-- Language Selector -->
-            <div class="flex items-center justify-between border-t border-slate-800/80 pt-2">
-              <div>
-                <span class="font-bold text-white block">App Language</span>
-                <span class="text-[10px] text-slate-400">Current display language</span>
-              </div>
-              <select id="setting-app-language" class="bg-slate-950 text-white font-bold text-xs rounded-lg px-2.5 py-1 border border-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
-                <option value="en" selected>English</option>
-                <option value="mr">मराठी (Marathi)</option>
-                <option value="hi">हिंदी (Hindi)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- 9. ADMIN SIMULATOR & LOGOUT -->
-        <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 space-y-2.5">
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Partner Account & Session</span>
-          <button id="btn-switch-account" class="w-full py-2.5 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer">
-            <span class="material-symbols-outlined text-sm">swap_horiz</span>
-            <span>Switch Partner Account / Login with Mobile</span>
-          </button>
-          <div class="flex items-center gap-2">
-            <button id="btn-admin-toggle-approve" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer border border-slate-700">
-              <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
-              <span id="btn-admin-toggle-text">Toggle KYC Status</span>
-            </button>
-            <button id="btn-rider-logout" class="py-2.5 px-4 bg-slate-800 hover:bg-rose-900 text-slate-300 hover:text-rose-200 text-xs font-black rounded-xl transition-all border border-slate-700 cursor-pointer">
-              Log Out
+            <button id="btn-rider-logout" class="w-full py-3 bg-rose-950/60 hover:bg-rose-900 text-rose-300 text-xs font-black rounded-xl border border-rose-500/30 transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-sm">logout</span>
+              <span>End Shift & Log Out</span>
             </button>
           </div>
         </div>
@@ -1009,7 +814,7 @@
   </div>
 
   <!-- ==================== FIXED BOTTOM NAVIGATION (4 TABS) ==================== -->
-  <nav class="relative z-30 w-full max-w-md mx-auto bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-3 py-2 flex items-center justify-around shadow-2xl">
+  <nav class="relative z-30 w-full max-w-md mx-auto bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 px-3 py-2 flex items-center justify-around shadow-2xl">
     <button class="nav-tab-btn flex flex-col items-center gap-0.5 text-blue-400 active:scale-95 transition-all cursor-pointer" data-tab="home">
       <span class="material-symbols-outlined text-2xl">explore</span>
       <span class="text-[10px] font-black">Home</span>
@@ -1045,188 +850,20 @@
       <div id="modal-active-orders-list" class="space-y-3 overflow-y-auto flex-1 pr-1">
         <!-- Rendered items -->
       </div>
-
-      <div class="border-t border-slate-800 pt-3 flex items-center justify-between text-xs">
-        <span class="text-slate-400 font-bold">Total Batch Payout:</span>
-        <span id="modal-active-orders-total-payout" class="text-sm font-black text-emerald-400 font-display">₹0</span>
-      </div>
     </div>
   </div>
 
-  <!-- ==================== PASSENGER BOARDING OTP VERIFICATION MODAL ==================== -->
-  <div id="modal-passenger-otp" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/85 backdrop-blur-sm">
-    <div class="bg-slate-900 w-full max-w-sm rounded-t-2xl sm:rounded-2xl border-2 border-amber-400 shadow-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+  <!-- ==================== EDIT PAYOUT TARGET / UPI MODAL ==================== -->
+  <div id="modal-edit-payout-target" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/80 backdrop-blur-sm">
+    <div class="bg-slate-900 w-full max-w-md rounded-t-2xl sm:rounded-2xl border border-slate-700 shadow-2xl p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-black">
-            <span class="material-symbols-outlined text-base">pin</span>
-          </div>
-          <div>
-            <h3 class="text-sm font-black text-white">Boarding Verification</h3>
-            <p class="text-[10px] text-slate-400 font-semibold">Verify passenger before trip start</p>
-          </div>
-        </div>
-        <button id="btn-close-passenger-otp" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center border border-slate-700 cursor-pointer">
-          <span class="material-symbols-outlined text-base">close</span>
-        </button>
-      </div>
-
-      <div class="space-y-3 text-center">
-        <p class="text-xs font-semibold text-slate-300">
-          Ask <strong id="otp-passenger-name" class="text-amber-300">Amit Sharma</strong> for the 4-digit Ride Start OTP displayed on their screen.
-        </p>
-
-        <div class="flex justify-center gap-2 py-2">
-          <input type="tel" maxlength="1" class="otp-passenger-input w-11 h-12 bg-slate-950 border-2 border-slate-700 rounded-xl text-center text-lg font-black text-amber-400 focus:border-amber-400 focus:outline-none" />
-          <input type="tel" maxlength="1" class="otp-passenger-input w-11 h-12 bg-slate-950 border-2 border-slate-700 rounded-xl text-center text-lg font-black text-amber-400 focus:border-amber-400 focus:outline-none" />
-          <input type="tel" maxlength="1" class="otp-passenger-input w-11 h-12 bg-slate-950 border-2 border-slate-700 rounded-xl text-center text-lg font-black text-amber-400 focus:border-amber-400 focus:outline-none" />
-          <input type="tel" maxlength="1" class="otp-passenger-input w-11 h-12 bg-slate-950 border-2 border-slate-700 rounded-xl text-center text-lg font-black text-amber-400 focus:border-amber-400 focus:outline-none" />
-        </div>
-
-        <p id="error-passenger-otp" class="hidden text-xs font-bold text-rose-400">
-          Invalid OTP. Please verify with passenger.
-        </p>
-
-        <div class="bg-amber-400/10 border border-amber-400/30 rounded-xl p-2 text-[11px] text-amber-300 font-bold flex items-center justify-center gap-1.5">
-          <span class="material-symbols-outlined text-sm">key</span>
-          <span>Sample Booking OTP: <strong class="text-white font-mono">4892</strong></span>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 pt-1">
-        <button id="btn-cancel-passenger-otp" class="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-black text-xs rounded-xl border border-slate-700 cursor-pointer">
-          Cancel
-        </button>
-        <button id="btn-submit-passenger-otp" class="py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs rounded-xl shadow-md cursor-pointer flex items-center justify-center gap-1">
-          <span>Start Ride</span>
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== RIDE COMPLETED SUMMARY MODAL ==================== -->
-  <div id="modal-passenger-completed" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/85 backdrop-blur-sm">
-    <div class="bg-gradient-to-b from-slate-900 via-slate-900 to-amber-950/40 w-full max-w-sm rounded-t-2xl sm:rounded-2xl border-2 border-emerald-500 shadow-2xl p-5 space-y-4 text-center">
-      
-      <div class="w-14 h-14 rounded-full bg-emerald-500/20 border-2 border-emerald-400 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
-        <span class="material-symbols-outlined text-3xl">check_circle</span>
-      </div>
-
-      <div class="space-y-1">
-        <h3 class="text-base font-black text-white">Ride Completed!</h3>
-        <p class="text-xs text-slate-300 font-medium">Passenger dropped safely at destination.</p>
-      </div>
-
-      <!-- 3-Metric Summary Grid -->
-      <div class="grid grid-cols-3 gap-2 bg-slate-950/80 p-3 rounded-xl border border-slate-800">
-        <div class="p-1 border-r border-slate-800">
-          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Earnings</span>
-          <span id="completed-ride-fare" class="text-base font-black text-emerald-400 font-display">₹55</span>
-        </div>
-        <div class="p-1 border-r border-slate-800">
-          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Distance</span>
-          <span id="completed-ride-dist" class="text-base font-black text-blue-400">3.8 km</span>
-        </div>
-        <div class="p-1">
-          <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Duration</span>
-          <span id="completed-ride-duration" class="text-base font-black text-amber-400">12 mins</span>
-        </div>
-      </div>
-
-      <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-2.5 text-xs text-emerald-300 font-bold flex items-center justify-center gap-1.5">
-        <span class="material-symbols-outlined text-sm">payments</span>
-        <span>₹55 Credited to your Wallet & Today's Earnings</span>
-      </div>
-
-      <div class="space-y-2 pt-1">
-        <button id="btn-return-available-cta" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 transition-all">
-          <span>🟢 Return to AVAILABLE Now</span>
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </button>
-        <p id="completed-auto-return-text" class="text-[10px] text-slate-400 font-medium">
-          Automatically returning to available in <span id="completed-countdown-sec">3</span>s...
-        </p>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ==================== INSTANT CASHOUT MODAL ==================== -->
-  <div id="modal-wallet-cashout" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/85 backdrop-blur-sm">
-    <div class="bg-slate-900 w-full max-w-sm rounded-t-2xl sm:rounded-2xl border-2 border-emerald-500 shadow-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black">
-            <span class="material-symbols-outlined text-base">bolt</span>
-          </div>
-          <div>
-            <h3 class="text-sm font-black text-white">Instant Cashout</h3>
-            <p class="text-[10px] text-slate-400 font-semibold">Direct transfer via UPI 24x7</p>
-          </div>
-        </div>
-        <button id="btn-close-cashout-modal" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center border border-slate-700 cursor-pointer">
-          <span class="material-symbols-outlined text-base">close</span>
-        </button>
-      </div>
-
-      <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-1 text-center">
-        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Available Balance</span>
-        <span id="modal-cashout-available-val" class="text-2xl font-black text-white font-display">₹1,240</span>
-      </div>
-
-      <div class="space-y-1.5">
-        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Withdrawal Amount (₹)</label>
-        <div class="relative">
-          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">₹</span>
-          <input type="number" id="input-cashout-amount" class="w-full pl-8 pr-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white font-black text-base focus:border-emerald-500 focus:outline-none" placeholder="500" />
-        </div>
-        <div class="flex gap-1.5 pt-1">
-          <button type="button" class="btn-quick-amount flex-1 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold rounded-lg border border-slate-700 cursor-pointer" data-val="200">₹200</button>
-          <button type="button" class="btn-quick-amount flex-1 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold rounded-lg border border-slate-700 cursor-pointer" data-val="500">₹500</button>
-          <button type="button" class="btn-quick-amount flex-1 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold rounded-lg border border-slate-700 cursor-pointer" data-val="1000">₹1,000</button>
-          <button type="button" class="btn-quick-amount flex-1 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 text-[11px] font-black rounded-lg border border-emerald-500/30 cursor-pointer" data-val="all">All</button>
-        </div>
-      </div>
-
-      <div class="p-2.5 bg-slate-950/80 rounded-xl border border-slate-800 text-xs space-y-1">
-        <div class="flex justify-between text-slate-400">
-          <span>Target UPI:</span>
-          <span id="modal-cashout-upi-display" class="font-extrabold text-white">rahulpatil@okaxis</span>
-        </div>
-        <div class="flex justify-between text-slate-400">
-          <span>Transfer Speed:</span>
-          <span class="text-emerald-400 font-bold">Instant (&lt; 60s)</span>
-        </div>
-        <div class="flex justify-between text-slate-400">
-          <span>Processing Fee:</span>
-          <span class="text-emerald-400 font-bold">₹0 Free</span>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 pt-1">
-        <button id="btn-cancel-cashout-modal" class="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-black text-xs rounded-xl border border-slate-700 cursor-pointer">
-          Cancel
-        </button>
-        <button id="btn-confirm-cashout-submit" class="py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs rounded-xl shadow-md cursor-pointer flex items-center justify-center gap-1">
-          <span>Transfer Now</span>
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ==================== EDIT BANK / UPI MODAL ==================== -->
-  <div id="modal-edit-upi" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/85 backdrop-blur-sm">
-    <div class="bg-slate-900 w-full max-w-sm rounded-t-2xl sm:rounded-2xl border border-blue-500 shadow-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-black">
+          <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center">
             <span class="material-symbols-outlined text-base">account_balance</span>
           </div>
           <div>
-            <h3 class="text-sm font-black text-white">Settlement Details</h3>
-            <p class="text-[10px] text-slate-400 font-semibold">Update UPI ID & Payout Accounts</p>
+            <h3 class="text-sm font-black text-white">Linked Bank & UPI Account</h3>
+            <p class="text-[10px] text-slate-400">Direct settlement destination for Bhusawal partner earnings</p>
           </div>
         </div>
         <button id="btn-close-edit-upi-modal" class="w-8 h-8 rounded-xl bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center border border-slate-700 cursor-pointer">
