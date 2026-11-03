@@ -420,22 +420,27 @@
     stopCountdown();
     closeModal();
 
-    // Server-side action dispatch
+    if (!currentRequestData) return;
+
+    var req = currentRequestData;
+    var state = getAuthState();
     var riderId = state.id || 'BSL-RIDER-8942';
+
+    // Server-side action dispatch with auth credentials
+    var headers = { 'Content-Type': 'application/json' };
+    var token = localStorage.getItem('bhusawal_rider_auth_token');
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+
     fetch('/api/rider/order-action', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: headers,
+      credentials: 'include',
       body: JSON.stringify({
         riderId: riderId,
         orderId: req.id,
         action: 'ACCEPT'
       })
     }).catch(function() {});
-
-    if (!currentRequestData) return;
-
-    var req = currentRequestData;
-    var state = getAuthState();
 
     // BACKEND INTEGRATION: Validate with BslFleetEngine
     if (window.BslFleetEngine) {
@@ -561,9 +566,15 @@
 
       var state = getAuthState();
       var riderId = state.id || 'BSL-RIDER-8942';
+
+      var headers = { 'Content-Type': 'application/json' };
+      var token = localStorage.getItem('bhusawal_rider_auth_token');
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+
       fetch('/api/rider/order-action', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: headers,
+        credentials: 'include',
         body: JSON.stringify({
           riderId: riderId,
           orderId: req.id,

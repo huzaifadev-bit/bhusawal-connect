@@ -1,17 +1,42 @@
 import type { APIRoute } from 'astro';
 import { ServerFleetEngine } from '../../../lib/serverFleetEngine';
+import { authenticateRiderRequest } from '../../../lib/riderAuth';
 
 export const prerender = false;
 
-// GET /api/rider/earnings?riderId=BSL-RIDER-8942
+// GET /api/rider/earnings
 export const GET: APIRoute = async ({ request }) => {
   try {
+    const auth = await authenticateRiderRequest(request);
+    if (!auth.authenticated || !auth.riderId) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: auth.error || 'Authentication required. Missing Bearer token or session cookie.',
+          code: 401
+        }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const url = new URL(request.url);
-    const riderId = url.searchParams.get('riderId') || 'BSL-RIDER-8942';
+    const paramRiderId = url.searchParams.get('riderId');
 
-    const rider = ServerFleetEngine.getRider(riderId);
+    // Strict Ownership Check: A rider CANNOT inspect another rider's private earnings & wallet
+    if (paramRiderId && paramRiderId !== auth.riderId) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'Forbidden: You are not authorized to view another partner\'s financial earnings and wallet balance.',
+          code: 403
+        }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
-    // Dynamic breakdown based on real stats
+    const rider = await ServerFleetEngine.getRiderAsync(auth.riderId);
+
+    // Dynamic breakdown based on verified DB stats
     const todayOrders = rider.todayCompletedCount;
     const totalEarned = rider.todayEarningsAmount;
     const basePay = Math.round(totalEarned * 0.75);
@@ -21,7 +46,7 @@ export const GET: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         success: true,
-        riderId,
+        riderId: auth.riderId,
         today: {
           totalEarnings: totalEarned,
           completedOrders: todayOrders,
@@ -33,8 +58,8 @@ export const GET: APIRoute = async ({ request }) => {
         },
         wallet: {
           balance: rider.walletBalance,
-          bankAccount: 'SBI •••• 8942',
-          upiId: 'rahulpatil@okaxis',
+          bankAccount: 'SBI •••• ' + rider.phone.slice(-4),
+          upiId: `${rider.name.toLowerCase().replace(/\s+/g, '')}@okaxis`,
           payoutSchedule: 'Daily Auto-Settlement at 11:59 PM'
         },
         recentHistory: [
@@ -71,7 +96,7 @@ export const GET: APIRoute = async ({ request }) => {
     );
   } catch (err: any) {
     return new Response(
-      JSON.stringify({ success: false, message: err.message || 'Server error getting earnings.' }),
+      JSON.stringify({ success: false, message: err.message || 'Error fetching earnings.' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }

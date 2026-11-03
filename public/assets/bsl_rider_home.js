@@ -792,13 +792,31 @@ window.BslRiderHome = (function() {
   }
 
   // ====================================================================
-  // SERVER API SYNCHRONIZATION HELPERS (PHASE 3 & PHASE 4)
+  // SERVER API SYNCHRONIZATION HELPERS (PHASE 3 & PHASE 4 SECURED)
   // ====================================================================
+  function getAuthHeaders() {
+    var headers = { 'Content-Type': 'application/json' };
+    var token = localStorage.getItem('bhusawal_rider_auth_token');
+    if (!token) {
+      try {
+        var st = JSON.parse(localStorage.getItem(AUTH_KEY) || 'null');
+        if (st && st.token) token = st.token;
+      } catch(e) {}
+    }
+    if (token) {
+      headers['Authorization'] = 'Bearer ' + token;
+    }
+    return headers;
+  }
+
   function syncRiderServerStatus() {
     var st = getRiderState();
     var riderId = st.id || 'BSL-RIDER-8942';
 
-    fetch('/api/rider/status?riderId=' + encodeURIComponent(riderId))
+    fetch('/api/rider/status?riderId=' + encodeURIComponent(riderId), {
+      headers: getAuthHeaders(),
+      credentials: 'include'
+    })
       .then(function(res) { return res.json(); })
       .then(function(data) {
         if (data && data.success && data.rider) {
@@ -818,7 +836,10 @@ window.BslRiderHome = (function() {
     var st = getRiderState();
     var riderId = st.id || 'BSL-RIDER-8942';
 
-    fetch('/api/rider/earnings?riderId=' + encodeURIComponent(riderId))
+    fetch('/api/rider/earnings?riderId=' + encodeURIComponent(riderId), {
+      headers: getAuthHeaders(),
+      credentials: 'include'
+    })
       .then(function(res) { return res.json(); })
       .then(function(data) {
         if (data && data.success && data.today) {
@@ -855,7 +876,8 @@ window.BslRiderHome = (function() {
 
     fetch('/api/rider/location', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify({ riderId: riderId, lat: lat, lng: lng })
     }).catch(function() {});
   }
@@ -873,7 +895,10 @@ window.BslRiderHome = (function() {
 
     var riderId = state.id || 'BSL-RIDER-8942';
 
-    fetch('/api/rider/orders?riderId=' + encodeURIComponent(riderId))
+    fetch('/api/rider/orders?riderId=' + encodeURIComponent(riderId), {
+      headers: getAuthHeaders(),
+      credentials: 'include'
+    })
       .then(function(res) { return res.json(); })
       .then(function(data) {
         if (!data || !data.success) {
@@ -1097,7 +1122,8 @@ window.BslRiderHome = (function() {
 
     fetch('/api/rider/order-action', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify({
         riderId: riderId,
         orderId: orderId,
@@ -1137,7 +1163,8 @@ window.BslRiderHome = (function() {
 
     fetch('/api/rider/order-action', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify({
         riderId: riderId,
         orderId: orderId,
@@ -1710,7 +1737,8 @@ window.BslRiderHome = (function() {
       var riderId = st.id || 'BSL-RIDER-8942';
       fetch('/api/rider/status', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
+        credentials: 'include',
         body: JSON.stringify({ riderId: riderId, isOnline: nextDuty })
       })
       .then(function(res) { return res.json(); })
@@ -1811,7 +1839,8 @@ window.BslRiderHome = (function() {
       // Send to server API
       fetch('/api/rider/order-action', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
+        credentials: 'include',
         body: JSON.stringify({
           riderId: riderId,
           orderId: stop.orderId,
@@ -2097,7 +2126,8 @@ window.BslRiderHome = (function() {
         var riderId = st.id || 'BSL-RIDER-8942';
         fetch('/api/rider/order-action', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getAuthHeaders(),
+          credentials: 'include',
           body: JSON.stringify({
             riderId: riderId,
             orderId: curRide.id,
@@ -2199,7 +2229,8 @@ window.BslRiderHome = (function() {
       if (curRide.id) {
         fetch('/api/rider/order-action', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: getAuthHeaders(),
+          credentials: 'include',
           body: JSON.stringify({
             riderId: riderId,
             orderId: curRide.id,

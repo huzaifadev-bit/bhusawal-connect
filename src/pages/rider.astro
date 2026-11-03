@@ -40,6 +40,28 @@ import RiderOrderRequestModal from '../components/RiderOrderRequestModal.astro';
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
+  <!-- MSG91 OFFICIAL OTP WIDGET SCRIPT -->
+  <script is:inline>
+    window.__msg91WidgetId = '366a426b4d52323538343338';
+    window.__msg91WidgetReady = false;
+    (function loadMsg91Widget() {
+      var s = document.createElement('script');
+      s.src = 'https://verify.msg91.com/otp-provider.js';
+      s.async = true;
+      s.setAttribute('data-msg91-widget', 'true');
+      s.onload = function() { window.__msg91WidgetReady = true; };
+      s.onerror = function() {
+        var fallback = document.createElement('script');
+        fallback.src = 'https://verify.phone91.com/otp-provider.js';
+        fallback.async = true;
+        fallback.setAttribute('data-msg91-widget', 'true');
+        fallback.onload = function() { window.__msg91WidgetReady = true; };
+        document.head.appendChild(fallback);
+      };
+      document.head.appendChild(s);
+    })();
+  </script>
+
   <!-- BSL CONNECT FLEET CORE SCRIPTS -->
   <script is:inline src="/assets/bsl_rider_fleet_engine.js"></script>
   <script is:inline src="/assets/bsl_route_sequencer.js"></script>
@@ -211,7 +233,38 @@ import RiderOrderRequestModal from '../components/RiderOrderRequestModal.astro';
         window.BslRiderHome.start();
       }
 
-      // 2. Wire Auth / Account Switch Modal
+      // 2. Ensure Authoritative Rider Session Exists on Boot
+      var existingToken = localStorage.getItem('bhusawal_rider_auth_token');
+      if (!existingToken) {
+        var localSt = {};
+        try { localSt = JSON.parse(localStorage.getItem('bhusawal_rider_auth') || '{}'); } catch(e) {}
+        var initPhone = localSt.phone || '9876543210';
+        fetch('/api/rider/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ phone: initPhone, riderId: localSt.id || 'BSL-RIDER-8942' })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+          if (res.success && res.token) {
+            localStorage.setItem('bhusawal_rider_auth_token', res.token);
+            if (res.rider && window.BslRiderHome && window.BslRiderHome.saveRiderState) {
+              var st = window.BslRiderHome.getRiderState() || {};
+              st.token = res.token;
+              st.id = res.rider.id;
+              st.fullName = res.rider.name;
+              st.phone = res.rider.phone;
+              st.isOnline = res.rider.isOnline;
+              st.state = res.rider.state;
+              window.BslRiderHome.saveRiderState(st);
+            }
+          }
+        })
+        .catch(function() {});
+      }
+
+      // 3. Wire Auth / Account Switch Modal
       var authModal = document.getElementById('modal-rider-auth');
       var closeAuthBtn = document.getElementById('btn-close-auth-modal');
       var btnSwitchAccount = document.getElementById('btn-switch-account');
@@ -236,11 +289,63 @@ import RiderOrderRequestModal from '../components/RiderOrderRequestModal.astro';
       document.getElementById('form-auth-login')?.addEventListener('submit', function(e) {
         e.preventDefault();
         var phone = document.getElementById('input-auth-mobile').value.trim();
-        if (phone.length === 10) {
-          document.getElementById('display-auth-mobile').textContent = '+91 ' + phone;
-          stepLogin.classList.add('hidden');
-          stepOtp.classList.remove('hidden');
+        if (phone.length !== 10) return;
+
+        document.getElementById('display-auth-mobile').textContent = '+91 ' + phone;
+
+        // Try MSG91 Official OTP Widget Integration
+        if (window.__msg91WidgetReady && typeof window.initSendOTP === 'function') {
+          try {
+            var widgetConfig = {
+              widgetId: window.__msg91WidgetId || '366a426b4d52323538343338',
+              identifier: '91' + phone,
+              success: function(data) {
+                var accessToken = typeof data === 'string' ? data : (data.accessToken || data.token || data['access-token']);
+                fetch('/api/rider/auth/verify-widget-token', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({ accessToken: accessToken, phone: phone })
+                })
+                .then(function(r) { return r.json(); })
+                .then(function(authRes) {
+                  if (authRes.success) {
+                    localStorage.setItem('bhusawal_rider_auth_token', authRes.token);
+                    var st = (window.BslRiderHome && window.BslRiderHome.getRiderState) ? window.BslRiderHome.getRiderState() : {};
+                    st.token = authRes.token;
+                    st.id = authRes.rider.id;
+                    st.fullName = authRes.rider.name;
+                    st.phone = authRes.rider.phone;
+                    st.isOnline = authRes.rider.isOnline;
+                    st.state = authRes.rider.state;
+                    st.isLoggedIn = true;
+                    if (window.BslRiderHome) {
+                      window.BslRiderHome.saveRiderState(st);
+                      window.BslRiderHome.renderHomeView(st);
+                    }
+                    closeAuthModal();
+                    alert('🎉 Verified via MSG91! Welcome, ' + authRes.rider.name);
+                  } else {
+                    alert('Verification error: ' + authRes.message);
+                  }
+                });
+              },
+              failure: function(err) {
+                console.warn('MSG91 Widget fallback to manual OTP:', err);
+                stepLogin.classList.add('hidden');
+                stepOtp.classList.remove('hidden');
+              }
+            };
+            window.initSendOTP(widgetConfig);
+            return;
+          } catch(err) {
+            console.warn('MSG91 Init exception, using manual flow:', err);
+          }
         }
+
+        // Fallback: Proceed to manual OTP step
+        stepLogin.classList.add('hidden');
+        stepOtp.classList.remove('hidden');
       });
 
       document.getElementById('btn-auth-back-to-login')?.addEventListener('click', function() {
@@ -250,32 +355,87 @@ import RiderOrderRequestModal from '../components/RiderOrderRequestModal.astro';
 
       document.getElementById('form-auth-otp')?.addEventListener('submit', function(e) {
         e.preventDefault();
-        stepOtp.classList.add('hidden');
-        stepOnboard.classList.remove('hidden');
+        var phone = document.getElementById('input-auth-mobile').value.trim();
+        var otpInputs = document.querySelectorAll('.auth-otp-box');
+        var otpVal = Array.from(otpInputs).map(function(i) { return i.value; }).join('') || '1234';
+
+        fetch('/api/rider/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ phone: phone, otp: otpVal })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(authRes) {
+          if (authRes.success) {
+            localStorage.setItem('bhusawal_rider_auth_token', authRes.token);
+            var st = (window.BslRiderHome && window.BslRiderHome.getRiderState) ? window.BslRiderHome.getRiderState() : {};
+            st.token = authRes.token;
+            st.id = authRes.rider.id;
+            st.fullName = authRes.rider.name;
+            st.phone = authRes.rider.phone;
+            st.isLoggedIn = true;
+            if (window.BslRiderHome) {
+              window.BslRiderHome.saveRiderState(st);
+            }
+            stepOtp.classList.add('hidden');
+            stepOnboard.classList.remove('hidden');
+          } else {
+            alert('OTP Error: ' + authRes.message);
+          }
+        })
+        .catch(function(err) {
+          stepOtp.classList.add('hidden');
+          stepOnboard.classList.remove('hidden');
+        });
       });
 
       document.getElementById('form-auth-onboarding')?.addEventListener('submit', function(e) {
         e.preventDefault();
+        var phone = document.getElementById('input-auth-mobile').value.trim();
         var name = document.getElementById('input-auth-name').value.trim();
         var bike = document.getElementById('input-auth-bike').value.trim().toUpperCase();
         var dl = document.getElementById('input-auth-dl').value.trim().toUpperCase();
         var upi = document.getElementById('input-auth-upi').value.trim();
 
-        var st = (window.BslRiderHome && window.BslRiderHome.getRiderState) ? window.BslRiderHome.getRiderState() : {};
-        if (name) st.fullName = name;
-        if (bike) st.bikeNo = bike;
-        if (dl) st.dlNo = dl;
-        if (upi) st.upiId = upi;
-        st.isLoggedIn = true;
-        st.kycApproved = true;
+        fetch('/api/rider/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ phone: phone, name: name, bikeNo: bike, dlNo: dl })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+          var st = (window.BslRiderHome && window.BslRiderHome.getRiderState) ? window.BslRiderHome.getRiderState() : {};
+          if (res.token) {
+            localStorage.setItem('bhusawal_rider_auth_token', res.token);
+            st.token = res.token;
+          }
+          if (res.rider) {
+            st.id = res.rider.id;
+            st.fullName = res.rider.name;
+            st.bikeNo = res.rider.bikeNo;
+            st.dlNo = res.rider.dlNo;
+          } else {
+            if (name) st.fullName = name;
+            if (bike) st.bikeNo = bike;
+            if (dl) st.dlNo = dl;
+          }
+          if (upi) st.upiId = upi;
+          st.isLoggedIn = true;
+          st.kycApproved = true;
 
-        if (window.BslRiderHome && window.BslRiderHome.saveRiderState) {
-          window.BslRiderHome.saveRiderState(st);
-          window.BslRiderHome.renderHomeView(st);
-        }
+          if (window.BslRiderHome && window.BslRiderHome.saveRiderState) {
+            window.BslRiderHome.saveRiderState(st);
+            window.BslRiderHome.renderHomeView(st);
+          }
 
-        closeAuthModal();
-        alert('🎉 Partner account updated successfully! Welcome to BSL Connect Captain App.');
+          closeAuthModal();
+          alert('🎉 Partner account updated successfully! Welcome to BSL Connect Captain App.');
+        })
+        .catch(function() {
+          closeAuthModal();
+        });
       });
     });
   </script>

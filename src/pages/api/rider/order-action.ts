@@ -1,11 +1,24 @@
 import type { APIRoute } from 'astro';
 import { ServerFleetEngine } from '../../../lib/serverFleetEngine';
+import { authenticateRiderRequest } from '../../../lib/riderAuth';
 
 export const prerender = false;
 
 // POST /api/rider/order-action
 export const POST: APIRoute = async ({ request }) => {
   try {
+    const auth = await authenticateRiderRequest(request);
+    if (!auth.authenticated || !auth.riderId) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: auth.error || 'Authentication required. Missing Bearer token or session cookie.',
+          code: 401
+        }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     let body: any = {};
     try {
       body = await request.json();
@@ -16,7 +29,19 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const { riderId = 'BSL-RIDER-8942', orderId, action } = body;
+    const { orderId, action } = body;
+
+    // Strict Ownership Check: A rider CANNOT dispatch actions on behalf of another rider
+    if (body.riderId && body.riderId !== auth.riderId) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: 'Forbidden: You cannot perform order actions for another rider.',
+          code: 403
+        }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     if (!orderId || !action) {
       return new Response(
@@ -33,7 +58,8 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const result = ServerFleetEngine.handleAction(riderId, orderId, action);
+    // Authoritatively use the authenticated rider's verified identity
+    const result = await ServerFleetEngine.handleActionAsync(auth.riderId, orderId, action);
 
     if (!result.success) {
       return new Response(
@@ -47,7 +73,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    const activeOrders = ServerFleetEngine.getActiveOrders(riderId);
+    const activeOrders = await ServerFleetEngine.getActiveOrdersAsync(auth.riderId);
 
     return new Response(
       JSON.stringify({
